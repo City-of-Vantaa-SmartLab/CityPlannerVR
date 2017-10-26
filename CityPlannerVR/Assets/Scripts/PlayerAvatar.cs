@@ -10,12 +10,21 @@ public class PlayerAvatar : NetworkBehaviour
     public GameObject handPositionSetterPrefab;
     public GameObject otherPrefab;
 
+    private Component[] avatarMaterials;
+
     public override void OnStartLocalPlayer()
     {
         base.OnStartLocalPlayer();
         Debug.Log("MirrorNetworkedVRNode::OnStartServer: Object " + this.gameObject.name + ":" + this.gameObject.GetInstanceID().ToString() + " coming active!");
         StartCoroutine(TrackHeadCoroutine());
         StartCoroutine(MakeSureSetHand());
+
+        avatarMaterials = GetComponentsInChildren<Renderer>();
+        if (avatarMaterials == null)
+        {
+            Debug.LogError("PlayerColorManager::Start: AvatarMaterials is null!");
+        }
+        GetRandomColor();
     }
 
     IEnumerator MakeSureSetHand()
@@ -78,5 +87,27 @@ public class PlayerAvatar : NetworkBehaviour
         {
             CmdSpawn();
         }
+    }
+
+    private void GetRandomColor()
+
+    {
+
+        float h, s;
+
+        h = Random.Range(0.0f, 1.0f);
+        s = Random.Range(0.0f, 5.0f);
+
+        if (s > 1.0f)
+        {
+            s = 1.0f;
+        }
+
+        foreach (Renderer renderer in avatarMaterials)
+        {
+            renderer.material.color = Color.HSVToRGB(h, s, 1);
+
+        }
+
     }
 }
