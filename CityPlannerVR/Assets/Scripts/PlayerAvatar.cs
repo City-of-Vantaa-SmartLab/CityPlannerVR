@@ -10,21 +10,20 @@ public class PlayerAvatar : NetworkBehaviour
     public GameObject handPositionSetterPrefab;
     public GameObject otherPrefab;
 
-    private Component[] avatarMaterials;
+    private GameObject playerHead;
+    private GameObject playerBody;
 
     public override void OnStartLocalPlayer()
     {
         base.OnStartLocalPlayer();
         Debug.Log("MirrorNetworkedVRNode::OnStartServer: Object " + this.gameObject.name + ":" + this.gameObject.GetInstanceID().ToString() + " coming active!");
-        StartCoroutine(TrackHeadCoroutine());
-        StartCoroutine(MakeSureSetHand());
 
-        avatarMaterials = GetComponentsInChildren<Renderer>();
-        if (avatarMaterials == null)
-        {
-            Debug.LogError("PlayerColorManager::Start: AvatarMaterials is null!");
-        }
-        GetRandomColor();
+        // Get player head and body gameobjects
+        playerHead = transform.GetChild(0).gameObject;
+        playerBody = transform.GetChild(1).gameObject;
+
+        StartCoroutine(TrackHeadCoroutine());
+        StartCoroutine(MakeSureSetHand());   
     }
 
     IEnumerator MakeSureSetHand()
@@ -48,7 +47,6 @@ public class PlayerAvatar : NetworkBehaviour
 
         NetworkServer.SpawnWithClientAuthority(left, connectionToClient);
         NetworkServer.SpawnWithClientAuthority(right, connectionToClient);
-        Debug.Log("asd");
 
         left.GetComponent<HandPositionSetter>().TargetSetHand(connectionToClient, VRNode.LeftHand);
         right.GetComponent<HandPositionSetter>().TargetSetHand(connectionToClient, VRNode.RightHand);
@@ -57,11 +55,21 @@ public class PlayerAvatar : NetworkBehaviour
 
     IEnumerator TrackHeadCoroutine()
     {
-        Debug.Log("MirrorNetworkedVRNode::TrackHeadCoroutine: Start headtracking!");
+        Debug.Log("MirrorNetworkedVRNode::TrackHeadCoroutine: Start avatar tracking!");
         while (true)
         {
-            transform.rotation = InputTracking.GetLocalRotation(node);
-            transform.position = InputTracking.GetLocalPosition(node);
+            Vector3 nodePos = InputTracking.GetLocalPosition(node);
+            Quaternion nodeRot = InputTracking.GetLocalRotation(node);
+
+            playerHead.transform.rotation = nodeRot;
+            playerHead.transform.position = nodePos;
+
+            Vector3 bodyNewRot = new Vector3(0, nodeRot.eulerAngles.y, 0);
+
+            playerBody.transform.rotation = Quaternion.Euler(bodyNewRot);
+            // Body position is lower than head position
+            playerBody.transform.position = new Vector3(nodePos.x, nodePos.y - 0.75f, nodePos.z);
+            
             yield return null;
         }
     }
@@ -87,27 +95,5 @@ public class PlayerAvatar : NetworkBehaviour
         {
             CmdSpawn();
         }
-    }
-
-    private void GetRandomColor()
-
-    {
-
-        float h, s;
-
-        h = Random.Range(0.0f, 1.0f);
-        s = Random.Range(0.0f, 5.0f);
-
-        if (s > 1.0f)
-        {
-            s = 1.0f;
-        }
-
-        foreach (Renderer renderer in avatarMaterials)
-        {
-            renderer.material.color = Color.HSVToRGB(h, s, 1);
-
-        }
-
     }
 }
