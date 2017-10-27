@@ -6,7 +6,7 @@ using UnityEngine.Networking;
 
 public class PlayerAvatar : NetworkBehaviour
 {
-    public VRNode node = VRNode.LeftHand;
+    public VRNode node = VRNode.Head;
     public GameObject handPositionSetterPrefab;
     public GameObject otherPrefab;
 
@@ -28,9 +28,11 @@ public class PlayerAvatar : NetworkBehaviour
 
     IEnumerator MakeSureSetHand()
     {
-        CmdSpawn();
         //if (NetworkServer.active)
         //{
+        //// Vive controllers might take a while to become active at
+        //// startup so it's nice to wait for a second before 
+        //// attempting to do something with them.
         yield return new WaitForSeconds(1f);
         CmdSpawnHands();
         //} else
@@ -48,14 +50,14 @@ public class PlayerAvatar : NetworkBehaviour
         NetworkServer.SpawnWithClientAuthority(left, connectionToClient);
         NetworkServer.SpawnWithClientAuthority(right, connectionToClient);
 
+        // Tell client that these are its hands and it should keep track of them
         left.GetComponent<HandPositionSetter>().TargetSetHand(connectionToClient, VRNode.LeftHand);
         right.GetComponent<HandPositionSetter>().TargetSetHand(connectionToClient, VRNode.RightHand);
     }
 
-
     IEnumerator TrackHeadCoroutine()
     {
-        Debug.Log("MirrorNetworkedVRNode::TrackHeadCoroutine: Start avatar tracking!");
+        Debug.Log("MirrorNetworkedVRNode::TrackHeadCoroutine: Starting avatar tracking!");
         while (true)
         {
             Vector3 nodePos = InputTracking.GetLocalPosition(node);
@@ -64,36 +66,12 @@ public class PlayerAvatar : NetworkBehaviour
             playerHead.transform.rotation = nodeRot;
             playerHead.transform.position = nodePos;
 
-            Vector3 bodyNewRot = new Vector3(0, nodeRot.eulerAngles.y, 0);
-
-            playerBody.transform.rotation = Quaternion.Euler(bodyNewRot);
+            Vector3 newBodyRot = new Vector3(0, nodeRot.eulerAngles.y, 0);
+            playerBody.transform.rotation = Quaternion.Euler(newBodyRot);
             // Body position is lower than head position
-            playerBody.transform.position = new Vector3(nodePos.x, nodePos.y - 0.75f, nodePos.z);
+            playerBody.transform.position = new Vector3(nodePos.x, nodePos.y - 0.8f, nodePos.z);
             
             yield return null;
-        }
-    }
-
-    [Command]
-    void CmdSpawn()
-    {
-        var go = Instantiate(
-           otherPrefab,
-           transform.position + new Vector3(0, 1, 0),
-           Quaternion.identity);
-
-        NetworkServer.SpawnWithClientAuthority(go, connectionToClient);
-    }
-    private void Update()
-    {
-        if (!isLocalPlayer)
-        {
-            return;
-        }
-
-        if (Input.GetKeyDown(KeyCode.Space))
-        {
-            CmdSpawn();
         }
     }
 }
