@@ -6,23 +6,33 @@ using UnityEngine.Networking;
 
 public class PlayerAvatar : NetworkBehaviour
 {
-    public VRNode node = VRNode.LeftHand;
+    public VRNode node = VRNode.Head;
     public GameObject handPositionSetterPrefab;
     public GameObject otherPrefab;
+
+    private GameObject playerHead;
+    private GameObject playerBody;
 
     public override void OnStartLocalPlayer()
     {
         base.OnStartLocalPlayer();
         Debug.Log("MirrorNetworkedVRNode::OnStartServer: Object " + this.gameObject.name + ":" + this.gameObject.GetInstanceID().ToString() + " coming active!");
+
+        // Get player head and body gameobjects
+        playerHead = transform.GetChild(0).gameObject;
+        playerBody = transform.GetChild(1).gameObject;
+
         StartCoroutine(TrackHeadCoroutine());
-        StartCoroutine(MakeSureSetHand());
+        StartCoroutine(MakeSureSetHand());   
     }
 
     IEnumerator MakeSureSetHand()
     {
-        CmdSpawn();
         //if (NetworkServer.active)
         //{
+        //// Vive controllers might take a while to become active at
+        //// startup so it's nice to wait for a second before 
+        //// attempting to do something with them.
         yield return new WaitForSeconds(1f);
         CmdSpawnHands();
         //} else
@@ -39,44 +49,29 @@ public class PlayerAvatar : NetworkBehaviour
 
         NetworkServer.SpawnWithClientAuthority(left, connectionToClient);
         NetworkServer.SpawnWithClientAuthority(right, connectionToClient);
-        Debug.Log("asd");
 
+        // Tell client that these are its hands and it should keep track of them
         left.GetComponent<HandPositionSetter>().TargetSetHand(connectionToClient, VRNode.LeftHand);
         right.GetComponent<HandPositionSetter>().TargetSetHand(connectionToClient, VRNode.RightHand);
     }
 
-
     IEnumerator TrackHeadCoroutine()
     {
-        Debug.Log("MirrorNetworkedVRNode::TrackHeadCoroutine: Start headtracking!");
+        Debug.Log("MirrorNetworkedVRNode::TrackHeadCoroutine: Starting avatar tracking!");
         while (true)
         {
-            transform.rotation = InputTracking.GetLocalRotation(node);
-            transform.position = InputTracking.GetLocalPosition(node);
+            Vector3 nodePos = InputTracking.GetLocalPosition(node);
+            Quaternion nodeRot = InputTracking.GetLocalRotation(node);
+
+            playerHead.transform.rotation = nodeRot;
+            playerHead.transform.position = nodePos;
+
+            Vector3 newBodyRot = new Vector3(0, nodeRot.eulerAngles.y, 0);
+            playerBody.transform.rotation = Quaternion.Euler(newBodyRot);
+            // Body position is lower than head position
+            playerBody.transform.position = new Vector3(nodePos.x, nodePos.y - 0.8f, nodePos.z);
+            
             yield return null;
-        }
-    }
-
-    [Command]
-    void CmdSpawn()
-    {
-        var go = Instantiate(
-           otherPrefab,
-           transform.position + new Vector3(0, 1, 0),
-           Quaternion.identity);
-
-        NetworkServer.SpawnWithClientAuthority(go, connectionToClient);
-    }
-    private void Update()
-    {
-        if (!isLocalPlayer)
-        {
-            return;
-        }
-
-        if (Input.GetKeyDown(KeyCode.Space))
-        {
-            CmdSpawn();
         }
     }
 }

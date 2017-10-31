@@ -6,7 +6,6 @@ using UnityEngine.VR;
 
 public class HandPositionSetter : NetworkBehaviour
 {
-
     IEnumerator TrackNodeCoroutine(VRNode node)
     {
         while (true)
