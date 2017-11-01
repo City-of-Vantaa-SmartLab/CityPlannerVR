@@ -10,6 +10,7 @@ public class PlayerAvatar : NetworkBehaviour
     public GameObject handPositionSetterPrefab;
     public GameObject otherPrefab;
 
+    private GameObject playerVR;
     private GameObject playerHead;
     private GameObject playerBody;
 
@@ -17,6 +18,9 @@ public class PlayerAvatar : NetworkBehaviour
     {
         base.OnStartLocalPlayer();
         Debug.Log("MirrorNetworkedVRNode::OnStartServer: Object " + this.gameObject.name + ":" + this.gameObject.GetInstanceID().ToString() + " coming active!");
+
+        // Get gameobject handling player VR stuff
+        playerVR = GameObject.FindGameObjectWithTag("Player");
 
         // Get player head and body gameobjects
         playerHead = transform.GetChild(0).gameObject;
@@ -60,7 +64,7 @@ public class PlayerAvatar : NetworkBehaviour
         Debug.Log("MirrorNetworkedVRNode::TrackHeadCoroutine: Starting avatar tracking!");
         while (true)
         {
-            Vector3 nodePos = InputTracking.GetLocalPosition(node);
+            Vector3 nodePos = playerVR.transform.position + InputTracking.GetLocalPosition(node);
             Quaternion nodeRot = InputTracking.GetLocalRotation(node);
 
             playerHead.transform.rotation = nodeRot;
