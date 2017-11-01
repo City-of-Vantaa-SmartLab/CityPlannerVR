@@ -6,12 +6,14 @@ using UnityEngine.VR;
 
 public class HandPositionSetter : NetworkBehaviour
 {
+    private GameObject playerVR;
+
     IEnumerator TrackNodeCoroutine(VRNode node)
     {
         while (true)
         {
             transform.rotation = InputTracking.GetLocalRotation(node);
-            transform.position = InputTracking.GetLocalPosition(node);
+            transform.position = playerVR.transform.position + InputTracking.GetLocalPosition(node);
             yield return null;
         }
     }
@@ -19,6 +21,9 @@ public class HandPositionSetter : NetworkBehaviour
     [TargetRpc]
     public void TargetSetHand(NetworkConnection target, VRNode node)
     {
+        // Get gameobject handling player VR stuff
+        playerVR = GameObject.FindGameObjectWithTag("Player");
+
         StartCoroutine(TrackNodeCoroutine(node));
         Debug.Log("RpcSetHand");
     }
