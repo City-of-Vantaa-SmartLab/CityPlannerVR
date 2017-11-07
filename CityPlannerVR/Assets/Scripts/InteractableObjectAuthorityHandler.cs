@@ -11,16 +11,15 @@ public class InteractableObjectAuthorityHandler : NetworkBehaviour
     {
         Debug.Log("InteractableObjectAuthorityHandler::OnGrab: Grabbed!");
 
-        GameObject player = null;
         if(localPlayer == null)
         {
-            player = FindLocalPlayer();
+            localPlayer = FindLocalPlayer();
         }
 
-        var playerID = player.GetComponent<NetworkIdentity>();
+        var playerID = localPlayer.GetComponent<NetworkIdentity>();
 
         Debug.Log("Object authority status before: " + hasAuthority);
-        player.GetComponent<PlayerAvatar>().CmdSetAuth(netId, playerID);
+        localPlayer.GetComponent<PlayerAvatar>().CmdSetAuth(netId, playerID);
         Debug.Log("Object authority status after: " + hasAuthority);
     }
 
