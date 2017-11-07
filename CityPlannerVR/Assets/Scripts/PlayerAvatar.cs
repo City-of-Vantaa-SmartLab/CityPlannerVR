@@ -79,18 +79,8 @@ public class PlayerAvatar : NetworkBehaviour
         }
     }
 
-    /// <summary>
-    /// Give authority of object to player
-    /// </summary>
-    /// <param name="objectId">Network ID of object</param>
-    /// <param name="playerId">Player to give authority of object to</param>
-    public void SetAuthForObj(NetworkInstanceId objectId, NetworkIdentity playerId)
-    {
-        CmdSetAuth(netId, playerId);
-    }
-
     [Command]
-    private void CmdSetAuth(NetworkInstanceId objectId, NetworkIdentity player)
+    public void CmdSetAuth(NetworkInstanceId objectId, NetworkIdentity player)
     {
         var iObject = NetworkServer.FindLocalObject(objectId);
         var networkIdentity = iObject.GetComponent<NetworkIdentity>();

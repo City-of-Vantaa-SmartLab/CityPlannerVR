@@ -5,19 +5,27 @@ using UnityEngine.Networking;
 
 public class InteractableObjectAuthorityHandler : NetworkBehaviour
 {
+    GameObject localPlayer = null;
+
     private void OnAttachedToHand(Valve.VR.InteractionSystem.Hand hand)
     {
         Debug.Log("InteractableObjectAuthorityHandler::OnGrab: Grabbed!");
-        var player = FindLocalPlayer();
+
+        GameObject player = null;
+        if(localPlayer == null)
+        {
+            player = FindLocalPlayer();
+        }
+
         var playerID = player.GetComponent<NetworkIdentity>();
 
-        player.GetComponent<PlayerAvatar>().SetAuthForObj(netId, playerID);
+        Debug.Log("Object authority status before: " + hasAuthority);
+        player.GetComponent<PlayerAvatar>().CmdSetAuth(netId, playerID);
+        Debug.Log("Object authority status after: " + hasAuthority);
     }
 
     private GameObject FindLocalPlayer()
     {
-        GameObject localPlayer = null;
-
         GameObject[] players = GameObject.FindGameObjectsWithTag("VRLocalPlayer");
         Debug.Log("Players found: " + players.Length);
 
