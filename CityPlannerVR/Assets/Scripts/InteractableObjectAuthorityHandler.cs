@@ -11,6 +11,9 @@ public class InteractableObjectAuthorityHandler : NetworkBehaviour
         Debug.Log("InteractableObjectAuthorityHandler::OnGrab: Grabbed!");
         var player = GameObject.FindGameObjectWithTag("VRLocalPlayer");
         var playerID = player.GetComponent<NetworkIdentity>();
-        player.GetComponent<PlayerAvatar>().CmdSetAuth(netId, playerID);
+
+        this.GetComponent<NetworkIdentity>().AssignClientAuthority(player.GetComponent<NetworkIdentity>().connectionToClient);
+
+        //player.GetComponent<PlayerAvatar>().CmdSetAuth(netId, playerID);
     }
 }
