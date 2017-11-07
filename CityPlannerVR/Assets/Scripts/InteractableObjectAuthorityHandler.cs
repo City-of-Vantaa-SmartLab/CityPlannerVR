@@ -12,8 +12,6 @@ public class InteractableObjectAuthorityHandler : NetworkBehaviour
         var player = GameObject.FindGameObjectWithTag("VRLocalPlayer");
         var playerID = player.GetComponent<NetworkIdentity>();
 
-        this.GetComponent<NetworkIdentity>().AssignClientAuthority(player.GetComponent<NetworkIdentity>().connectionToClient);
-
-        //player.GetComponent<PlayerAvatar>().CmdSetAuth(netId, playerID);
+        player.GetComponent<PlayerAvatar>().SetAuthForObj(netId, playerID);
     }
 }
