@@ -20,15 +20,15 @@ GameObject:
   m_Component:
   - component: {fileID: 4933014543699240}
   - component: {fileID: 33159393275791592}
+  - component: {fileID: 136047850596070012}
   - component: {fileID: 23880728234558652}
-  - component: {fileID: 114420289692450362}
+  - component: {fileID: 114211337680918314}
+  - component: {fileID: 114490582978425940}
+  - component: {fileID: 54005705991747246}
+  - component: {fileID: 114787003161656144}
   - component: {fileID: 114921807751187558}
   - component: {fileID: 114982600512173702}
-  - component: {fileID: 54005705991747246}
-  - component: {fileID: 114490582978425940}
-  - component: {fileID: 114211337680918314}
-  - component: {fileID: 114787003161656144}
-  - component: {fileID: 136047850596070012}
+  - component: {fileID: 114420289692450362}
   m_Layer: 0
   m_Name: SmartLabBall
   m_TagString: Untagged
@@ -96,8 +96,8 @@ Rigidbody:
   m_GameObject: {fileID: 1470627636321408}
   serializedVersion: 2
   m_Mass: 1
-  m_Drag: 0
-  m_AngularDrag: 0.05
+  m_Drag: 0.1
+  m_AngularDrag: 1
   m_UseGravity: 1
   m_IsKinematic: 0
   m_Interpolate: 0
@@ -248,7 +248,7 @@ CapsuleCollider:
   m_Material: {fileID: 0}
   m_IsTrigger: 0
   m_Enabled: 1
-  m_Radius: 0.15
-  m_Height: 0.35
+  m_Radius: 0.1
+  m_Height: 0.22
   m_Direction: 2
   m_Center: {x: 0, y: 0, z: 0}
