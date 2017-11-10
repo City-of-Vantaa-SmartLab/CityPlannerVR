@@ -8,18 +8,18 @@ public class HandPositionSetter : NetworkBehaviour
 {
     private GameObject playerVR;
 
-    IEnumerator TrackNodeCoroutine(VRNode node)
+    IEnumerator TrackNodeCoroutine(UnityEngine.XR.XRNode node)
     {
         while (true)
         {
-            transform.rotation = InputTracking.GetLocalRotation(node);
-            transform.position = playerVR.transform.position + InputTracking.GetLocalPosition(node);
+            transform.rotation = UnityEngine.XR.InputTracking.GetLocalRotation(node);
+            transform.position = playerVR.transform.position + UnityEngine.XR.InputTracking.GetLocalPosition(node);
             yield return null;
         }
     }
 
     [TargetRpc]
-    public void TargetSetHand(NetworkConnection target, VRNode node)
+    public void TargetSetHand(NetworkConnection target, UnityEngine.XR.XRNode node)
     {
         // Get gameobject handling player VR stuff
         playerVR = GameObject.FindGameObjectWithTag("Player");

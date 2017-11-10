@@ -36,7 +36,10 @@ public class SteamVR_Settings : EditorWindow
 #endif
 
 	const BuildTarget recommended_BuildTarget = BuildTarget.StandaloneWindows64;
-	const bool recommended_ShowUnitySplashScreen = false;
+    // NOTE: changed splashscreen recommendation from false to true to stop SteamVR asking to change
+    // it to disable splashscreen and being unable to do it on every game startup in editor if
+    // using Unity personal edition.
+	const bool recommended_ShowUnitySplashScreen = true;
 	const bool recommended_DefaultIsFullScreen = false;
 	const int recommended_DefaultScreenWidth = 1024;
 	const int recommended_DefaultScreenHeight = 768;
