@@ -6,7 +6,7 @@ using UnityEngine.Networking;
 
 public class PlayerAvatar : NetworkBehaviour
 {
-    public VRNode node = VRNode.Head;
+    public UnityEngine.XR.XRNode node = UnityEngine.XR.XRNode.Head;
     public GameObject handPositionSetterPrefab;
     public GameObject otherPrefab;
 
@@ -55,8 +55,8 @@ public class PlayerAvatar : NetworkBehaviour
         NetworkServer.SpawnWithClientAuthority(right, connectionToClient);
 
         // Tell client that these are its hands and it should keep track of them
-        left.GetComponent<HandPositionSetter>().TargetSetHand(connectionToClient, VRNode.LeftHand);
-        right.GetComponent<HandPositionSetter>().TargetSetHand(connectionToClient, VRNode.RightHand);
+        left.GetComponent<HandPositionSetter>().TargetSetHand(connectionToClient, UnityEngine.XR.XRNode.LeftHand);
+        right.GetComponent<HandPositionSetter>().TargetSetHand(connectionToClient, UnityEngine.XR.XRNode.RightHand);
     }
 
     IEnumerator TrackHeadCoroutine()
@@ -64,8 +64,8 @@ public class PlayerAvatar : NetworkBehaviour
         Debug.Log("MirrorNetworkedVRNode::TrackHeadCoroutine: Starting avatar tracking!");
         while (true)
         {
-            Vector3 nodePos = playerVR.transform.position + InputTracking.GetLocalPosition(node);
-            Quaternion nodeRot = InputTracking.GetLocalRotation(node);
+            Vector3 nodePos = playerVR.transform.position + UnityEngine.XR.InputTracking.GetLocalPosition(node);
+            Quaternion nodeRot = UnityEngine.XR.InputTracking.GetLocalRotation(node);
 
             playerHead.transform.rotation = nodeRot;
             playerHead.transform.position = nodePos;
@@ -76,6 +76,27 @@ public class PlayerAvatar : NetworkBehaviour
             playerBody.transform.position = new Vector3(nodePos.x, nodePos.y - 0.8f, nodePos.z);
             
             yield return null;
+        }
+    }
+
+    [Command]
+    public void CmdSetAuth(NetworkInstanceId objectId, NetworkIdentity player)
+    {
+        var iObject = NetworkServer.FindLocalObject(objectId);
+        var networkIdentity = iObject.GetComponent<NetworkIdentity>();
+        var otherOwner = networkIdentity.clientAuthorityOwner;
+
+        if (otherOwner == player.connectionToClient)
+        {
+            return;
+        }
+        else
+        {
+            if (otherOwner != null)
+            {
+                networkIdentity.RemoveClientAuthority(otherOwner);
+            }
+            networkIdentity.AssignClientAuthority(player.connectionToClient);
         }
     }
 }
