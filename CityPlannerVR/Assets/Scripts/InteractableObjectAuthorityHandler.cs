@@ -18,22 +18,21 @@ public class InteractableObjectAuthorityHandler : NetworkBehaviour
 
         var playerID = localPlayer.GetComponent<NetworkIdentity>();
 
-        Debug.Log("Object authority status before: " + hasAuthority);
         localPlayer.GetComponent<PlayerAvatar>().CmdSetAuth(netId, playerID);
-        Debug.Log("Object authority status after: " + hasAuthority);
     }
 
+    // TODO: This function could be in some kind of GameManager script
     private GameObject FindLocalPlayer()
     {
         GameObject[] players = GameObject.FindGameObjectsWithTag("VRLocalPlayer");
-        Debug.Log("Players found: " + players.Length);
+        Debug.Log("InteractableObjectAuthorityHandler::FindLocalPlayer: Players found: " + players.Length);
 
         foreach (GameObject player in players)
         {
             if(player.GetComponent<NetworkIdentity>().isLocalPlayer)
             {
                 localPlayer = player;
-                Debug.Log("Local player found!");
+                Debug.Log("InteractableObjectAuthorityHandler::FindLocalPlayer: Local player found!");
             }
         }
 

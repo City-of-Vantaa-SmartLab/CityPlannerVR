@@ -25,6 +25,6 @@ public class HandPositionSetter : NetworkBehaviour
         playerVR = GameObject.FindGameObjectWithTag("Player");
 
         StartCoroutine(TrackNodeCoroutine(node));
-        Debug.Log("RpcSetHand");
+        Debug.Log("HandPositionSetter::TargetSetHand: Hand set");
     }
 }
