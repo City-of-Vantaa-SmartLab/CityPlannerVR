@@ -107,19 +107,12 @@ Shader "Unlit/HologramShader"
 					// sample the texture
 					col = tex2D(_MainTex, i.uv);
 					tex = tex2D(_MainTex, i.uv);
-				
-					//Pick Color
-					/*col = _Color * max(0, cos(i.objVertex.y * _HolographAmount * 100 + _Time.x * _HolagraphSpeed * 100) + _Bias);
-					col *= 1 - max(0, cos(i.objVertex.x * _Holographamount * 100));*/
-
-					//On texture
-					/*col = tex * max(0, cos(i.objVertex.y * _HolographAmount * 100 + _Time.x * _HolagraphSpeed * 100) + _Bias);
-					col *= 1 - max(0, cos(i.objVertex.x * _HolographAmount * 100));*/
 
 					//TEST
 					half rim = 1.0-saturate(dot(i.viewDir, i.worldNormal));
 					fixed4 rimColor = _RimColor * pow (rim, _RimPower);
 
+					//i.objVertex sign determines the direction of fill 
 					float glow = frac(-i.objVertex.y * _GlowTiling - _Time.x * _GlowSpeed);
 
 					col = tex * _Color + rimColor;
@@ -128,9 +121,7 @@ Shader "Unlit/HologramShader"
 
 					col.rgb *= _Brightness;
 
-					col *= max(0, cos(i.objVertex.y * _HolographAmount * 100 + _Time.x * _HolagraphSpeed * 100) + _Bias);
-
-					//col *= 1 - max(0, cos(i.objVertex.x * _HolographAmount * 100));
+					col *= max(0, cos(i.objVertex.y * _HolographAmount * 100 + _Time.x * _HolagraphSpeed * 100) + _Bias);;
 				}
 				
 				// apply fog
