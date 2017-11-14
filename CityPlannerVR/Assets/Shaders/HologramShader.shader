@@ -7,6 +7,8 @@ Shader "Unlit/HologramShader"
 		_MainTex ("Texture", 2D) = "white" {}
 		//_NoiseMap ("Texture", 2D) = "white" {}
 		_Color ("Color", Color) = (1,0,0,1)
+		_TopColor ("TopColor", Color) = (1,0,0,1)
+		_TopAlpha ("TopAlpha", Range(0.0, 1.0)) = 1.0
 		_Brightness("Brightness", Range(0.1, 6.0)) = 3.0
 		_Alpha ("Alpha", Range (0.0, 1.0)) = 1.0
 		_RimColor ("Rim Color", Color) = (1,1,1,1)
@@ -60,6 +62,7 @@ Shader "Unlit/HologramShader"
 			};
 
 			fixed4 _Color;
+			fixed4 _TopColor;
 			float _HolographAmount, _HolagraphSpeed;
 			sampler2D _MainTex;
 			sampler2D _NoiseMap;
@@ -69,6 +72,7 @@ Shader "Unlit/HologramShader"
 			float _RimPower;
 			float _Brightness;
 			float _Alpha, _GlitchIntensity,_GlitchSpeed;
+			float _TopAlpha;
 			float _GlowTiling;
 			float _GlowSpeed;
 			
@@ -89,36 +93,51 @@ Shader "Unlit/HologramShader"
 			
 			fixed4 frag (v2f i) : SV_Target
 			{
-				// sample the texture
-				fixed4 col = tex2D(_MainTex, i.uv);
-				fixed4 tex = tex2D(_MainTex, i.uv);
+				fixed4 col;
+				fixed4 tex;
+
+				if(i.worldNormal.y >=0.1)
+				{
+					col = _TopColor;
+					col.a = _TopAlpha;
+				}
+
+				else
+				{
+					// sample the texture
+					col = tex2D(_MainTex, i.uv);
+					tex = tex2D(_MainTex, i.uv);
 				
-				//Pick Color
-				/*col = _Color * max(0, cos(i.objVertex.y * _HolographAmount * 100 + _Time.x * _HolagraphSpeed * 100) + _Bias);
-				col *= 1 - max(0, cos(i.objVertex.x * _Holographamount * 100));*/
+					//Pick Color
+					/*col = _Color * max(0, cos(i.objVertex.y * _HolographAmount * 100 + _Time.x * _HolagraphSpeed * 100) + _Bias);
+					col *= 1 - max(0, cos(i.objVertex.x * _Holographamount * 100));*/
 
-				//On texture
-				/*col = tex * max(0, cos(i.objVertex.y * _HolographAmount * 100 + _Time.x * _HolagraphSpeed * 100) + _Bias);
-				col *= 1 - max(0, cos(i.objVertex.x * _HolographAmount * 100));*/
+					//On texture
+					/*col = tex * max(0, cos(i.objVertex.y * _HolographAmount * 100 + _Time.x * _HolagraphSpeed * 100) + _Bias);
+					col *= 1 - max(0, cos(i.objVertex.x * _HolographAmount * 100));*/
 
-				//TEST
-				half rim = 1.0-saturate(dot(i.viewDir, i.worldNormal));
-				fixed4 rimColor = _RimColor * pow (rim, _RimPower);
+					//TEST
+					half rim = 1.0-saturate(dot(i.viewDir, i.worldNormal));
+					fixed4 rimColor = _RimColor * pow (rim, _RimPower);
 
-				float glow = frac(i.objVertex.y * _GlowTiling - _Time.x * _GlowSpeed);
+					float glow = frac(-i.objVertex.y * _GlowTiling - _Time.x * _GlowSpeed);
 
-				col = tex * _Color + rimColor;
+					col = tex * _Color + rimColor;
 
-				col.a = _Alpha * rim * glow;
+					col.a = _Alpha * rim * glow;
 
-				col.rgb *= _Brightness;
+					col.rgb *= _Brightness;
 
-				col *= max(0, cos(i.objVertex.y * _HolographAmount * 100 + _Time.x * _HolagraphSpeed * 100) + _Bias);
+					col *= max(0, cos(i.objVertex.y * _HolographAmount * 100 + _Time.x * _HolagraphSpeed * 100) + _Bias);
 
-				//col *= 1 - max(0, cos(i.objVertex.x * _HolographAmount * 100));
+					//col *= 1 - max(0, cos(i.objVertex.x * _HolographAmount * 100));
+				}
 				
 				// apply fog
 				UNITY_APPLY_FOG(i.fogCoord, col);
+
+				
+
 				return col;
 			}
 			ENDCG
