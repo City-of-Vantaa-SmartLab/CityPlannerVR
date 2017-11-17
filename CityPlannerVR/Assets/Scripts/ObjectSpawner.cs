@@ -45,7 +45,7 @@ public class ObjectSpawner : NetworkBehaviour
                     // This mean that this gameobject has already triggered OnTriggerEnter
                     // and has been previously added to the collected items list. Do not
                     // add it a second time.
-                    //Debug.Log(other.gameObject.name + " already found in here! Do not add a second time!");
+                    Debug.Log(other.gameObject.name + " already found in here! Do not add a second time!");
                     objectFound = true;
                 }
             }
@@ -80,7 +80,7 @@ public class ObjectSpawner : NetworkBehaviour
                     // If a match for this GameObject is not found, it most likely
                     // means that it has already been removed previously, so do not
                     // try to remove it again.
-                    //Debug.Log(other.gameObject.name + " found, first instance of exiting collider, this should not be seen twice");
+                    Debug.Log(other.gameObject.name + " found, first instance of exiting collider, this should not be seen twice");
 
                     found = true;
                 }
