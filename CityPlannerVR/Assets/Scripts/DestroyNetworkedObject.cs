@@ -6,7 +6,7 @@ public class DestroyNetworkedObject : NetworkBehaviour{
     [SerializeField]
     private string objectTag = "Spawnable";
 
-    private void OnEnterTrigger(Collider other)
+    private void OnTriggerEnter(Collider other)
     {
         if(other.tag == objectTag)
         {
