@@ -9,7 +9,7 @@ public class InteractableObjectAuthorityHandler : NetworkBehaviour
 
     private void OnAttachedToHand(Valve.VR.InteractionSystem.Hand hand)
     {
-        Debug.Log("InteractableObjectAuthorityHandler::OnGrab: Grabbed!");
+        //Debug.Log("InteractableObjectAuthorityHandler::OnGrab: Grabbed!");
 
         if(localPlayer == null)
         {

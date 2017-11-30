@@ -17,7 +17,7 @@ public class PlayerAvatar : NetworkBehaviour
     public override void OnStartLocalPlayer()
     {
         base.OnStartLocalPlayer();
-        Debug.Log("MirrorNetworkedVRNode::OnStartServer: Object " + this.gameObject.name + ":" + this.gameObject.GetInstanceID().ToString() + " coming active!");
+        Debug.Log("PlayerAvatar::OnStartLocalPlayer: Object " + this.gameObject.name + ":" + this.gameObject.GetInstanceID().ToString() + " coming active!");
 
         // Get gameobject handling player VR stuff
         playerVR = GameObject.FindGameObjectWithTag("Player");
@@ -61,7 +61,7 @@ public class PlayerAvatar : NetworkBehaviour
 
     IEnumerator TrackHeadCoroutine()
     {
-        Debug.Log("MirrorNetworkedVRNode::TrackHeadCoroutine: Starting avatar tracking!");
+        Debug.Log("PlayerAvatar::TrackHeadCoroutine: Starting avatar tracking!");
         while (true)
         {
             Vector3 nodePos = playerVR.transform.position + UnityEngine.XR.InputTracking.GetLocalPosition(node);
