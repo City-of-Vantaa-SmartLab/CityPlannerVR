@@ -16,6 +16,9 @@ public class PlayerAvatar : NetworkBehaviour
 
     private Vector3 playerBodyScaleFactor;
 
+    [SyncVar(hook = "ScaleChange")]
+    public Vector3 objScale;
+
     public override void OnStartLocalPlayer()
     {
         base.OnStartLocalPlayer();
@@ -91,6 +94,12 @@ public class PlayerAvatar : NetworkBehaviour
     {
         Debug.Log("PlayerAvatar::CmdUpdateScale: Scaling to " + newScale.z.ToString());
         transform.localScale = newScale;
+    }
+
+    public void ScaleChange(Vector3 tmp)
+    {
+        Debug.Log("SyncVar scale updated! " + gameObject.name);
+        transform.localScale = tmp;
     }
 
     [Command]
