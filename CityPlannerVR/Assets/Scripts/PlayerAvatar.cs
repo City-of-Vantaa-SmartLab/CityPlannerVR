@@ -89,6 +89,7 @@ public class PlayerAvatar : NetworkBehaviour
     [Command]
     public void CmdUpdateScale(Vector3 newScale)
     {
+        Debug.Log("PlayerAvatar::CmdUpdateScale: Scaling to " + newScale.z.ToString());
         transform.localScale = newScale;
     }
 
