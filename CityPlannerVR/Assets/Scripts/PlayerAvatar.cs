@@ -74,16 +74,22 @@ public class PlayerAvatar : NetworkBehaviour
 
             playerHead.transform.rotation = nodeRot;
             playerHead.transform.position = nodePos;
-            playerHead.transform.localScale = playerVR.transform.localScale;
+            //playerHead.transform.localScale = playerVR.transform.localScale;
 
             Vector3 newBodyRot = new Vector3(0, nodeRot.eulerAngles.y, 0);
             playerBody.transform.rotation = Quaternion.Euler(newBodyRot);
             // Body position is lower than head position
             playerBody.transform.position = new Vector3(nodePos.x, nodePos.y - 0.8f * playerVR.transform.localScale.y, nodePos.z);
-            playerBody.transform.localScale = Vector3.Scale(playerVR.transform.localScale, playerBodyScaleFactor);
+            //playerBody.transform.localScale = Vector3.Scale(playerVR.transform.localScale, playerBodyScaleFactor);
 
             yield return null;
         }
+    }
+
+    [Command]
+    public void CmdUpdateScale(Vector3 newScale)
+    {
+        transform.localScale = newScale;
     }
 
     [Command]

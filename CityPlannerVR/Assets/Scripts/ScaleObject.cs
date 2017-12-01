@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Networking;
 
 /// <summary>
 /// Scales the player object when player lets go of this object.
@@ -14,15 +15,50 @@ public class ScaleObject : MonoBehaviour {
     [SerializeField]
     private Vector3 newScale;
 
-    //private void OnDetachedFromHand(Valve.VR.InteractionSystem.Hand hand)
-    //{
-    //    // Scale player
-    //    Debug.Log("ScalePlayer::OnDetachedFromHand: Scaling");
-    //}
+    private GameObject localPlayer = null;
 
     public void Scale()
     {
         Debug.Log("ScalePlayer::Scale: Scaling");
         objectToScale.transform.localScale = newScale;
+    }
+
+    public void ScaleNetworkedPlayerAvatar()
+    {
+        if(localPlayer == null)
+        {
+            FindLocalPlayer();
+        }
+
+        PlayerAvatar pa = localPlayer.GetComponent<PlayerAvatar>();
+        if(pa != null)
+        {
+            pa.CmdUpdateScale(newScale);
+        } else
+        {
+            Debug.Log("ScaleObject::ScaleNetworkedPlayerAvatar: Player avatar was null");
+        }
+    }
+
+    private GameObject FindLocalPlayer()
+    {
+        GameObject[] players = GameObject.FindGameObjectsWithTag("VRLocalPlayer");
+        Debug.Log("ScaleObject::FindLocalPlayer: Players found: " + players.Length);
+
+        foreach (GameObject player in players)
+        {
+            if (player.GetComponent<NetworkIdentity>().isLocalPlayer)
+            {
+                localPlayer = player;
+                Debug.Log("ScaleObject::FindLocalPlayer: Local player found!");
+            }
+        }
+
+        if (localPlayer == null)
+        {
+            Debug.LogError("ScaleObject::FindLocalPlayer: Could not find local player!");
+        }
+
+        return localPlayer;
     }
 }
