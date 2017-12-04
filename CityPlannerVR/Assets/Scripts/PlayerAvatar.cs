@@ -96,10 +96,12 @@ public class PlayerAvatar : NetworkBehaviour
         transform.localScale = newScale;
     }
 
-    public void ScaleChange(Vector3 tmp)
+    public void ScaleChange(Vector3 value)
     {
         Debug.Log("SyncVar scale updated! " + gameObject.name);
-        transform.localScale = tmp;
+        // Just to make absolutely sure all variables do get updated
+        objScale = value;
+        transform.localScale = objScale;
     }
 
     [Command]
