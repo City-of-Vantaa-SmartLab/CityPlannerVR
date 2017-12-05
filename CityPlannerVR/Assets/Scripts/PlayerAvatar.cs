@@ -14,6 +14,11 @@ public class PlayerAvatar : NetworkBehaviour
     private GameObject playerHead;
     private GameObject playerBody;
 
+    private Vector3 playerBodyScaleFactor;
+
+    [SyncVar(hook = "ScaleChange")]
+    public Vector3 objScale;
+
     public override void OnStartLocalPlayer()
     {
         base.OnStartLocalPlayer();
@@ -25,6 +30,8 @@ public class PlayerAvatar : NetworkBehaviour
         // Get player head and body gameobjects
         playerHead = transform.GetChild(0).gameObject;
         playerBody = transform.GetChild(1).gameObject;
+
+        playerBodyScaleFactor = playerBody.transform.localScale;
 
         StartCoroutine(TrackHeadCoroutine());
         StartCoroutine(MakeSureSetHand());   
@@ -64,19 +71,39 @@ public class PlayerAvatar : NetworkBehaviour
         Debug.Log("PlayerAvatar::TrackHeadCoroutine: Starting avatar tracking!");
         while (true)
         {
-            Vector3 nodePos = playerVR.transform.position + UnityEngine.XR.InputTracking.GetLocalPosition(node);
+            //Vector3 nodePos = playerVR.transform.position + UnityEngine.XR.InputTracking.GetLocalPosition(node);
+            Vector3 nodePos = Camera.main.transform.position;
             Quaternion nodeRot = UnityEngine.XR.InputTracking.GetLocalRotation(node);
 
             playerHead.transform.rotation = nodeRot;
             playerHead.transform.position = nodePos;
+            //playerHead.transform.localScale = playerVR.transform.localScale;
 
             Vector3 newBodyRot = new Vector3(0, nodeRot.eulerAngles.y, 0);
             playerBody.transform.rotation = Quaternion.Euler(newBodyRot);
             // Body position is lower than head position
-            playerBody.transform.position = new Vector3(nodePos.x, nodePos.y - 0.8f, nodePos.z);
-            
+            playerBody.transform.position = new Vector3(nodePos.x, nodePos.y - 0.8f * playerVR.transform.localScale.y, nodePos.z);
+            //playerBody.transform.localScale = Vector3.Scale(playerVR.transform.localScale, playerBodyScaleFactor);
+
             yield return null;
         }
+    }
+
+    [Command]
+    public void CmdUpdateScale(Vector3 newScale)
+    {
+        Debug.Log("PlayerAvatar::CmdUpdateScale: Scaling to " + newScale.z.ToString());
+        objScale = newScale;
+        transform.localScale = objScale;
+
+    }
+
+    public void ScaleChange(Vector3 newScaleValue)
+    {
+        Debug.Log("PlayerAvatar::ScaleChange: SyncVar scale updated to " + newScaleValue + " (" + gameObject.name + ")");
+        // Just to make absolutely sure all variables do get updated
+        objScale = newScaleValue;
+        transform.localScale = objScale;
     }
 
     [Command]
