@@ -10,11 +10,12 @@ public class HandPositionSetter : NetworkBehaviour
 
     IEnumerator TrackNodeCoroutine(UnityEngine.XR.XRNode node)
     {
-
         while (true)
         {
             transform.rotation = UnityEngine.XR.InputTracking.GetLocalRotation(node);
+            // TODO: Position is incorrect when scaling player avatar
             transform.position = playerVR.transform.position + UnityEngine.XR.InputTracking.GetLocalPosition(node);
+            // TODO: Network the scaling like in player avatar
             transform.localScale = playerVR.transform.localScale * 0.07f;
 
             yield return null;
