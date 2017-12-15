@@ -1,9 +1,13 @@
 ﻿using UnityEngine;
 using UnityEngine.Networking;
 
+/// <summary>
+/// Description: Unique player colors for avatar
+/// TODO: Colors do not sync correctly between clients. Low priority feature.
+/// </summary>
+
 public class ColorSetter : NetworkBehaviour
 {
-
     [SyncVar]
     private Color playerColor;
 

@@ -4,7 +4,6 @@ using UnityEngine;
 
 public class ChangeTeleportProperties : MonoBehaviour {
 
-
     [SerializeField]
     private Valve.VR.InteractionSystem.Teleport teleportScript;
 

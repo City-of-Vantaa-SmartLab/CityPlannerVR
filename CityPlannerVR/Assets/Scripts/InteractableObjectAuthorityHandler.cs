@@ -3,6 +3,12 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Networking;
 
+/// <summary>
+/// Description: Change the authority of an object depending on who is touching it
+/// TODO: Move FindLocalPlayer to someplace where it makes more sense. We have to find
+/// local player in multiple scripts already.
+/// </summary>
+
 public class InteractableObjectAuthorityHandler : NetworkBehaviour
 {
     GameObject localPlayer = null;
@@ -25,14 +31,14 @@ public class InteractableObjectAuthorityHandler : NetworkBehaviour
     private GameObject FindLocalPlayer()
     {
         GameObject[] players = GameObject.FindGameObjectsWithTag("VRLocalPlayer");
-        Debug.Log("InteractableObjectAuthorityHandler::FindLocalPlayer: Players found: " + players.Length);
+        //Debug.Log("InteractableObjectAuthorityHandler::FindLocalPlayer: Players found: " + players.Length);
 
         foreach (GameObject player in players)
         {
             if(player.GetComponent<NetworkIdentity>().isLocalPlayer)
             {
                 localPlayer = player;
-                Debug.Log("InteractableObjectAuthorityHandler::FindLocalPlayer: Local player found!");
+                //Debug.Log("InteractableObjectAuthorityHandler::FindLocalPlayer: Local player found!");
             }
         }
 
