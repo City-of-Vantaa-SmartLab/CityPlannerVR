@@ -19,7 +19,7 @@ public class ScaleObject : MonoBehaviour {
 
     public void Scale()
     {
-        Debug.Log("ScalePlayer::Scale: Scaling " + objectToScale.gameObject.name);
+        //Debug.Log("ScalePlayer::Scale: Scaling " + objectToScale.gameObject.name);
         objectToScale.transform.localScale = newScale;
     }
 
@@ -33,26 +33,25 @@ public class ScaleObject : MonoBehaviour {
         PlayerAvatar pa = localPlayer.GetComponent<PlayerAvatar>();
         if(pa != null)
         {
-            Debug.Log("ScaleObject::ScaleNetworkedPlayerAvatar: Scaling player! (" + pa.gameObject.name + ")");
+            //Debug.Log("ScaleObject::ScaleNetworkedPlayerAvatar: Scaling player! (" + pa.gameObject.name + ")");
             pa.CmdUpdateScale(newScale);
-            //pa.objScale = newScale;
         } else
         {
-            Debug.Log("ScaleObject::ScaleNetworkedPlayerAvatar: Player avatar was null");
+            Debug.LogError("ScaleObject::ScaleNetworkedPlayerAvatar: Player avatar was null");
         }
     }
 
     private void FindLocalPlayer()
     {
         GameObject[] players = GameObject.FindGameObjectsWithTag("VRLocalPlayer");
-        Debug.Log("ScaleObject::FindLocalPlayer: Players found: " + players.Length);
+        //Debug.Log("ScaleObject::FindLocalPlayer: Players found: " + players.Length);
 
         foreach (GameObject player in players)
         {
             if (player.GetComponent<NetworkIdentity>().isLocalPlayer)
             {
                 localPlayer = player;
-                Debug.Log("ScaleObject::FindLocalPlayer: Local player found! netID: " + player.GetComponent<NetworkIdentity>().netId);
+                //Debug.Log("ScaleObject::FindLocalPlayer: Local player found! netID: " + player.GetComponent<NetworkIdentity>().netId);
             }
         }
 

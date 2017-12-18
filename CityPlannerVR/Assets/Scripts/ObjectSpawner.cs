@@ -5,7 +5,6 @@ using UnityEngine.Networking;
 
 public class ObjectSpawner : NetworkBehaviour
 {
-
     [SerializeField]
     private GameObject item;
 
@@ -53,7 +52,7 @@ public class ObjectSpawner : NetworkBehaviour
             if (objectFound == false)
             {
                 itemsInSpawner.Add(other.gameObject);
-                Debug.Log("Added item: " + other.gameObject.name);
+                //Debug.Log("Added item: " + other.gameObject.name);
             }
         }
     }
@@ -105,9 +104,7 @@ public class ObjectSpawner : NetworkBehaviour
         clone.name = item.name;
         itemsInSpawner.Add(clone);
 
-        NetworkServer.Spawn(clone);
-
-        
+        NetworkServer.Spawn(clone);    
     }
 
 }
