@@ -16,6 +16,9 @@ public class PlayerAvatar : NetworkBehaviour
 
     private Vector3 playerBodyScaleFactor;
 
+    private GameObject left;
+    private GameObject right;
+
     [SyncVar(hook = "ScaleChange")]
     public Vector3 objScale;
 
@@ -33,6 +36,7 @@ public class PlayerAvatar : NetworkBehaviour
 
         playerBodyScaleFactor = playerBody.transform.localScale;
 
+
         StartCoroutine(TrackHeadCoroutine());
         StartCoroutine(MakeSureSetHand());   
     }
@@ -49,15 +53,18 @@ public class PlayerAvatar : NetworkBehaviour
     [Command]
     private void CmdSpawnHands()
     {
-        var left = Instantiate(handPositionSetterPrefab);
-        var right = Instantiate(handPositionSetterPrefab);
+        left = Instantiate(handPositionSetterPrefab);
+        right = Instantiate(handPositionSetterPrefab);
+
+        left.transform.parent = playerVR.transform.Find("Hand1").transform;
+        right.transform.parent = playerVR.transform.Find("Hand2").transform;
 
         NetworkServer.SpawnWithClientAuthority(left, connectionToClient);
         NetworkServer.SpawnWithClientAuthority(right, connectionToClient);
 
         // Tell client that these are its hands and it should keep track of them
-        left.GetComponent<HandPositionSetter>().TargetSetHand(connectionToClient, UnityEngine.XR.XRNode.LeftHand);
-        right.GetComponent<HandPositionSetter>().TargetSetHand(connectionToClient, UnityEngine.XR.XRNode.RightHand);
+        //left.GetComponent<HandPositionSetter>().TargetSetHand(connectionToClient, UnityEngine.XR.XRNode.LeftHand);
+        //right.GetComponent<HandPositionSetter>().TargetSetHand(connectionToClient, UnityEngine.XR.XRNode.RightHand);
     }
 
     IEnumerator TrackHeadCoroutine()
@@ -69,14 +76,16 @@ public class PlayerAvatar : NetworkBehaviour
             Vector3 nodePos = Camera.main.transform.position; // This still works when player gets scaled down/up, above does not
             Quaternion nodeRot = UnityEngine.XR.InputTracking.GetLocalRotation(node);
 
+            transform.position = nodePos;
+
             playerHead.transform.rotation = nodeRot;
-            playerHead.transform.position = nodePos;
+            //playerHead.transform.position = nodePos;
             //playerHead.transform.localScale = playerVR.transform.localScale;
 
             Vector3 newBodyRot = new Vector3(0, nodeRot.eulerAngles.y, 0);
             playerBody.transform.rotation = Quaternion.Euler(newBodyRot);
             // Body position is lower than head position
-            playerBody.transform.position = new Vector3(nodePos.x, nodePos.y - 0.8f * playerVR.transform.localScale.y, nodePos.z);
+            //playerBody.transform.position = new Vector3(nodePos.x, nodePos.y - 0.8f * playerVR.transform.localScale.y, nodePos.z);
             //playerBody.transform.localScale = Vector3.Scale(playerVR.transform.localScale, playerBodyScaleFactor);
 
             yield return null;
@@ -89,6 +98,10 @@ public class PlayerAvatar : NetworkBehaviour
         //Debug.Log("PlayerAvatar::CmdUpdateScale: Scaling to " + newScale.z.ToString());
         objScale = newScale;
         transform.localScale = objScale;
+
+        //Scale hands
+        left.transform.localScale = objScale;
+        right.transform.localScale = objScale;
     }
 
     public void ScaleChange(Vector3 newScaleValue)
@@ -97,6 +110,10 @@ public class PlayerAvatar : NetworkBehaviour
         // Most likely unnecessary, but just to make absolutely sure all variables do get updated
         objScale = newScaleValue;
         transform.localScale = objScale;
+
+        //Scale hands
+        left.transform.localScale = objScale;
+        right.transform.localScale = objScale;
     }
 
     [Command]

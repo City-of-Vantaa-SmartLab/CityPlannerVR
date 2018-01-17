@@ -25,6 +25,7 @@ public class HandPositionSetter : NetworkBehaviour
 			// Have to do it "manually". Network the scaling like in player avatar / ScaleObject.cs.
 			// Basically instead of client changing the object scale, tell the server to change the object scale.
             transform.localScale = playerVR.transform.localScale * 0.07f;
+            
 
             yield return null;
         }
