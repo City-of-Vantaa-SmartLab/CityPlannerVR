@@ -99,18 +99,10 @@ public class PlayerAvatar : NetworkBehaviour
         //Debug.Log("PlayerAvatar::CmdUpdateScale: Scaling to " + newScale.z.ToString());
         objScale = newScale;
         transform.localScale = objScale;
-
-        if (playerVR.transform.localScale == new Vector3(1, 1, 1))
+        if (isLocalPlayer)
         {
-            //Scale hands
-            left.transform.localScale = new Vector3(0.07f, 0.07f, 0.07f);
-            right.transform.localScale = new Vector3(0.07f, 0.07f, 0.07f);
-        }
-        else if(playerVR.transform.localScale == new Vector3(0.025f, 0.025f, 0.025f))
-        {
-            //Scale hands
-            left.transform.localScale = new Vector3(0.00175f, 0.00175f, 0.00175f);
-            right.transform.localScale = new Vector3(0.00175f, 0.00175f, 0.00175f);
+            left.transform.localScale = playerVR.transform.localScale * 0.07f;
+            right.transform.localScale = playerVR.transform.localScale * 0.07f;
         }
     }
 
