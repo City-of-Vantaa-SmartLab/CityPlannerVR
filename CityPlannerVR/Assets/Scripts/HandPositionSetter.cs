@@ -13,23 +13,34 @@ using UnityEngine.VR;
 public class HandPositionSetter : NetworkBehaviour
 {
     private GameObject playerVR;
+    
 
     IEnumerator TrackNodeCoroutine(UnityEngine.XR.XRNode node)
     {
         while (true)
         {
-            //        transform.rotation = UnityEngine.XR.InputTracking.GetLocalRotation(node);
-            //         TODO: Position is incorrect when scaling player avatar
-            //        transform.position = playerVR.transform.position + UnityEngine.XR.InputTracking.GetLocalPosition(node);
-            //         TODO: Unity does not seem to automatically network object scale.
-            //Have to do it "manually". Network the scaling like in player avatar / ScaleObject.cs.
-            //Basically instead of client changing the object scale, tell the server to change the object scale.
-            //        transform.localScale = playerVR.transform.localScale * 0.07f;
+            //We are big
+            if(playerVR.transform.localScale == new Vector3(1, 1, 1))
+            {
+                transform.rotation = UnityEngine.XR.InputTracking.GetLocalRotation(node);
+                //TODO: Position is incorrect when scaling player avatar
+                transform.position = playerVR.transform.position + UnityEngine.XR.InputTracking.GetLocalPosition(node);
+                //TODO: Unity does not seem to automatically network object scale.
+                //Have to do it "manually".Network the scaling like in player avatar / ScaleObject.cs.
+                //Basically instead of client changing the object scale, tell the server to change the object scale.
+                transform.localScale = playerVR.transform.localScale * 0.07f;
+            }
+            //We are small
+            else if(playerVR.transform.localScale == new Vector3(0.025f, 0.025f, 0.025f))
+            {
+                transform.rotation = UnityEngine.XR.InputTracking.GetLocalRotation(node);
+                transform.position = playerVR.transform.position + UnityEngine.XR.InputTracking.GetLocalPosition(node) * 0.025f;
+                transform.localScale = playerVR.transform.localScale * 0.07f;
+            }
 
+            //transform.localPosition = Vector3.zero;
+            //transform.localRotation = Quaternion.identity;
 
-            transform.localPosition = Vector3.zero;
-            transform.localRotation = Quaternion.identity;
-            
 
             yield return null;
         }

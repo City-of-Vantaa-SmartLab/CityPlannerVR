@@ -60,8 +60,8 @@ public class PlayerAvatar : NetworkBehaviour
         NetworkServer.SpawnWithClientAuthority(right, connectionToClient);
 
         //Sets left and right hand to be the child of Hand1 and Hand2 in Player gameObject
-        left.transform.parent = playerVR.transform.GetChild(0).transform.Find("Hand1");
-        right.transform.parent = playerVR.transform.GetChild(0).transform.Find("Hand2");
+        //left.transform.parent = playerVR.transform.GetChild(0).transform.Find("Hand1");
+        //right.transform.parent = playerVR.transform.GetChild(0).transform.Find("Hand2");
 
         // Tell client that these are its hands and it should keep track of them
         left.GetComponent<HandPositionSetter>().TargetSetHand(connectionToClient, UnityEngine.XR.XRNode.LeftHand);
@@ -79,12 +79,12 @@ public class PlayerAvatar : NetworkBehaviour
 
             transform.position = nodePos;
 
-            playerHead.transform.rotation = nodeRot;
+            playerHead.transform.localRotation = nodeRot;
             //playerHead.transform.position = nodePos;
             //playerHead.transform.localScale = playerVR.transform.localScale;
 
             Vector3 newBodyRot = new Vector3(0, nodeRot.eulerAngles.y, 0);
-            playerBody.transform.rotation = Quaternion.Euler(newBodyRot);
+            playerBody.transform.localRotation = Quaternion.Euler(newBodyRot);
             // Body position is lower than head position
             //playerBody.transform.position = new Vector3(nodePos.x, nodePos.y - 0.8f * playerVR.transform.localScale.y, nodePos.z);
             //playerBody.transform.localScale = Vector3.Scale(playerVR.transform.localScale, playerBodyScaleFactor);
