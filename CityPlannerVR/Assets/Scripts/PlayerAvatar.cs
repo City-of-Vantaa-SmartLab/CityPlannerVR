@@ -100,9 +100,18 @@ public class PlayerAvatar : NetworkBehaviour
         objScale = newScale;
         transform.localScale = objScale;
 
-        //Scale hands
-        left.transform.localScale = playerVR.transform.localScale * 0.07f;
-        right.transform.localScale = playerVR.transform.localScale * 0.07f;
+        if (playerVR.transform.localScale == new Vector3(1, 1, 1))
+        {
+            //Scale hands
+            left.transform.localScale = new Vector3(0.07f, 0.07f, 0.07f);
+            right.transform.localScale = new Vector3(0.07f, 0.07f, 0.07f);
+        }
+        else if(playerVR.transform.localScale == new Vector3(0.025f, 0.025f, 0.025f))
+        {
+            //Scale hands
+            left.transform.localScale = new Vector3(0.00175f, 0.00175f, 0.00175f);
+            right.transform.localScale = new Vector3(0.00175f, 0.00175f, 0.00175f);
+        }
     }
 
     public void ScaleChange(Vector3 newScaleValue)
@@ -111,10 +120,6 @@ public class PlayerAvatar : NetworkBehaviour
         // Most likely unnecessary, but just to make absolutely sure all variables do get updated
         objScale = newScaleValue;
         transform.localScale = objScale;
-
-        //Scale hands
-        left.transform.localScale = playerVR.transform.localScale * 0.07f;
-        right.transform.localScale = playerVR.transform.localScale * 0.07f;
     }
 
     [Command]
