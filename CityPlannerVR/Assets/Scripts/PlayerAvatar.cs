@@ -56,15 +56,16 @@ public class PlayerAvatar : NetworkBehaviour
         left = Instantiate(handPositionSetterPrefab);
         right = Instantiate(handPositionSetterPrefab);
 
-        left.transform.parent = playerVR.transform.Find("Hand1").transform;
-        right.transform.parent = playerVR.transform.Find("Hand2").transform;
-
         NetworkServer.SpawnWithClientAuthority(left, connectionToClient);
         NetworkServer.SpawnWithClientAuthority(right, connectionToClient);
 
+        //Sets left and right hand to be the child of Hand1 and Hand2 in Player gameObject
+        left.transform.parent = playerVR.transform.GetChild(0).transform.Find("Hand1");
+        right.transform.parent = playerVR.transform.GetChild(0).transform.Find("Hand2");
+
         // Tell client that these are its hands and it should keep track of them
-        //left.GetComponent<HandPositionSetter>().TargetSetHand(connectionToClient, UnityEngine.XR.XRNode.LeftHand);
-        //right.GetComponent<HandPositionSetter>().TargetSetHand(connectionToClient, UnityEngine.XR.XRNode.RightHand);
+        left.GetComponent<HandPositionSetter>().TargetSetHand(connectionToClient, UnityEngine.XR.XRNode.LeftHand);
+        right.GetComponent<HandPositionSetter>().TargetSetHand(connectionToClient, UnityEngine.XR.XRNode.RightHand);
     }
 
     IEnumerator TrackHeadCoroutine()
