@@ -21,26 +21,40 @@ public class HandPositionSetter : NetworkBehaviour
     {
         while (true)
         {
+
+            transform.rotation = UnityEngine.XR.InputTracking.GetLocalRotation(node);
+            //TODO: Unity does not seem to automatically network object scale.
+            //Have to do it "manually". Network the scaling like in player avatar / ScaleObject.cs.
+            //Basically instead of client changing the object scale, tell the server to change the object scale.
+
+
             //Values are harcoded because time issues. Change later to something smarter if time
-            if(playerVR.transform.localScale == new Vector3(1, 1, 1))
+            if (playerVR.transform.localScale == new Vector3(1, 1, 1))
             {
                 //We are big
-                transform.rotation = UnityEngine.XR.InputTracking.GetLocalRotation(node);
                 transform.position = playerVR.transform.position + UnityEngine.XR.InputTracking.GetLocalPosition(node);
-                //TODO: Unity does not seem to automatically network object scale.
-                //Have to do it "manually". Network the scaling like in player avatar / ScaleObject.cs.
-                //Basically instead of client changing the object scale, tell the server to change the object scale.
-                transform.localScale = playerVR.transform.localScale * 0.07f;
-
             }
             
             else if(playerVR.transform.localScale == new Vector3(0.025f, 0.025f, 0.025f))
             {
                 //We are small
-                transform.rotation = UnityEngine.XR.InputTracking.GetLocalRotation(node);
                 transform.position = playerVR.transform.position + UnityEngine.XR.InputTracking.GetLocalPosition(node) * 0.025f;
-                transform.localScale = playerVR.transform.localScale * 0.07f;
             }
+
+            //TESTAA TÄTÄ JA TOISTA
+            //--------------------------------------------------------------------------------------------
+            transform.localScale = playerVR.transform.localScale * 0.07f;
+            if (isLocalPlayer)
+            {
+                CmdScaleHands(transform.localScale);
+            }
+            //--------------------------------------------------------------------------------------------
+            //--------------------------------------------------------------------------------------------
+            //if (isLocalPlayer)
+            //{
+            //    CmdScaleHands(playerVR.transform.localScale * 0.07f);
+            //}
+            //--------------------------------------------------------------------------------------------
 
             yield return null;
         }
@@ -54,5 +68,12 @@ public class HandPositionSetter : NetworkBehaviour
 
         StartCoroutine(TrackNodeCoroutine(node));
         //Debug.Log("HandPositionSetter::TargetSetHand: Hand set");
+    }
+
+    [Command]
+    public void CmdScaleHands(Vector3 newScale)
+    {
+        objScale = newScale;
+        transform.localScale = objScale;
     }
 }

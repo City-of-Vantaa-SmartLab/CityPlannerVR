@@ -99,11 +99,6 @@ public class PlayerAvatar : NetworkBehaviour
         //Debug.Log("PlayerAvatar::CmdUpdateScale: Scaling to " + newScale.z.ToString());
         objScale = newScale;
         transform.localScale = objScale;
-        if (isLocalPlayer)
-        {
-            left.transform.localScale = playerVR.transform.localScale * 0.07f;
-            right.transform.localScale = playerVR.transform.localScale * 0.07f;
-        }
     }
 
     public void ScaleChange(Vector3 newScaleValue)
