@@ -101,8 +101,8 @@ public class PlayerAvatar : NetworkBehaviour
         transform.localScale = objScale;
 
         //Scale hands
-        left.transform.localScale = objScale;
-        right.transform.localScale = objScale;
+        left.transform.localScale = playerVR.transform.localScale * 0.07f;
+        right.transform.localScale = playerVR.transform.localScale * 0.07f;
     }
 
     public void ScaleChange(Vector3 newScaleValue)
@@ -113,8 +113,8 @@ public class PlayerAvatar : NetworkBehaviour
         transform.localScale = objScale;
 
         //Scale hands
-        left.transform.localScale = objScale;
-        right.transform.localScale = objScale;
+        left.transform.localScale = playerVR.transform.localScale * 0.07f;
+        right.transform.localScale = playerVR.transform.localScale * 0.07f;
     }
 
     [Command]
