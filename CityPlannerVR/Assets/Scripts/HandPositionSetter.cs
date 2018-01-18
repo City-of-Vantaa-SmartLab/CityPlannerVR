@@ -51,10 +51,10 @@ public class HandPositionSetter : NetworkBehaviour
 
             //TESTAA TÄTÄ
             //--------------------------------------------------------------------------------------------------------------------------------------
-            transform.localScale = playerVR.transform.localScale * 0.07f;
+            //transform.localScale = playerVR.transform.localScale * 0.07f;
             //if (isLocalPlayer)
             //{
-                CmdScaleHands(transform.localScale);
+            CmdCallHandScale(playerVR.transform.localScale * 0.07f);
             //}
             //--------------------------------------------------------------------------------------------------------------------------------------
 
@@ -62,12 +62,18 @@ public class HandPositionSetter : NetworkBehaviour
         }
     }
 
-    [Command]
-    public void CmdScaleHands(Vector3 newScale)
+    [Client]
+    public void ScaleHands(Vector3 newScale)
     {
         //Tells the server to scale the hands for other clients also
-        Debug.Log("Scale for hand "+ GetComponent<NetworkIdentity>().netId + " is " + newScale.ToString("F5"));
+        //Debug.Log("Scale for hand "+ GetComponent<NetworkIdentity>().netId + " is " + newScale.ToString("F5"));
         objScale = newScale;
         transform.localScale = objScale;
+    }
+
+    [Command]
+    public void CmdCallHandScale(Vector3 newScale)
+    {
+        ScaleHands(newScale);
     }
 }
