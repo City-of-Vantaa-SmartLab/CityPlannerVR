@@ -17,8 +17,8 @@ public class PlayerAvatar : NetworkBehaviour
     private Vector3 playerBodyScaleFactor;
 
     //These two can be deleted
-    //private GameObject left;
-    //private GameObject right;
+    private GameObject left;
+    private GameObject right;
 
     [SyncVar(hook = "ScaleChange")]
     public Vector3 objScale;
@@ -54,8 +54,8 @@ public class PlayerAvatar : NetworkBehaviour
     [Command]
     private void CmdSpawnHands()
     {
-        GameObject left = Instantiate(handPositionSetterPrefab);
-        GameObject right = Instantiate(handPositionSetterPrefab);
+        left = Instantiate(handPositionSetterPrefab);
+        right = Instantiate(handPositionSetterPrefab);
 
         NetworkServer.SpawnWithClientAuthority(left, connectionToClient);
         NetworkServer.SpawnWithClientAuthority(right, connectionToClient);
