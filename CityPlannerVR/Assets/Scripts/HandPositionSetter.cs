@@ -21,40 +21,36 @@ public class HandPositionSetter : NetworkBehaviour
     {
         while (true)
         {
+            //--------------------------------------------------------------------------------------------------------------------------------------
 
             transform.rotation = UnityEngine.XR.InputTracking.GetLocalRotation(node);
-            //TODO: Unity does not seem to automatically network object scale.
-            //Have to do it "manually". Network the scaling like in player avatar / ScaleObject.cs.
-            //Basically instead of client changing the object scale, tell the server to change the object scale.
 
-
-            //Values are harcoded because time issues. Change later to something smarter if time
             if (playerVR.transform.localScale == new Vector3(1, 1, 1))
             {
-                //We are big
                 transform.position = playerVR.transform.position + UnityEngine.XR.InputTracking.GetLocalPosition(node);
             }
-            
-            else if(playerVR.transform.localScale == new Vector3(0.025f, 0.025f, 0.025f))
+
+            else if (playerVR.transform.localScale == new Vector3(0.025f, 0.025f, 0.025f))
             {
-                //We are small
                 transform.position = playerVR.transform.position + UnityEngine.XR.InputTracking.GetLocalPosition(node) * 0.025f;
             }
 
+            //--------------------------------------------------------------------------------------------------------------------------------------
+
             //TESTAA TÄTÄ JA TOISTA
-            //--------------------------------------------------------------------------------------------
+
+            //--------------------------------------------------------------------------------------------------------------------------------------
             transform.localScale = playerVR.transform.localScale * 0.07f;
             if (isLocalPlayer)
             {
                 CmdScaleHands(transform.localScale);
             }
-            //--------------------------------------------------------------------------------------------
-            //--------------------------------------------------------------------------------------------
+            //--------------------------------------------------------------------------------------------------------------------------------------
             //if (isLocalPlayer)
             //{
             //    CmdScaleHands(playerVR.transform.localScale * 0.07f);
             //}
-            //--------------------------------------------------------------------------------------------
+            //--------------------------------------------------------------------------------------------------------------------------------------
 
             yield return null;
         }
