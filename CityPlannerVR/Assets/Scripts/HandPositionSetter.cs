@@ -14,8 +14,8 @@ public class HandPositionSetter : NetworkBehaviour
 {
     private GameObject playerVR;
 
-    private Vector3 objScale;
-
+    [SyncVar]
+    Vector3 objScale;
 
     [TargetRpc]
     public void TargetSetHand(NetworkConnection target, UnityEngine.XR.XRNode node)
@@ -51,10 +51,10 @@ public class HandPositionSetter : NetworkBehaviour
 
             //TESTAA TÄTÄ
             //--------------------------------------------------------------------------------------------------------------------------------------
-            //transform.localScale = playerVR.transform.localScale * 0.07f;
+            transform.localScale = playerVR.transform.localScale * 0.07f;
             //if (isLocalPlayer)
             //{
-            CallHandScale(playerVR.transform.localScale * 0.07f);
+            CallHandScale(transform.localScale);
             //}
             //--------------------------------------------------------------------------------------------------------------------------------------
 
@@ -62,24 +62,28 @@ public class HandPositionSetter : NetworkBehaviour
         }
     }
 
-    [Client]
-    public void ScaleHands(Vector3 newScale)
-    {
-        //Tells the server to scale the hands for other clients also
-        Debug.Log("Scale for hand " + GetComponent<NetworkIdentity>().netId + " is " + newScale.ToString("F5"));
-        objScale = newScale;
-        transform.localScale = objScale;
-    }
-
-    [Command]
-    public void CmdHandScale(Vector3 newScale)
-    {
-        ScaleHands(newScale);
-    }
 
     [Client]
     public void CallHandScale(Vector3 newScale)
     {
         CmdHandScale(newScale);
+    }
+
+    [Command]
+    public void CmdHandScale(Vector3 newScale)
+    {
+        //Tells the server to scale the hands for other clients also
+        //Debug.Log("Scale for hand " + GetComponent<NetworkIdentity>().netId + " is " + newScale.ToString("F5"));
+        objScale = newScale;
+        transform.localScale = objScale;
+    }
+
+    [Client]
+    public void ScaleHands(Vector3 newScale)
+    {
+        //Tells the server to scale the hands for other clients also
+        //Debug.Log("Scale for hand " + GetComponent<NetworkIdentity>().netId + " is " + newScale.ToString("F5"));
+        objScale = newScale;
+        transform.localScale = objScale;
     }
 }
