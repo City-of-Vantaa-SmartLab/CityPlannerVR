@@ -95,7 +95,6 @@ public class PlayerAvatar : NetworkBehaviour
             //playerBody.transform.position = new Vector3(nodePos.x, nodePos.y - 0.8f * playerVR.transform.localScale.y, nodePos.z);
             //playerBody.transform.localScale = Vector3.Scale(playerVR.transform.localScale, playerBodyScaleFactor);
 
-
             yield return null;
         }
     }

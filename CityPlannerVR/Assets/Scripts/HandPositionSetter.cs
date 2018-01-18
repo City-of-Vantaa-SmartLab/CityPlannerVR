@@ -54,7 +54,7 @@ public class HandPositionSetter : NetworkBehaviour
             transform.localScale = playerVR.transform.localScale * 0.07f;
             //if (isLocalPlayer)
             //{
-            CallHandScale(transform.localScale);
+            RpcCallHandScale(transform.localScale);
             //}
             //--------------------------------------------------------------------------------------------------------------------------------------
 
@@ -63,8 +63,8 @@ public class HandPositionSetter : NetworkBehaviour
     }
 
 
-    [Client]
-    public void CallHandScale(Vector3 newScale)
+    [ClientRpc]
+    public void RpcCallHandScale(Vector3 newScale)
     {
         CmdHandScale(newScale);
     }
