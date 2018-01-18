@@ -15,46 +15,7 @@ public class HandPositionSetter : NetworkBehaviour
     private GameObject playerVR;
 
     private Vector3 objScale;
-    
 
-    IEnumerator TrackNodeCoroutine(UnityEngine.XR.XRNode node)
-    {
-        while (true)
-        {
-            //--------------------------------------------------------------------------------------------------------------------------------------
-
-            transform.rotation = UnityEngine.XR.InputTracking.GetLocalRotation(node);
-
-            if (playerVR.transform.localScale == new Vector3(1, 1, 1))
-            {
-                transform.position = playerVR.transform.position + UnityEngine.XR.InputTracking.GetLocalPosition(node);
-            }
-
-            else if (playerVR.transform.localScale == new Vector3(0.025f, 0.025f, 0.025f))
-            {
-                transform.position = playerVR.transform.position + UnityEngine.XR.InputTracking.GetLocalPosition(node) * 0.025f;
-            }
-
-            //--------------------------------------------------------------------------------------------------------------------------------------
-
-            //TESTAA TÄTÄ JA TOISTA
-
-            //--------------------------------------------------------------------------------------------------------------------------------------
-            transform.localScale = playerVR.transform.localScale * 0.07f;
-            if (isLocalPlayer)
-            {
-                CmdScaleHands(transform.localScale);
-            }
-            //--------------------------------------------------------------------------------------------------------------------------------------
-            //if (isLocalPlayer)
-            //{
-            //    CmdScaleHands(playerVR.transform.localScale * 0.07f);
-            //}
-            //--------------------------------------------------------------------------------------------------------------------------------------
-
-            yield return null;
-        }
-    }
 
     [TargetRpc]
     public void TargetSetHand(NetworkConnection target, UnityEngine.XR.XRNode node)
@@ -66,9 +27,46 @@ public class HandPositionSetter : NetworkBehaviour
         //Debug.Log("HandPositionSetter::TargetSetHand: Hand set");
     }
 
+    IEnumerator TrackNodeCoroutine(UnityEngine.XR.XRNode node)
+    {
+        while (true)
+        {
+            transform.rotation = UnityEngine.XR.InputTracking.GetLocalRotation(node);
+
+            //Scaling the playerVR (Player) down causes some funky stuff with the position calculations. These checks are needed to counter that.
+            //(the check values are hardcoded for now. Solution can be changed if there is time).
+
+            //Check if we are in god mode (big)
+            if (playerVR.transform.localScale == new Vector3(1, 1, 1))
+            {
+                transform.position = playerVR.transform.position + UnityEngine.XR.InputTracking.GetLocalPosition(node);
+            }
+
+            //Check if we are in pedestrian mode (small)
+            else if (playerVR.transform.localScale == new Vector3(0.025f, 0.025f, 0.025f))
+            {
+                //                                                                                                       all the axes are same for scale, so no matter which one is used. (If they're not, something is wrong and it should be fixed)
+                transform.position = playerVR.transform.position + UnityEngine.XR.InputTracking.GetLocalPosition(node) * playerVR.transform.localScale.x;
+            }
+
+            //TESTAA TÄTÄ
+            //--------------------------------------------------------------------------------------------------------------------------------------
+            transform.localScale = playerVR.transform.localScale * 0.07f;
+            //if (isLocalPlayer)
+            //{
+                CmdScaleHands(transform.localScale);
+            //}
+            //--------------------------------------------------------------------------------------------------------------------------------------
+
+            yield return null;
+        }
+    }
+
     [Command]
     public void CmdScaleHands(Vector3 newScale)
     {
+        //Tells the server to scale the hands for other clients also
+        Debug.Log("Scale for hand "+ GetComponent<NetworkIdentity>().netId + " is " + newScale.ToString("F5"));
         objScale = newScale;
         transform.localScale = objScale;
     }

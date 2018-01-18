@@ -16,8 +16,9 @@ public class PlayerAvatar : NetworkBehaviour
 
     private Vector3 playerBodyScaleFactor;
 
-    private GameObject left;
-    private GameObject right;
+    //These two can be deleted
+    //private GameObject left;
+    //private GameObject right;
 
     [SyncVar(hook = "ScaleChange")]
     public Vector3 objScale;
@@ -43,9 +44,9 @@ public class PlayerAvatar : NetworkBehaviour
 
     IEnumerator MakeSureSetHand()
     {
-        //// Vive controllers might take a while to become active at
-        //// startup so it's nice to wait for a second before 
-        //// attempting to do something with them.
+        // Vive controllers might take a while to become active at
+        // startup so it's nice to wait for a second before 
+        // attempting to do something with them.
         yield return new WaitForSeconds(1f);
         CmdSpawnHands();
     }
@@ -53,15 +54,11 @@ public class PlayerAvatar : NetworkBehaviour
     [Command]
     private void CmdSpawnHands()
     {
-        left = Instantiate(handPositionSetterPrefab);
-        right = Instantiate(handPositionSetterPrefab);
+        GameObject left = Instantiate(handPositionSetterPrefab);
+        GameObject right = Instantiate(handPositionSetterPrefab);
 
         NetworkServer.SpawnWithClientAuthority(left, connectionToClient);
         NetworkServer.SpawnWithClientAuthority(right, connectionToClient);
-
-        //Sets left and right hand to be the child of Hand1 and Hand2 in Player gameObject
-        //left.transform.parent = playerVR.transform.GetChild(0).transform.Find("Hand1");
-        //right.transform.parent = playerVR.transform.GetChild(0).transform.Find("Hand2");
 
         // Tell client that these are its hands and it should keep track of them
         left.GetComponent<HandPositionSetter>().TargetSetHand(connectionToClient, UnityEngine.XR.XRNode.LeftHand);
@@ -77,17 +74,27 @@ public class PlayerAvatar : NetworkBehaviour
             Vector3 nodePos = Camera.main.transform.position; // This still works when player gets scaled down/up, above does not
             Quaternion nodeRot = UnityEngine.XR.InputTracking.GetLocalRotation(node);
 
+            //moves the "Avatar" gameobject which has head and body as children
             transform.position = nodePos;
 
+            //Rotates the head of player
             playerHead.transform.localRotation = nodeRot;
+
+            //Will not delete these yet, but if you can read this, these can be deleted
             //playerHead.transform.position = nodePos;
             //playerHead.transform.localScale = playerVR.transform.localScale;
 
+            
+            
+            //Rotates the body of player
             Vector3 newBodyRot = new Vector3(0, nodeRot.eulerAngles.y, 0);
             playerBody.transform.localRotation = Quaternion.Euler(newBodyRot);
+
+            //Will not delete these yet, but if you can read this, these can be deleted
             // Body position is lower than head position
             //playerBody.transform.position = new Vector3(nodePos.x, nodePos.y - 0.8f * playerVR.transform.localScale.y, nodePos.z);
             //playerBody.transform.localScale = Vector3.Scale(playerVR.transform.localScale, playerBodyScaleFactor);
+
 
             yield return null;
         }

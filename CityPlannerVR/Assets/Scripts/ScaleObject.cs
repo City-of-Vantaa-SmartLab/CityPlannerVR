@@ -17,6 +17,7 @@ public class ScaleObject : MonoBehaviour {
 
     private GameObject localPlayer = null;
 
+
     public void Scale()
     {
         //Debug.Log("ScalePlayer::Scale: Scaling " + objectToScale.gameObject.name);
