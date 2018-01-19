@@ -105,8 +105,6 @@ public class PlayerAvatar : NetworkBehaviour
         //Debug.Log("PlayerAvatar::CmdUpdateScale: Scaling to " + newScale.z.ToString());
         objScale = newScale;
         transform.localScale = objScale;
-        left.transform.localScale = left.GetComponent<HandPositionSetter>().objScale;
-        right.transform.localScale = right.GetComponent<HandPositionSetter>().objScale;
     }
 
     public void ScaleChange(Vector3 newScaleValue)
@@ -138,4 +136,29 @@ public class PlayerAvatar : NetworkBehaviour
         }
     }
 
+    //Is used to store the last and current position of the player
+    //Vector3[] positions = new Vector3[2];
+
+    //public void StopJumpingFromTable()
+    //{
+    //    //Jos ollaan pieniä
+    //    if (playerVR.transform.localScale == new Vector3(0.025f, 0.025f, 0.025f))
+    //    {
+    //        for (int i = 0; i < positions.Length; i++)
+    //        {
+    //            if(positions[i] == null)
+    //            {
+    //                if(positions[i] != playerVR.transform.position)
+    //                {
+    //                    positions[i] = playerVR.transform.position;
+    //                }
+    //            }
+    //        }
+
+    //        if (playerVR.transform.position.y <= 3)
+    //        {
+
+    //        }
+    //    }
+    //}
 }

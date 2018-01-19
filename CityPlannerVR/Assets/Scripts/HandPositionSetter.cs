@@ -51,39 +51,48 @@ public class HandPositionSetter : NetworkBehaviour
 
             //TESTAA TÄTÄ
             //--------------------------------------------------------------------------------------------------------------------------------------
-            transform.localScale = playerVR.transform.localScale * 0.07f;
-            //if (isLocalPlayer)
-            //{
-            //RpcCallHandScale(transform.localScale);
-            //}
+            ScaleHands(playerVR.transform.localScale * 0.07f);
+            //transform.localScale = objScale;
+
             //--------------------------------------------------------------------------------------------------------------------------------------
 
             yield return null;
         }
     }
 
-
-    [ClientRpc]
-    public void RpcCallHandScale(Vector3 newScale)
+    void ScaleHands(Vector3 scale)
     {
-        CmdHandScale(newScale);
-    }
+        if (!isServer)
+        {
+            return;
+        }
 
-    [Command]
-    public void CmdHandScale(Vector3 newScale)
-    {
-        //Tells the server to scale the hands for other clients also
-        //Debug.Log("Scale for hand " + GetComponent<NetworkIdentity>().netId + " is " + newScale.ToString("F5"));
-        objScale = newScale;
+        objScale = scale;
         transform.localScale = objScale;
     }
 
-    [Client]
-    public void ScaleHands(Vector3 newScale)
-    {
-        //Tells the server to scale the hands for other clients also
-        //Debug.Log("Scale for hand " + GetComponent<NetworkIdentity>().netId + " is " + newScale.ToString("F5"));
-        objScale = newScale;
-        transform.localScale = objScale;
-    }
+
+    //[Client]
+    //public void RpcCallHandScale(Vector3 newScale)
+    //{
+    //    CmdHandScale(newScale);
+    //}
+
+    //[Command]
+    //public void CmdHandScale(Vector3 newScale)
+    //{
+    //    //Tells the server to scale the hands for other clients also
+    //    //Debug.Log("Scale for hand " + GetComponent<NetworkIdentity>().netId + " is " + newScale.ToString("F5"));
+    //    objScale = newScale;
+    //    transform.localScale = objScale;
+    //}
+
+    //[Client]
+    //public void ScaleHands(Vector3 newScale)
+    //{
+    //    //Tells the server to scale the hands for other clients also
+    //    //Debug.Log("Scale for hand " + GetComponent<NetworkIdentity>().netId + " is " + newScale.ToString("F5"));
+    //    objScale = newScale;
+    //    transform.localScale = objScale;
+    //}
 }
