@@ -16,9 +16,11 @@ public class PlayerAvatar : NetworkBehaviour
 
     private Vector3 playerBodyScaleFactor;
 
-    //These two can be deleted
     private GameObject left;
     private GameObject right;
+
+    //used to determine the height of the table
+    private GameObject cityTeleportArea;
 
     [SyncVar(hook = "ScaleChange")]
     public Vector3 objScale;
@@ -37,7 +39,8 @@ public class PlayerAvatar : NetworkBehaviour
 
         playerBodyScaleFactor = playerBody.transform.localScale;
 
-
+        cityTeleportArea = GameObject.Find("Environment/NewTikkuraittiModel/TeleportAreaCity");
+        
         StartCoroutine(TrackHeadCoroutine());
         StartCoroutine(MakeSureSetHand());   
     }
@@ -84,6 +87,9 @@ public class PlayerAvatar : NetworkBehaviour
             Vector3 newBodyRot = new Vector3(0, nodeRot.eulerAngles.y, 0);
             playerBody.transform.localRotation = Quaternion.Euler(newBodyRot);
 
+            //Checks if player tries to jump down from the table
+            CheckPlayerPosition();
+
             yield return null;
         }
     }
@@ -126,28 +132,50 @@ public class PlayerAvatar : NetworkBehaviour
     }
 
     //Is used to store the last and current position of the player
-    //Vector3[] positions = new Vector3[2];
+    List<Vector3> positions_list = new List<Vector3>();
 
-    //public void StopJumpingFromTable()
-    //{
-    //    //Jos ollaan pieniä
-    //    if (playerVR.transform.localScale == new Vector3(0.025f, 0.025f, 0.025f))
-    //    {
-    //        for (int i = 0; i < positions.Length; i++)
-    //        {
-    //            if(positions[i] == null)
-    //            {
-    //                if(positions[i] != playerVR.transform.position)
-    //                {
-    //                    positions[i] = playerVR.transform.position;
-    //                }
-    //            }
-    //        }
+    //Keeps track of the last 2 positions player had
+    public void TrackPlayerPosition()
+    {
+        //if the list is empty
+        if(positions_list.Count == 0)
+        {
+            positions_list.Add(playerVR.transform.position);
+        }
+        //if there is 1 element in the list
+        else if(positions_list.Count == 1)
+        {
+            //jos nykyinen positio ei ole sama, kuin edellinen
+            if(positions_list[0] != playerVR.transform.position)
+            {
+                positions_list.Add(playerVR.transform.position);
+            }
+        }
+        //if list is "full" (Count > 2)
+        else
+        {
+            //if there is more than two positions remove the first one (we don't need to know it anymore)
+            RemoveFromPositions_list();
+        }
+    }
 
-    //        if (playerVR.transform.position.y <= 3)
-    //        {
+    //Checks if player tried to jump down from the table
+    void CheckPlayerPosition()
+    {
+        //if we are on pedestrian mode (small) (hardcoded)
+        if (playerVR.transform.localScale == new Vector3(0.025f, 0.025f, 0.025f))
+        {
+            TrackPlayerPosition();
 
-    //        }
-    //    }
-    //}
+            if (playerVR.transform.position.y < cityTeleportArea.transform.position.y)
+            {
+                playerVR.transform.position = positions_list[0];
+            }
+        }
+    }
+
+    public void RemoveFromPositions_list()
+    {
+        positions_list.RemoveAt(0);
+    }
 }
