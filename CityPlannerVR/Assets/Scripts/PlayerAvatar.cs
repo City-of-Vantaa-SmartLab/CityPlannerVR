@@ -78,22 +78,11 @@ public class PlayerAvatar : NetworkBehaviour
             transform.position = nodePos;
 
             //Rotates the head of player
-            playerHead.transform.localRotation = nodeRot;
-
-            //Will not delete these yet, but if you can read this, these can be deleted
-            //playerHead.transform.position = nodePos;
-            //playerHead.transform.localScale = playerVR.transform.localScale;
-
-            
+            playerHead.transform.localRotation = nodeRot;            
             
             //Rotates the body of player
             Vector3 newBodyRot = new Vector3(0, nodeRot.eulerAngles.y, 0);
             playerBody.transform.localRotation = Quaternion.Euler(newBodyRot);
-
-            //Will not delete these yet, but if you can read this, these can be deleted
-            // Body position is lower than head position
-            //playerBody.transform.position = new Vector3(nodePos.x, nodePos.y - 0.8f * playerVR.transform.localScale.y, nodePos.z);
-            //playerBody.transform.localScale = Vector3.Scale(playerVR.transform.localScale, playerBodyScaleFactor);
 
             yield return null;
         }

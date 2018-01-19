@@ -49,53 +49,24 @@ public class HandPositionSetter : NetworkBehaviour
                 transform.position = playerVR.transform.position + UnityEngine.XR.InputTracking.GetLocalPosition(node) * playerVR.transform.localScale.x;
             }
 
-            //TESTAA TÄTÄ
-            //--------------------------------------------------------------------------------------------------------------------------------------
             CmdScaleHands(playerVR.transform.localScale * 0.07f);
-            //transform.localScale = objScale;
-
-            //--------------------------------------------------------------------------------------------------------------------------------------
 
             yield return null;
         }
     }
 
+    //Does the hand scaling on the server
     [Command]
     void CmdScaleHands(Vector3 scale)
     {
-
         objScale = scale;
         transform.localScale = objScale;
     }
 
+    //Is used for the syncVar to work correctly
     void HookScaleHands(Vector3 scale)
     {
         objScale = scale;
         transform.localScale = objScale;
     }
-
-
-    //[Client]
-    //public void RpcCallHandScale(Vector3 newScale)
-    //{
-    //    CmdHandScale(newScale);
-    //}
-
-    //[Command]
-    //public void CmdHandScale(Vector3 newScale)
-    //{
-    //    //Tells the server to scale the hands for other clients also
-    //    //Debug.Log("Scale for hand " + GetComponent<NetworkIdentity>().netId + " is " + newScale.ToString("F5"));
-    //    objScale = newScale;
-    //    transform.localScale = objScale;
-    //}
-
-    //[Client]
-    //public void ScaleHands(Vector3 newScale)
-    //{
-    //    //Tells the server to scale the hands for other clients also
-    //    //Debug.Log("Scale for hand " + GetComponent<NetworkIdentity>().netId + " is " + newScale.ToString("F5"));
-    //    objScale = newScale;
-    //    transform.localScale = objScale;
-    //}
 }
