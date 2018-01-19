@@ -105,6 +105,8 @@ public class PlayerAvatar : NetworkBehaviour
         //Debug.Log("PlayerAvatar::CmdUpdateScale: Scaling to " + newScale.z.ToString());
         objScale = newScale;
         transform.localScale = objScale;
+        left.transform.localScale = left.GetComponent<HandPositionSetter>().objScale;
+        right.transform.localScale = right.GetComponent<HandPositionSetter>().objScale;
     }
 
     public void ScaleChange(Vector3 newScaleValue)
@@ -135,4 +137,5 @@ public class PlayerAvatar : NetworkBehaviour
             networkIdentity.AssignClientAuthority(player.connectionToClient);
         }
     }
+
 }

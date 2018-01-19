@@ -15,7 +15,7 @@ public class HandPositionSetter : NetworkBehaviour
     private GameObject playerVR;
 
     [SyncVar]
-    Vector3 objScale;
+    public Vector3 objScale;
 
     [TargetRpc]
     public void TargetSetHand(NetworkConnection target, UnityEngine.XR.XRNode node)
@@ -54,7 +54,7 @@ public class HandPositionSetter : NetworkBehaviour
             transform.localScale = playerVR.transform.localScale * 0.07f;
             //if (isLocalPlayer)
             //{
-            RpcCallHandScale(transform.localScale);
+            //RpcCallHandScale(transform.localScale);
             //}
             //--------------------------------------------------------------------------------------------------------------------------------------
 
