@@ -6,7 +6,6 @@ using UnityEngine.VR;
 
 /// <summary>
 /// Description: Sets the transform of player avatar hands correctly
-/// TODO: Objects only scales correctly for local player.
 /// </summary>
 
 

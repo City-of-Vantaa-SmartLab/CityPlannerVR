@@ -131,8 +131,32 @@ public class PlayerAvatar : NetworkBehaviour
         }
     }
 
+    //----------------------------------------------------------------------------------------------------------------------------
+
+    /// <summary>
+    /// Stops player from jumping down the table if in pedestrian mode
+    /// </summary>
+
+    #region StopPlayer
+
+    //are we small
+    bool isInPedesrianMode = false;
+
     //Is used to store the last and current position of the player
     List<Vector3> positions_list = new List<Vector3>();
+
+    void CalculateMode()
+    {
+        //hardcoded values for now
+        if (playerVR.transform.localScale == new Vector3(0.025f, 0.025f, 0.025f))
+        {
+            isInPedesrianMode = true;
+        }
+        else if (playerVR.transform.localScale == new Vector3(1, 1, 1))
+        {
+            isInPedesrianMode = false;
+        }
+    }
 
     //Keeps track of the last 2 positions player had
     public void TrackPlayerPosition()
@@ -151,7 +175,7 @@ public class PlayerAvatar : NetworkBehaviour
                 positions_list.Add(playerVR.transform.position);
             }
         }
-        //if list is "full" (Count > 2)
+        //if list is "full" (Count > 2) (we don't want to store all the position during runtime, just the current and previous)
         else
         {
             //if there is more than two positions remove the first one (we don't need to know it anymore)
@@ -162,8 +186,10 @@ public class PlayerAvatar : NetworkBehaviour
     //Checks if player tried to jump down from the table
     void CheckPlayerPosition()
     {
-        //if we are on pedestrian mode (small) (hardcoded)
-        if (playerVR.transform.localScale == new Vector3(0.025f, 0.025f, 0.025f))
+        CalculateMode();
+
+        //if we are on pedestrian mode (small)
+        if (isInPedesrianMode)
         {
             TrackPlayerPosition();
 
@@ -178,4 +204,5 @@ public class PlayerAvatar : NetworkBehaviour
     {
         positions_list.RemoveAt(0);
     }
+#endregion
 }
