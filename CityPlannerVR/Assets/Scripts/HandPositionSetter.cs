@@ -14,7 +14,7 @@ public class HandPositionSetter : NetworkBehaviour
 {
     private GameObject playerVR;
 
-    [SyncVar]
+    [SyncVar(hook = "HookScaleHands")]
     public Vector3 objScale;
 
     [TargetRpc]
@@ -51,7 +51,7 @@ public class HandPositionSetter : NetworkBehaviour
 
             //TESTAA TÄTÄ
             //--------------------------------------------------------------------------------------------------------------------------------------
-            ScaleHands(playerVR.transform.localScale * 0.07f);
+            CmdScaleHands(playerVR.transform.localScale * 0.07f);
             //transform.localScale = objScale;
 
             //--------------------------------------------------------------------------------------------------------------------------------------
@@ -60,13 +60,16 @@ public class HandPositionSetter : NetworkBehaviour
         }
     }
 
-    void ScaleHands(Vector3 scale)
+    [Command]
+    void CmdScaleHands(Vector3 scale)
     {
-        if (!isServer)
-        {
-            return;
-        }
 
+        objScale = scale;
+        transform.localScale = objScale;
+    }
+
+    void HookScaleHands(Vector3 scale)
+    {
         objScale = scale;
         transform.localScale = objScale;
     }
