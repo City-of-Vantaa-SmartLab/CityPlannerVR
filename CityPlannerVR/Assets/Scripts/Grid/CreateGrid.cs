@@ -48,7 +48,7 @@ public class CreateGrid : MonoBehaviour {
 	//Multplier is 1 or -1
 	float CalculatePos(GridTile tile, int multiplier)
 	{
-		//We want to use the tiles own size just in case the cellSize of this object is changed when it should not b
+		//We want to use the tiles own size just in case the cellSize of this object is changed when it should not be
 		float pos = (float)tile.CellSize * multiplier / 2;
 		return pos;
 	}

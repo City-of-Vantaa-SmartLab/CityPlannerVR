@@ -2,11 +2,6 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-//TODO: Toteuta se mitä tapahtuu, jos ruudussa on jo jotain
-//TODO: Toteuta tapa katsoa, montako ruutua yksi talo vie ja laita kaikkien state "Full":ksi
-//TODO: Korjaa rotaatio
-//TODO: Estä taloja roikkumasta pöydän ulkopuolella (eli ettei saa asettaa taloa liian reunalle)
-
 public class SnapToGrid : MonoBehaviour {
 
     LineRenderer lr;
@@ -45,15 +40,20 @@ public class SnapToGrid : MonoBehaviour {
 				//Moves the building to the grids position									    just a bit higher than the table, so the building collider won't go inside table collider
 				transform.position = new Vector3 (hit.collider.gameObject.transform.position.x, hit.collider.gameObject.transform.position.y * 1.3f, hit.collider.gameObject.transform.position.z);
 				//The tile is now full, and no other objects should be able to be there at the same time
+				//This might not be necessary anymore, but I will look into it later (maybe)
 				tile.State = GridTile.GridState.Full;
 			} 
 
 			else {
 				//There is already something in this tile, so we cannot put this here
 				Debug.Log("This tile is full");
-			}
 
-			//CheckRotation();
+				//These are different solutions to same problem. We'll test them out 
+				MoveObjectToPoint ();
+				//DestroyOldObject ();
+			}
+				
+			CheckRotation();
         }
     }
 
@@ -61,10 +61,19 @@ public class SnapToGrid : MonoBehaviour {
     {
         float newZ = 0;
 
-        if (transform.rotation.z >= 315 && transform.rotation.z < 45)
+		float angle = 0.0F;
+		Vector3 axis = Vector3.zero;
+
+		Debug.Log(gameObject.name + " rotated " + angle + " degrees");
+
+		if (transform.rotation.eulerAngles.z >= 0 && transform.rotation.eulerAngles.z < 45)
         {
             newZ = 0;
         }
+
+		else if(transform.rotation.eulerAngles.z >= 315 && transform.rotation.eulerAngles.z < 360){
+			newZ = 0;
+		}
 
         else if (transform.rotation.eulerAngles.z >= 45 && transform.rotation.eulerAngles.z < 135)
         {
@@ -75,17 +84,18 @@ public class SnapToGrid : MonoBehaviour {
         {
             newZ = 180;
         }
+
         else
         {
             newZ = 270;
         }
 
-        Debug.Log("newZ = " + newZ);
+        //Debug.Log("newZ = " + newZ);
 
         //Debug.Log("z = " + transform.localRotation.eulerAngles.z);
         //Debug.Log("-z = " + -transform.localRotation.eulerAngles.z);
         //                                           First we reset the z angle and then add the correct angle
-        transform.rotation = Quaternion.Euler(-90, 0, /*-transform.rotation.eulerAngles.z +*/ newZ);
+        //transform.rotation = Quaternion.Euler(-90, 0, -transform.rotation.eulerAngles.z + newZ);
     }
 
 	//When we pick an object the tile it was in is set to be empty
@@ -113,5 +123,17 @@ public class SnapToGrid : MonoBehaviour {
 
 		lr.SetPosition(0, Vector3.zero);
 		lr.SetPosition(1, new Vector3(0, 0, -0.5f));
+	}
+
+
+	void MoveObjectToPoint(){
+
+		GameObject go = GameObject.Find ("Temporary table/Sphere");
+		//I'll deside the coordinate later
+		transform.position = go.transform.position;
+	}
+
+	void DestroyOldObject(Collider other){
+		Destroy (other);
 	}
 }

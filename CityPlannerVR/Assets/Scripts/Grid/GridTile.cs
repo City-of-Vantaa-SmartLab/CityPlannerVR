@@ -30,6 +30,8 @@ public class GridTile {
     public BoxCollider collider;
     public LineRenderer line;
 
+	private GridTileStateCheck checkGridState;
+
 	public GridTile(GameObject tileObject, int cellSize)
     {
         this.tileObject = tileObject;
@@ -37,7 +39,8 @@ public class GridTile {
 
 		collider = tileObject.AddComponent<BoxCollider> ();
 		line = tileObject.AddComponent<LineRenderer> ();
-
+		checkGridState = tileObject.AddComponent<GridTileStateCheck> ();
+		checkGridState.tile = this;
 
 		InitializeTileObject ();
 		InitializeLineRenderer ();
@@ -49,6 +52,8 @@ public class GridTile {
 		tileObject.layer = LayerMask.NameToLayer("GridLayer");
 
 		collider.size = new Vector3(cellSize, 0, cellSize);
+		//This is hardcoded value. It makes sure the collider is in right place 
+		collider.center = new Vector3 (0, 0.7f, 0);
 	}
 
 	private void InitializeLineRenderer(){
