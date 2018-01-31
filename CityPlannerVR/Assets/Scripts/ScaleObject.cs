@@ -36,6 +36,7 @@ public class ScaleObject : MonoBehaviour {
         {
             //Debug.Log("ScaleObject::ScaleNetworkedPlayerAvatar: Scaling player! (" + pa.gameObject.name + ")");
             pa.CmdUpdateScale(newScale);
+            pa.UpdateScaleCheck();
         } else
         {
             Debug.LogError("ScaleObject::ScaleNetworkedPlayerAvatar: Player avatar was null");

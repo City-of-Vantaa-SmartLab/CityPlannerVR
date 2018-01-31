@@ -12,6 +12,7 @@ using UnityEngine.VR;
 public class HandPositionSetter : NetworkBehaviour
 {
     private GameObject playerVR;
+    private ChangeMode mode;
 
     [SyncVar(hook = "HookScaleHands")]
     public Vector3 objScale;
@@ -21,6 +22,8 @@ public class HandPositionSetter : NetworkBehaviour
     {
         // Get gameobject handling player VR stuff
         playerVR = GameObject.FindGameObjectWithTag("Player");
+
+        mode = playerVR.GetComponent<ChangeMode>();
 
         StartCoroutine(TrackNodeCoroutine(node));
         //Debug.Log("HandPositionSetter::TargetSetHand: Hand set");
@@ -35,17 +38,16 @@ public class HandPositionSetter : NetworkBehaviour
             //Scaling the playerVR (Player) down causes some funky stuff with the position calculations. These checks are needed to counter that.
             //(the check values are hardcoded for now. Solution can be changed if there is time).
 
-            //Check if we are in god mode (big)
-            if (playerVR.transform.localScale == new Vector3(1, 1, 1))
-            {
-                transform.position = playerVR.transform.position + UnityEngine.XR.InputTracking.GetLocalPosition(node);
-            }
-
-            //Check if we are in pedestrian mode (small)
-            else if (playerVR.transform.localScale == new Vector3(0.025f, 0.025f, 0.025f))
+            if (mode.GetIsInPedestrianMode())
             {
                 //                                                                                                       all the axes are same for scale, so no matter which one is used. (If they're not, something is wrong and it should be fixed)
                 transform.position = playerVR.transform.position + UnityEngine.XR.InputTracking.GetLocalPosition(node) * playerVR.transform.localScale.x;
+            }
+
+            //Check if we are in god mode (big)
+            else
+            {
+                transform.position = playerVR.transform.position + UnityEngine.XR.InputTracking.GetLocalPosition(node);
             }
 
             CmdScaleHands(playerVR.transform.localScale * 0.07f);

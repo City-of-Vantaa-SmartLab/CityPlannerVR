@@ -25,6 +25,8 @@ public class PlayerAvatar : NetworkBehaviour
     [SyncVar(hook = "ScaleChange")]
     public Vector3 objScale;
 
+    private ChangeMode mode;
+
     public override void OnStartLocalPlayer()
     {
         base.OnStartLocalPlayer();
@@ -32,6 +34,7 @@ public class PlayerAvatar : NetworkBehaviour
 
         // Get gameobject handling player VR stuff
         playerVR = GameObject.FindGameObjectWithTag("Player");
+        mode = playerVR.GetComponent<ChangeMode>();
 
         // Get player head and body gameobjects
         playerHead = transform.GetChild(0).gameObject;
@@ -39,8 +42,12 @@ public class PlayerAvatar : NetworkBehaviour
 
         playerBodyScaleFactor = playerBody.transform.localScale;
 
-        cityTeleportArea = GameObject.Find("Environment/NewTikkuraittiModel/TeleportAreaCity");
-        
+        //use this, if using the detailed version of the Tikkuraitti model
+        //cityTeleportArea = GameObject.Find("Environment/NewTikkuraittiModel/TeleportAreaCity");
+
+        //use this if using the simplified version of the Tikkuraitti model
+        cityTeleportArea = GameObject.Find("Environment/TikkuraittiModel_simple/TeleportAreaCity");
+
         StartCoroutine(TrackHeadCoroutine());
         StartCoroutine(MakeSureSetHand());   
     }
@@ -133,30 +140,16 @@ public class PlayerAvatar : NetworkBehaviour
 
     //----------------------------------------------------------------------------------------------------------------------------
 
+    #region Stop player from themselves
+
     /// <summary>
     /// Stops player from jumping down the table if in pedestrian mode
     /// </summary>
 
-    #region StopPlayer
-
-    //are we small
-    bool isInPedesrianMode = false;
-
     //Is used to store the last and current position of the player
     List<Vector3> positions_list = new List<Vector3>();
 
-    void CalculateMode()
-    {
-        //hardcoded values for now
-        if (playerVR.transform.localScale == new Vector3(0.025f, 0.025f, 0.025f))
-        {
-            isInPedesrianMode = true;
-        }
-        else if (playerVR.transform.localScale == new Vector3(1, 1, 1))
-        {
-            isInPedesrianMode = false;
-        }
-    }
+    //----------------------------------------------------------------------------------------------------------------------------
 
     //Keeps track of the last 2 positions player had
     public void TrackPlayerPosition()
@@ -169,27 +162,38 @@ public class PlayerAvatar : NetworkBehaviour
         //if there is 1 element in the list
         else if(positions_list.Count == 1)
         {
-            //jos nykyinen positio ei ole sama, kuin edellinen
+            //if our current position is not the same as the previous position
+            //(We don't want to update the list, if we are standing still)
             if(positions_list[0] != playerVR.transform.position)
             {
                 positions_list.Add(playerVR.transform.position);
             }
         }
-        //if list is "full" (Count > 2) (we don't want to store all the position during runtime, just the current and previous)
+        //if list is "full" (Count => 2) (we don't want to store all the position during runtime, just the current and previous)
         else
         {
-            //if there is more than two positions remove the first one (we don't need to know it anymore)
+            //if there is two or more positions, remove the first one (we don't need to know it anymore)
             RemoveFromPositions_list();
         }
     }
 
+    //----------------------------------------------------------------------------------------------------------------------------
+
+    //This is called from 'ScaleObject.cs' because we don't need to update this information every frame
+    public void UpdateScaleCheck()
+    {
+        //Checks if we are in pedestrian or god mode (small or big)
+        mode.CheckPlayerMode();
+        //Debug.Log(mode.GetIsInPedestrianMode());
+    }
+
+    //----------------------------------------------------------------------------------------------------------------------------
+
     //Checks if player tried to jump down from the table
     void CheckPlayerPosition()
     {
-        CalculateMode();
-
         //if we are on pedestrian mode (small)
-        if (isInPedesrianMode)
+        if (mode.GetIsInPedestrianMode())
         {
             TrackPlayerPosition();
 
@@ -200,9 +204,12 @@ public class PlayerAvatar : NetworkBehaviour
         }
     }
 
+    //----------------------------------------------------------------------------------------------------------------------------
+
     public void RemoveFromPositions_list()
     {
         positions_list.RemoveAt(0);
     }
+
 #endregion
 }
