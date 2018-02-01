@@ -53,7 +53,7 @@ public class SnapToGrid : MonoBehaviour {
 				//DestroyOldObject ();
 			}
 				
-			CheckRotation();
+			//CheckRotation();
         }
     }
 
@@ -124,8 +124,7 @@ public class SnapToGrid : MonoBehaviour {
 		lr.SetPosition(0, Vector3.zero);
 		lr.SetPosition(1, new Vector3(0, 0, -0.5f));
 	}
-
-
+		
 	void MoveObjectToPoint(){
 
 		GameObject go = GameObject.Find ("Temporary table/Sphere");

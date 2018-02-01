@@ -18,14 +18,6 @@ public class GridTile {
 		}
 	}
 
-	private int cellSize;
-
-	public int CellSize {
-		get {
-			return cellSize;
-		}
-	}
-
     public GameObject tileObject;
     public BoxCollider collider;
     public LineRenderer line;
@@ -35,19 +27,18 @@ public class GridTile {
 	public GridTile(GameObject tileObject, int cellSize)
     {
         this.tileObject = tileObject;
-		this.cellSize = cellSize;
 
 		collider = tileObject.AddComponent<BoxCollider> ();
 		line = tileObject.AddComponent<LineRenderer> ();
 		checkGridState = tileObject.AddComponent<GridTileStateCheck> ();
 		checkGridState.tile = this;
 
-		InitializeTileObject ();
+		InitializeTileObject (cellSize);
 		InitializeLineRenderer ();
     }
 
 	//All the grids will have these values and they are not changed
-	private void InitializeTileObject(){
+	private void InitializeTileObject(int cellSize){
 		tileObject.tag = "Grid";
 		tileObject.layer = LayerMask.NameToLayer("GridLayer");
 

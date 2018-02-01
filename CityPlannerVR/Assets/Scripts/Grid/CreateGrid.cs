@@ -5,16 +5,31 @@ using UnityEngine;
 public class CreateGrid : MonoBehaviour {
 
 	private GridTile[,] tiles;
+
 	public int gridSizeX;
 	public int gridSizeZ;
 
-	[SerializeField]
-	private int cellSize;
+	private int cellSize = 5;
+
+	public int CellSize {
+		get {
+			return cellSize;
+		}
+		set {
+			cellSize = value;
+			//CreateGridTiles ();
+		}
+	}
 
 	public Material gridMaterial;
 
 	// Use this for initialization
 	void Start () {
+
+		CreateGridTiles ();
+	}
+
+	void CreateGridTiles(){
 
 		tiles = new GridTile[gridSizeX, gridSizeZ];
 
@@ -29,13 +44,14 @@ public class CreateGrid : MonoBehaviour {
 				tiles [x, z].tileObject.transform.localPosition = new Vector3(x, transform.position.y, z);
 				//This must be done because of all the scaling done in the scene
 				tiles [x, z].tileObject.transform.localScale = new Vector3(1, 1, 1);
-				
+
 				tiles [x, z].line.material = gridMaterial;
 
 				DrawGrid (tiles[x, z]);
 			}
 		}
 	}
+
 
 	void DrawGrid(GridTile tile){
 		tile.line.SetPosition(0, new Vector3(CalculatePos(tile, 1), transform.position.y, CalculatePos(tile, 1)));
@@ -49,7 +65,7 @@ public class CreateGrid : MonoBehaviour {
 	float CalculatePos(GridTile tile, int multiplier)
 	{
 		//We want to use the tiles own size just in case the cellSize of this object is changed when it should not be
-		float pos = (float)tile.CellSize * multiplier / 2;
+		float pos = (float)CellSize * multiplier / 2;
 		return pos;
 	}
 
