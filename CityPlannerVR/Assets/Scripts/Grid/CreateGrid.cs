@@ -11,6 +11,8 @@ public class CreateGrid : MonoBehaviour {
 
 	private int cellSize = 5;
 
+	public List<GridTile> path;
+
 	public int CellSize {
 		get {
 			return cellSize;
@@ -36,7 +38,7 @@ public class CreateGrid : MonoBehaviour {
 		for (int x = 0; x < gridSizeX; x += cellSize) {
 			for (int z = 0; z < gridSizeZ; z += cellSize) {
 
-				tiles [x, z] = new GridTile (new GameObject (), cellSize);
+				tiles [x, z] = new GridTile (new GameObject (), cellSize, x, z);
 				tiles [x, z].tileObject.name = "Grid point (" + x + "," + z + ")";
 
 				//Set the tiles to be children of this object
@@ -52,13 +54,35 @@ public class CreateGrid : MonoBehaviour {
 		}
 	}
 
-
 	void DrawGrid(GridTile tile){
 		tile.line.SetPosition(0, new Vector3(CalculatePos(tile, 1), transform.position.y, CalculatePos(tile, 1)));
 		tile.line.SetPosition(1, new Vector3(CalculatePos(tile, 1), transform.position.y, CalculatePos(tile, -1)));
 		tile.line.SetPosition(2, new Vector3(CalculatePos(tile, -1), transform.position.y, CalculatePos(tile, -1)));
 		tile.line.SetPosition(3, new Vector3(CalculatePos(tile, -1), transform.position.y, CalculatePos(tile, 1)));
 	}
+
+
+	public List<GridTile> GetNeighbours(GridTile tile){
+		List<GridTile> neighbours = new List<GridTile> ();
+		for (int x = -1; x <= 1; x++) {
+			for (int z = -1; z <= 1; z++) {
+				if (x == 0 && z == 0) {
+					continue;
+				}
+
+				int checkX = tile.xPos + x;
+				int checkZ = tile.zPos + z;
+
+				if (checkX >= 0 && checkX < gridSizeX && checkZ == 0 && checkZ < gridSizeZ) {
+					neighbours.Add (tiles[checkX, checkZ]);
+				}
+			}
+		}
+		return neighbours;
+	}
+
+
+
 
 	//Defines the size and position of the lines in the grid
 	//Multplier is 1 or -1

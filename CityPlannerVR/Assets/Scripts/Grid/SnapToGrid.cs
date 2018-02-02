@@ -50,13 +50,13 @@ public class SnapToGrid : MonoBehaviour {
 
 				//These are different solutions to same problem. We'll test them out 
 				MoveObjectToPoint ();
-				//DestroyOldObject ();
 			}
 				
 			//CheckRotation();
         }
     }
 
+	//This thing has a bad gimbal lock problem at the moment, so we just let it be for now
     void CheckRotation()
     {
         float newZ = 0;
@@ -98,7 +98,7 @@ public class SnapToGrid : MonoBehaviour {
         //transform.rotation = Quaternion.Euler(-90, 0, -transform.rotation.eulerAngles.z + newZ);
     }
 
-	//When we pick an object the tile it was in is set to be empty
+	//When we pick an object, the tile it was in is set to be empty
     private void OnAttachedToHand(Valve.VR.InteractionSystem.Hand hand)
     {
 		tile.State = GridTile.GridState.Empty;
@@ -125,14 +125,10 @@ public class SnapToGrid : MonoBehaviour {
 		lr.SetPosition(1, new Vector3(0, 0, -0.5f));
 	}
 		
+	//if there is alredy something in this tile, we move this object away
 	void MoveObjectToPoint(){
 
 		GameObject go = GameObject.Find ("Temporary table/Sphere");
-		//I'll deside the coordinate later
 		transform.position = go.transform.position;
-	}
-
-	void DestroyOldObject(Collider other){
-		Destroy (other);
 	}
 }

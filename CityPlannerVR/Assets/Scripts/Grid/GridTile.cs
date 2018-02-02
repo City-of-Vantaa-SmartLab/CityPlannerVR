@@ -22,11 +22,27 @@ public class GridTile {
     public BoxCollider collider;
     public LineRenderer line;
 
+	public int xPos;
+	public int zPos;
+
+	public int gCost;
+	public int hCost;
+	public GridTile parent;
+
+
+	public int fCost{
+		get{ 
+			return gCost + hCost;
+		}
+	}
+
 	private GridTileStateCheck checkGridState;
 
-	public GridTile(GameObject tileObject, int cellSize)
+	public GridTile(GameObject tileObject, int cellSize, int x, int z)
     {
         this.tileObject = tileObject;
+		xPos = x;
+		zPos = z;
 
 		collider = tileObject.AddComponent<BoxCollider> ();
 		line = tileObject.AddComponent<LineRenderer> ();
