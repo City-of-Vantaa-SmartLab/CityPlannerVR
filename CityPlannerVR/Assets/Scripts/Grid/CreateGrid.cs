@@ -31,6 +31,14 @@ public class CreateGrid : MonoBehaviour {
 		CreateGridTiles ();
 	}
 
+    public int MaxSize
+    {
+        get
+        {
+            return gridSizeX * gridSizeZ;
+        }
+    }
+
 	void CreateGridTiles(){
 
         //This will make sure that the grid is the same size as the table is when cellSize is changed
@@ -86,9 +94,6 @@ public class CreateGrid : MonoBehaviour {
 		return neighbours;
 	}
 
-
-
-
 	//Defines the size and position of the lines in the grid
 	//Multplier is 1 or -1
 	float CalculatePos(GridTile tile, int multiplier)
@@ -109,4 +114,22 @@ public class CreateGrid : MonoBehaviour {
 
 		return tiles [xIndex, zIndex];
 	}
+
+    //Just for pathfinding debugging
+    void OnDrawGizmos()
+    {
+        Gizmos.DrawWireCube(transform.position, new Vector3(gridSizeX, 1, gridSizeZ));
+
+        if (tiles != null)
+        {
+            foreach (GridTile n in tiles)
+            {
+                Gizmos.color = (n.State == GridTile.GridState.Empty) ? Color.white : Color.red;
+                if (path != null)
+                    if (path.Contains(n))
+                        Gizmos.color = Color.black;
+                Gizmos.DrawCube(new Vector3(n.xPos, 1, n.zPos)*0.025f, Vector3.one * CellSize * 0.025f);
+            }
+        }
+    }
 }

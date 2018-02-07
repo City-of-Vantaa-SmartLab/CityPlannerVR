@@ -2,6 +2,9 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+/// <summary>
+/// Determines all the basic function for the start and end measurement points
+/// </summary>
 public class MeasurementPoint : MonoBehaviour {
 
     GameObject grid;
@@ -15,8 +18,6 @@ public class MeasurementPoint : MonoBehaviour {
 
     public GameObject otherPoint;
     MeasurementPoint other;
-
-    float scale = 0.025f;
 
     void Start()
 	{
@@ -46,6 +47,7 @@ public class MeasurementPoint : MonoBehaviour {
             other = otherPoint.GetComponent<MeasurementPoint>();
             if (other.Tile != null)
             {
+                //Gets distance between the tile this object is on and the tile the other object is on
                 float dist = MeasureDistance.CalculateDistance(tile, other.Tile);
                 Debug.Log("Distance is " + dist);
             }

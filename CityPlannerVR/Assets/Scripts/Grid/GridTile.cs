@@ -3,7 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class GridTile {
+public class GridTile : IHeapItem<GridTile> {
 
     public enum GridState { Empty, Full };
 
@@ -28,6 +28,8 @@ public class GridTile {
 	public float gCost;
 	public float hCost;
 	public GridTile parent;
+
+    int heapIndex;
 
 
 	public float fCost{
@@ -76,4 +78,26 @@ public class GridTile {
 		//Draws a line from last point to the first (so we get a square)
 		line.loop = true;
 	}
+
+    public int HeapIndex
+    {
+        get
+        {
+            return heapIndex;
+        }
+        set
+        {
+            heapIndex = value;
+        }
+    }
+
+    public int CompareTo(GridTile nodeToCompare)
+    {
+        int compare = fCost.CompareTo(nodeToCompare.fCost);
+        if(compare == 0)
+        {
+            compare = hCost.CompareTo(nodeToCompare.hCost);
+        }
+        return -compare;
+    }
 }

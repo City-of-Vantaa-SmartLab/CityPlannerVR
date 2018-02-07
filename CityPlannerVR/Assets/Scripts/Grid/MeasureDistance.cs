@@ -1,7 +1,9 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-
+/// <summary>
+/// Is used with and without pathfinding to determine distance between two tiles
+/// </summary>
 public static class MeasureDistance {
 
     public static float CalculateDistance(GridTile tileA, GridTile tileB)
@@ -11,7 +13,7 @@ public static class MeasureDistance {
 
         if (distX > distZ)
         {
-            //1.4 is the distance needed to go in diagonal line (if normally distance is 1)
+            //1.4 is the diagonal distance
             return 1.4f * distZ + (distX - distZ);
         }
         return 1.4f * distX + (distZ - distX);
