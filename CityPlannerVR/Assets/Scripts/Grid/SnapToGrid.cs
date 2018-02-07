@@ -9,8 +9,6 @@ public class SnapToGrid : MonoBehaviour {
 
 	GridTile tile;
 
-    float scale = 0.025f;
-
     void Start()
     {
 		DrawDebugLine ();
@@ -33,7 +31,7 @@ public class SnapToGrid : MonoBehaviour {
         if (Physics.Raycast(ray, out hit, 1f, 1 << LayerMask.NameToLayer("GridLayer")))
         {
 			//Get the tile we hit
-			tile = cg.GetTileAt (Mathf.FloorToInt(hit.collider.transform.localPosition.x), Mathf.FloorToInt(hit.collider.transform.localPosition.z));
+			tile = cg.GetTileAt (hit.collider.transform.localPosition.x, hit.collider.transform.localPosition.z);
 
 			//If there is nothing on the tile, we can put this object there
 			if (tile.State == GridTile.GridState.Empty) {

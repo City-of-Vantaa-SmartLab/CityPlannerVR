@@ -22,15 +22,15 @@ public class GridTile {
     public BoxCollider collider;
     public LineRenderer line;
 
-	public int xPos;
-	public int zPos;
+	public float xPos;
+	public float zPos;
 
-	public int gCost;
-	public int hCost;
+	public float gCost;
+	public float hCost;
 	public GridTile parent;
 
 
-	public int fCost{
+	public float fCost{
 		get{ 
 			return gCost + hCost;
 		}
@@ -38,7 +38,7 @@ public class GridTile {
 
 	private GridTileStateCheck checkGridState;
 
-	public GridTile(GameObject tileObject, int cellSize, int x, int z)
+	public GridTile(GameObject tileObject, float cellSize, float x, float z)
     {
         this.tileObject = tileObject;
 		xPos = x;
@@ -54,7 +54,7 @@ public class GridTile {
     }
 
 	//All the grids will have these values and they are not changed
-	private void InitializeTileObject(int cellSize){
+	private void InitializeTileObject(float cellSize){
 		tileObject.tag = "Grid";
 		tileObject.layer = LayerMask.NameToLayer("GridLayer");
 

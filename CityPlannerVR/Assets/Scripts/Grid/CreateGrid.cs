@@ -9,11 +9,11 @@ public class CreateGrid : MonoBehaviour {
 	public int gridSizeX;
 	public int gridSizeZ;
 
-	private int cellSize = 5;
+	private float cellSize = 5;
 
 	public List<GridTile> path;
 
-	public int CellSize {
+	public float CellSize {
 		get {
 			return cellSize;
 		}
@@ -35,15 +35,15 @@ public class CreateGrid : MonoBehaviour {
 
 		tiles = new GridTile[gridSizeX, gridSizeZ];
 
-		for (int x = 0; x < gridSizeX; x += cellSize) {
-			for (int z = 0; z < gridSizeZ; z += cellSize) {
+		for (int x = 0; x < gridSizeX; x++) {
+			for (int z = 0; z < gridSizeZ; z++) {
 
-				tiles [x, z] = new GridTile (new GameObject (), cellSize, x, z);
-				tiles [x, z].tileObject.name = "Grid point (" + x + "," + z + ")";
+				tiles [x, z] = new GridTile (new GameObject (), cellSize, x * CellSize, z * CellSize);
+				tiles [x, z].tileObject.name = "Grid point (" + x * CellSize + "," + z * CellSize + ")";
 
 				//Set the tiles to be children of this object
 				tiles [x, z].tileObject.transform.parent = transform;
-				tiles [x, z].tileObject.transform.localPosition = new Vector3(x, transform.position.y, z);
+				tiles [x, z].tileObject.transform.localPosition = new Vector3(x * CellSize, transform.position.y, z * CellSize);
 				//This must be done because of all the scaling done in the scene
 				tiles [x, z].tileObject.transform.localScale = new Vector3(1, 1, 1);
 
@@ -64,16 +64,17 @@ public class CreateGrid : MonoBehaviour {
 
 	public List<GridTile> GetNeighbours(GridTile tile){
 		List<GridTile> neighbours = new List<GridTile> ();
+
 		for (int x = -1; x <= 1; x++) {
 			for (int z = -1; z <= 1; z++) {
 				if (x == 0 && z == 0) {
 					continue;
 				}
 
-				int checkX = tile.xPos + x;
-				int checkZ = tile.zPos + z;
+				int checkX = Mathf.FloorToInt(tile.xPos/CellSize + x);
+				int checkZ = Mathf.FloorToInt(tile.zPos/CellSize + z);
 
-				if (checkX >= 0 && checkX < gridSizeX && checkZ == 0 && checkZ < gridSizeZ) {
+				if (checkX >= 0 && checkX < gridSizeX && checkZ >= 0 && checkZ < gridSizeZ) {
 					neighbours.Add (tiles[checkX, checkZ]);
 				}
 			}
@@ -89,16 +90,19 @@ public class CreateGrid : MonoBehaviour {
 	float CalculatePos(GridTile tile, int multiplier)
 	{
 		//We want to use the tiles own size just in case the cellSize of this object is changed when it should not be
-		float pos = (float)CellSize * multiplier / 2;
+		float pos = CellSize * multiplier / 2;
 		return pos;
 	}
 
-	public GridTile GetTileAt(int x, int z){
-	
-		if (tiles [x, z] == null) {
+	public GridTile GetTileAt(float x, float z){
+
+        int xIndex = Mathf.FloorToInt(x / CellSize);
+        int zIndex = Mathf.FloorToInt(z / CellSize);
+
+        if (tiles [xIndex, zIndex] == null) {
 			Debug.LogError ("Tile " + x + "," + z + " was null");
 		}
 
-		return tiles [x, z];
+		return tiles [xIndex, zIndex];
 	}
 }
