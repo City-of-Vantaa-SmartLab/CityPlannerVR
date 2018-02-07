@@ -3440,6 +3440,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7e7193ce543def544a0fd054acfddbdf, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  otherPoint: {fileID: 2131674262}
 --- !u!114 &721397445
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -5782,7 +5783,6 @@ GameObject:
   - component: {fileID: 1508446437}
   - component: {fileID: 1508446438}
   - component: {fileID: 1508446439}
-  - component: {fileID: 1508446440}
   m_Layer: 0
   m_Name: Grid
   m_TagString: GridParent
@@ -5816,8 +5816,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c1c1341c140d7aa44a417fbe157963c2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  gridSizeX: 23
-  gridSizeZ: 16
+  gridSizeX: 110
+  gridSizeZ: 80
   gridMaterial: {fileID: 2100000, guid: 811b99e4662ba184082e5e8bfe6045d1, type: 2}
 --- !u!114 &1508446439
 MonoBehaviour:
@@ -5830,19 +5830,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0b295143695cea8439c2f5c9b9a24da1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!114 &1508446440
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 1508446436}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: fb73cb9455169614090d215f5b86f057, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  startPoint: {fileID: 721397443}
-  endPoint: {fileID: 2131674262}
 --- !u!1 &1530157207
 GameObject:
   m_ObjectHideFlags: 0
@@ -10002,6 +9989,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7e7193ce543def544a0fd054acfddbdf, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  otherPoint: {fileID: 721397443}
 --- !u!114 &2131674264
 MonoBehaviour:
   m_ObjectHideFlags: 0

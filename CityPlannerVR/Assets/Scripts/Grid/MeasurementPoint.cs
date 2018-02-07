@@ -5,15 +5,16 @@ using UnityEngine;
 public class MeasurementPoint : MonoBehaviour {
 
     GameObject grid;
-
 	CreateGrid cg;
-
     GridTile tile;
 	public GridTile Tile {
 		get {
 			return tile;
 		}
 	}
+
+    public GameObject otherPoint;
+    MeasurementPoint other;
 
     float scale = 0.025f;
 
@@ -22,7 +23,8 @@ public class MeasurementPoint : MonoBehaviour {
         grid = GameObject.FindGameObjectWithTag("GridParent");
 
         cg = grid.GetComponent<CreateGrid> ();
-		SnapPosition();
+
+        SnapPosition();
 	}
 
 	private void SnapPosition()
@@ -40,6 +42,13 @@ public class MeasurementPoint : MonoBehaviour {
 			tile = cg.GetTileAt (hit.collider.transform.localPosition.x, hit.collider.transform.localPosition.z);
             transform.localPosition = new Vector3(tile.tileObject.transform.localPosition.x, tile.tileObject.transform.localPosition.y * 2f, tile.tileObject.transform.localPosition.z);
             transform.localRotation = Quaternion.identity;
+
+            other = otherPoint.GetComponent<MeasurementPoint>();
+            if (other.Tile != null)
+            {
+                float dist = MeasureDistance.CalculateDistance(tile, other.Tile);
+                Debug.Log("Distance is " + dist);
+            }
 		}
 	}
 

@@ -2,18 +2,18 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class MeasureDistance : MonoBehaviour {
+public static class MeasureDistance {
 
-    public GameObject startPoint;
-    public GameObject endPoint;
-
-	Pathfinding path;
-
-    float distance;
-
-    void CalculateDistance()
+    public static float CalculateDistance(GridTile tileA, GridTile tileB)
     {
-		distance = path.GetDistance (startPoint, endPoint);
-		Debug.Log ("Distance is " + distance);
+        float distX = Mathf.Abs(tileA.xPos - tileB.xPos);
+        float distZ = Mathf.Abs(tileA.zPos - tileB.zPos);
+
+        if (distX > distZ)
+        {
+            //1.4 is the distance needed to go in diagonal line (if normally distance is 1)
+            return 1.4f * distZ + (distX - distZ);
+        }
+        return 1.4f * distX + (distZ - distX);
     }
 }

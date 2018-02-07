@@ -9,7 +9,7 @@ public class CreateGrid : MonoBehaviour {
 	public int gridSizeX;
 	public int gridSizeZ;
 
-	private float cellSize = 5;
+	private float cellSize = 5f;
 
 	public List<GridTile> path;
 
@@ -33,7 +33,11 @@ public class CreateGrid : MonoBehaviour {
 
 	void CreateGridTiles(){
 
-		tiles = new GridTile[gridSizeX, gridSizeZ];
+        //This will make sure that the grid is the same size as the table is when cellSize is changed
+        gridSizeX = Mathf.FloorToInt(gridSizeX / CellSize);
+        gridSizeZ = Mathf.FloorToInt(gridSizeZ / CellSize);
+
+        tiles = new GridTile[gridSizeX, gridSizeZ];
 
 		for (int x = 0; x < gridSizeX; x++) {
 			for (int z = 0; z < gridSizeZ; z++) {
