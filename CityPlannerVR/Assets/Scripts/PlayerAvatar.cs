@@ -25,6 +25,8 @@ public class PlayerAvatar : NetworkBehaviour
     [SyncVar(hook = "ScaleChange")]
     public Vector3 objScale;
 
+    private CheckPlayerSize playerSize;
+
     public override void OnStartLocalPlayer()
     {
         base.OnStartLocalPlayer();
@@ -40,6 +42,8 @@ public class PlayerAvatar : NetworkBehaviour
         playerBodyScaleFactor = playerBody.transform.localScale;
 
         cityTeleportArea = GameObject.Find("Environment/NewTikkuraittiModel/TeleportAreaCity");
+
+        playerSize = playerVR.GetComponent<CheckPlayerSize>();
         
         StartCoroutine(TrackHeadCoroutine());
         StartCoroutine(MakeSureSetHand());   
@@ -139,24 +143,8 @@ public class PlayerAvatar : NetworkBehaviour
 
     #region StopPlayer
 
-    //are we small
-    bool isInPedesrianMode = false;
-
     //Is used to store the last and current position of the player
     List<Vector3> positions_list = new List<Vector3>();
-
-    void CalculateMode()
-    {
-        //hardcoded values for now
-        if (playerVR.transform.localScale == new Vector3(0.025f, 0.025f, 0.025f))
-        {
-            isInPedesrianMode = true;
-        }
-        else if (playerVR.transform.localScale == new Vector3(1, 1, 1))
-        {
-            isInPedesrianMode = false;
-        }
-    }
 
     //Keeps track of the last 2 positions player had
     public void TrackPlayerPosition()
@@ -169,7 +157,7 @@ public class PlayerAvatar : NetworkBehaviour
         //if there is 1 element in the list
         else if(positions_list.Count == 1)
         {
-            //jos nykyinen positio ei ole sama, kuin edellinen
+            //if current position is not same as the previous position
             if(positions_list[0] != playerVR.transform.position)
             {
                 positions_list.Add(playerVR.transform.position);
@@ -186,10 +174,9 @@ public class PlayerAvatar : NetworkBehaviour
     //Checks if player tried to jump down from the table
     void CheckPlayerPosition()
     {
-        CalculateMode();
 
         //if we are on pedestrian mode (small)
-        if (isInPedesrianMode)
+        if (playerSize.isSmall)
         {
             TrackPlayerPosition();
 
