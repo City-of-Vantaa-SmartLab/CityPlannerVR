@@ -2,7 +2,7 @@
 using System;
 using UnityEngine;
 /// <summary>
-/// This makes it easier for the computer to find the path
+/// This makes it easier for the computer to find the path. It's generic so it can be used on other things than GridTile
 /// </summary>
 /// 
 public class Heap<T> where T : IHeapItem<T> {
@@ -14,6 +14,7 @@ public class Heap<T> where T : IHeapItem<T> {
         items = new T[maxHeapSize];
     }
 
+    //Adds an item to array
     public void Add(T item) {
         item.HeapIndex = currentItemCount;
         items[currentItemCount] = item;
@@ -21,6 +22,7 @@ public class Heap<T> where T : IHeapItem<T> {
         currentItemCount++;
     }
 
+    //Removes the first item from array
     public T RemoveFirst()
     {
         T firstItem = items[0];
@@ -31,6 +33,7 @@ public class Heap<T> where T : IHeapItem<T> {
         return firstItem;
     }
 
+    //How many items is in arrays
     public int Count
     {
         get
@@ -44,6 +47,7 @@ public class Heap<T> where T : IHeapItem<T> {
         SortUp(item);
     }
 
+    //Checks if item is in the array
     public bool Contains(T item)
     {
         return Equals(items[item.HeapIndex], item);
