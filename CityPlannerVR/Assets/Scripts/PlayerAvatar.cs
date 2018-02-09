@@ -25,7 +25,7 @@ public class PlayerAvatar : NetworkBehaviour
     [SyncVar(hook = "ScaleChange")]
     public Vector3 objScale;
 
-    private ChangeMode mode;
+    private CheckPlayerSize playerSize;
 
     public override void OnStartLocalPlayer()
     {
@@ -34,7 +34,6 @@ public class PlayerAvatar : NetworkBehaviour
 
         // Get gameobject handling player VR stuff
         playerVR = GameObject.FindGameObjectWithTag("Player");
-        mode = playerVR.GetComponent<ChangeMode>();
 
         // Get player head and body gameobjects
         playerHead = transform.GetChild(0).gameObject;
@@ -47,6 +46,8 @@ public class PlayerAvatar : NetworkBehaviour
 
         //use this if using the simplified version of the Tikkuraitti model
         cityTeleportArea = GameObject.Find("Environment/TikkuraittiModel_simple/TeleportAreaCity");
+
+        playerSize = playerVR.GetComponent<CheckPlayerSize>();
 
         StartCoroutine(TrackHeadCoroutine());
         StartCoroutine(MakeSureSetHand());   
@@ -149,8 +150,6 @@ public class PlayerAvatar : NetworkBehaviour
     //Is used to store the last and current position of the player
     List<Vector3> positions_list = new List<Vector3>();
 
-    //----------------------------------------------------------------------------------------------------------------------------
-
     //Keeps track of the last 2 positions player had
     public void TrackPlayerPosition()
     {
@@ -179,21 +178,11 @@ public class PlayerAvatar : NetworkBehaviour
 
     //----------------------------------------------------------------------------------------------------------------------------
 
-    //This is called from 'ScaleObject.cs' because we don't need to update this information every frame
-    public void UpdateScaleCheck()
-    {
-        //Checks if we are in pedestrian or god mode (small or big)
-        mode.CheckPlayerMode();
-        //Debug.Log(mode.GetIsInPedestrianMode());
-    }
-
-    //----------------------------------------------------------------------------------------------------------------------------
-
     //Checks if player tried to jump down from the table
     void CheckPlayerPosition()
     {
         //if we are on pedestrian mode (small)
-        if (mode.GetIsInPedestrianMode())
+        if (playerSize.isSmall)
         {
             TrackPlayerPosition();
 
