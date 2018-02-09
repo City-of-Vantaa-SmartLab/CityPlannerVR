@@ -29,9 +29,10 @@ GameObject:
   - component: {fileID: 114239625919131846}
   - component: {fileID: 114287365794063122}
   - component: {fileID: 114963299683374840}
+  - component: {fileID: 114515892967443602}
   m_Layer: 9
   m_Name: Building14
-  m_TagString: Untagged
+  m_TagString: Building
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -42,8 +43,8 @@ Transform:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1298520891471186}
-  m_LocalRotation: {x: -0.7071068, y: -0, z: -0, w: 0.7071068}
-  m_LocalPosition: {x: 0.745, y: 1.138, z: 0}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 1.398, y: -0.483, z: -0.317}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
@@ -101,7 +102,7 @@ MeshFilter:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1298520891471186}
-  m_Mesh: {fileID: 4300000, guid: 77f32e729e2af964dbddbdfca716dd9f, type: 3}
+  m_Mesh: {fileID: 4300000, guid: 3fddead653a024b408afd879fa7ff23d, type: 3}
 --- !u!54 &54651281410077656
 Rigidbody:
   m_ObjectHideFlags: 1
@@ -127,8 +128,8 @@ BoxCollider:
   m_IsTrigger: 0
   m_Enabled: 1
   serializedVersion: 2
-  m_Size: {x: 0.5034014, y: 0.16289724, z: 0.05034001}
-  m_Center: {x: -0.099967204, y: 0.015626002, z: -0.000021301215}
+  m_Size: {x: 0.50340134, y: 0.050339997, z: 0.16289718}
+  m_Center: {x: -0.099967435, y: -0.00002133101, z: -0.015625905}
 --- !u!114 &114239625919131846
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -182,6 +183,17 @@ MonoBehaviour:
   m_SnapThreshold: 5
   m_InterpolateRotation: 1
   m_InterpolateMovement: 1
+--- !u!114 &114515892967443602
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1298520891471186}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8ae500a5f59b80d42b375ade6e366fdf, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!114 &114656932589873258
 MonoBehaviour:
   m_ObjectHideFlags: 1

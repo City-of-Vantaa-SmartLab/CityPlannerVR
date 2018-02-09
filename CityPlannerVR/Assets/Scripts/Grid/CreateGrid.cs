@@ -11,6 +11,7 @@ public class CreateGrid : MonoBehaviour {
 
 	private float cellSize = 5f;
 
+    //This is here for now because tutorial said so. Used if we want to move something in our grid
 	public List<GridTile> path;
 
 	public float CellSize {
@@ -103,13 +104,11 @@ public class CreateGrid : MonoBehaviour {
 		return pos;
 	}
 
+    //Gets a tile according to its position in the world from the array and returns it
 	public GridTile GetTileAt(float x, float z){
 
         int xIndex = Mathf.FloorToInt(x / CellSize);
         int zIndex = Mathf.FloorToInt(z / CellSize);
-
-        Debug.Log("xIndex = " + xIndex);
-        Debug.Log("zIndex = " + zIndex);
 
         if (tiles [xIndex, zIndex] == null) {
 			Debug.LogError ("Tile " + x + "," + z + " was null");
@@ -117,22 +116,4 @@ public class CreateGrid : MonoBehaviour {
 
 		return tiles [xIndex, zIndex];
 	}
-
-    //Just for pathfinding debugging
-    void OnDrawGizmos()
-    {
-        Gizmos.DrawWireCube(transform.position, new Vector3(gridSizeX, 1, gridSizeZ));
-
-        if (tiles != null)
-        {
-            foreach (GridTile n in tiles)
-            {
-                Gizmos.color = (n.State == GridTile.GridState.Empty) ? Color.white : Color.red;
-                if (path != null)
-                    if (path.Contains(n))
-                        Gizmos.color = Color.black;
-                Gizmos.DrawCube(new Vector3(n.xPos, 1, n.zPos)*0.025f, Vector3.one * CellSize * 0.025f);
-            }
-        }
-    }
 }

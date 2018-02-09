@@ -29,9 +29,10 @@ GameObject:
   - component: {fileID: 114211460856963364}
   - component: {fileID: 114887797887948518}
   - component: {fileID: 114009498474669674}
+  - component: {fileID: 114587082715932474}
   m_Layer: 9
   m_Name: Building13
-  m_TagString: Untagged
+  m_TagString: Building
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -42,8 +43,8 @@ Transform:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1349501067397222}
-  m_LocalRotation: {x: -0.7071068, y: -0, z: -0, w: 0.7071068}
-  m_LocalPosition: {x: 0, y: 1.284, z: 0.965}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -0.239, y: -0.34090805, z: -1.199}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
@@ -139,7 +140,7 @@ MeshFilter:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1349501067397222}
-  m_Mesh: {fileID: 4300000, guid: 333968624d5aa504b83797b0f107caf9, type: 3}
+  m_Mesh: {fileID: 4300000, guid: 179136886c0b24a468b63b79064e8435, type: 3}
 --- !u!54 &54183862474227172
 Rigidbody:
   m_ObjectHideFlags: 1
@@ -165,8 +166,8 @@ BoxCollider:
   m_IsTrigger: 0
   m_Enabled: 1
   serializedVersion: 2
-  m_Size: {x: 0.5260673, y: 0.18918075, z: 0.14781004}
-  m_Center: {x: 0.004065752, y: 0.009570556, z: -0.03224871}
+  m_Size: {x: 0.52606726, y: 0.14781, z: 0.18918069}
+  m_Center: {x: 0.0040657516, y: -0.0322487, z: -0.009570493}
 --- !u!114 &114009498474669674
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -271,6 +272,17 @@ MonoBehaviour:
     m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
       Culture=neutral, PublicKeyToken=null
   snapAttachEaseInCompleted: 0
+--- !u!114 &114587082715932474
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1349501067397222}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8ae500a5f59b80d42b375ade6e366fdf, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!114 &114876386042547642
 MonoBehaviour:
   m_ObjectHideFlags: 1

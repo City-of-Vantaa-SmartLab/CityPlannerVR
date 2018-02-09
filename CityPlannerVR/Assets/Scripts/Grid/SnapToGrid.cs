@@ -4,8 +4,8 @@ using UnityEngine;
 
 public class SnapToGrid : MonoBehaviour {
 
-    LineRenderer lr;
-	CreateGrid cg;
+    LineRenderer line;
+	CreateGrid createGrid;
 
 	GridTile tile;
 
@@ -13,7 +13,7 @@ public class SnapToGrid : MonoBehaviour {
     {
 		DrawDebugLine ();
 
-		cg = GameObject.FindGameObjectWithTag ("GridParent").GetComponent<CreateGrid> ();
+        createGrid = GameObject.FindGameObjectWithTag ("GridParent").GetComponent<CreateGrid> ();
 
         SnapPosition();
 
@@ -25,13 +25,13 @@ public class SnapToGrid : MonoBehaviour {
 
         Vector3 Start = transform.position;
 
-        Ray ray = new Ray(Start, new Vector3(0, -1, 0));
+        Ray ray = new Ray(Start, Vector3.down);
 
 
-        if (Physics.Raycast(ray, out hit, 1f, 1 << LayerMask.NameToLayer("GridLayer")))
+        if (Physics.Raycast(ray, out hit, 10f, 1 << LayerMask.NameToLayer("GridLayer")))
         {
 			//Get the tile we hit
-			tile = cg.GetTileAt (hit.collider.transform.localPosition.x, hit.collider.transform.localPosition.z);
+			tile = createGrid.GetTileAt (hit.collider.transform.localPosition.x, hit.collider.transform.localPosition.z);
 
 			//If there is nothing on the tile, we can put this object there
 			if (tile.State == GridTile.GridState.Empty) {
@@ -39,7 +39,7 @@ public class SnapToGrid : MonoBehaviour {
 				transform.position = new Vector3 (hit.collider.gameObject.transform.position.x, hit.collider.gameObject.transform.position.y * 1.3f, hit.collider.gameObject.transform.position.z);
 				//The tile is now full, and no other objects should be able to be there at the same time
 				//This might not be necessary anymore, but I will look into it later (maybe)
-				tile.State = GridTile.GridState.Full;
+				//tile.State = GridTile.GridState.Full;
 			} 
 
 			else {
@@ -50,57 +50,47 @@ public class SnapToGrid : MonoBehaviour {
 				MoveObjectToPoint ();
 			}
 				
-			//CheckRotation();
+			CheckRotation();
         }
     }
 
-	//This thing has a bad gimbal lock problem at the moment, so we just let it be for now
     void CheckRotation()
     {
-        float newZ = 0;
+        float newY = 0;
 
-		float angle = 0.0F;
-		Vector3 axis = Vector3.zero;
-
-		Debug.Log(gameObject.name + " rotated " + angle + " degrees");
-
-		if (transform.rotation.eulerAngles.z >= 0 && transform.rotation.eulerAngles.z < 45)
+		if (transform.rotation.eulerAngles.y >= 0 && transform.rotation.eulerAngles.y < 45)
         {
-            newZ = 0;
+            newY = 0;
         }
 
-		else if(transform.rotation.eulerAngles.z >= 315 && transform.rotation.eulerAngles.z < 360){
-			newZ = 0;
+		else if(transform.rotation.eulerAngles.y >= 315 && transform.rotation.eulerAngles.y < 360){
+			newY = 0;
 		}
 
-        else if (transform.rotation.eulerAngles.z >= 45 && transform.rotation.eulerAngles.z < 135)
+        else if (transform.rotation.eulerAngles.y >= 45 && transform.rotation.eulerAngles.y < 135)
         {
-            newZ = 90;
+            newY = 90;
         }
 
-        else if (transform.rotation.eulerAngles.z >= 135 && transform.rotation.eulerAngles.z < 225)
+        else if (transform.rotation.eulerAngles.y >= 135 && transform.rotation.eulerAngles.y < 225)
         {
-            newZ = 180;
+            newY = 180;
         }
 
         else
         {
-            newZ = 270;
+            newY = 270;
         }
 
-        //Debug.Log("newZ = " + newZ);
-
-        //Debug.Log("z = " + transform.localRotation.eulerAngles.z);
-        //Debug.Log("-z = " + -transform.localRotation.eulerAngles.z);
-        //                                           First we reset the z angle and then add the correct angle
-        //transform.rotation = Quaternion.Euler(-90, 0, -transform.rotation.eulerAngles.z + newZ);
+        transform.rotation = Quaternion.Euler(0, newY, 0);
     }
 
+    //This might also be unnecessary
 	//When we pick an object, the tile it was in is set to be empty
-    private void OnAttachedToHand(Valve.VR.InteractionSystem.Hand hand)
-    {
-		tile.State = GridTile.GridState.Empty;
-    }
+  //  private void OnAttachedToHand(Valve.VR.InteractionSystem.Hand hand)
+  //  {
+		//tile.State = GridTile.GridState.Empty;
+  //  }
 
 	//When we drop an object it will snap to the grid
     private void OnDetachedFromHand(Valve.VR.InteractionSystem.Hand hand)
@@ -109,18 +99,18 @@ public class SnapToGrid : MonoBehaviour {
     }
 
 	private void DrawDebugLine(){
-		lr = gameObject.AddComponent<LineRenderer>();
-		//Defines how many points we have to draw the line through
-		lr.positionCount = 2;
-		//Don't know if I have to use them both, but I'm using them just in case
-		lr.startWidth = 0.01f;
-		lr.endWidth = 0.01f;
-		//Used so the grid scales correctly on the table
-		lr.useWorldSpace = false;
-		lr.shadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.Off;
+        line = gameObject.AddComponent<LineRenderer>();
+        //Defines how many points we have to draw the line through
+        line.positionCount = 2;
+        //Don't know if I have to use them both, but I'm using them just in case
+        line.startWidth = 0.01f;
+        line.endWidth = 0.01f;
+        //Used so the grid scales correctly on the table
+        line.useWorldSpace = false;
+        line.shadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.Off;
 
-		lr.SetPosition(0, Vector3.zero);
-		lr.SetPosition(1, new Vector3(0, 0, -0.5f));
+        line.SetPosition(0, Vector3.zero);
+        line.SetPosition(1, Vector3.down);
 	}
 		
 	//if there is alredy something in this tile, we move this object away

@@ -8,20 +8,22 @@ using UnityEngine;
 
 public class Pathfinding : MonoBehaviour {
 
-	CreateGrid grid;
+	CreateGrid createGrid;
     private LineRenderer pathRenderer;
 
     // Use this for initialization 
     void Start () {
-		grid = GetComponent<CreateGrid> ();
+        createGrid = GetComponent<CreateGrid> ();
         pathRenderer = GetComponent<LineRenderer>();
     }
 
     public void FindPath(GridTile startNode, GridTile targetNode)
     {
-        Heap<GridTile> openSet = new Heap<GridTile>(grid.MaxSize);
+        Heap<GridTile> openSet = new Heap<GridTile>(createGrid.MaxSize);
         HashSet<GridTile> closedSet = new HashSet<GridTile>();
         openSet.Add(startNode);
+
+        pathRenderer.positionCount = 0;
 
         while (openSet.Count > 0)
         {
@@ -35,7 +37,7 @@ public class Pathfinding : MonoBehaviour {
                 return;
             }
 
-            foreach (GridTile neighbour in grid.GetNeighbours(node))
+            foreach (GridTile neighbour in createGrid.GetNeighbours(node))
             {
                 if (neighbour.State != GridTile.GridState.Empty || closedSet.Contains(neighbour))
                 {
@@ -81,7 +83,7 @@ public class Pathfinding : MonoBehaviour {
 
         //This might actually be never needed, but I'm leaving it for now just in case
         path.Reverse();
-        grid.path = path;
+        createGrid.path = path;
 
         //This might not be right, but it has to be tested out to know for sure
         pathRenderer.positionCount = path.Count;
@@ -103,7 +105,7 @@ public class Pathfinding : MonoBehaviour {
             }
         }
 
-        float distance = diagonalCount * 1.4f * grid.CellSize + verticalOrHorizontalCount * grid.CellSize;
+        float distance = diagonalCount * 1.4f * createGrid.CellSize + verticalOrHorizontalCount * createGrid.CellSize;
         Debug.Log("Distance with pathfinding is " + distance);
 
     }
