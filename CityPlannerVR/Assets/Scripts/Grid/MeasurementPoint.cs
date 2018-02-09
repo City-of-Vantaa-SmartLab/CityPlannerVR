@@ -9,6 +9,7 @@ public class MeasurementPoint : MonoBehaviour {
 
     GameObject grid;
 	CreateGrid cg;
+    Pathfinding path;
     GridTile tile;
 	public GridTile Tile {
 		get {
@@ -24,6 +25,7 @@ public class MeasurementPoint : MonoBehaviour {
         grid = GameObject.FindGameObjectWithTag("GridParent");
 
         cg = grid.GetComponent<CreateGrid> ();
+        path = grid.GetComponent<Pathfinding>();
 
         SnapPosition();
 	}
@@ -49,7 +51,8 @@ public class MeasurementPoint : MonoBehaviour {
             {
                 //Gets distance between the tile this object is on and the tile the other object is on
                 float dist = MeasureDistance.CalculateDistance(tile, other.Tile);
-                Debug.Log("Distance is " + dist);
+                path.FindPath(Tile, other.Tile);
+                Debug.Log("Distance without pathfinding is " + dist);
             }
 		}
 	}

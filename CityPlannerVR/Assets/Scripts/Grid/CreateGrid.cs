@@ -108,6 +108,9 @@ public class CreateGrid : MonoBehaviour {
         int xIndex = Mathf.FloorToInt(x / CellSize);
         int zIndex = Mathf.FloorToInt(z / CellSize);
 
+        Debug.Log("xIndex = " + xIndex);
+        Debug.Log("zIndex = " + zIndex);
+
         if (tiles [xIndex, zIndex] == null) {
 			Debug.LogError ("Tile " + x + "," + z + " was null");
 		}
