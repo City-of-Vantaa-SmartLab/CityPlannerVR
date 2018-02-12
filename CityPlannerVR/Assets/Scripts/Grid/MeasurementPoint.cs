@@ -31,7 +31,15 @@ public class MeasurementPoint : MonoBehaviour {
 
 		attached = GetComponent<IsAttachedToHand> ();
 
-        SnapPosition();
+		if (gameObject.name == "MeasurementStartPoint") {
+			otherPoint = GameObject.FindGameObjectWithTag("EndPoint");
+		} else if (gameObject.name == "MeasurementEndPoint") {
+			otherPoint = GameObject.FindGameObjectWithTag("StartPoint");
+		} else {
+			Debug.LogError ("There is a typo somewhere");
+		}
+
+		SnapPosition();
 
 		if (attached != null) {
 			attached.OnSnapToGrid += CheckIfSnapping;
