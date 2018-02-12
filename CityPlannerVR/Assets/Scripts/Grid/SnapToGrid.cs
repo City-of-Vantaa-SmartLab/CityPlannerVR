@@ -4,21 +4,18 @@ using UnityEngine;
 
 public class SnapToGrid : MonoBehaviour {
 
-    LineRenderer line;
 	CreateGrid createGrid;
 
 	GridTile tile;
 
-	IsAttachadToHand attached;
+	IsAttachedToHand attached;
 
     void Start()
     {
-		DrawDebugLine ();
-
         createGrid = GameObject.FindGameObjectWithTag ("GridParent").GetComponent<CreateGrid> ();
 
         SnapPosition();
-		attached = GetComponent<IsAttachadToHand> ();
+		attached = GetComponent<IsAttachedToHand> ();
 
 		if (attached != null) {
 			attached.OnSnapToGrid += CheckIfSnapping;
@@ -27,7 +24,7 @@ public class SnapToGrid : MonoBehaviour {
 
 	void CheckIfSnapping(){
 		if (attached != null) {
-			Debug.Log ("IsHolding " + attached.IsHolding);
+			Debug.Log ("IsHolding a building: " + attached.IsHolding);
 			if (!attached.IsHolding) {
 				SnapPosition ();
 			}
@@ -107,20 +104,6 @@ public class SnapToGrid : MonoBehaviour {
 		//tile.State = GridTile.GridState.Empty;
   //  }
 
-	private void DrawDebugLine(){
-        line = gameObject.AddComponent<LineRenderer>();
-        //Defines how many points we have to draw the line through
-        line.positionCount = 2;
-        //Don't know if I have to use them both, but I'm using them just in case
-        line.startWidth = 0.01f;
-        line.endWidth = 0.01f;
-        //Used so the grid scales correctly on the table
-        line.useWorldSpace = false;
-        line.shadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.Off;
-
-        line.SetPosition(0, Vector3.zero);
-        line.SetPosition(1, Vector3.down);
-	}
 		
 	//if there is alredy something in this tile, we move this object away
 	public void MoveObjectToPoint(){

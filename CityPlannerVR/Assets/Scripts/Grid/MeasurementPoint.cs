@@ -17,6 +17,8 @@ public class MeasurementPoint : MonoBehaviour {
 		}
 	}
 
+	IsAttachedToHand attached;
+
     public GameObject otherPoint;
     MeasurementPoint other;
 
@@ -27,7 +29,23 @@ public class MeasurementPoint : MonoBehaviour {
         createGrid = grid.GetComponent<CreateGrid> ();
         pathfinding = grid.GetComponent<Pathfinding>();
 
+		attached = GetComponent<IsAttachedToHand> ();
+
         SnapPosition();
+
+		if (attached != null) {
+			attached.OnSnapToGrid += CheckIfSnapping;
+		}
+	}
+
+	void CheckIfSnapping(){
+		if (attached != null) {
+			Debug.Log ("IsHolding a Measuremen point: " + attached.IsHolding);
+			if (!attached.IsHolding) {
+				transform.parent = grid.transform;
+				SnapPosition ();
+			}
+		}
 	}
 
 	private void SnapPosition()
@@ -55,13 +73,5 @@ public class MeasurementPoint : MonoBehaviour {
                 Debug.Log("Distance without pathfinding is " + dist);
             }
 		}
-	}
-
-
-	//When we drop an object it will snap to the grid
-	private void OnDetachedFromHand(Valve.VR.InteractionSystem.Hand hand)
-	{
-        transform.parent = grid.transform;
-		SnapPosition();
 	}
 }

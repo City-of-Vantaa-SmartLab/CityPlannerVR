@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class IsAttachadToHand : MonoBehaviour {
+public class IsAttachedToHand : MonoBehaviour {
 
 	int maxTimer = 2;
 	int timer = 0;
