@@ -2,6 +2,10 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+/// <summary>
+/// Checks if player is normal size or shrinked down on the table for other scripts
+/// </summary>
+
 public class CheckPlayerSize : MonoBehaviour {
 
     //are we small
@@ -27,7 +31,7 @@ public class CheckPlayerSize : MonoBehaviour {
         }
         else
         {
-            Debug.LogError("Player scale changed and forgotten to change CheckPlayerSize values");
+            Debug.LogError("Player scale changed and forgotten to change CheckPlayerSize.cs values");
         }
     }
 }

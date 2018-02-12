@@ -21,7 +21,9 @@ public class HandPositionSetter : NetworkBehaviour
     [SyncVar(hook = "HookScaleHands")]
     public Vector3 objScale;
 
+	//Values come from the layer list
     int buildingLayer = 9;
+	int measurePointLayer = 11;
     int finalMask;
 
     [TargetRpc]
@@ -38,8 +40,9 @@ public class HandPositionSetter : NetworkBehaviour
         StartCoroutine(TrackNodeCoroutine(node));
         //Debug.Log("HandPositionSetter::TargetSetHand: Hand set");
 
-        int layerMask = 1 << buildingLayer;
-        finalMask = ~layerMask;
+        int buildingLayerMask = 1 << buildingLayer;
+		int measureLayerMask = 1 << measurePointLayer;
+		finalMask = ~(buildingLayerMask | measureLayerMask);
     }
 
     IEnumerator TrackNodeCoroutine(UnityEngine.XR.XRNode node)
@@ -55,7 +58,8 @@ public class HandPositionSetter : NetworkBehaviour
             {
                 //                                                                                                       all the axes are same for scale, so no matter which one is used. (If they're not, something is wrong and it should be fixed)
                 transform.position = playerVR.transform.position + UnityEngine.XR.InputTracking.GetLocalPosition(node) * playerVR.transform.localScale.x;
-                hand1.hoverLayerMask = finalMask;
+                //Now player won't be able to pick up building or other stuff we don't want when they are shrinked down on the table
+				hand1.hoverLayerMask = finalMask;
                 hand2.hoverLayerMask = finalMask;
             }
 
@@ -63,7 +67,8 @@ public class HandPositionSetter : NetworkBehaviour
             else
             {
                 transform.position = playerVR.transform.position + UnityEngine.XR.InputTracking.GetLocalPosition(node);
-                hand1.hoverLayerMask = -1;
+                //Player is normal sized again and must be able to move everything again
+				hand1.hoverLayerMask = -1;
                 hand2.hoverLayerMask = -1;
             }
 

@@ -9,6 +9,8 @@ public class SnapToGrid : MonoBehaviour {
 
 	GridTile tile;
 
+	IsAttachadToHand attached;
+
     void Start()
     {
 		DrawDebugLine ();
@@ -16,8 +18,21 @@ public class SnapToGrid : MonoBehaviour {
         createGrid = GameObject.FindGameObjectWithTag ("GridParent").GetComponent<CreateGrid> ();
 
         SnapPosition();
+		attached = GetComponent<IsAttachadToHand> ();
 
+		if (attached != null) {
+			attached.OnSnapToGrid += CheckIfSnapping;
+		}
     }
+
+	void CheckIfSnapping(){
+		if (attached != null) {
+			Debug.Log ("IsHolding " + attached.IsHolding);
+			if (!attached.IsHolding) {
+				SnapPosition ();
+			}
+		}
+	}
 
     private void SnapPosition()
     {
@@ -92,12 +107,6 @@ public class SnapToGrid : MonoBehaviour {
 		//tile.State = GridTile.GridState.Empty;
   //  }
 
-	//When we drop an object it will snap to the grid
-    private void OnDetachedFromHand(Valve.VR.InteractionSystem.Hand hand)
-    {
-        SnapPosition();
-    }
-
 	private void DrawDebugLine(){
         line = gameObject.AddComponent<LineRenderer>();
         //Defines how many points we have to draw the line through
@@ -114,7 +123,7 @@ public class SnapToGrid : MonoBehaviour {
 	}
 		
 	//if there is alredy something in this tile, we move this object away
-	void MoveObjectToPoint(){
+	public void MoveObjectToPoint(){
 
 		GameObject go = GameObject.Find ("Temporary table/Sphere");
 		transform.position = go.transform.position;
