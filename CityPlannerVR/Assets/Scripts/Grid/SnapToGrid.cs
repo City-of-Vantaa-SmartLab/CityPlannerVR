@@ -2,6 +2,10 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+/// <summary>
+/// Snaps a building to a grid
+/// </summary>
+
 public class SnapToGrid : MonoBehaviour {
 
 	CreateGrid createGrid;
@@ -24,7 +28,6 @@ public class SnapToGrid : MonoBehaviour {
 
 	void CheckIfSnapping(){
 		if (attached != null) {
-			Debug.Log ("IsHolding a building: " + attached.IsHolding);
 			if (!attached.IsHolding) {
 				SnapPosition ();
 			}
@@ -39,28 +42,18 @@ public class SnapToGrid : MonoBehaviour {
 
         Ray ray = new Ray(Start, Vector3.down);
 
+		if(Physics.Raycast(ray, out hit, 10f, 1 << LayerMask.NameToLayer("Building"))){
+			hit.collider.transform.position = new Vector3 (0, 0, 0);
+		}
+
 
         if (Physics.Raycast(ray, out hit, 10f, 1 << LayerMask.NameToLayer("GridLayer")))
         {
 			//Get the tile we hit
 			tile = createGrid.GetTileAt (hit.collider.transform.localPosition.x, hit.collider.transform.localPosition.z);
 
-			//If there is nothing on the tile, we can put this object there
-			if (tile.State == GridTile.GridState.Empty) {
-				//Moves the building to the grids position									    just a bit higher than the table, so the building collider won't go inside table collider
-				transform.position = new Vector3 (hit.collider.gameObject.transform.position.x, hit.collider.gameObject.transform.position.y * 1.3f, hit.collider.gameObject.transform.position.z);
-				//The tile is now full, and no other objects should be able to be there at the same time
-				//This might not be necessary anymore, but I will look into it later (maybe)
-				//tile.State = GridTile.GridState.Full;
-			} 
-
-			else {
-				//There is already something in this tile, so we cannot put this here
-				Debug.Log("This tile is full");
-
-				//These are different solutions to same problem. We'll test them out 
-				MoveObjectToPoint ();
-			}
+			//Moves the building to the grids position									    just a bit higher than the table, so the building collider won't go inside a table collider
+			transform.position = new Vector3 (hit.collider.gameObject.transform.position.x, hit.collider.gameObject.transform.position.y * 1.3f, hit.collider.gameObject.transform.position.z);
 				
 			CheckRotation();
         }
@@ -96,14 +89,6 @@ public class SnapToGrid : MonoBehaviour {
 
         transform.rotation = Quaternion.Euler(0, newY, 0);
     }
-
-    //This might also be unnecessary
-	//When we pick an object, the tile it was in is set to be empty
-  //  private void OnAttachedToHand(Valve.VR.InteractionSystem.Hand hand)
-  //  {
-		//tile.State = GridTile.GridState.Empty;
-  //  }
-
 		
 	//if there is alredy something in this tile, we move this object away
 	public void MoveObjectToPoint(){

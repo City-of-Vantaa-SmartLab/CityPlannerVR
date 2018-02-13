@@ -71,8 +71,8 @@ public class GridTile : IHeapItem<GridTile> {
 		//This is hardcoded value. It makes sure the collider is in right place 
 		collider.center = new Vector3 (0, 0.7f, 0);
 
-        trigger.size = new Vector3(cellSize, 10, cellSize);
-        trigger.center = new Vector3(0, 5, 0);
+        trigger.size = new Vector3(cellSize, 1, cellSize);
+        trigger.center = new Vector3(0, 1, 0);
         trigger.isTrigger = true;
 	}
 
