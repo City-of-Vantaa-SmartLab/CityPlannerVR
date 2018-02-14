@@ -88,12 +88,12 @@ public class GridTile : IHeapItem<GridTile> {
 		//Defines how many points we have to draw the line through
 		line.SetVertexCount(4);
 		line.SetTotalWidth(0.1f);
-		//Used so the grid scales correctly on the table
-		//line.m_UseWorldSpace = false;
 		//Draws a line from last point to the first (so we get a square)
 		line.loop = true;
 	}
 
+
+    //For the pathfinding
     public int HeapIndex
     {
         get

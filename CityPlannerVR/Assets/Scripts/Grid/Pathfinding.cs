@@ -91,7 +91,12 @@ public class Pathfinding : MonoBehaviour {
 
         for (int i = 0; i < pathRenderer.GetVertexCount(); i++)
         {
-            pathRenderer.SetPosition(i, path[i].tileObject.transform.position);
+            //This will make a line to represent the path found with the pathfinding
+            //                                                                           we have to lift the line up a bit, so we can see it
+            Vector3 linePath = new Vector3(path[i].tileObject.transform.localPosition.x, path[i].tileObject.transform.localPosition.y * 2, path[i].tileObject.transform.localPosition.z);
+            pathRenderer.SetPosition(i, linePath);
+
+            //This is used to measure the distance of the path that is found with the pathfinding
             if(i > 0)
             {
 
