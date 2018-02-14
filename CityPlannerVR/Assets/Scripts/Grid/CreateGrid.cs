@@ -6,8 +6,11 @@ public class CreateGrid : MonoBehaviour {
 
 	private GridTile[,] tiles;
 
-	public int gridSizeX;
-	public int gridSizeZ;
+	public int originalGridSizeX;
+	public int originalGridSizeZ;
+
+    int gridSizeX;
+    int gridSizeZ;
 
 	private float cellSize = 2f;
 
@@ -20,14 +23,15 @@ public class CreateGrid : MonoBehaviour {
 		}
 		set {
 			cellSize = value;
-			//CreateGridTiles ();
+            DeleteGridTiles();
+			CreateGridTiles ();
 		}
 	}
 
 	public Material gridMaterial;
 
-	// Use this for initialization
-	void Start () {
+    // Use this for initialization
+    void Start () {
 
 		CreateGridTiles ();
 	}
@@ -41,7 +45,21 @@ public class CreateGrid : MonoBehaviour {
         }
     }
 
+    void DeleteGridTiles()
+    {
+        for (int i = 0; i < gridSizeX; i++)
+        {
+            for (int j = 0; j < gridSizeZ; j++)
+            {
+                Destroy(tiles[i, j].tileObject);
+            }
+        }
+    }
+
 	void CreateGridTiles(){
+
+        gridSizeX = originalGridSizeX;
+        gridSizeZ = originalGridSizeZ;
 
         //This will make sure that the grid is the same size as the table is when cellSize is changed
         gridSizeX = Mathf.FloorToInt(gridSizeX / CellSize);
