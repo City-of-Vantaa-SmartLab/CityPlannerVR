@@ -32,6 +32,7 @@ public class CreateGrid : MonoBehaviour {
 		CreateGridTiles ();
 	}
 
+    //Pathfinding uses this
     public int MaxSize
     {
         get
