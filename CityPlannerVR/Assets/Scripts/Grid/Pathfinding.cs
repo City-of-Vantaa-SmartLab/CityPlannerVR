@@ -9,12 +9,13 @@ using UnityEngine;
 public class Pathfinding : MonoBehaviour {
 
 	CreateGrid createGrid;
-    private LineRenderer pathRenderer;
+    private XRLineRenderer pathRenderer;
+    
 
     // Use this for initialization 
     void Start () {
         createGrid = GetComponent<CreateGrid> ();
-        pathRenderer = GetComponent<LineRenderer>();
+        pathRenderer = GetComponent<XRLineRenderer>();
     }
 
     public void FindPath(GridTile startNode, GridTile targetNode)
@@ -23,7 +24,7 @@ public class Pathfinding : MonoBehaviour {
         HashSet<GridTile> closedSet = new HashSet<GridTile>();
         openSet.Add(startNode);
 
-        pathRenderer.positionCount = 0;
+        pathRenderer.SetVertexCount(0);
 
         while (openSet.Count > 0)
         {
@@ -86,11 +87,16 @@ public class Pathfinding : MonoBehaviour {
         createGrid.path = path;
 
         //This might not be right, but it has to be tested out to know for sure
-        pathRenderer.positionCount = path.Count;
+        pathRenderer.SetVertexCount(path.Count);
 
-        for (int i = 0; i < pathRenderer.positionCount; i++)
+        for (int i = 0; i < pathRenderer.GetVertexCount(); i++)
         {
-            pathRenderer.SetPosition(i, path[i].tileObject.transform.position);
+            //This will make a line to represent the path found with the pathfinding
+            //                                                                           we have to lift the line up a bit, so we can see it
+            Vector3 linePath = new Vector3(path[i].tileObject.transform.localPosition.x, path[i].tileObject.transform.localPosition.y * 2, path[i].tileObject.transform.localPosition.z);
+            pathRenderer.SetPosition(i, linePath);
+
+            //This is used to measure the distance of the path that is found with the pathfinding
             if(i > 0)
             {
 
