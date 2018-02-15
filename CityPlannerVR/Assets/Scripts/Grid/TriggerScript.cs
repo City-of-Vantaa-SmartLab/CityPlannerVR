@@ -36,12 +36,6 @@ public class TriggerScript : MonoBehaviour {
         //If the triggering object is building
         if (other.tag == "Building")
         {
-            if(state == GridTile.GridState.Full)
-            {
-                //Muutetaan meshin väriä hieman punaisemmaksi tai jotain
-                
-            }
-
             attached = other.GetComponent<IsAttachedToHand>();
             //Check if the player is not holding the object anymore
             if (!attached.IsHolding)
@@ -61,9 +55,14 @@ public class TriggerScript : MonoBehaviour {
                     //The building was different
                     else
                     {
-                       //We move the old building out of the way, and put the new one here
-                       buildings[0].GetComponent<SnapToGrid>().MoveObjectToPoint();
-                       buildings.Remove(buildings[0]);                        
+                        //I'm not even sure we need this check anymore....
+                        if (state == GridTile.GridState.Full)
+                        {
+                            //We move the old building out of the way, and put the new one here
+                            buildings[0].GetComponent<SnapToGrid>().MoveObjectToPoint();
+                            buildings.Remove(buildings[0]);
+
+                        }
                     }
                 }
             }
@@ -80,8 +79,6 @@ public class TriggerScript : MonoBehaviour {
         {
             buildings.Remove(buildings[0]);
         }
-
-        //Muutetaan meshin väri takaisin normaaliksi
     }
     #endregion
 

@@ -22,8 +22,7 @@ public class GridTile : IHeapItem<GridTile> {
     public GameObject tileObject;
     public BoxCollider collider;
     public BoxCollider trigger;
-    public BoxCollider indicatorTrigger;
-    public XRLineRenderer line;
+    public LineRenderer line;
 
 	public float xPos;
 	public float zPos;
@@ -53,8 +52,7 @@ public class GridTile : IHeapItem<GridTile> {
 
 		collider = tileObject.AddComponent<BoxCollider> ();
         trigger = tileObject.AddComponent<BoxCollider>();
-        indicatorTrigger = tileObject.AddComponent<BoxCollider>();
-		line = tileObject.AddComponent<XRLineRenderer> ();
+		line = tileObject.AddComponent<LineRenderer> ();
 		checkGridState = tileObject.AddComponent<GridTileStateCheck> ();
 		checkGridState.tile = this;
 
@@ -73,27 +71,25 @@ public class GridTile : IHeapItem<GridTile> {
 		//This is hardcoded value. It makes sure the collider is in right place 
 		collider.center = new Vector3 (0, 0.7f, 0);
 
-        //This will trigger when the building is put on the table
         trigger.size = new Vector3(cellSize, 1, cellSize);
         trigger.center = new Vector3(0, 1, 0);
         trigger.isTrigger = true;
-
-        //This will trigger and change the color of the building, to indicate, if the building will be put on another building
-        indicatorTrigger.size = new Vector3(cellSize, 7, cellSize);
-        indicatorTrigger.center = new Vector3(0, 4, 0);
-        indicatorTrigger.isTrigger = true;
-    }
+	}
 
 	private void InitializeLineRenderer(){
 		//Defines how many points we have to draw the line through
-		line.SetVertexCount(4);
-		line.SetTotalWidth(0.1f);
+		line.positionCount = 4;
+		//Don't know if I have to use them both, but I'm using them just in case
+		line.startWidth = 0.01f;
+		line.endWidth = 0.01f;
+		//Used so the grid scales correctly on the table
+		line.useWorldSpace = false;
+		//We don't need (or want) shadows
+		line.shadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.Off;
 		//Draws a line from last point to the first (so we get a square)
 		line.loop = true;
 	}
 
-
-    //For the pathfinding
     public int HeapIndex
     {
         get
