@@ -12,6 +12,10 @@ public class MeasurementPoint : MonoBehaviour {
     Pathfinding pathfinding;
     GridTile tile;
 	public GridTile Tile {
+        private set
+        {
+            tile = value;
+        }
 		get {
 			return tile;
 		}
@@ -68,8 +72,8 @@ public class MeasurementPoint : MonoBehaviour {
 		if (Physics.Raycast(ray, out hit, 5f, 1 << LayerMask.NameToLayer("GridLayer")))
 		{
 			//Get the tile we hit
-			tile = createGrid.GetTileAt (hit.collider.transform.localPosition.x, hit.collider.transform.localPosition.z);
-            transform.localPosition = new Vector3(tile.tileObject.transform.localPosition.x, tile.tileObject.transform.localPosition.y * 2f, tile.tileObject.transform.localPosition.z);
+			Tile = createGrid.GetTileAt (hit.collider.transform.localPosition.x, hit.collider.transform.localPosition.z);
+            transform.localPosition = new Vector3(Tile.tileObject.transform.localPosition.x, Tile.tileObject.transform.localPosition.y * 2f, Tile.tileObject.transform.localPosition.z);
             transform.localRotation = Quaternion.identity;
 
             other = otherPoint.GetComponent<MeasurementPoint>();
@@ -77,7 +81,7 @@ public class MeasurementPoint : MonoBehaviour {
             {
                 //Gets distance between the tile this object is on and the tile the other object is on
                 float dist = MeasureDistance.CalculateDistance(tile, other.Tile);
-                pathfinding.FindPath(Tile, other.Tile);
+                pathfinding.CmdFindPath(Tile.tileObject.transform.localPosition, other.Tile.tileObject.transform.localPosition);
                 Debug.Log("Distance without pathfinding is " + dist);
             }
 		}

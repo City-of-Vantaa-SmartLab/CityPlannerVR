@@ -1,12 +1,10 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Networking;
 
 
-//TODO: Change and optimize sometime
-//  -Add possible visual effect to show the path
-
-public class Pathfinding : MonoBehaviour {
+public class Pathfinding : NetworkBehaviour {
 
 	CreateGrid createGrid;
     private XRLineRenderer pathRenderer;
@@ -18,8 +16,12 @@ public class Pathfinding : MonoBehaviour {
         pathRenderer = GetComponent<XRLineRenderer>();
     }
 
-    public void FindPath(GridTile startNode, GridTile targetNode)
+    [Command]
+    public void CmdFindPath(Vector3 startPos, Vector3 targetPos)
     {
+        GridTile startNode = createGrid.GetTileAt(startPos.x, startPos.z);
+        GridTile targetNode = createGrid.GetTileAt(targetPos.x, targetPos.z);
+
         Heap<GridTile> openSet = new Heap<GridTile>(createGrid.MaxSize);
         HashSet<GridTile> closedSet = new HashSet<GridTile>();
         openSet.Add(startNode);
