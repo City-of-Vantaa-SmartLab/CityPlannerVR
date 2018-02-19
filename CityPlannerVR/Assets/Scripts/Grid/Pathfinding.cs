@@ -63,8 +63,7 @@ public class Pathfinding : NetworkBehaviour {
     //    return path;
     //}
 
-    [Command]
-    public void CmdFindPath(Vector3 startPos, Vector3 targetPos)
+    public void FindPath(Vector3 startPos, Vector3 targetPos)
     {
         GridTile startNode = createGrid.GetTileAt(startPos.x, startPos.z);
         GridTile targetNode = createGrid.GetTileAt(targetPos.x, targetPos.z);
@@ -83,7 +82,7 @@ public class Pathfinding : NetworkBehaviour {
 
             if (node == targetNode)
             {
-                CmdRetracePath(startNode.tileObject.transform.localPosition, targetNode.tileObject.transform.localPosition);
+                RetracePath(startNode.tileObject.transform.localPosition, targetNode.tileObject.transform.localPosition);
                 return;
             }
 
@@ -114,8 +113,7 @@ public class Pathfinding : NetworkBehaviour {
         }
     }
 
-    [Command]
-    void CmdRetracePath(Vector3 startPos, Vector3 targetPos)
+    void RetracePath(Vector3 startPos, Vector3 targetPos)
     {
 
         GridTile start = createGrid.GetTileAt(startPos.x, startPos.z);
@@ -142,7 +140,6 @@ public class Pathfinding : NetworkBehaviour {
 
     }
 
-    [Client]
     void DrawAndMeasurePath(List<GridTile> path)
     {
         int diagonalCount = 0;

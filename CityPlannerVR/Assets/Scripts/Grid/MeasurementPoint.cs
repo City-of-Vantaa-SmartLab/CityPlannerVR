@@ -81,7 +81,7 @@ public class MeasurementPoint : MonoBehaviour {
             {
                 //Gets distance between the tile this object is on and the tile the other object is on
                 float dist = MeasureDistance.CalculateDistance(tile, other.Tile);
-                pathfinding.CmdFindPath(Tile.tileObject.transform.localPosition, other.Tile.tileObject.transform.localPosition);
+                pathfinding.FindPath(Tile.tileObject.transform.localPosition, other.Tile.tileObject.transform.localPosition);
                 Debug.Log("Distance without pathfinding is " + dist);
             }
 		}
