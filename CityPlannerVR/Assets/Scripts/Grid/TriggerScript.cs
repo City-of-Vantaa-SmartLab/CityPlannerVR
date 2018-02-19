@@ -6,7 +6,7 @@ using UnityEngine;
 /// Is used to check if a tile is full before we put the building down.
 /// Option1: There is a little bug, where you can put building inside other if you can trigger the OnTriggerEnter() before leting go of the building 
 ///     (this doesn't break the game however (hopefully))
-/// Option1: Is a bit heavy right now
+/// Option1: Is a bit heavy right now (propably)
 /// Option2: There is a bug, where some of the tables are moved when initialized 
 /// (Possibly because they are so big, that they collide with the collider before trigger)
 /// </summary>

@@ -10,8 +10,6 @@ public class SnapToGrid : MonoBehaviour {
 
 	CreateGrid createGrid;
 
-	GridTile tile;
-
 	IsAttachedToHand attached;
 
     void Start()
@@ -26,6 +24,7 @@ public class SnapToGrid : MonoBehaviour {
 		}
     }
 
+    //This will allow us to change the hand holding the object without it trying to snap to the grid
 	void CheckIfSnapping(){
 		if (attached != null) {
 			if (!attached.IsHolding) {
@@ -49,9 +48,6 @@ public class SnapToGrid : MonoBehaviour {
 
         if (Physics.Raycast(ray, out hit, 10f, 1 << LayerMask.NameToLayer("GridLayer")))
         {
-			//Get the tile we hit
-			tile = createGrid.GetTileAt (hit.collider.transform.localPosition.x, hit.collider.transform.localPosition.z);
-
 			//Moves the building to the grids position									    just a bit higher than the table, so the building collider won't go inside a table collider
 			transform.position = new Vector3 (hit.collider.gameObject.transform.position.x, hit.collider.gameObject.transform.position.y * 1.3f, hit.collider.gameObject.transform.position.z);
 				

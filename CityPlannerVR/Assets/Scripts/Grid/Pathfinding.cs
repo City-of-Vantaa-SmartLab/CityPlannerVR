@@ -4,64 +4,15 @@ using UnityEngine;
 using UnityEngine.Networking;
 
 public class Pathfinding : NetworkBehaviour {
-
-    public class SyncListVector : SyncList<Vector3>
-    {
-
-        protected override void SerializeItem(NetworkWriter writer, Vector3 item)
-        {
-            writer.Write(item);
-        }
-
-        protected override Vector3 DeserializeItem(NetworkReader reader)
-        {
-            return reader.ReadVector3();
-        }
-    }
-
     
     private CreateGrid createGrid;
     private XRLineRenderer pathRenderer;
-
-    SyncListVector syncPath = new SyncListVector();
-    //SyncListFloat serverPath = new SyncListFloat();
 
     // Use this for initialization 
     void Start () {
         createGrid = GetComponent<CreateGrid> ();
         pathRenderer = GetComponent<XRLineRenderer>();
     }
-
-    //If the vector version doesn't work, I'll try this
-    //[Command]
-    //void CmdMakeServerPathList()
-    //{
-    //    //Saa vektorilistan ja tekee int listan serverille
-    //    List<GridTile> path = createGrid.path;
-    //    int lenght = createGrid.path.Count * 3;
-    //    for (int i = 0; i < lenght; i += 3)
-    //    {
-    //        serverPath.Add(path[i].tileObject.transform.localPosition.x);
-    //        serverPath.Add(path[i + 1].tileObject.transform.localPosition.y);
-    //        serverPath.Add(path[i + 2].tileObject.transform.localPosition.z);
-    //    }
-
-    //}
-
-    //[Client]
-    //List<Vector3> MakeVectorList()
-    //{
-    //    CmdMakeServerPathList();
-
-    //    //Saa int listan ja tekee vektorilistan clientille
-    //    List<Vector3> path = new List<Vector3>();
-    //    for (int i = 0; i < serverPath.Count; i += 3)
-    //    {
-    //        path.Add(new Vector3(serverPath[i], serverPath[i +1], serverPath[i + 2]));
-    //    }
-
-    //    return path;
-    //}
 
     public void FindPath(Vector3 startPos, Vector3 targetPos)
     {
@@ -70,8 +21,10 @@ public class Pathfinding : NetworkBehaviour {
 
         Heap<GridTile> openSet = new Heap<GridTile>(createGrid.MaxSize);
         HashSet<GridTile> closedSet = new HashSet<GridTile>();
+
         openSet.Add(startNode);
 
+        //Initializes the path drawing every time, so if the path cannot be established, there will be no path visible
         pathRenderer.SetVertexCount(0);
 
         while (openSet.Count > 0)
@@ -115,7 +68,6 @@ public class Pathfinding : NetworkBehaviour {
 
     void RetracePath(Vector3 startPos, Vector3 targetPos)
     {
-
         GridTile start = createGrid.GetTileAt(startPos.x, startPos.z);
         GridTile end = createGrid.GetTileAt(targetPos.x, targetPos.z);
 
@@ -125,14 +77,13 @@ public class Pathfinding : NetworkBehaviour {
         while (currentNode != start)
         {
             path.Add(currentNode);
-            syncPath.Add(currentNode.tileObject.transform.localPosition);
             currentNode = currentNode.parent;
         }
 
         path.Add(start);
 
         //This might actually be never needed, but I'm leaving it for now just in case 
-        //(if we want something to move along the path)
+        //(if we want something to move along the path etc.)
         path.Reverse();
         createGrid.path = path;
 
