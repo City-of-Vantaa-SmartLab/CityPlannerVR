@@ -8,21 +8,25 @@ using UnityEngine;
 
 public class SnapToGrid : MonoBehaviour {
 
-	CreateGrid createGrid;
-
 	IsAttachedToHand attached;
 
     void Start()
     {
-        createGrid = GameObject.FindGameObjectWithTag ("GridParent").GetComponent<CreateGrid> ();
-
         SnapPosition();
 		attached = GetComponent<IsAttachedToHand> ();
 
 		if (attached != null) {
 			attached.OnSnapToGrid += CheckIfSnapping;
 		}
+
+		//Adds this gameObject to a static list for easy access
+		ObjectContainer.objects.Add (gameObject);
     }
+
+	void OnDestroy(){
+		//Removes this object from the static list
+		ObjectContainer.objects.Remove(gameObject);
+	}
 
     //This will allow us to change the hand holding the object without it trying to snap to the grid
 	void CheckIfSnapping(){
@@ -41,16 +45,11 @@ public class SnapToGrid : MonoBehaviour {
 
         Ray ray = new Ray(Start, Vector3.down);
 
-		if(Physics.Raycast(ray, out hit, 10f, 1 << LayerMask.NameToLayer("Building"))){
-			hit.collider.transform.position = new Vector3 (0, 0, 0);
-		}
-
-
         if (Physics.Raycast(ray, out hit, 10f, 1 << LayerMask.NameToLayer("GridLayer")))
         {
-			//Moves the building to the grids position									    just a bit higher than the table, so the building collider won't go inside a table collider
+			//Moves the object to the grids position									    just a bit higher than the table, so the object collider won't go inside a table collider
 			transform.position = new Vector3 (hit.collider.gameObject.transform.position.x, hit.collider.gameObject.transform.position.y * 1.3f, hit.collider.gameObject.transform.position.z);
-				
+
 			CheckRotation();
         }
     }
@@ -89,7 +88,6 @@ public class SnapToGrid : MonoBehaviour {
 	//if there is alredy something in this tile, we move this object away
 	public void MoveObjectToPoint(){
 
-		GameObject go = GameObject.Find ("Temporary table/Sphere");
-		transform.position = go.transform.position;
+		transform.position = ObjectContainer.trashPoint;
 	}
 }

@@ -46,6 +46,7 @@ public class TriggerScript : MonoBehaviour {
             //Check if the player is not holding the object anymore
             if (!attached.IsHolding)
             {
+                #region Check_if_two buildings_are_in_the_same_gridTile
                 //This grid has a building now
                 buildings.Add(other.gameObject);
 
@@ -66,6 +67,7 @@ public class TriggerScript : MonoBehaviour {
                        buildings.Remove(buildings[0]);                        
                     }
                 }
+                #endregion
             }
         }
     }

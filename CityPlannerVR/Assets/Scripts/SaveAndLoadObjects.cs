@@ -4,57 +4,93 @@ using UnityEngine;
 using System.Runtime.Serialization.Formatters.Binary;
 using System.IO;
 
+
+//TODO: tehdään vain hostilla/serverillä ja clientit saa valmiina kaikki tiedot
+
 public class SaveAndLoadObjects : MonoBehaviour {
 
     public static SaveAndLoadObjects saveLoad;
 
     public string objectName;
     public Vector3 objectPosition;
-    public Vector3 objectRotation;
+    public Quaternion objectRotation;
     public Vector3 objectScale;
 
-    private string pathName = Application.persistentDataPath + "/joku.joku";
+    private string pathName;
+
+    private void Awake()
+    {
+        pathName = Application.persistentDataPath + "/ObjectData.dat";
+
+        LoadObject();
+    }
+
+    private void OnApplicationQuit()
+    {
+        SaveObject();
+    }
+
+    public GameObject table;
 
     public void SaveObject()
     {
         BinaryFormatter bf = new BinaryFormatter();
         FileStream file = File.Create(pathName);
+        ObjectList ol = new ObjectList();
 
-        ObjectData data = new ObjectData();
-        data.objectName = objectName;
-        data.objectPosition = objectPosition;
-        data.objectRotation = objectRotation;
-        data.objectScale = objectScale;
+        for (int i = 0; i < ObjectContainer.objects.Count; i++)
+        {
+            ObjectData data = new ObjectData();
+            data.objectName = objectName;
+            data.objectPosition = objectPosition;
+            data.objectRotation = objectRotation;
+            data.objectScale = objectScale;
 
-        testi test = new testi();
-        test.joku[0] = data;
+            ol.objectDataList.Add(data);
+        }
 
-        bf.Serialize(file, data);
-        bf.Serialize(file, test);
+        bf.Serialize(file, ol);
         file.Close();
     }
 
-    public void Load()
+    public void LoadObject()
     {
         if(File.Exists(pathName))
         {
             BinaryFormatter bf = new BinaryFormatter();
             FileStream file = File.Open(pathName, FileMode.Open);
-            ObjectData data = (ObjectData)bf.Deserialize(file);
+            ObjectList ol = (ObjectList)bf.Deserialize(file);
             file.Close();
 
-            objectName = data.objectName;
-            objectPosition = data.objectPosition;
-            objectRotation = data.objectRotation;
-            objectScale = data.objectScale;
+            GameObject parent = new GameObject
+            {
+                name = "Parent"
+            };
+            //Hardcoded for now
+            parent.transform.parent = table.transform;
+            parent.transform.localPosition = new Vector3(0, 0, 0);
+            parent.transform.localRotation = Quaternion.identity;
+            parent.transform.localScale = new Vector3(1, 1, 1);
+
+            for (int i = 0; i < ol.objectDataList.Count; i++)
+            {
+                objectName = ol.objectDataList[i].objectName;
+                objectPosition = ol.objectDataList[i].objectPosition;
+                objectRotation = ol.objectDataList[i].objectRotation;
+                objectScale = ol.objectDataList[i].objectScale;
+
+                GameObject go = Instantiate(GameObject.Find(objectName), objectPosition, objectRotation);
+                go.transform.parent = parent.transform;
+                go.transform.localScale = objectScale;
+            }
         }
     }
 }
 
 [System.Serializable]
-class testi
+class ObjectList
 {
-    public ObjectData[] joku;
+    public List<ObjectData> objectDataList;
 }
 
 [System.Serializable]
@@ -62,6 +98,6 @@ class ObjectData
 {
     public string objectName;
     public Vector3 objectPosition;
-    public Vector3 objectRotation;
+    public Quaternion objectRotation;
     public Vector3 objectScale;
 }
