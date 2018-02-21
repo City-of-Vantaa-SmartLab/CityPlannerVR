@@ -24,8 +24,9 @@ public class SnapToGrid : MonoBehaviour {
     }
 
 	void OnDestroy(){
-		//Removes this object from the static list
-		ObjectContainer.objects.Remove(gameObject);
+
+        //Removes this object from the static list
+        ObjectContainer.objects.Remove(gameObject);
 	}
 
     //This will allow us to change the hand holding the object without it trying to snap to the grid

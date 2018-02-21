@@ -12,7 +12,7 @@ public class CreateGrid : MonoBehaviour {
     int gridSizeX;
     int gridSizeZ;
 
-	private float cellSize = 2f;
+	private float cellSize = 10f;
 
     //This is here for now because tutorial said so. Used if we want to move something in our grid
 	public List<GridTile> path;
