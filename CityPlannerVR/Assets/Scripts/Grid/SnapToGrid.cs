@@ -10,6 +10,38 @@ public class SnapToGrid : MonoBehaviour {
 
 	IsAttachedToHand attached;
 
+    private bool isOnGrid = false;
+    public bool IsOnGrid
+    {
+        get
+        {
+            return isOnGrid;
+        }
+        set
+        {
+            isOnGrid = value;
+            if (isOnGrid)
+            {
+                if (!ObjectContainer.objects.Contains(gameObject))
+                {
+                    //Adds this gameObject to a static list for easy access
+                    ObjectContainer.objects.Add(gameObject);
+                    Debug.Log(gameObject.name + " is in the list now.");
+                }
+            }
+            else
+            {
+                if (ObjectContainer.objects.Contains(gameObject))
+                {
+                    //If the object is in the list, remove it
+                    ObjectContainer.objects.Remove(gameObject);
+                    Debug.Log(gameObject.name + " removed from the list now.");
+                }
+            }
+        }
+    }
+
+
     void Start()
     {
         SnapPosition();
@@ -18,9 +50,6 @@ public class SnapToGrid : MonoBehaviour {
 		if (attached != null) {
 			attached.OnSnapToGrid += CheckIfSnapping;
 		}
-
-		//Adds this gameObject to a static list for easy access
-		ObjectContainer.objects.Add (gameObject);
     }
 
 	void OnDestroy(){
@@ -50,6 +79,7 @@ public class SnapToGrid : MonoBehaviour {
         {
 			//Moves the object to the grids position									    just a bit higher than the table, so the object collider won't go inside a table collider
 			transform.position = new Vector3 (hit.collider.gameObject.transform.position.x, hit.collider.gameObject.transform.position.y * 1.3f, hit.collider.gameObject.transform.position.z);
+
 
 			CheckRotation();
         }

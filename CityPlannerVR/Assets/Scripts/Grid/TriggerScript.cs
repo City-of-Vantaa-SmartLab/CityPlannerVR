@@ -22,6 +22,8 @@ public class TriggerScript : MonoBehaviour {
     #region option1
 
     //This list count should and will always be 2 at max, which let's me do some assumptions later
+    //It stores the building on this tile and if there are more than one, does something
+    //BUG: if both players try to put a building on top of another building, this might cause something unexpected
     List<GameObject> buildings;
     IsAttachedToHand attached;
 
