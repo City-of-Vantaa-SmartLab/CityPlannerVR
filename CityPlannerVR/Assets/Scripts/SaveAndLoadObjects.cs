@@ -32,6 +32,8 @@ public class SaveAndLoadObjects : MonoBehaviour {
         pathName = Application.persistentDataPath + "/ObjectData.dat";
         xmlPathName = Application.persistentDataPath + "/XmlData.dat";
 
+        Debug.Log(pathName);
+
         XmlLoadObject();
     }
 
@@ -60,6 +62,7 @@ public class SaveAndLoadObjects : MonoBehaviour {
 
         for (int i = 0; i < ObjectContainer.objects.Count; i++)
         {
+
             dataDB.list.Add(new ObjectData());
             dataDB.list[i].objectName = ObjectContainer.objects[i].name;
 
@@ -105,25 +108,36 @@ public class SaveAndLoadObjects : MonoBehaviour {
                 parent.transform.localRotation = Quaternion.identity;
                 parent.transform.localScale = new Vector3(1, 1, 1);
 
-                //All the lists are (or should be) the same lenght
-                for (int i = 0; i < dataDB.list.Count; i++)
+                for (int i = 0; i < dataDB.list.Count; ++i)
                 {
                     objectName = dataDB.list[i].objectName;
                     objectPosition = new Vector3(dataDB.list[i].objectPosition[0], dataDB.list[i].objectPosition[1], dataDB.list[i].objectPosition[2]);
                     objectRotation = new Quaternion(dataDB.list[i].objectRotation[0], dataDB.list[i].objectRotation[1], dataDB.list[i].objectRotation[2], dataDB.list[i].objectRotation[3]);
                     objectScale = new Vector3(dataDB.list[i].objectScale[0], dataDB.list[i].objectScale[1], dataDB.list[i].objectScale[2]);
 
-                    dataDB.list.Remove(dataDB.list[i]);
-
-                    GameObject go = Instantiate(Resources.Load("Prefabs/Buildings/" + objectName, typeof(GameObject)), objectPosition, objectRotation) as GameObject;
+                    GameObject go = Instantiate(Resources.Load("Prefabs/Buildings/" + objectName, typeof(GameObject))) as GameObject;
                     go.name = objectName;
                     go.transform.parent = parent.transform;
+                    go.transform.localPosition = objectPosition;
+                    go.transform.rotation = objectRotation;
                     go.transform.localScale = objectScale;
                 }
+
+                InitializeObjectDatabase();
+
             }
         }
     }
     #endregion
+
+
+    void InitializeObjectDatabase()
+    {
+        while(dataDB.list.Count > 0)
+        {
+            dataDB.list.Remove(dataDB.list[0]);
+        }
+    }
 
     #region save and load
     public void SaveObject()
@@ -208,7 +222,7 @@ public class ObjectData
 {
     public string objectName;
     public float[] objectPosition = new float[3];
-    public float[] objectRotation = new float[4];
+    public float[] objectRotation = new float[4]; //x, y, z, w
     public float[] objectScale = new float[3];
 }
 
