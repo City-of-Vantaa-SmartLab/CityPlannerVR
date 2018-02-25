@@ -38,6 +38,7 @@ public class TriggerScript : MonoBehaviour {
         //If the triggering object is building
         if (other.tag == "Building")
         {
+            //To indicate to the player, that here is something 
             if(state == GridTile.GridState.Full)
             {
                 //Muutetaan meshin väriä hieman punaisemmaksi tai jotain
@@ -48,7 +49,7 @@ public class TriggerScript : MonoBehaviour {
             //Check if the player is not holding the object anymore
             if (!attached.IsHolding)
             {
-                #region Check_if_two buildings_are_in_the_same_gridTile
+                #region Check if two buildings are in the same gridTile
                 //This grid has a building now
                 buildings.Add(other.gameObject);
 
@@ -68,6 +69,10 @@ public class TriggerScript : MonoBehaviour {
                        buildings[0].GetComponent<SnapToGrid>().MoveObjectToPoint();
                        buildings.Remove(buildings[0]);                        
                     }
+                }
+                else
+                {
+                    Debug.LogError("There is more than two objects in buildings list");
                 }
                 #endregion
             }
@@ -89,6 +94,7 @@ public class TriggerScript : MonoBehaviour {
     }
     #endregion
 
+    //If we choose this option, some stuff needs to be added (like the indicator check)
     #region option2
     //private void OnTriggerEnter(Collider other)
     //{

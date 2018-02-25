@@ -190,7 +190,7 @@ public class SaveAndLoadObjects : MonoBehaviour {
                 {
                     name = "Parent"
                 };
-                //Hardcoded for now
+                //Hardcoded
                 parent.transform.parent = table.transform;
                 parent.transform.localPosition = new Vector3(0, 0, 0);
                 parent.transform.localRotation = Quaternion.identity;
