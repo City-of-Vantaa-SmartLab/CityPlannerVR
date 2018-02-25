@@ -22,7 +22,6 @@ public class GridTile : IHeapItem<GridTile> {
     public GameObject tileObject;
     public BoxCollider collider;
     public BoxCollider trigger;
-    public BoxCollider indicatorTrigger;
     public XRLineRenderer line;
 
 	public float xPos;
@@ -53,7 +52,6 @@ public class GridTile : IHeapItem<GridTile> {
 
 		collider = tileObject.AddComponent<BoxCollider> ();
         trigger = tileObject.AddComponent<BoxCollider>();
-        indicatorTrigger = tileObject.AddComponent<BoxCollider>();
 		line = tileObject.AddComponent<XRLineRenderer> ();
 		checkGridState = tileObject.AddComponent<GridTileStateCheck> ();
 		checkGridState.tile = this;
@@ -77,11 +75,6 @@ public class GridTile : IHeapItem<GridTile> {
         trigger.size = new Vector3(cellSize, 1, cellSize);
         trigger.center = new Vector3(0, 1, 0);
         trigger.isTrigger = true;
-
-        //This will trigger and change the color of the building, to indicate, if the building will be put on another building
-        indicatorTrigger.size = new Vector3(cellSize, 7, cellSize);
-        indicatorTrigger.center = new Vector3(0, 4, 0);
-        indicatorTrigger.isTrigger = true;
     }
 
 	private void InitializeLineRenderer(){

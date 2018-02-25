@@ -38,13 +38,6 @@ public class TriggerScript : MonoBehaviour {
         //If the triggering object is building
         if (other.tag == "Building")
         {
-            //To indicate to the player, that here is something 
-            if(state == GridTile.GridState.Full)
-            {
-                //Muutetaan meshin väriä hieman punaisemmaksi tai jotain
-                
-            }
-
             attached = other.GetComponent<IsAttachedToHand>();
             //Check if the player is not holding the object anymore
             if (!attached.IsHolding)
@@ -70,6 +63,7 @@ public class TriggerScript : MonoBehaviour {
                        buildings.Remove(buildings[0]);                        
                     }
                 }
+                //Just in case
                 else
                 {
                     Debug.LogError("There is more than two objects in buildings list");
@@ -77,20 +71,6 @@ public class TriggerScript : MonoBehaviour {
                 #endregion
             }
         }
-    }
-
-    private void OnTriggerExit(Collider other)
-    {
-        //There should never be more than one object on one grid object
-        //and because the grid object won't trigger unless something is actually placed on it,
-        //I can assume that buldings.Count == 1 
-        //this check is just in case (if I forget to add some other checks or something)
-        if (buildings.Count > 0)
-        {
-            buildings.Remove(buildings[0]);
-        }
-
-        //Muutetaan meshin väri takaisin normaaliksi
     }
     #endregion
 

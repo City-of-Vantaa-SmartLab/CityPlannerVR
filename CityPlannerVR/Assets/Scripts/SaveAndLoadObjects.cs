@@ -24,13 +24,31 @@ public class SaveAndLoadObjects : MonoBehaviour {
     [HideInInspector]
     public Vector3 objectScale;
 
+    private string folderPathName;
+    private string folder;
+    private string fileName;
+    private string fileExtender;
     private string pathName;
+    private char slash = Path.DirectorySeparatorChar;
     //private string xmlPathName;
+
+    
 
     private void Awake()
     {
-        pathName = Application.persistentDataPath + "/ObjectData.dat";
+        
+        folder = "SaveData";
+        fileName = "ObjectData";
+        fileExtender = ".dat";
+        folderPathName = Application.persistentDataPath + slash + folder;
+        pathName = folderPathName + slash + fileName + fileExtender;
+
+        
         //xmlPathName = Application.persistentDataPath + "/XmlData.dat";
+        if (!Directory.Exists(folderPathName))
+        {
+            Directory.CreateDirectory(folderPathName);
+        }
 
         LoadObject();
     }
@@ -129,14 +147,6 @@ public class SaveAndLoadObjects : MonoBehaviour {
     //#endregion
 
 
-    void InitializeObjectDatabase()
-    {
-        while(dataDB.list.Count > 0)
-        {
-            dataDB.list.Remove(dataDB.list[0]);
-        }
-    }
-
     #region save and load
     public void SaveObject()
     {
@@ -177,45 +187,63 @@ public class SaveAndLoadObjects : MonoBehaviour {
 
     public void LoadObject()
     {
-        if (File.Exists(pathName))
+        //TODO: Nämä starttiin tms.
+        DirectoryInfo files = new DirectoryInfo(folderPathName);
+        FileInfo[] fileInfo = files.GetFiles();
+
+        foreach (var item in fileInfo)
         {
-            BinaryFormatter bf = new BinaryFormatter();
-            FileStream file = File.Open(pathName, FileMode.Open);
-            if (file.Length > 0)
+            //TODO: Pitää muuttaa path name niin, että löytää kaikki oikein eikä vain yhtä tms.
+            if (File.Exists(pathName))
             {
-                dataDB = (ObjectDatabase)bf.Deserialize(file);
-                file.Close();
-
-                GameObject parent = new GameObject
+                BinaryFormatter bf = new BinaryFormatter();
+                FileStream file = File.Open(pathName, FileMode.Open);
+                if (file.Length > 0)
                 {
-                    name = "Parent"
-                };
-                //Hardcoded
-                parent.transform.parent = table.transform;
-                parent.transform.localPosition = new Vector3(0, 0, 0);
-                parent.transform.localRotation = Quaternion.identity;
-                parent.transform.localScale = new Vector3(1, 1, 1);
+                    dataDB = (ObjectDatabase)bf.Deserialize(file);
+                    file.Close();
 
-                for (int i = 0; i < dataDB.list.Count; ++i)
-                {
-                    objectName = dataDB.list[i].objectName;
-                    objectPosition = new Vector3(dataDB.list[i].objectPosition[0], dataDB.list[i].objectPosition[1], dataDB.list[i].objectPosition[2]);
-                    objectRotation = new Quaternion(dataDB.list[i].objectRotation[0], dataDB.list[i].objectRotation[1], dataDB.list[i].objectRotation[2], dataDB.list[i].objectRotation[3]);
-                    objectScale = new Vector3(dataDB.list[i].objectScale[0], dataDB.list[i].objectScale[1], dataDB.list[i].objectScale[2]);
+                    GameObject parent = new GameObject
+                    {
+                        name = "Parent"
+                    };
+                    //Hardcoded
+                    parent.transform.parent = table.transform;
+                    parent.transform.localPosition = new Vector3(0, 0, 0);
+                    parent.transform.localRotation = Quaternion.identity;
+                    parent.transform.localScale = new Vector3(1, 1, 1);
 
-                    GameObject go = Instantiate(Resources.Load("Prefabs/Buildings/" + objectName, typeof(GameObject))) as GameObject;
-                    go.name = objectName;
-                    go.transform.parent = parent.transform;
-                    go.transform.localPosition = objectPosition;
-                    go.transform.rotation = objectRotation;
-                    go.transform.localScale = objectScale;
+                    for (int i = 0; i < dataDB.list.Count; ++i)
+                    {
+                        objectName = dataDB.list[i].objectName;
+                        objectPosition = new Vector3(dataDB.list[i].objectPosition[0], dataDB.list[i].objectPosition[1], dataDB.list[i].objectPosition[2]);
+                        objectRotation = new Quaternion(dataDB.list[i].objectRotation[0], dataDB.list[i].objectRotation[1], dataDB.list[i].objectRotation[2], dataDB.list[i].objectRotation[3]);
+                        objectScale = new Vector3(dataDB.list[i].objectScale[0], dataDB.list[i].objectScale[1], dataDB.list[i].objectScale[2]);
+
+                        GameObject go = Instantiate(Resources.Load("Prefabs/Buildings/" + objectName, typeof(GameObject))) as GameObject;
+                        go.name = objectName;
+                        go.transform.parent = parent.transform;
+                        go.transform.localPosition = objectPosition;
+                        go.transform.rotation = objectRotation;
+                        go.transform.localScale = objectScale;
+                    }
+
+                    InitializeObjectDatabase();
                 }
-
-                InitializeObjectDatabase();
             }
+
+        
         }
     }
-#endregion
+    #endregion
+
+    void InitializeObjectDatabase()
+    {
+        while (dataDB.list.Count > 0)
+        {
+            dataDB.list.Remove(dataDB.list[0]);
+        }
+    }
 }
 
 
