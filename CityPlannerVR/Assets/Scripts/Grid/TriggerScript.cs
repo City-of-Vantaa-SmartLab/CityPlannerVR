@@ -22,6 +22,8 @@ public class TriggerScript : MonoBehaviour {
     #region option1
 
     //This list count should and will always be 2 at max, which let's me do some assumptions later
+    //It stores the building on this tile and if there are more than one, does something
+    //BUG: if both players try to put a building on top of another building, this might cause something unexpected
     List<GameObject> buildings;
     IsAttachedToHand attached;
 
@@ -36,16 +38,11 @@ public class TriggerScript : MonoBehaviour {
         //If the triggering object is building
         if (other.tag == "Building")
         {
-            if(state == GridTile.GridState.Full)
-            {
-                //Muutetaan meshin väriä hieman punaisemmaksi tai jotain
-                
-            }
-
             attached = other.GetComponent<IsAttachedToHand>();
             //Check if the player is not holding the object anymore
             if (!attached.IsHolding)
             {
+                #region Check if two buildings are in the same gridTile
                 //This grid has a building now
                 buildings.Add(other.gameObject);
 
@@ -66,25 +63,22 @@ public class TriggerScript : MonoBehaviour {
                        buildings.Remove(buildings[0]);                        
                     }
                 }
+                #endregion
             }
         }
     }
 
     private void OnTriggerExit(Collider other)
     {
-        //There should never be more than one object on one grid object
-        //and because the grid object won't trigger unless something is actually placed on it,
-        //I can assume that buldings.Count == 1 
-        //this check is just in case (if I forget to add some other checks or something)
         if (buildings.Count > 0)
         {
+            //This is assumption I made because there is only on thing in the list (or nothing at all)
             buildings.Remove(buildings[0]);
         }
-
-        //Muutetaan meshin väri takaisin normaaliksi
     }
     #endregion
 
+    //If we choose this option, some stuff needs to be added (like the indicator check)
     #region option2
     //private void OnTriggerEnter(Collider other)
     //{

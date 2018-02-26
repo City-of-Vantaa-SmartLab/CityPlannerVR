@@ -51,9 +51,6 @@ public class HandPositionSetter : NetworkBehaviour
         {
             transform.rotation = UnityEngine.XR.InputTracking.GetLocalRotation(node);
 
-            //Scaling the playerVR (Player) down causes some funky stuff with the position calculations. These checks are needed to counter that.
-            //(the check values are hardcoded for now. Solution can be changed if there is time).
-
             if (playerSize.isSmall)
             {
                 //                                                                                                       all the axes are same for scale, so no matter which one is used. (If they're not, something is wrong and it should be fixed)
