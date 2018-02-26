@@ -2,28 +2,29 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-
-//TODO: Change and optimize sometime
-//  -Add possible visual effect to show the path
-
 public class Pathfinding : MonoBehaviour {
-
-	CreateGrid createGrid;
-    private LineRenderer pathRenderer;
+    
+    private CreateGrid createGrid;
+    private XRLineRenderer pathRenderer;
 
     // Use this for initialization 
     void Start () {
         createGrid = GetComponent<CreateGrid> ();
-        pathRenderer = GetComponent<LineRenderer>();
+        pathRenderer = GetComponent<XRLineRenderer>();
     }
 
-    public void FindPath(GridTile startNode, GridTile targetNode)
+    public void FindPath(Vector3 startPos, Vector3 targetPos)
     {
+        GridTile startNode = createGrid.GetTileAt(startPos.x, startPos.z);
+        GridTile targetNode = createGrid.GetTileAt(targetPos.x, targetPos.z);
+
         Heap<GridTile> openSet = new Heap<GridTile>(createGrid.MaxSize);
         HashSet<GridTile> closedSet = new HashSet<GridTile>();
+
         openSet.Add(startNode);
 
-        pathRenderer.positionCount = 0;
+        //Initializes the path drawing every time, so if the path cannot be established, there will be no path visible
+        pathRenderer.SetVertexCount(0);
 
         while (openSet.Count > 0)
         {
@@ -33,7 +34,7 @@ public class Pathfinding : MonoBehaviour {
 
             if (node == targetNode)
             {
-                RetracePath(startNode, targetNode);
+                RetracePath(startNode.tileObject.transform.localPosition, targetNode.tileObject.transform.localPosition);
                 return;
             }
 
@@ -64,37 +65,52 @@ public class Pathfinding : MonoBehaviour {
         }
     }
 
-    void RetracePath(GridTile start, GridTile end)
+    void RetracePath(Vector3 startPos, Vector3 targetPos)
     {
+        GridTile start = createGrid.GetTileAt(startPos.x, startPos.z);
+        GridTile end = createGrid.GetTileAt(targetPos.x, targetPos.z);
+
         List<GridTile> path = new List<GridTile>();
         GridTile currentNode = end;
-
-        int diagonalCount = 0;
-        int verticalOrHorizontalCount = 0;
 
         while (currentNode != start)
         {
             path.Add(currentNode);
             currentNode = currentNode.parent;
-            
         }
 
         path.Add(start);
 
-        //This might actually be never needed, but I'm leaving it for now just in case
+        //This might actually be never needed, but I'm leaving it for now just in case 
+        //(if we want something to move along the path etc.)
         path.Reverse();
         createGrid.path = path;
 
-        //This might not be right, but it has to be tested out to know for sure
-        pathRenderer.positionCount = path.Count;
+        DrawAndMeasurePath(path);
 
-        for (int i = 0; i < pathRenderer.positionCount; i++)
+    }
+
+    void DrawAndMeasurePath(List<GridTile> path)
+    {
+        int diagonalCount = 0;
+        int verticalOrHorizontalCount = 0;
+
+        //This might not be right, but it has to be tested out to know for sure
+        //(Everything looks right so far)
+        pathRenderer.SetVertexCount(path.Count);
+
+        for (int i = 0; i < pathRenderer.GetVertexCount(); i++)
         {
-            pathRenderer.SetPosition(i, path[i].tileObject.transform.position);
-            if(i > 0)
+            //This will make a line to represent the path found with the pathfinding
+            //                                                                           we have to lift the line up a bit, so we can see it
+            Vector3 linePath = new Vector3(path[i].tileObject.transform.localPosition.x, path[i].tileObject.transform.localPosition.y * 2, path[i].tileObject.transform.localPosition.z);
+            pathRenderer.SetPosition(i, linePath);
+
+            //This is used to measure the distance of the path that is found with the pathfinding
+            if (i > 0)
             {
 
-                if(path[i].xPos != path[i - 1].xPos && path[i].zPos != path[i - 1].zPos)
+                if (path[i].xPos != path[i - 1].xPos && path[i].zPos != path[i - 1].zPos)
                 {
                     diagonalCount++;
                 }
@@ -107,6 +123,5 @@ public class Pathfinding : MonoBehaviour {
 
         float distance = diagonalCount * 1.4f * createGrid.CellSize + verticalOrHorizontalCount * createGrid.CellSize;
         Debug.Log("Distance with pathfinding is " + distance);
-
     }
 }

@@ -22,7 +22,7 @@ public class GridTile : IHeapItem<GridTile> {
     public GameObject tileObject;
     public BoxCollider collider;
     public BoxCollider trigger;
-    public LineRenderer line;
+    public XRLineRenderer line;
 
 	public float xPos;
 	public float zPos;
@@ -52,7 +52,7 @@ public class GridTile : IHeapItem<GridTile> {
 
 		collider = tileObject.AddComponent<BoxCollider> ();
         trigger = tileObject.AddComponent<BoxCollider>();
-		line = tileObject.AddComponent<LineRenderer> ();
+		line = tileObject.AddComponent<XRLineRenderer> ();
 		checkGridState = tileObject.AddComponent<GridTileStateCheck> ();
 		checkGridState.tile = this;
 
@@ -71,25 +71,22 @@ public class GridTile : IHeapItem<GridTile> {
 		//This is hardcoded value. It makes sure the collider is in right place 
 		collider.center = new Vector3 (0, 0.7f, 0);
 
-        trigger.size = new Vector3(cellSize, 10, cellSize);
-        trigger.center = new Vector3(0, 5, 0);
+        //This will trigger when the building is put on the table
+        trigger.size = new Vector3(cellSize, 1, cellSize);
+        trigger.center = new Vector3(0, 1, 0);
         trigger.isTrigger = true;
-	}
+    }
 
 	private void InitializeLineRenderer(){
 		//Defines how many points we have to draw the line through
-		line.positionCount = 4;
-		//Don't know if I have to use them both, but I'm using them just in case
-		line.startWidth = 0.01f;
-		line.endWidth = 0.01f;
-		//Used so the grid scales correctly on the table
-		line.useWorldSpace = false;
-		//We don't need (or want) shadows
-		line.shadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.Off;
+		line.SetVertexCount(4);
+		line.SetTotalWidth(0.1f);
 		//Draws a line from last point to the first (so we get a square)
 		line.loop = true;
 	}
 
+
+    //For the pathfinding
     public int HeapIndex
     {
         get

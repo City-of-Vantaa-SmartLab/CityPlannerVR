@@ -12,22 +12,53 @@ public class MeasurementPoint : MonoBehaviour {
     Pathfinding pathfinding;
     GridTile tile;
 	public GridTile Tile {
+        private set
+        {
+            tile = value;
+        }
 		get {
 			return tile;
 		}
 	}
 
+	IsAttachedToHand attached;
+
+	[Tooltip("The other one of the two measurementpoints (EndPoint for StartPoint and other way around)")]
     public GameObject otherPoint;
     MeasurementPoint other;
 
     void Start()
 	{
-        grid = GameObject.FindGameObjectWithTag("GridParent");
+		grid = ObjectContainer.grid;
 
         createGrid = grid.GetComponent<CreateGrid> ();
         pathfinding = grid.GetComponent<Pathfinding>();
 
-        SnapPosition();
+		attached = GetComponent<IsAttachedToHand> ();
+
+		if (gameObject.name == "MeasurementStartPoint") {
+			otherPoint = GameObject.FindGameObjectWithTag("EndPoint");
+		} else if (gameObject.name == "MeasurementEndPoint") {
+			otherPoint = GameObject.FindGameObjectWithTag("StartPoint");
+		} else {
+			Debug.LogError ("There is a typo somewhere");
+		}
+
+		SnapPosition();
+
+		if (attached != null) {
+			attached.OnSnapToGrid += CheckIfSnapping;
+		}
+	}
+
+	void CheckIfSnapping(){
+		if (attached != null) {
+			Debug.Log ("IsHolding a Measuremen point: " + attached.IsHolding);
+			if (!attached.IsHolding) {
+				transform.parent = grid.transform;
+				SnapPosition ();
+			}
+		}
 	}
 
 	private void SnapPosition()
@@ -42,8 +73,8 @@ public class MeasurementPoint : MonoBehaviour {
 		if (Physics.Raycast(ray, out hit, 5f, 1 << LayerMask.NameToLayer("GridLayer")))
 		{
 			//Get the tile we hit
-			tile = createGrid.GetTileAt (hit.collider.transform.localPosition.x, hit.collider.transform.localPosition.z);
-            transform.localPosition = new Vector3(tile.tileObject.transform.localPosition.x, tile.tileObject.transform.localPosition.y * 2f, tile.tileObject.transform.localPosition.z);
+			Tile = createGrid.GetTileAt (hit.collider.transform.localPosition.x, hit.collider.transform.localPosition.z);
+            transform.localPosition = new Vector3(Tile.tileObject.transform.localPosition.x, Tile.tileObject.transform.localPosition.y * 2f, Tile.tileObject.transform.localPosition.z);
             transform.localRotation = Quaternion.identity;
 
             other = otherPoint.GetComponent<MeasurementPoint>();
@@ -51,17 +82,9 @@ public class MeasurementPoint : MonoBehaviour {
             {
                 //Gets distance between the tile this object is on and the tile the other object is on
                 float dist = MeasureDistance.CalculateDistance(tile, other.Tile);
-                pathfinding.FindPath(Tile, other.Tile);
+                pathfinding.FindPath(Tile.tileObject.transform.localPosition, other.Tile.tileObject.transform.localPosition);
                 Debug.Log("Distance without pathfinding is " + dist);
             }
 		}
-	}
-
-
-	//When we drop an object it will snap to the grid
-	private void OnDetachedFromHand(Valve.VR.InteractionSystem.Hand hand)
-	{
-        transform.parent = grid.transform;
-		SnapPosition();
 	}
 }

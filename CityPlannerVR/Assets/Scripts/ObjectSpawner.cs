@@ -87,6 +87,8 @@ public class ObjectSpawner : NetworkBehaviour
 
             if (found == true)
             {
+                Rigidbody r_body = other.gameObject.GetComponent<Rigidbody>();
+                r_body.constraints = RigidbodyConstraints.None;
                 itemsInSpawner.Remove(other.gameObject);
                 if (itemsInSpawner.Count == 0)
                 {
@@ -99,9 +101,11 @@ public class ObjectSpawner : NetworkBehaviour
     private void InstantiateItem()
     {
         GameObject clone = Instantiate(item, spawnPoint.position, spawnPoint.rotation);
+        Rigidbody r_clone = clone.GetComponent<Rigidbody>();
 
         clone.transform.SetParent(this.transform);
         clone.name = item.name;
+        r_clone.constraints = RigidbodyConstraints.FreezeAll;
         itemsInSpawner.Add(clone);
 
         NetworkServer.Spawn(clone);    

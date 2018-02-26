@@ -2,7 +2,10 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class IsAttachadToHand : MonoBehaviour {
+/// <summary>
+/// This fixes the bug where building jumped a bit, when tried to put object from one hand to another
+/// </summary>
+public class IsAttachedToHand : MonoBehaviour {
 
 	int maxTimer = 2;
 	int timer = 0;
