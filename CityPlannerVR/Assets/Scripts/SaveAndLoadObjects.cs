@@ -32,18 +32,17 @@ public class SaveAndLoadObjects : MonoBehaviour {
     private char slash = Path.DirectorySeparatorChar;
     //private string xmlPathName;
 
-    
+    DirectoryInfo files;
+    FileInfo[] fileInfo;
 
     private void Awake()
     {
-        
         folder = "SaveData";
         fileName = "ObjectData";
         fileExtender = ".dat";
         folderPathName = Application.persistentDataPath + slash + folder;
         pathName = folderPathName + slash + fileName + fileExtender;
 
-        
         //xmlPathName = Application.persistentDataPath + "/XmlData.dat";
         if (!Directory.Exists(folderPathName))
         {
@@ -64,7 +63,7 @@ public class SaveAndLoadObjects : MonoBehaviour {
     [HideInInspector]
     public ObjectDatabase dataDB;
 
-    //#region Xml debug
+    #region Xml debug
     //public void XmlSaveObject()
     //{
     //    //Delete the old savefile if there is one
@@ -144,10 +143,10 @@ public class SaveAndLoadObjects : MonoBehaviour {
     //        }
     //    }
     //}
-    //#endregion
-
+    #endregion
 
     #region save and load
+    //This is not fully ready yet, but it is a good start
     public void SaveObject()
     {
         //Delete the old savefile if there is one
@@ -187,13 +186,14 @@ public class SaveAndLoadObjects : MonoBehaviour {
 
     public void LoadObject()
     {
-        //TODO: Nämä starttiin tms.
-        DirectoryInfo files = new DirectoryInfo(folderPathName);
-        FileInfo[] fileInfo = files.GetFiles();
+        files = new DirectoryInfo(folderPathName);
+        //Get all the savefiles in the same folder 
+        fileInfo = files.GetFiles();
 
+        //Loop through each of the files and load the content
         foreach (var item in fileInfo)
         {
-            //TODO: Pitää muuttaa path name niin, että löytää kaikki oikein eikä vain yhtä tms.
+            pathName = Application.persistentDataPath + slash + folder + slash + item.Name;
             if (File.Exists(pathName))
             {
                 BinaryFormatter bf = new BinaryFormatter();
@@ -223,16 +223,17 @@ public class SaveAndLoadObjects : MonoBehaviour {
                         GameObject go = Instantiate(Resources.Load("Prefabs/Buildings/" + objectName, typeof(GameObject))) as GameObject;
                         go.name = objectName;
                         go.transform.parent = parent.transform;
+                        //Gives the parent object to the child so it knows who its parent is when there are multiple parents in the scene
+                        go.GetComponent<SnapToGrid>().parent = parent;
                         go.transform.localPosition = objectPosition;
                         go.transform.rotation = objectRotation;
                         go.transform.localScale = objectScale;
                     }
 
+                    //This must be done in order to prevent a bug that duplicates all the buildings 
                     InitializeObjectDatabase();
                 }
             }
-
-        
         }
     }
     #endregion
@@ -252,11 +253,12 @@ public class SaveAndLoadObjects : MonoBehaviour {
 public class ObjectData
 {
     public string objectName;
-    public float[] objectPosition = new float[3];
+    public float[] objectPosition = new float[3]; //x, y, z
     public float[] objectRotation = new float[4]; //x, y, z, w
-    public float[] objectScale = new float[3];
+    public float[] objectScale = new float[3];    //x, y, z
 }
 
+//Contains all the objects from the scene that are saved
 [System.Serializable]
 public class ObjectDatabase
 {

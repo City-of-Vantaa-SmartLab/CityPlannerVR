@@ -63,13 +63,17 @@ public class TriggerScript : MonoBehaviour {
                        buildings.Remove(buildings[0]);                        
                     }
                 }
-                //Just in case
-                else
-                {
-                    Debug.LogError("There is more than two objects in buildings list");
-                }
                 #endregion
             }
+        }
+    }
+
+    private void OnTriggerExit(Collider other)
+    {
+        if (buildings.Count > 0)
+        {
+            //This is assumption I made because there is only on thing in the list (or nothing at all)
+            buildings.Remove(buildings[0]);
         }
     }
     #endregion
