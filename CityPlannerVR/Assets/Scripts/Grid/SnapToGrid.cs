@@ -81,7 +81,7 @@ public class SnapToGrid : MonoBehaviour {
         {
 			//Moves the object to the grids position									    just a bit higher than the table, so the object collider won't go inside a table collider
 			transform.position = new Vector3 (hit.collider.gameObject.transform.position.x, hit.collider.gameObject.transform.position.y * 1.3f, hit.collider.gameObject.transform.position.z);
-            transform.parent = parent.transform;
+            //transform.parent = parent.transform;
 
 			CheckRotation();
         }
