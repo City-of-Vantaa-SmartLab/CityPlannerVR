@@ -22,7 +22,7 @@ GameObject:
   - component: {fileID: 33220504991562986}
   - component: {fileID: 135308365316589790}
   - component: {fileID: 23512322525255042}
-  - component: {fileID: 114231505155107820}
+  - component: {fileID: 114287926025515776}
   m_Layer: 0
   m_Name: PhotonSphere
   m_TagString: Untagged
@@ -84,7 +84,7 @@ MeshFilter:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1611609996486316}
   m_Mesh: {fileID: 10207, guid: 0000000000000000e000000000000000, type: 0}
---- !u!114 &114231505155107820
+--- !u!114 &114287926025515776
 MonoBehaviour:
   m_ObjectHideFlags: 1
   m_PrefabParentObject: {fileID: 0}
@@ -92,30 +92,24 @@ MonoBehaviour:
   m_GameObject: {fileID: 1611609996486316}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 372142912, guid: dc443db3e92b4983b9738c1131f555cb, type: 3}
+  m_Script: {fileID: 11500000, guid: aa584fbee541324448dd18d8409c7a41, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_SceneId:
-    m_Value: 0
-  m_AssetId:
-    i0: 23
-    i1: 7
-    i2: 164
-    i3: 76
-    i4: 8
-    i5: 163
-    i6: 115
-    i7: 244
-    i8: 251
-    i9: 41
-    i10: 7
-    i11: 16
-    i12: 13
-    i13: 176
-    i14: 85
-    i15: 112
-  m_ServerOnly: 0
-  m_LocalPlayerAuthority: 1
+  ownerId: 0
+  group: 0
+  OwnerShipWasTransfered: 0
+  prefixBackup: -1
+  synchronization: 0
+  onSerializeTransformOption: 3
+  onSerializeRigidBodyOption: 2
+  ownershipTransfer: 0
+  ObservedComponents:
+  - {fileID: 0}
+  ObservedComponentsFoldoutOpen: 1
+  viewIdField: 0
+  instantiationId: -1
+  currentMasterID: -1
+  isRuntimeInstantiated: 0
 --- !u!135 &135308365316589790
 SphereCollider:
   m_ObjectHideFlags: 1

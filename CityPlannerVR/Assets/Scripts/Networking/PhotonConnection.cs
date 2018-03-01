@@ -21,6 +21,7 @@ public class PhotonConnection : Photon.PunBehaviour {
 
 	#endregion
 
+
 	#region Public Methods
 
 	public void Init()
@@ -36,19 +37,31 @@ public class PhotonConnection : Photon.PunBehaviour {
 		PhotonNetwork.logLevel = Loglevel;
 	}
 
+	// Start the connection process.
+	// If already connected, attempt to join room
+	// If not connected, connect app instance to Photon Cloud
 	public void ConnectToPhoton(string gameVersion)
 	{
 		isConnecting = true;
 
 		//Check if connected
 		if (PhotonNetwork.connected) {
-			// Attempt joining a Random Room. If it fails, notified in OnPhotonRandomJoinFailed() and create one.
-			PhotonNetwork.JoinRandomRoom();
+			OnConnectedToMaster ();
 		} 
 		else {
 			// Connect to Photon Online Server.
 			PhotonNetwork.ConnectUsingSettings(gameVersion);
 		}
+	}
+
+	public void LeaveRoom()
+	{
+		PhotonNetwork.LeaveRoom ();
+	}
+
+	public void Disconnect()
+	{
+		PhotonNetwork.Disconnect ();
 	}
 
 	#endregion
@@ -57,29 +70,36 @@ public class PhotonConnection : Photon.PunBehaviour {
 
 	public override void OnConnectedToMaster()
 	{
-		Debug.Log("Launcher: OnConnectedToMaster() was called by PUN");
-
 		//Only join room if we actually want to connect
 		if (isConnecting) {
-			// Join a potential existing room. 
-			//If there is, good, if not, callback with OnPhotonRandomJoinFailed()  
-			PhotonNetwork.JoinRandomRoom ();
+			isConnecting = false;
+			if (!PhotonNetwork.inRoom) {
+				GetComponentInParent<PhotonGameManager> ().ChangeState (NetworkState.JOINING_ROOM);
+				// Join a potential existing room. 
+				//If there is, good, if not, callback with OnPhotonRandomJoinFailed()  
+				PhotonNetwork.JoinRandomRoom ();
+			}
 		}
 	}
 
 	public override void OnDisconnectedFromPhoton()
 	{
-		GetComponentInParent<Launcher> ().progressLabel.SetActive (false);
-		GetComponentInParent<Launcher> ().controlPanel.SetActive (true);
-
 		Debug.LogWarning ("Launcher: OnDisconnedtedFromPhoton() was called by PUN");
+		GetComponentInParent<PhotonGameManager> ().ChangeState (NetworkState.DISCONNECTED);
+		GetComponentInParent<PhotonGameManager> ().LoadLauncher ();
 	}
 
 	public override void OnPhotonRandomJoinFailed(object[] codeAndMsg)
 	{
 		Debug.Log("Launcher:OnPhotonRandomJoinFailed() was called by PUN. No random room available, so we create one.");
+		GetComponentInParent<PhotonGameManager> ().ChangeState (NetworkState.CREATING_ROOM);
 		// Failed to join a random room. Create a new room.
-		PhotonNetwork.CreateRoom(null, new RoomOptions() {MaxPlayers = GetComponentInParent<Launcher>().MaxPlayersPerRoom}, null);
+		PhotonNetwork.CreateRoom(null, new RoomOptions() {MaxPlayers = GetComponentInParent<PhotonGameManager>().MaxPlayersPerRoom}, null);
+	}
+
+	public override void OnCreatedRoom()
+	{
+		GetComponentInParent<PhotonGameManager> ().ChangeState (NetworkState.ROOM_CREATED);
 	}
 
 	public override void OnJoinedRoom()
@@ -88,10 +108,40 @@ public class PhotonConnection : Photon.PunBehaviour {
 
 		//Load world if we are the first player
 		//Otherwise rely on PhotonNetwork.automaticallySyncScene to sync the instance
-		if(PhotonNetwork.room.PlayerCount == 1) {
+		if (PhotonNetwork.room.PlayerCount == 1) {
 			Debug.Log ("First player loading the world");
 
 			PhotonNetwork.LoadLevel ("photonMultiplayer");
+		}
+		GetComponentInParent<PhotonGameManager> ().ChangeState (NetworkState.ROOM_JOINED);
+	}
+
+	//Called when the local player left the room.
+	//Load Launcher scene
+	public override void OnLeftRoom()
+	{
+		GetComponentInParent<PhotonGameManager> ().LoadLauncher ();
+	}
+
+	public override void OnPhotonPlayerConnected(PhotonPlayer other)
+	{
+		Debug.Log ("OnPhotonPlayerConnected() " + other.NickName);
+		GetComponentInParent<PhotonGameManager> ().ChangeState (NetworkState.SOME_PLAYER_CONNECTED, other);
+
+		if (PhotonNetwork.isMasterClient) {
+			Debug.Log ("OnPhotonPlayerConnected isMasterClient " + PhotonNetwork.isMasterClient);
+			GetComponentInParent<PhotonGameManager> ().LoadWorld ();
+		}
+	}
+
+	public override void OnPhotonPlayerDisconnected(PhotonPlayer other)
+	{
+		Debug.Log ("OnPhotonPlayerDisconnected() " + other.NickName);
+		GetComponentInParent<PhotonGameManager> ().ChangeState (NetworkState.SOME_PLAYER_DISCONNECTED, other);
+
+		if (PhotonNetwork.isMasterClient) {
+			Debug.Log ("OnPhotonPlayerConnected isMasterClient " + PhotonNetwork.isMasterClient);
+			GetComponentInParent<PhotonGameManager> ().LoadWorld ();
 		}
 	}
 
