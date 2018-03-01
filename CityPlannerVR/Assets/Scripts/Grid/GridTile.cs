@@ -15,13 +15,11 @@ public class GridTile : IHeapItem<GridTile> {
 		}
 		set {
 			state = value;
-			triggerScript.GetGridState (state);
 		}
 	}
 
     public GameObject tileObject;
     public BoxCollider collider;
-    public BoxCollider trigger;
     public XRLineRenderer line;
 
 	public float xPos;
@@ -30,8 +28,6 @@ public class GridTile : IHeapItem<GridTile> {
 	public float gCost;
 	public float hCost;
 	public GridTile parent;
-
-	TriggerScript triggerScript;
 
     int heapIndex;
 
@@ -51,12 +47,9 @@ public class GridTile : IHeapItem<GridTile> {
 		zPos = z;
 
 		collider = tileObject.AddComponent<BoxCollider> ();
-        trigger = tileObject.AddComponent<BoxCollider>();
 		line = tileObject.AddComponent<XRLineRenderer> ();
 		checkGridState = tileObject.AddComponent<GridTileStateCheck> ();
 		checkGridState.tile = this;
-
-		triggerScript = tileObject.AddComponent<TriggerScript>();
 
         InitializeTileObject (cellSize);
 		InitializeLineRenderer ();
@@ -70,11 +63,6 @@ public class GridTile : IHeapItem<GridTile> {
 		collider.size = new Vector3(cellSize, 0, cellSize);
 		//This is hardcoded value. It makes sure the collider is in right place 
 		collider.center = new Vector3 (0, 0.7f, 0);
-
-        //This will trigger when the building is put on the table
-        trigger.size = new Vector3(cellSize, 1, cellSize);
-        trigger.center = new Vector3(0, 1, 0);
-        trigger.isTrigger = true;
     }
 
 	private void InitializeLineRenderer(){
