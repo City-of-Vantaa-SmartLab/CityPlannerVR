@@ -18,8 +18,6 @@ public class GridTileStateCheck : MonoBehaviour {
     void OnCollisionEnter(Collision other){
 		if (other.collider.tag == "Building") {
 
-            //Check if the tile object collides with is already full
-			tile.State = GridTile.GridState.Full;
             #region Option1
             if(tile.State == GridTile.GridState.Full)
             {
