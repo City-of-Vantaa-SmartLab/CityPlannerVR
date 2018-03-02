@@ -2,18 +2,40 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+/// <summary>
+/// Checks and changes the state of the tile according to colliding objects
+/// </summary>
+
 public class GridTileStateCheck : MonoBehaviour {
 
 	//This gets its value from GridTile.cs when its created
 	public GridTile tile = null;
 
-	//If something that is building collides with me, I'm full
-	void OnCollisionEnter(Collision other){
+    //This is part of the option1
+    GameObject objectOnThisTile = null;
+
+    //If something that is building collides with me, I'm full
+    void OnCollisionEnter(Collision other){
 		if (other.collider.tag == "Building") {
 
-            //Ennenkun muutetaan tämä Fulliksi, katsotaan, mitä se oli aiemmin
-
+            //Check if the tile object collides with is already full
 			tile.State = GridTile.GridState.Full;
+            #region Option1
+            if(tile.State == GridTile.GridState.Full)
+            {
+                objectOnThisTile.transform.position = ObjectContainer.trashPoint;
+            }
+            #endregion
+
+            #region option2
+            //if (tile.State == GridTile.GridState.Full)
+            //{
+            //    other.transform.position = ObjectContainer.trashPoint;
+            //}
+            #endregion
+
+            tile.State = GridTile.GridState.Full;
+            objectOnThisTile = other.gameObject;
             other.gameObject.GetComponent<SnapToGrid>().IsOnGrid = true;
 		}
 	}
@@ -22,6 +44,7 @@ public class GridTileStateCheck : MonoBehaviour {
 	void OnCollisionExit(Collision other){
 		if (other.collider.tag == "Building") {
 			tile.State = GridTile.GridState.Empty;
+            objectOnThisTile = null;
             other.gameObject.GetComponent<SnapToGrid>().IsOnGrid = false;
         }
 	}
