@@ -53,7 +53,6 @@ public class MeasurementPoint : MonoBehaviour {
 
 	void CheckIfSnapping(){
 		if (attached != null) {
-			Debug.Log ("IsHolding a Measuremen point: " + attached.IsHolding);
 			if (!attached.IsHolding) {
 				transform.parent = grid.transform;
 				SnapPosition ();

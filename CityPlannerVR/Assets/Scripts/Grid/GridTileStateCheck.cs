@@ -10,6 +10,9 @@ public class GridTileStateCheck : MonoBehaviour {
 	//If something that is building collides with me, I'm full
 	void OnCollisionEnter(Collision other){
 		if (other.collider.tag == "Building") {
+
+            //Ennenkun muutetaan tämä Fulliksi, katsotaan, mitä se oli aiemmin
+
 			tile.State = GridTile.GridState.Full;
             other.gameObject.GetComponent<SnapToGrid>().IsOnGrid = true;
 		}

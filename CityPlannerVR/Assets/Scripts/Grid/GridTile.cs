@@ -19,6 +19,7 @@ public class GridTile : IHeapItem<GridTile> {
 		}
 	}
 
+    //The gameObject that represents this tile and has all the components
     public GameObject tileObject;
     public BoxCollider collider;
     public BoxCollider trigger;
