@@ -29,7 +29,7 @@ public class SnapToGrid : MonoBehaviour {
                 {
                     //Adds this gameObject to a static list for easy access
                     ObjectContainer.objects.Add(gameObject);
-                    Debug.Log(gameObject.name + " is in the list now.");
+                    //Debug.Log(gameObject.name + " is in the list now.");
                 }
             }
             else
@@ -38,7 +38,7 @@ public class SnapToGrid : MonoBehaviour {
                 {
                     //If the object is in the list, remove it
                     ObjectContainer.objects.Remove(gameObject);
-                    Debug.Log(gameObject.name + " removed from the list now.");
+                    //Debug.Log(gameObject.name + " removed from the list now.");
                 }
             }
         }
