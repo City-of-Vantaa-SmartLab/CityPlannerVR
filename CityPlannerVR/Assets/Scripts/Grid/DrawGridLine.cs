@@ -22,9 +22,11 @@ public class DrawGridLine : MonoBehaviour {
 	private int lineCountX;
 	private int lineCountZ;
 
+	//nämä voinee yhdistää
 	private int coefficientX;
 	private int coefficientZ;
 
+	//nämä voinee yhdistää
 	private const int x = 0;
 	private const int z = 0;
 
@@ -81,8 +83,9 @@ public class DrawGridLine : MonoBehaviour {
 
 				//Tämä suunta on valmis
 				if (lineCountX >= maxLineCountX) {
+					line.SetPosition (i, new Vector3(cellSize * coefficientX, y, lineLenghtZ));
 					xFull = true;
-					if (line.GetPosition (i - 1).x != 0) {
+					if (line.GetPosition (i - 1).x == 0) {
 						coefficientZ = 0;
 						goUp = true;
 					} else {
@@ -90,7 +93,7 @@ public class DrawGridLine : MonoBehaviour {
 					}
 				}
 
-				if (tempX == 0 || tempX == 1) {
+				else if (tempX == 0 || tempX == 1) {
 					//ylös
 					line.SetPosition (i, new Vector3(cellSize * coefficientX, y, lineLenghtZ));
 					tempX++;
