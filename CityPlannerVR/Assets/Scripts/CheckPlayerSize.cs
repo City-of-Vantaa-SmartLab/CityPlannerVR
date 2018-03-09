@@ -8,6 +8,12 @@ using UnityEngine;
 
 public class CheckPlayerSize : MonoBehaviour {
 
+    public GameObject scalePlayerToSmall;
+    public GameObject scalePlayerToLarge;
+
+    Vector3 smallScale;
+    Vector3 largeScale;
+
     //are we small
     bool isInPedesrianMode = false;
     public bool isSmall
@@ -19,19 +25,26 @@ public class CheckPlayerSize : MonoBehaviour {
         }
     }
 
+    private void Awake()
+    {
+        smallScale = scalePlayerToSmall.GetComponent<ScaleObject>().NewScale;
+        largeScale = scalePlayerToLarge.GetComponent<ScaleObject>().NewScale;
+    }
+
     void CalculateMode()
     {
-        //hardcoded values for now
-        if (transform.localScale == new Vector3(0.025f, 0.025f, 0.025f))        {
+        if (transform.localScale == smallScale)
+        {
             isInPedesrianMode = true;
         }
-        else if (transform.localScale == new Vector3(1, 1, 1))
+        else if (transform.localScale == largeScale)
         {
             isInPedesrianMode = false;
         }
+        //Just in case
         else
         {
-            Debug.LogError("Player scale changed and forgotten to change CheckPlayerSize.cs values");
+            Debug.LogError("There is something wrong in CheckPlayerSize");
         }
     }
 }

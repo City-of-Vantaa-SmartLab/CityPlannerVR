@@ -1,9 +1,8 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.Networking;
 
-public class Pathfinding : NetworkBehaviour {
+public class Pathfinding : MonoBehaviour {
     
     private CreateGrid createGrid;
     private XRLineRenderer pathRenderer;

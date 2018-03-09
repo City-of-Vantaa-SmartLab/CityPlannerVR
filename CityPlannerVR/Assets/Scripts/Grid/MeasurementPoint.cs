@@ -23,12 +23,13 @@ public class MeasurementPoint : MonoBehaviour {
 
 	IsAttachedToHand attached;
 
+	[Tooltip("The other one of the two measurementpoints (EndPoint for StartPoint and other way around)")]
     public GameObject otherPoint;
     MeasurementPoint other;
 
     void Start()
 	{
-        grid = GameObject.FindGameObjectWithTag("GridParent");
+		grid = ObjectContainer.grid;
 
         createGrid = grid.GetComponent<CreateGrid> ();
         pathfinding = grid.GetComponent<Pathfinding>();

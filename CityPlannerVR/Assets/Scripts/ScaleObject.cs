@@ -14,6 +14,13 @@ public class ScaleObject : MonoBehaviour {
 
     [SerializeField]
     private Vector3 newScale;
+    public Vector3 NewScale
+    {
+        get
+        {
+            return newScale;
+        }
+    }
 
     private GameObject localPlayer = null;
 
