@@ -22,9 +22,6 @@ GameObject:
   - component: {fileID: 33228734577789164}
   - component: {fileID: 65213842895798018}
   - component: {fileID: 23514106367813250}
-  - component: {fileID: 114759127661972966}
-  - component: {fileID: 114729467764711972}
-  - component: {fileID: 114223770499075696}
   - component: {fileID: 114196198519483986}
   - component: {fileID: 114891946440325448}
   m_Layer: 0
@@ -126,71 +123,6 @@ MonoBehaviour:
   instantiationId: -1
   currentMasterID: -1
   isRuntimeInstantiated: 0
---- !u!114 &114223770499075696
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1494633411942206}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: a22bdc03e2781e441ac8072f3e1469f6, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  objScale: {x: 0, y: 0, z: 0}
---- !u!114 &114729467764711972
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1494633411942206}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: -1768714887, guid: dc443db3e92b4983b9738c1131f555cb, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_TransformSyncMode: 1
-  m_SendInterval: 0.033333335
-  m_SyncRotationAxis: 7
-  m_RotationSyncCompression: 0
-  m_SyncSpin: 0
-  m_MovementTheshold: 0.001
-  m_VelocityThreshold: 0.0001
-  m_SnapThreshold: 5
-  m_InterpolateRotation: 1
-  m_InterpolateMovement: 1
---- !u!114 &114759127661972966
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1494633411942206}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 372142912, guid: dc443db3e92b4983b9738c1131f555cb, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_SceneId:
-    m_Value: 0
-  m_AssetId:
-    i0: 186
-    i1: 101
-    i2: 42
-    i3: 180
-    i4: 132
-    i5: 22
-    i6: 71
-    i7: 116
-    i8: 169
-    i9: 233
-    i10: 95
-    i11: 244
-    i12: 84
-    i13: 130
-    i14: 211
-    i15: 7
-  m_ServerOnly: 0
-  m_LocalPlayerAuthority: 1
 --- !u!114 &114891946440325448
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -203,7 +135,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_PositionModel:
-    SynchronizeEnabled: 0
+    SynchronizeEnabled: 1
     TeleportEnabled: 1
     TeleportIfDistanceGreaterThan: 3
     InterpolateOption: 2
@@ -247,7 +179,7 @@ MonoBehaviour:
     ExtrapolateNumberOfStoredPositions: 1
     DrawErrorGizmo: 1
   m_RotationModel:
-    SynchronizeEnabled: 0
+    SynchronizeEnabled: 1
     InterpolateOption: 1
     InterpolateRotateTowardsSpeed: 180
     InterpolateLerpSpeed: 5

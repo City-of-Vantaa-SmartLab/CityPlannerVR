@@ -59,6 +59,7 @@ public class PhotonGameManager : MonoBehaviour {
 		Instance = this;
 		connection = GetComponent<PhotonConnection> ();
 	}
+
 	void OnEnable()
 	{
 		PhotonNetwork.OnEventCall += this.ProcessNetworkEvent;
@@ -74,8 +75,19 @@ public class PhotonGameManager : MonoBehaviour {
 		ChangeState (NetworkState.INITIALIZING);
 		Debug.Log ("PhotonNetwork: Initializing network connection");
 		connection.Init ();
+
+		SceneManager.sceneLoaded += (scene, loadingMode) =>
+		{
+			SceneLoaded(scene, loadingMode);
+		};
 	}
 
+	void SceneLoaded(Scene scene, LoadSceneMode mode)
+	{
+		if (scene.name.Equals (MULTIPLAYER_SCENE_NAME)) {
+			InstantiatePlayer ();
+		}
+	}
 	#region Public Methods
 
 	public void Connect()
@@ -98,6 +110,7 @@ public class PhotonGameManager : MonoBehaviour {
 		}
 		Debug.Log ("PhotonNetwork: Loading Level");
 		PhotonNetwork.LoadLevel (MULTIPLAYER_SCENE_NAME);
+
 	}
 
 	public void ChangeState(NetworkState newstate, object stateData = null)
@@ -113,7 +126,7 @@ public class PhotonGameManager : MonoBehaviour {
 			case NetworkState.ROOM_CREATED:
 				break;
 			case NetworkState.ROOM_JOINED:
-				InstantiatePlayer ();
+				
 				ChangeState (NetworkState.PLAYING);
 				break;
 			case NetworkState.SOME_PLAYER_CONNECTED:
