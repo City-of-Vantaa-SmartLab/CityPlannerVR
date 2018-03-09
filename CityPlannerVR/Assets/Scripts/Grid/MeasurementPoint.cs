@@ -23,8 +23,7 @@ public class MeasurementPoint : MonoBehaviour {
 
 	IsAttachedToHand attached;
 
-	//[Tooltip("The other one of the two measurementpoints (EndPoint for StartPoint and other way around)")]
-    [HideInInspector]
+	[Tooltip("The other one of the two measurementpoints (EndPoint for StartPoint and other way around)")]
     public GameObject otherPoint;
     MeasurementPoint other;
 
@@ -54,6 +53,7 @@ public class MeasurementPoint : MonoBehaviour {
 
 	void CheckIfSnapping(){
 		if (attached != null) {
+			Debug.Log ("IsHolding a Measuremen point: " + attached.IsHolding);
 			if (!attached.IsHolding) {
 				transform.parent = grid.transform;
 				SnapPosition ();

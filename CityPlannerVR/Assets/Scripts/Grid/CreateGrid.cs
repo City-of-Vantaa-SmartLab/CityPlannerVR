@@ -6,7 +6,7 @@ public class CreateGrid : MonoBehaviour {
 
 	private GridTile[,] tiles;
 
-    public int originalGridSizeX;
+	public int originalGridSizeX;
 	public int originalGridSizeZ;
 
     int gridSizeX;
@@ -27,6 +27,8 @@ public class CreateGrid : MonoBehaviour {
 			CreateGridTiles ();
 		}
 	}
+
+	public Material gridMaterial;
 
     // Use this for initialization
     void Start () {
@@ -59,7 +61,7 @@ public class CreateGrid : MonoBehaviour {
         gridSizeX = originalGridSizeX;
         gridSizeZ = originalGridSizeZ;
 
-        //This will make sure that the grid is the same size as the table is, when cellSize is changed
+        //This will make sure that the grid is the same size as the table is when cellSize is changed
         gridSizeX = Mathf.FloorToInt(gridSizeX / CellSize);
         gridSizeZ = Mathf.FloorToInt(gridSizeZ / CellSize);
 
@@ -77,19 +79,19 @@ public class CreateGrid : MonoBehaviour {
 				//This must be done because of all the scaling done in the scene
 				tiles [x, z].tileObject.transform.localScale = new Vector3(1, 1, 1);
 
-				//tiles [x, z].line.material = gridMaterial;
+				tiles [x, z].line.material = gridMaterial;
 
-				//DrawGrid (tiles[x, z]);
+				DrawGrid (tiles[x, z]);
 			}
 		}
 	}
 
-	void DrawGrid(/*GridTile tile*/){
-        //tile.line.SetPosition(0, new Vector3(CalculatePos(tile, 1), transform.position.y, CalculatePos(tile, 1)));
-        //tile.line.SetPosition(1, new Vector3(CalculatePos(tile, 1), transform.position.y, CalculatePos(tile, -1)));
-        //tile.line.SetPosition(2, new Vector3(CalculatePos(tile, -1), transform.position.y, CalculatePos(tile, -1)));
-        //tile.line.SetPosition(3, new Vector3(CalculatePos(tile, -1), transform.position.y, CalculatePos(tile, 1)));       
-}
+	void DrawGrid(GridTile tile){
+		tile.line.SetPosition(0, new Vector3(CalculatePos(tile, 1), transform.position.y, CalculatePos(tile, 1)));
+		tile.line.SetPosition(1, new Vector3(CalculatePos(tile, 1), transform.position.y, CalculatePos(tile, -1)));
+		tile.line.SetPosition(2, new Vector3(CalculatePos(tile, -1), transform.position.y, CalculatePos(tile, -1)));
+		tile.line.SetPosition(3, new Vector3(CalculatePos(tile, -1), transform.position.y, CalculatePos(tile, 1)));
+	}
 
 
 	public List<GridTile> GetNeighbours(GridTile tile){

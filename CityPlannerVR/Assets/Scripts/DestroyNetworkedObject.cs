@@ -13,7 +13,7 @@ public class DestroyNetworkedObject : NetworkBehaviour{
 
     private void OnTriggerEnter(Collider other)
     {
-        if(other.CompareTag(objectTag))
+        if(other.tag == objectTag)
         {
             //Debug.Log("Object " + other.gameObject.name + " destroyed.");
             NetworkServer.Destroy(other.gameObject);

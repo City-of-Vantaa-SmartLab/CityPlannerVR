@@ -25,41 +25,34 @@ public class IsAttachedToHand : MonoBehaviour {
 		}
 	}
 
-    void Start(){
+	void Start(){
 		timer = maxTimer;
-    }
+	}
 
 	//If the player wants to just put the object to their other hand, 
 	//it cannot be considered off hand, because that causes some funky glitches
 	IEnumerator CheckIfHandChanged(){
-
-        isHolding = true;
-        while (timer < maxTimer)
-        {
-            ++timer;
-            yield return null;
-        }
-
+		isHolding = true;
+		yield return new WaitUntil (() => ++timer >= maxTimer);
 		//Debug.Log ("Nyt on kulunut riittävästi aikaa, että voidaan tarkistaa, onko asia vielä kädessä");
 		if (!isInHand) {
 			//Debug.Log ("Asia ei ole enää kädessä");
 			isHolding = false;
+			timer = 0;
 			if (OnSnapToGrid != null) {
 				OnSnapToGrid ();
 			}
-		}
-
-        timer = 0;
+		} 
 		//else {
 			//Debug.Log ("Asia on vielä kädessä");
 		//}
 	}
 
-    private void OnAttachedToHand(Valve.VR.InteractionSystem.Hand hand)
+	private void OnAttachedToHand(Valve.VR.InteractionSystem.Hand hand)
 	{
 		isInHand = true;
-        //StartCoroutine(CheckIfHandChanged ());
-    }
+		StartCoroutine(CheckIfHandChanged ());
+	}
 
 	private void OnDetachedFromHand(Valve.VR.InteractionSystem.Hand hand)
 	{

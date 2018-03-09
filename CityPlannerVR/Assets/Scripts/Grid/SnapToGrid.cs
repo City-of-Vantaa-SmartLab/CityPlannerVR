@@ -29,7 +29,7 @@ public class SnapToGrid : MonoBehaviour {
                 {
                     //Adds this gameObject to a static list for easy access
                     ObjectContainer.objects.Add(gameObject);
-                    //Debug.Log(gameObject.name + " is in the list now.");
+                    Debug.Log(gameObject.name + " is in the list now.");
                 }
             }
             else
@@ -38,7 +38,7 @@ public class SnapToGrid : MonoBehaviour {
                 {
                     //If the object is in the list, remove it
                     ObjectContainer.objects.Remove(gameObject);
-                    //Debug.Log(gameObject.name + " removed from the list now.");
+                    Debug.Log(gameObject.name + " removed from the list now.");
                 }
             }
         }
@@ -81,7 +81,7 @@ public class SnapToGrid : MonoBehaviour {
         {
 			//Moves the object to the grids position									    just a bit higher than the table, so the object collider won't go inside a table collider
 			transform.position = new Vector3 (hit.collider.gameObject.transform.position.x, hit.collider.gameObject.transform.position.y * 1.3f, hit.collider.gameObject.transform.position.z);
-            //transform.parent = parent.transform;
+            transform.parent = parent.transform;
 
 			CheckRotation();
         }
