@@ -23,7 +23,8 @@ public class MeasurementPoint : MonoBehaviour {
 
 	IsAttachedToHand attached;
 
-	[Tooltip("The other one of the two measurementpoints (EndPoint for StartPoint and other way around)")]
+	//[Tooltip("The other one of the two measurementpoints (EndPoint for StartPoint and other way around)")]
+    [HideInInspector]
     public GameObject otherPoint;
     MeasurementPoint other;
 

@@ -21,7 +21,6 @@ GameObject:
   - component: {fileID: 4338586871629210}
   - component: {fileID: 33577176250338342}
   - component: {fileID: 23845876102358110}
-  - component: {fileID: 65334494520326044}
   - component: {fileID: 114788203911854384}
   - component: {fileID: 114761230558838798}
   - component: {fileID: 54079010744120254}
@@ -31,6 +30,8 @@ GameObject:
   - component: {fileID: 114415364835780418}
   - component: {fileID: 114144451104390448}
   - component: {fileID: 114034777932561928}
+  - component: {fileID: 65049721964227420}
+  - component: {fileID: 114995128954449170}
   m_Layer: 9
   m_Name: Building80
   m_TagString: Building
@@ -45,7 +46,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1068628987748528}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0.863, y: -0.5225, z: -0.362}
+  m_LocalPosition: {x: 1.682, y: 0.3462, z: 0.1938}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
@@ -115,7 +116,7 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
---- !u!65 &65334494520326044
+--- !u!65 &65049721964227420
 BoxCollider:
   m_ObjectHideFlags: 1
   m_PrefabParentObject: {fileID: 0}
@@ -125,8 +126,8 @@ BoxCollider:
   m_IsTrigger: 0
   m_Enabled: 1
   serializedVersion: 2
-  m_Size: {x: 0.0762473, y: 0.03873, z: 0.10319389}
-  m_Center: {x: -0.00002588704, y: 0.00007622968, z: -0.0020125115}
+  m_Size: {x: 0.19427812, y: 0.09868404, z: 0.26293802}
+  m_Center: {x: -0.00006535649, y: 0.00019415654, z: -0.005128227}
 --- !u!114 &114034777932561928
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -144,11 +145,12 @@ MonoBehaviour:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1068628987748528}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 8ae500a5f59b80d42b375ade6e366fdf, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  parent: {fileID: 0}
 --- !u!114 &114245303958595828
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -285,3 +287,15 @@ MonoBehaviour:
   m_SnapThreshold: 5
   m_InterpolateRotation: 1
   m_InterpolateMovement: 1
+--- !u!114 &114995128954449170
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1068628987748528}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8ae500a5f59b80d42b375ade6e366fdf, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  parent: {fileID: 0}

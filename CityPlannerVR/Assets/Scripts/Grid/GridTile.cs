@@ -21,7 +21,7 @@ public class GridTile : IHeapItem<GridTile> {
     //The gameObject that represents this tile and has all the components
     public GameObject tileObject;
     public BoxCollider collider;
-    public XRLineRenderer line;
+    //public XRLineRenderer line;
 
 	public float xPos;
 	public float zPos;
@@ -48,7 +48,7 @@ public class GridTile : IHeapItem<GridTile> {
 		zPos = z;
 
 		collider = tileObject.AddComponent<BoxCollider> ();
-		line = tileObject.AddComponent<XRLineRenderer> ();
+		//line = tileObject.AddComponent<XRLineRenderer> ();
 		checkGridState = tileObject.AddComponent<GridTileStateCheck> ();
 		checkGridState.tile = this;
 
@@ -63,15 +63,15 @@ public class GridTile : IHeapItem<GridTile> {
 
 		collider.size = new Vector3(cellSize, 0, cellSize);
 		//This is hardcoded value. It makes sure the collider is in right place 
-		collider.center = new Vector3 (0, 0.7f, 0);
+		collider.center = new Vector3 (0, 0, 0);
     }
 
 	private void InitializeLineRenderer(){
 		//Defines how many points we have to draw the line through
-		line.SetVertexCount(4);
-		line.SetTotalWidth(0.1f);
+		//line.SetVertexCount(4);
+		//line.SetTotalWidth(0.1f);
 		//Draws a line from last point to the first (so we get a square)
-		line.loop = true;
+		//line.loop = true;
 	}
 
 

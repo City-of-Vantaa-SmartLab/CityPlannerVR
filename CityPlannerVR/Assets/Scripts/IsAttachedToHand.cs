@@ -47,7 +47,9 @@ public class IsAttachedToHand : MonoBehaviour {
 			if (OnSnapToGrid != null) {
 				OnSnapToGrid ();
 			}
-		} 
+		}
+
+        timer = 0;
 		//else {
 			//Debug.Log ("Asia on vielä kädessä");
 		//}
@@ -56,8 +58,7 @@ public class IsAttachedToHand : MonoBehaviour {
     private void OnAttachedToHand(Valve.VR.InteractionSystem.Hand hand)
 	{
 		isInHand = true;
-        
-        StartCoroutine(CheckIfHandChanged ());
+        //StartCoroutine(CheckIfHandChanged ());
     }
 
 	private void OnDetachedFromHand(Valve.VR.InteractionSystem.Hand hand)

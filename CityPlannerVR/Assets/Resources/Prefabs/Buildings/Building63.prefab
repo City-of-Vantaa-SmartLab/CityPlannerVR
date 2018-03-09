@@ -21,7 +21,6 @@ GameObject:
   - component: {fileID: 4812755676345220}
   - component: {fileID: 33976784555457948}
   - component: {fileID: 23739496806322286}
-  - component: {fileID: 65083051380089280}
   - component: {fileID: 114611748056924640}
   - component: {fileID: 114148414279998460}
   - component: {fileID: 54772433737656588}
@@ -31,6 +30,7 @@ GameObject:
   - component: {fileID: 114255976909633756}
   - component: {fileID: 114188267454536750}
   - component: {fileID: 114630170379200386}
+  - component: {fileID: 65252170678322036}
   m_Layer: 9
   m_Name: Building63
   m_TagString: Building
@@ -44,8 +44,8 @@ Transform:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1020814555998614}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0.411, y: -0.495, z: -0.56}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0.82, y: 0.38, z: -0.349}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
@@ -216,7 +216,7 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
---- !u!65 &65083051380089280
+--- !u!65 &65252170678322036
 BoxCollider:
   m_ObjectHideFlags: 1
   m_PrefabParentObject: {fileID: 0}
@@ -226,8 +226,8 @@ BoxCollider:
   m_IsTrigger: 0
   m_Enabled: 1
   serializedVersion: 2
-  m_Size: {x: 0.4262252, y: 0.13106018, z: 0.81236094}
-  m_Center: {x: 0.054148506, y: 0.014941302, z: -0.21212673}
+  m_Size: {x: 1.0860218, y: 0.3339414, z: 2.0698957}
+  m_Center: {x: 0.13797039, y: 0.038070433, z: -0.5404991}
 --- !u!114 &114148414279998460
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -248,11 +248,12 @@ MonoBehaviour:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1020814555998614}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 8ae500a5f59b80d42b375ade6e366fdf, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  parent: {fileID: 0}
 --- !u!114 &114255976909633756
 MonoBehaviour:
   m_ObjectHideFlags: 1

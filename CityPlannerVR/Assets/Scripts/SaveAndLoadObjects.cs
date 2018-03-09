@@ -49,12 +49,12 @@ public class SaveAndLoadObjects : MonoBehaviour {
             Directory.CreateDirectory(folderPathName);
         }
 
-        LoadObject();
+        //LoadObject();
     }
 
     private void OnApplicationQuit()
     {
-        SaveObject();
+        //SaveObject();
     }
 
     //This will be the parent of the parent (the table we are going to put all the buildings and other stuff)
