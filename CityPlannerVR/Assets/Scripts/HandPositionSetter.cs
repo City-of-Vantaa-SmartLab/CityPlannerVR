@@ -34,7 +34,7 @@ public class HandPositionSetter : NetworkBehaviour
 
         playerSize = playerVR.GetComponent<CheckPlayerSize>();
 
-        hand1 = GameObject.Find("Player/SteamVRObjects/Hand1").GetComponent<Hand>(); ;
+        hand1 = GameObject.Find("Player/SteamVRObjects/Hand1").GetComponent<Hand>();
         hand2 = GameObject.Find("Player/SteamVRObjects/Hand2").GetComponent<Hand>();
 
         StartCoroutine(TrackNodeCoroutine(node));
