@@ -28,7 +28,7 @@ public class ObjectSpawner : NetworkBehaviour
     // Take care of items with multiple colliders
     private void OnTriggerEnter(Collider other)
     {
-        if (other.tag == objectTag)
+        if (other.CompareTag(objectTag))
         {
             bool objectFound = false;
 
@@ -62,7 +62,7 @@ public class ObjectSpawner : NetworkBehaviour
     // in the spawner, spawn a new one. Take care of items with multiple colliders
     private void OnTriggerExit(Collider other)
     {
-        if (other.tag == objectTag)
+        if (other.CompareTag(objectTag))
         {
             bool found = false;
 

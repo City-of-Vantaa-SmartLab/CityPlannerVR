@@ -14,7 +14,6 @@ public class InputListener : MonoBehaviour {
 	//Might not be needed
 	public List<GameObject> players;
 	public GameObject localPlayer;
-	public SteamVR_ControllerManager inputManager;
 
 	public GameObject leftHand;
 	public GameObject rightHand;
@@ -27,29 +26,39 @@ public class InputListener : MonoBehaviour {
 	[SerializeField]
 	private SteamVR_TrackedController rightTrackedController;
 
-	//Put here the events broadcasted by this script
-	public event ClickedEventHandler TriggerClicked;
+    [SerializeField]
+    private SteamVR_LaserPointer leftLaserPointer;
+    [SerializeField]
+    private SteamVR_LaserPointer rightLaserPointer;
+
+    //Put here the events broadcasted by this script
+    public event ClickedEventHandler TriggerClicked;
 
 
 
 	private void OnEnable() {
-		leftHandIndex = OpenVR.System.GetTrackedDeviceIndexForControllerRole(ETrackedControllerRole.LeftHand);
-		rightHandIndex = OpenVR.System.GetTrackedDeviceIndexForControllerRole(ETrackedControllerRole.RightHand);
+        localPlayer = GameObject.FindGameObjectWithTag("Player");
+        leftHandIndex = OpenVR.System.GetTrackedDeviceIndexForControllerRole
+            (ETrackedControllerRole.LeftHand);
+		rightHandIndex = OpenVR.System.GetTrackedDeviceIndexForControllerRole
+            (ETrackedControllerRole.RightHand);
 
-		inputManager = this.GetComponent<SteamVR_ControllerManager> ();
-		leftHand = inputManager.left;
-		rightHand = inputManager.right;
+        leftHand = localPlayer.GetComponentInChildren<GameObject>();
+        rightHand = localPlayer.GetComponentInChildren<GameObject>();
 
 
-//		leftHand = SteamVR_Controller.Input(SteamVR_Controller.GetDeviceIndex (
-//			SteamVR_Controller.DeviceRelation.Leftmost));
-//		rightHand = SteamVR_Controller.GetDeviceIndex (
-//			SteamVR_Controller.DeviceRelation.Rightmost);
-		leftTrackedController = leftHand.GetComponentInChildren<SteamVR_TrackedController> ();
+
+        //		leftHand = SteamVR_Controller.Input(SteamVR_Controller.GetDeviceIndex (
+        //			SteamVR_Controller.DeviceRelation.Leftmost));
+        //		rightHand = SteamVR_Controller.GetDeviceIndex (
+        //			SteamVR_Controller.DeviceRelation.Rightmost);
+        leftTrackedController = leftHand.GetComponentInChildren<SteamVR_TrackedController> ();
 		rightTrackedController = rightHand.GetComponentInChildren<SteamVR_TrackedController> ();
 
 		leftTrackedController.controllerIndex = leftHandIndex;
 		rightTrackedController.controllerIndex = rightHandIndex;
+
+        
 
 //
 //
