@@ -31,6 +31,7 @@ GameObject:
   - component: {fileID: 114718683853925186}
   - component: {fileID: 114958925136425612}
   - component: {fileID: 114955303196018142}
+  - component: {fileID: 114589985751692448}
   - component: {fileID: 65460566484921316}
   m_Layer: 9
   m_Name: Building39
@@ -310,6 +311,19 @@ MonoBehaviour:
   m_SnapThreshold: 5
   m_InterpolateRotation: 1
   m_InterpolateMovement: 1
+--- !u!114 &114589985751692448
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1046644227652514}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7b261c9e86bd91a479fc414efcb8e679, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  isHighlighted: 0
+  isSelected: 0
 --- !u!114 &114718683853925186
 MonoBehaviour:
   m_ObjectHideFlags: 1

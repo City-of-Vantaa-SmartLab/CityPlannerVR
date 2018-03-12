@@ -31,6 +31,7 @@ GameObject:
   - component: {fileID: 114901487327507080}
   - component: {fileID: 114515892967443602}
   - component: {fileID: 114405420279980338}
+  - component: {fileID: 114810841782273782}
   - component: {fileID: 65766823375846840}
   m_Layer: 9
   m_Name: Building14
@@ -269,6 +270,19 @@ MonoBehaviour:
   velocityAverageFrames: 5
   angularVelocityAverageFrames: 11
   estimateOnAwake: 0
+--- !u!114 &114810841782273782
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1298520891471186}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7b261c9e86bd91a479fc414efcb8e679, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  isHighlighted: 0
+  isSelected: 0
 --- !u!114 &114901487327507080
 MonoBehaviour:
   m_ObjectHideFlags: 1
