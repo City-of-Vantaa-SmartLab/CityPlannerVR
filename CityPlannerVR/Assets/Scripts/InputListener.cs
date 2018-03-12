@@ -13,10 +13,11 @@ using System;
 
 public class InputListener : MonoBehaviour {
 
-	//Might not be needed
+	//List of players would be better elsewhere!
 	public List<GameObject> players;
 	public GameObject localPlayer;
-    public GameObject targetedObject;
+    public GameObject leftTargetedObject;
+    public GameObject rightTargetedObject;
 
 
     public GameObject leftHand;
@@ -26,21 +27,23 @@ public class InputListener : MonoBehaviour {
     private GameObject hand1;
     private GameObject hand2;
 
-
 	[SerializeField]
 	private SteamVR_TrackedController leftTrackedController;
 	[SerializeField]
 	private SteamVR_TrackedController rightTrackedController;
 
-    public SteamVR_Controller.Device leftDevice;
-    public SteamVR_Controller.Device rightDevice;
+    //private SteamVR_Controller.Device leftDevice;
+    //private SteamVR_Controller.Device rightDevice;
+
+    public bool swapHands = false;
+
 
     [SerializeField]
     private SteamVR_LaserPointer leftLaserPointer;
     [SerializeField]
     private SteamVR_LaserPointer rightLaserPointer;
 
-    //Put here the events broadcasted by this script
+    //Put here the events broadcasted by this script (for multiplayer)
     public event ClickedEventHandler TriggerClicked;
 
 
@@ -51,6 +54,10 @@ public class InputListener : MonoBehaviour {
         hand1 = GameObject.Find("Player/SteamVRObjects/Hand1");
         hand2 = GameObject.Find("Player/SteamVRObjects/Hand2");
 
+        //Swap these if eg. left trigger shows up as right trigger input!
+        leftHand = hand2;
+        rightHand = hand1;
+
         UpdateHands();
         InvokeRepeating("UpdateHands", 5, 10.0f);
 
@@ -58,30 +65,11 @@ public class InputListener : MonoBehaviour {
         rightLaserPointer = rightHand.GetComponentInChildren<SteamVR_LaserPointer>();
 
         SubscriptionOn();
-
-
-
-
-
-
-
-
-
-
-        //
-        //
-        //		leftTrackedController.controllerIndex = SteamVR_Controller.GetDeviceIndex (leftHand);
-
-        //subscribe only to the events called by the local player's tracked object
-
-
     }
 
 
     private void OnDisable() {
-
         SubscriptionOff();
-
     }
 
     //Subject to change when migrating to Photon
@@ -97,32 +85,39 @@ public class InputListener : MonoBehaviour {
         rightHandIndex = OpenVR.System.GetTrackedDeviceIndexForControllerRole
             (ETrackedControllerRole.RightHand);
 
-        //alternative method
-        //leftHand = SteamVR_Controller.Input(SteamVR_Controller.GetDeviceIndex(
+        //alternative methods
+        //leftDevice = SteamVR_Controller.Input(SteamVR_Controller.GetDeviceIndex(
         //    SteamVR_Controller.DeviceRelation.Leftmost));
-        //rightHand = SteamVR_Controller.GetDeviceIndex(
-        //    SteamVR_Controller.DeviceRelation.Rightmost);
+        //rightDevice = SteamVR_Controller.Input(SteamVR_Controller.GetDeviceIndex(
+        //    SteamVR_Controller.DeviceRelation.Rightmost));
 
-        //leftHand = localPlayer.GetComponentInChildren<GameObject>();
-        //rightHand = localPlayer.GetComponentInChildren<GameObject>();
+        //leftHandIndex = (uint)SteamVR_Controller.GetDeviceIndex(
+        //    SteamVR_Controller.DeviceRelation.Leftmost);
+        //rightHandIndex = (uint)SteamVR_Controller.GetDeviceIndex(
+        //    SteamVR_Controller.DeviceRelation.Rightmost);
 
         CheckIndex();
 
-        if (hand1)
-        {
-                leftHand = hand1;
-                rightHand = hand2;
-        }
+        //There is a bug in the if clause!!!
+        //if (hand1.GetComponent<Hand>().controller.index != leftHandIndex)
+        //{
+        //    //leftHand = hand1;
+        //    rightHand = hand1;
+
+        //}
+
+        //if (hand2.GetComponent<Hand>().controller.index != rightHandIndex)
+        //{
+        //    leftHand = hand2;
+        //    //rightHand = hand2;
+        //}
 
 
-        if(leftTrackedController == null || rightTrackedController == null)
-        {
+        //if (leftTrackedController == null || rightTrackedController == null)
+        //{
             leftTrackedController = leftHand.GetComponent<SteamVR_TrackedController>();
             rightTrackedController = rightHand.GetComponent<SteamVR_TrackedController>();
-        }
-
-        //leftTrackedController.controllerIndex = leftHandIndex;
-        //rightTrackedController.controllerIndex = rightHandIndex;
+        //}
 
         leftTrackedController.SetDeviceIndex((int)leftHandIndex);
         rightTrackedController.SetDeviceIndex((int)rightHandIndex);
@@ -163,6 +158,9 @@ public class InputListener : MonoBehaviour {
 
         leftTrackedController.MenuButtonClicked += HandleMenuClicked;
         rightTrackedController.MenuButtonClicked += HandleMenuClicked;
+        leftTrackedController.TriggerClicked += HandleTriggerClicked;
+        rightTrackedController.TriggerClicked += HandleTriggerClicked;
+
 
     }
 
@@ -195,26 +193,46 @@ public class InputListener : MonoBehaviour {
         leftLaserPointer.PointerOut -= HandlePointerOut;
         rightLaserPointer.PointerIn -= HandlePointerIn;
         rightLaserPointer.PointerOut -= HandlePointerOut;
+        leftTrackedController.TriggerClicked -= HandleTriggerClicked;
+        rightTrackedController.TriggerClicked -= HandleTriggerClicked;
     }
-
-
 
     private void HandleTriggerClicked(object sender, ClickedEventArgs e)
 	{
-		//if clause might be redundant, if the left/right is innately handled
-		//with correct subscription as well as networking
-//		if (e.controllerIndex == SteamVR_Controller.GetDeviceIndex (leftHand)) {
-//			//create an event that broadcasts for the local player's left input
-//		}
-//		else if (e.controllerIndex == SteamVR_Controller.GetDeviceIndex (leftHand)) {
-//
-//		}
+        if (e.controllerIndex == leftHandIndex)
+        {
+            //Debug.Log("Left trigger clicked!");
+            SelectByLaser(leftLaserPointer, leftTargetedObject); 
+        }
 
-	}
+        if (e.controllerIndex == rightHandIndex)
+        {
+            //Debug.Log("Right trigger clicked!");
+            SelectByLaser(rightLaserPointer, rightTargetedObject);
+        }
+    }
+
+    private void SelectByLaser(SteamVR_LaserPointer laserPointer, GameObject targetedObject)
+    {
+        if (laserPointer.gameObject.activeSelf && targetedObject != null)
+        {
+            var highlightScript = targetedObject.GetComponent<HighlightSelection>();
+            if (highlightScript != null)
+            {
+                highlightScript.ToggleSelection();
+            }
+            else
+                Debug.Log("Could not find higlightscript!");
+        }
+    }
 
     private void HandlePointerIn(object sender, PointerEventArgs e)
     {
-        targetedObject = e.target.gameObject;
+        if (e.controllerIndex == leftHandIndex)
+            leftTargetedObject = e.target.gameObject;
+        if (e.controllerIndex == rightHandIndex)
+            rightTargetedObject = e.target.gameObject;
+
         var highlightScript = e.target.GetComponent<HighlightSelection>();
 
         if (highlightScript != null)
@@ -233,7 +251,11 @@ public class InputListener : MonoBehaviour {
 
     private void HandlePointerOut(object sender, PointerEventArgs e)
     {
-        targetedObject = null;
+        if (e.controllerIndex == leftHandIndex)
+            leftTargetedObject = null;
+        if (e.controllerIndex == rightHandIndex)
+            rightTargetedObject = null;
+
         var highlightScript = e.target.GetComponent<HighlightSelection>();
         if (highlightScript != null)
         {
@@ -249,6 +271,28 @@ public class InputListener : MonoBehaviour {
         }
     }
 
+    private void SwapHands()
+    {
+        if (leftHand == hand2)
+        {
+            leftHand = hand1;
+            rightHand = hand2;
+        }
+        else
+        {
+            leftHand = hand2;
+            rightHand = hand1;
+        }
 
+    }
+
+    private void Update()
+    {
+        if (swapHands)
+        {
+            SwapHands();
+            swapHands = false;
+        }
+    }
 
 }
