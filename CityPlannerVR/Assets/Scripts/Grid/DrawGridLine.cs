@@ -52,8 +52,7 @@ public class DrawGridLine : MonoBehaviour {
 		bool xFull = false;
 
 		int temp = 0;
-		bool bTemp = false;
-		bool goUp = false;
+		bool goDown = false;
 
 		cellSize = createGrid.CellSize;
 		gridSizeX = Mathf.FloorToInt(createGrid.originalGridSizeX / cellSize);
@@ -88,10 +87,10 @@ public class DrawGridLine : MonoBehaviour {
 					if (line.GetPosition (i - 1).z == 0) {
 						coefficientZ = 0;
 						line.SetPosition (i, new Vector3 (x, y, cellSize * coefficientZ));
-						goUp = true;
+						goDown = true;
 					} else {
 						line.SetPosition (i, new Vector3 (x, y, cellSize * coefficientZ));
-						goUp = false;
+						goDown = false;
 					}
 				}
 
@@ -109,7 +108,7 @@ public class DrawGridLine : MonoBehaviour {
 			//Suuntaan Z
 			else{
 
-				if (temp == 0 || temp == 3) {
+				if ((goDown && (temp == 0 || temp == 3)) || (!goDown && (temp == 1 || temp == 2))) {
 					//ylös
 					line.SetPosition (i, new Vector3(x, y, cellSize * coefficientZ));
 				}
@@ -137,7 +136,7 @@ public class DrawGridLine : MonoBehaviour {
 			else {
 				if (temp % 2 != 0) {
 
-					if (goUp) {
+					if (goDown) {
 						coefficientZ++;
 						lineCountZ++;
 					} else {
