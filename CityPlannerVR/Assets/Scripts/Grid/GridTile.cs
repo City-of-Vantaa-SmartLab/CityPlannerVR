@@ -20,15 +20,17 @@ public class GridTile : IHeapItem<GridTile> {
 
     //The gameObject that represents this tile and has all the components
     public GameObject tileObject;
+    public GameObject containedObject;
     public BoxCollider collider;
     //public XRLineRenderer line;
 
-	public float xPos;
+    public float xPos;
 	public float zPos;
 
 	public float gCost;
 	public float hCost;
 	public GridTile parent;
+    HighlightSelection highLight;
 
     int heapIndex;
 
@@ -51,6 +53,7 @@ public class GridTile : IHeapItem<GridTile> {
 		//line = tileObject.AddComponent<XRLineRenderer> ();
 		checkGridState = tileObject.AddComponent<GridTileStateCheck> ();
 		checkGridState.tile = this;
+        highLight = tileObject.AddComponent<HighlightSelection>();
 
         InitializeTileObject (cellSize);
 		InitializeLineRenderer ();
