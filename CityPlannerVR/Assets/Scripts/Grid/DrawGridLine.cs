@@ -51,8 +51,8 @@ public class DrawGridLine : MonoBehaviour {
     {
 		bool xFull = false;
 
-		int tempX = 0;
-		int tempZ = 0;
+		int temp = 0;
+		bool bTemp = false;
 		bool goUp = false;
 
 		cellSize = createGrid.CellSize;
@@ -82,76 +82,73 @@ public class DrawGridLine : MonoBehaviour {
 			if (!xFull) {
 
 				//Tämä suunta on valmis
-				if (lineCountX >= maxLineCountX) {
-					line.SetPosition (i, new Vector3(cellSize * coefficientX, y, lineLenghtZ));
+				if (lineCountX > maxLineCountX) {
+					
 					xFull = true;
-					if (line.GetPosition (i - 1).x == 0) {
+					if (line.GetPosition (i - 1).z == 0) {
 						coefficientZ = 0;
+						line.SetPosition (i, new Vector3 (x, y, cellSize * coefficientZ));
 						goUp = true;
 					} else {
+						line.SetPosition (i, new Vector3 (x, y, cellSize * coefficientZ));
 						goUp = false;
 					}
 				}
 
-				else if (tempX == 0 || tempX == 1) {
+				else if (temp == 0 || temp == 1) {
 					//ylös
 					line.SetPosition (i, new Vector3(cellSize * coefficientX, y, lineLenghtZ));
-					tempX++;
 				}
 
 				else{
 					//alas
-					line.SetPosition (i, new Vector3(cellSize * coefficientX, y, z));
-					if (tempX == 2) {
-						tempX++;
-					} 
-
-					else {
-						tempX = 0;
-					}
+					line.SetPosition (i, new Vector3(cellSize * coefficientX, y, z)); 
 				}
 			}
 
 			//Suuntaan Z
 			else{
 
-				if (tempZ == 0 || tempZ == 1) {
+				if (temp == 0 || temp == 3) {
 					//ylös
 					line.SetPosition (i, new Vector3(x, y, cellSize * coefficientZ));
-					tempZ++;
 				}
 
 				else{
 					//alas
 					line.SetPosition (i, new Vector3(lineLenghtX, y, cellSize * coefficientZ));
-					if (tempZ == 2) {
-						tempZ++;
-					} 
-
-					else {
-						tempZ = 0;
-					}
 				}
 			}
 
 			//X
-			if (tempX % 2 != 0) {
-				coefficientX++;
-			} else {
-				lineCountX++;
+			if (!xFull) {
+				if (temp % 2 == 0) {
+					coefficientX++;
+					lineCountX++;
+				}
+				if (temp == 3) {
+					temp = 0;
+				} else {
+					temp++;
+				}
 			}
 
 			//Z
-			if (xFull) {
-				if (tempZ % 2 != 0) {
+			else {
+				if (temp % 2 != 0) {
 
 					if (goUp) {
 						coefficientZ++;
+						lineCountZ++;
 					} else {
 						coefficientZ--;
+						lineCountZ++;
 					}
+				}
+				if (temp == 3) {
+					temp = 0;
 				} else {
-					lineCountZ++;
+					temp++;
 				}
 			}
 		}
