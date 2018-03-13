@@ -88,10 +88,6 @@ public class SteamVR_LaserPointer : MonoBehaviour
         float dist = 100f;
 
         SteamVR_TrackedController controller = GetComponent<SteamVR_TrackedController>();
-        if (controller == null)
-        {
-            controller = GetComponentInParent<SteamVR_TrackedController>();
-        }
 
         Ray raycast = new Ray(transform.position, transform.forward);
         RaycastHit hit;
