@@ -59,7 +59,7 @@ public class InputListener : MonoBehaviour {
         rightHand = hand1;
 
         UpdateHands();
-        InvokeRepeating("UpdateHands", 5, 10.0f);
+        InvokeRepeating("UpdateHands", 5, 2.0f);
 
         leftLaserPointer = leftHand.GetComponentInChildren<SteamVR_LaserPointer>();
         rightLaserPointer = rightHand.GetComponentInChildren<SteamVR_LaserPointer>();
