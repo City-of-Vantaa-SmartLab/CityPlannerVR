@@ -109,7 +109,8 @@ public class HighlightSelection : MonoBehaviour
         selected = Shader.Find("FX/Flare");
         rend = this.GetComponent<MeshRenderer>();
         lineRend = this.GetComponent<XRLineRenderer>();
-        gameController = GameObject.Find("GameController");
+
+        gameController = GameObject.FindGameObjectWithTag("GameController");
         lista = gameController.GetComponent<SelectionList>();
 
 
