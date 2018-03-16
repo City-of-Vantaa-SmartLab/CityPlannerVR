@@ -4,7 +4,7 @@ using UnityEngine;
 using Valve.VR.InteractionSystem;
 
 
-public class MenuSpawner2 : MonoBehaviour
+public class MenuSpawner : MonoBehaviour
 {
 
     private Hand hand1;
@@ -59,10 +59,14 @@ public class MenuSpawner2 : MonoBehaviour
         {
             if (menu2Active == false)
             {
-                menu2.transform.position = _camera.transform.position;
-                menu2.transform.position = menu2.transform.position + Vector3.Normalize(menu2.transform.eulerAngles) * 0.5f;
+                Vector3 forwardPos = new Vector3(_camera.transform.forward.x, _camera.transform.forward.y - 0.4f, _camera.transform.forward.z);
+                //menu2.transform.position = _camera.transform.position + Vector3.Normalize(_camera.transform.forward / 4);  
 
-                menu2.transform.LookAt(_camera);
+
+                //menu2.transform.LookAt(_camera);
+                menu2.transform.position = _camera.transform.position + Vector3.Normalize(forwardPos);
+                menu2.transform.rotation = Quaternion.LookRotation(forwardPos) * Quaternion.Euler(-90, 0, 0);
+                //menu2.transform.localRotation = Quaternion.Euler(-35, 0, 0);
                 menu2Active = true;
                 menu2.SetActive(true);
 
