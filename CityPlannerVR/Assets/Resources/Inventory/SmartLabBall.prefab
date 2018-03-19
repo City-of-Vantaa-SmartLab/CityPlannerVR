@@ -29,6 +29,7 @@ GameObject:
   - component: {fileID: 114059897673139988}
   - component: {fileID: 114408140320775640}
   - component: {fileID: 114399941475277944}
+  - component: {fileID: 114814649388578036}
   m_Layer: 0
   m_Name: SmartLabBall
   m_TagString: Spawnable
@@ -241,6 +242,19 @@ MonoBehaviour:
   velocityAverageFrames: 5
   angularVelocityAverageFrames: 11
   estimateOnAwake: 0
+--- !u!114 &114814649388578036
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1495553322495980}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7b261c9e86bd91a479fc414efcb8e679, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  isHighlighted: 0
+  isSelected: 0
 --- !u!136 &136591847915721058
 CapsuleCollider:
   m_ObjectHideFlags: 1

@@ -21,7 +21,7 @@ public class InventoryUpdater : MonoBehaviour
     private void Start()
 
     {
-
+        itemDB = GameObject.Find("ItemDatabase");
         itemData = itemDB.GetComponent<ItemDatabase>();
         databaseSize = itemData.listSize;
         spawners = gameObject.GetComponentsInChildren<LocalObjectSpawner>(true);

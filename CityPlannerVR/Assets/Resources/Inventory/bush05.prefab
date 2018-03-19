@@ -29,6 +29,7 @@ GameObject:
   - component: {fileID: 54602055302928116}
   - component: {fileID: 114249373854866534}
   - component: {fileID: 114852180013550140}
+  - component: {fileID: 114714157932700958}
   m_Layer: 0
   m_Name: bush05
   m_TagString: Spawnable
@@ -154,6 +155,19 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5d60e7f52b31c4a40b997968ec8ff439, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &114714157932700958
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1329708849142602}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7b261c9e86bd91a479fc414efcb8e679, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  isHighlighted: 0
+  isSelected: 0
 --- !u!114 &114852180013550140
 MonoBehaviour:
   m_ObjectHideFlags: 1
