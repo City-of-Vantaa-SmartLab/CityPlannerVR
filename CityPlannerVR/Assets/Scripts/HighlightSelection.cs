@@ -30,6 +30,7 @@ public class HighlightSelection : MonoBehaviour
     //  public bool toggleSelect; 
 
     private GameObject gameController;
+    [SerializeField]
     private SelectionList lista;
 
 
@@ -110,26 +111,11 @@ public class HighlightSelection : MonoBehaviour
         rend = this.GetComponent<MeshRenderer>();
         lineRend = this.GetComponent<XRLineRenderer>();
 
-        gameController = GameObject.FindGameObjectWithTag("GameController");
+        //gameController = GameObject.FindGameObjectWithTag("GameController");
+        gameController = GameObject.Find("GameController");
         lista = gameController.GetComponent<SelectionList>();
 
 
     }
-
-    //  //Will be removed! 
-    //  void Update() { 
-    //    if (toggleHighlight) { 
-    //      ToggleHighlight (); 
-    //      toggleHighlight = false; 
-    //    } 
-    // 
-    //    if (toggleSelect) { 
-    //      ToggleSelection (); 
-    //      toggleSelect = false; 
-    // 
-    // 
-    //    } 
-    // 
-    //  } 
 
 }
