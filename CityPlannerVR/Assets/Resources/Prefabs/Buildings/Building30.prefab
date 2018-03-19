@@ -31,6 +31,7 @@ GameObject:
   - component: {fileID: 114925127817275142}
   - component: {fileID: 114443652123818860}
   - component: {fileID: 65891157183146084}
+  - component: {fileID: 114223767718561282}
   m_Layer: 9
   m_Name: Building30
   m_TagString: Building
@@ -204,6 +205,20 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b93b6a877adcbf94c89a9d6e0c0e844d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &114223767718561282
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1526450241108534}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7b261c9e86bd91a479fc414efcb8e679, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  isHighlighted: 0
+  isSelected: 0
+  lista: {fileID: 0}
 --- !u!114 &114309722387010340
 MonoBehaviour:
   m_ObjectHideFlags: 1
