@@ -29,7 +29,8 @@ public class HighlightSelection : MonoBehaviour
     public bool isSelected;
     //  public bool toggleSelect; 
 
-    private GameObject gameController;
+    //private GameObject gameController;
+    private GameObject localPlayer;
     [SerializeField]
     private SelectionList lista;
 
@@ -58,20 +59,37 @@ public class HighlightSelection : MonoBehaviour
     {
         if (isSelected)
         {
-            gameController.GetComponent<SelectionList>().RemoveFromList(this.gameObject, lista.selectedList);
             isSelected = false;
-            if (isHighlighted)
-                ChangeShader(highlight);
+            lista.RemoveFromList(this.gameObject, lista.selectedList);
+            if (tag == "Grid")
+            {
+                Destroy(transform.Find("Marker(Clone)").gameObject);
+            }
             else
-                ChangeShader(standard);
+            {
+                if (isHighlighted)
+                    ChangeShader(highlight);
+                else
+                    ChangeShader(standard);
+            }
 
 
         }
         else
         {
             isSelected = true;
-            ChangeShader(selected);
-            gameController.GetComponent<SelectionList>().AddToList(this.gameObject, lista.selectedList);
+            lista.AddToList(this.gameObject, lista.selectedList);
+
+            if (tag == "Grid")
+            {
+                //Instantiate(GameObject.CreatePrimitive(PrimitiveType.Sphere), (Vector3.up * 0.3f) + transform.position, transform.rotation, transform);
+                var marker = Resources.Load("Prefabs/Marker", typeof(GameObject));
+                Instantiate(marker, (Vector3.up * 0.3f) + transform.position, transform.rotation, transform);
+            }
+            else
+            {
+                ChangeShader(selected);
+            }
         }
     }
 
@@ -111,9 +129,9 @@ public class HighlightSelection : MonoBehaviour
         rend = this.GetComponent<MeshRenderer>();
         lineRend = this.GetComponent<XRLineRenderer>();
 
-        //gameController = GameObject.FindGameObjectWithTag("GameController");
-        gameController = GameObject.Find("GameController");
-        lista = gameController.GetComponent<SelectionList>();
+        //gameController = GameObject.Find("GameController");
+        localPlayer = GameObject.Find("Player");
+        lista = localPlayer.GetComponent<SelectionList>();
 
 
     }
