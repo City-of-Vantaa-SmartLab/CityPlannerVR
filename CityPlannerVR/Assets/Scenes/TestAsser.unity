@@ -1034,6 +1034,7 @@ GameObject:
   - component: {fileID: 1695863806}
   - component: {fileID: 480622350}
   - component: {fileID: 480622349}
+  - component: {fileID: 480622351}
   m_Layer: 26
   m_Name: Hand1
   m_TagString: Untagged
@@ -1086,6 +1087,19 @@ MonoBehaviour:
   controllerPrefab: {fileID: 168468, guid: 3f39fc63a93686e4a8e9168ee73f24d9, type: 2}
   showDebugText: 0
   spewDebugText: 0
+--- !u!114 &480622351
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 480622348}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d37c2cf88f7c59f4c8cf5d3812568143, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  index: -1
+  origin: {fileID: 0}
 --- !u!1 &495224141
 GameObject:
   m_ObjectHideFlags: 0
@@ -6157,7 +6171,7 @@ MonoBehaviour:
     type: 2}
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 748844236}
-  m_Enabled: 0
+  m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: d4e8a839a7c5b7e4580c59e305fb5f01, type: 3}
   m_Name: 
@@ -7935,8 +7949,6 @@ GameObject:
   - component: {fileID: 1256291289}
   - component: {fileID: 1256291288}
   - component: {fileID: 1256291287}
-  - component: {fileID: 1256291291}
-  - component: {fileID: 1256291290}
   m_Layer: 0
   m_Name: GameController
   m_TagString: Untagged
@@ -7988,42 +8000,6 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 18
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &1256291290
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 1256291286}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: bb6708b48c027cc4aaa2ea6837714435, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  selectedList: []
---- !u!114 &1256291291
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 1256291286}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 3563b74eb2c18bc4f83b42166b1dc615, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  players: []
-  localPlayer: {fileID: 0}
-  leftTargetedObject: {fileID: 0}
-  rightTargetedObject: {fileID: 0}
-  leftHand: {fileID: 0}
-  rightHand: {fileID: 0}
-  leftHandIndex: 0
-  rightHandIndex: 0
-  leftTrackedController: {fileID: 0}
-  rightTrackedController: {fileID: 0}
-  swapHands: 0
-  leftLaserPointer: {fileID: 0}
-  rightLaserPointer: {fileID: 0}
 --- !u!1001 &1309971733
 Prefab:
   m_ObjectHideFlags: 0
@@ -8157,6 +8133,8 @@ GameObject:
   - component: {fileID: 1323874203}
   - component: {fileID: 1323874201}
   - component: {fileID: 1323874200}
+  - component: {fileID: 1323874204}
+  - component: {fileID: 1323874199}
   m_Layer: 0
   m_Name: Player
   m_TagString: Player
@@ -8164,6 +8142,18 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
+--- !u!114 &1323874199
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1323874198}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bb6708b48c027cc4aaa2ea6837714435, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  selectedList: []
 --- !u!114 &1323874200
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -8238,6 +8228,31 @@ MonoBehaviour:
   rig2DFallback: {fileID: 909146320}
   audioListener: {fileID: 90713897}
   allowToggleTo2D: 1
+--- !u!114 &1323874204
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1323874198}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3563b74eb2c18bc4f83b42166b1dc615, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  leftTargetedObject: {fileID: 0}
+  rightTargetedObject: {fileID: 0}
+  leftHand: {fileID: 0}
+  rightHand: {fileID: 0}
+  leftHandIndex: 0
+  rightHandIndex: 0
+  leftTrackedController: {fileID: 0}
+  rightTrackedController: {fileID: 0}
+  leftTrackedObject: {fileID: 0}
+  rightTrackedObject: {fileID: 0}
+  swapHands: 0
+  handIndexesSet: 0
+  laserPointer1: {fileID: 0}
+  laserPointer2: {fileID: 0}
 --- !u!1 &1382298005
 GameObject:
   m_ObjectHideFlags: 0
@@ -8374,15 +8389,15 @@ Prefab:
     m_Modifications:
     - target: {fileID: 400000, guid: 71a45d2170036484f8b585753a801eee, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 0.7378988
+      value: -0.437
       objectReference: {fileID: 0}
     - target: {fileID: 400000, guid: 71a45d2170036484f8b585753a801eee, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 1.3263075
+      value: -0.99
       objectReference: {fileID: 0}
     - target: {fileID: 400000, guid: 71a45d2170036484f8b585753a801eee, type: 3}
       propertyPath: m_LocalPosition.z
-      value: -1.462
+      value: -1.46
       objectReference: {fileID: 0}
     - target: {fileID: 400000, guid: 71a45d2170036484f8b585753a801eee, type: 3}
       propertyPath: m_LocalRotation.x
@@ -9059,6 +9074,7 @@ GameObject:
   - component: {fileID: 1613533002}
   - component: {fileID: 1613533004}
   - component: {fileID: 1613533003}
+  - component: {fileID: 1613533005}
   m_Layer: 26
   m_Name: Hand2
   m_TagString: Untagged
@@ -9128,6 +9144,19 @@ MonoBehaviour:
   controllerPrefab: {fileID: 168468, guid: 3f39fc63a93686e4a8e9168ee73f24d9, type: 2}
   showDebugText: 0
   spewDebugText: 0
+--- !u!114 &1613533005
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1613533001}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d37c2cf88f7c59f4c8cf5d3812568143, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  index: -1
+  origin: {fileID: 0}
 --- !u!1 &1627133686
 GameObject:
   m_ObjectHideFlags: 0
@@ -9588,7 +9617,7 @@ MonoBehaviour:
     type: 2}
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 1711051661}
-  m_Enabled: 0
+  m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: d4e8a839a7c5b7e4580c59e305fb5f01, type: 3}
   m_Name: 

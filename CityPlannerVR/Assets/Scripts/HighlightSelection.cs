@@ -29,7 +29,8 @@ public class HighlightSelection : MonoBehaviour
     public bool isSelected;
     //  public bool toggleSelect; 
 
-    private GameObject gameController;
+    //private GameObject gameController;
+    private GameObject localPlayer;
     [SerializeField]
     private SelectionList lista;
 
@@ -59,7 +60,7 @@ public class HighlightSelection : MonoBehaviour
         if (isSelected)
         {
             isSelected = false;
-            gameController.GetComponent<SelectionList>().RemoveFromList(this.gameObject, lista.selectedList);
+            lista.RemoveFromList(this.gameObject, lista.selectedList);
             if (tag == "Grid")
             {
                 Destroy(transform.Find("Marker(Clone)").gameObject);
@@ -77,7 +78,7 @@ public class HighlightSelection : MonoBehaviour
         else
         {
             isSelected = true;
-            gameController.GetComponent<SelectionList>().AddToList(this.gameObject, lista.selectedList);
+            lista.AddToList(this.gameObject, lista.selectedList);
 
             if (tag == "Grid")
             {
@@ -128,9 +129,9 @@ public class HighlightSelection : MonoBehaviour
         rend = this.GetComponent<MeshRenderer>();
         lineRend = this.GetComponent<XRLineRenderer>();
 
-        //gameController = GameObject.FindGameObjectWithTag("GameController");
-        gameController = GameObject.Find("GameController");
-        lista = gameController.GetComponent<SelectionList>();
+        //gameController = GameObject.Find("GameController");
+        localPlayer = GameObject.Find("Player");
+        lista = localPlayer.GetComponent<SelectionList>();
 
 
     }
