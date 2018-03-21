@@ -57,7 +57,7 @@ public class VRUIInput : MonoBehaviour
 
             if (highlightScript != null)
             {
-                highlightScript.ToggleSelection();
+                highlightScript.ToggleSelection(this.gameObject);
             }
             else
                 Debug.Log("Could not find higlightscript!");

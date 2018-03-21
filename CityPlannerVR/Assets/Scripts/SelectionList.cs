@@ -12,18 +12,55 @@ public class SelectionList : MonoBehaviour
 
     public List<GameObject> selectedList;
     private CreateGrid grid;
+    [SerializeField]
+    private bool onlyGrid;
 
 
-    public void AddToList(GameObject go, List<GameObject> list)
+    public bool AddToList(GameObject go, List<GameObject> list)
     {
         if (ContainsGameObject(go, list))
         {
             Debug.Log("The list already contains: " + go.name);
-            return;
+            return true;
         }
         else
-            list.Add(go);
+        {
+            if (list.Count == 0)
+            {
+                if (go.CompareTag("Grid"))
+                    onlyGrid = true;
+                else
+                    onlyGrid = false;
 
+                list.Add(go);
+                return true;
+            }
+
+            if (onlyGrid && go.CompareTag("Grid"))
+            {
+                list.Add(go);
+                return true;
+            }
+            else if (!onlyGrid && !go.CompareTag("Grid"))
+            {
+                list.Add(go);
+                return true;
+            }
+            else
+            {
+                if (go.CompareTag("Grid"))
+                {
+                    Debug.Log("Cannot add gridtile to a non-grid list!");
+                }
+                else if (onlyGrid)
+                {
+                    Debug.Log("Cannot add object to a gridlist!");
+                }
+                else
+                    Debug.Log("Could not add object!");
+                return false;
+            }
+        }
     }
 
     public void RemoveFromList(GameObject go, List<GameObject> list)
@@ -36,11 +73,11 @@ public class SelectionList : MonoBehaviour
 
     public void DeSelectAll(List<GameObject> list)
     {
-        foreach (GameObject go in list)
-        {
-            RemoveFromList(go, list);
-        }
-        //list.Clear();  //better option? 
+        //foreach (GameObject go in list)
+        //{
+        //    RemoveFromList(go, list);
+        //}
+        list.Clear();
     }
 
     public void ChangeSelectionToList(List<GameObject> newSelectionsList, List<GameObject> list)
@@ -120,6 +157,7 @@ public class SelectionList : MonoBehaviour
     {
         selectedList = new List<GameObject>();
         grid = GameObject.FindGameObjectWithTag("GridParent").GetComponent<CreateGrid>();
+        onlyGrid = false;
     }
 
 }
