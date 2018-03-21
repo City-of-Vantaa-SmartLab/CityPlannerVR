@@ -104,6 +104,7 @@ public class HighlightSelection : MonoBehaviour
                     //Instantiate(GameObject.CreatePrimitive(PrimitiveType.Sphere), (Vector3.up * 0.3f) + transform.position, transform.rotation, transform);
                     var marker = Resources.Load("Prefabs/Marker", typeof(GameObject));
                     Instantiate(marker, (Vector3.up * 0.3f) + transform.position, transform.rotation, transform);
+                    lista.UpdateGrid();
                 }
                 else
                 {

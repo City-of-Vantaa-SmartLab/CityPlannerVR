@@ -22,6 +22,7 @@ GameObject:
   - component: {fileID: 33065313369062690}
   - component: {fileID: 135713416334064958}
   - component: {fileID: 23812989915826174}
+  - component: {fileID: 114259424987992924}
   m_Layer: 0
   m_Name: Marker
   m_TagString: Untagged
@@ -83,6 +84,20 @@ MeshFilter:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1757257201900016}
   m_Mesh: {fileID: 10207, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!114 &114259424987992924
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1757257201900016}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 93db69da750ca464e9b4602dd374cff8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  go1: {fileID: 0}
+  go2: {fileID: 0}
+  lineWidth: 0
 --- !u!135 &135713416334064958
 SphereCollider:
   m_ObjectHideFlags: 1
