@@ -13553,6 +13553,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   selectedList: []
+  onlyGrid: 0
 --- !u!114 &1323874200
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -13638,20 +13639,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3563b74eb2c18bc4f83b42166b1dc615, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  leftTargetedObject: {fileID: 0}
-  rightTargetedObject: {fileID: 0}
-  leftHand: {fileID: 0}
-  rightHand: {fileID: 0}
-  leftHandIndex: 0
-  rightHandIndex: 0
-  leftTrackedController: {fileID: 0}
-  rightTrackedController: {fileID: 0}
-  leftTrackedObject: {fileID: 0}
-  rightTrackedObject: {fileID: 0}
-  swapHands: 0
-  handIndexesSet: 0
+  laser1TargetedObject: {fileID: 0}
+  laser2TargetedObject: {fileID: 0}
+  hand1TrackedController: {fileID: 0}
+  hand2TrackedController: {fileID: 0}
+  hand1TrackedObject: {fileID: 0}
+  hand2TrackedObject: {fileID: 0}
   laserPointer1: {fileID: 0}
   laserPointer2: {fileID: 0}
+  handExist: 1
 --- !u!1001 &1328056090
 Prefab:
   m_ObjectHideFlags: 0
