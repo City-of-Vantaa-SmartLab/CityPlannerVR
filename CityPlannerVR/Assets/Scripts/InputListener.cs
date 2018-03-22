@@ -13,131 +13,68 @@ using System;
 
 public class InputListener : MonoBehaviour {
 
-    public GameObject leftTargetedObject;
-    public GameObject rightTargetedObject;
-
-    public GameObject leftHand;
-	public GameObject rightHand;
-	public uint leftHandIndex = 0;
-	public uint rightHandIndex = 0;
+    public GameObject laser1TargetedObject;
+    public GameObject laser2TargetedObject;
     private GameObject hand1;
     private GameObject hand2;
+    private uint hand1Index = 3;
+    private uint hand2Index = 4;
+    private uint leftHandIndex = 0;
+    private uint rightHandIndex = 0;
 
+    [SerializeField]
+	private SteamVR_TrackedController hand1TrackedController;
 	[SerializeField]
-	private SteamVR_TrackedController leftTrackedController;
-	[SerializeField]
-	private SteamVR_TrackedController rightTrackedController;
+	private SteamVR_TrackedController hand2TrackedController;
     [SerializeField]
-    private SteamVR_TrackedObject leftTrackedObject;
+    private SteamVR_TrackedObject hand1TrackedObject;
     [SerializeField]
-    private SteamVR_TrackedObject rightTrackedObject;
-
-
-
-    public bool swapHands = false;
-    [SerializeField]
-    private bool handIndexesSet = false;
-
+    private SteamVR_TrackedObject hand2TrackedObject;
     [SerializeField]
     private SteamVR_LaserPointer laserPointer1;
     [SerializeField]
     private SteamVR_LaserPointer laserPointer2;
+    [SerializeField]
+    private bool leftHandExists = true;
+    [SerializeField]
+    private bool rightHandExists = true;
 
-    //Put here the events broadcasted by this script (for multiplayer)
+
+    //Put here the events broadcasted by this script
     public event ClickedEventHandler TriggerClicked;
+    public event ClickedEventHandler LasersOff;
+    public event EventHandler Hand1Found;
+    public event EventHandler Hand2Found;
 
 
 
-	private void OnEnable() {
-
+    private void OnEnable()
+    {
         hand1 = GameObject.Find("Player/SteamVRObjects/Hand1");
         hand2 = GameObject.Find("Player/SteamVRObjects/Hand2");
-
-        FindHandIndexes();
-        handIndexesSet = CheckIndex();
-        if (handIndexesSet)
-        {
-            leftHand = hand1;
-            rightHand = hand2;
-            UpdateHands();
-        }
- 
-
         laserPointer1 = hand1.GetComponentInChildren<SteamVR_LaserPointer>();
         laserPointer2 = hand2.GetComponentInChildren<SteamVR_LaserPointer>();
-
+        UpdateHands();
         SubscriptionOn();
     }
 
-    private void FindHandIndexes()
+    private void OnDisable()
     {
-        var system = OpenVR.System;
-        if (system != null)
-        {
-            leftHandIndex = system.GetTrackedDeviceIndexForControllerRole
-                (ETrackedControllerRole.LeftHand);
-            rightHandIndex = system.GetTrackedDeviceIndexForControllerRole
-                (ETrackedControllerRole.RightHand);
-        }
-    }
-
-    private void OnDisable() {
         SubscriptionOff();
     }
 
-
+    
     private void UpdateHands()
     {
+        hand1TrackedController = hand1.GetComponent<SteamVR_TrackedController>();
+        hand2TrackedController = hand2.GetComponent<SteamVR_TrackedController>();
+        hand1TrackedObject = hand1.GetComponent<SteamVR_TrackedObject>();
+        hand2TrackedObject = hand2.GetComponent<SteamVR_TrackedObject>();
 
-        leftTrackedController = leftHand.GetComponent<SteamVR_TrackedController>();
-        rightTrackedController = rightHand.GetComponent<SteamVR_TrackedController>();
-        leftTrackedObject = leftHand.GetComponent<SteamVR_TrackedObject>();
-        rightTrackedObject = rightHand.GetComponent<SteamVR_TrackedObject>();
-
-        leftTrackedController.SetDeviceIndex((int)leftHandIndex);
-        rightTrackedController.SetDeviceIndex((int)rightHandIndex);
-        leftTrackedObject.SetDeviceIndex((int)leftHandIndex);
-        rightTrackedObject.SetDeviceIndex((int)rightHandIndex);
-
-    }
-
-    private bool CheckIndex()
-    {
-        bool check = true;
-        if (leftHandIndex == 4294967295 || leftHandIndex == 0)
-        {
-            if (rightHandIndex == 3)
-            {
-                leftHandIndex = 4;
-            }
-            else if (rightHandIndex == 4)
-            {
-                leftHandIndex = 3;
-            }
-            else
-            {
-                Debug.Log("Left hand index not set correctly!");
-                check = false;
-            }
-        }
-
-        if (rightHandIndex == 4294967295 || rightHandIndex == 0)
-        {
-            if (leftHandIndex == 3)
-            {
-                rightHandIndex = 4;
-            }
-            else if (leftHandIndex == 4)
-            {
-                rightHandIndex = 3;
-            }
-            else
-            {
-                Debug.Log("Right hand index not set correctly!");
-                check = false;
-            }
-        }
-        return check;
+        hand1TrackedController.SetDeviceIndex((int)hand1Index);
+        hand2TrackedController.SetDeviceIndex((int)hand2Index);
+        hand1TrackedObject.SetDeviceIndex((int)hand1Index);
+        hand2TrackedObject.SetDeviceIndex((int)hand2Index);
     }
         
 
@@ -148,42 +85,15 @@ public class InputListener : MonoBehaviour {
         laserPointer2.PointerIn += HandlePointerIn;
         laserPointer2.PointerOut += HandlePointerOut;
 
-        if (handIndexesSet)
-        {
-            leftTrackedController.MenuButtonClicked += HandleMenuClicked;
-            rightTrackedController.MenuButtonClicked += HandleMenuClicked;
-            leftTrackedController.TriggerClicked += HandleTriggerClicked;
-            rightTrackedController.TriggerClicked += HandleTriggerClicked;
-        }
-
-
-
+        hand1TrackedController.MenuButtonClicked += HandleMenuClicked;
+        hand1TrackedController.TriggerClicked += HandleTriggerClicked;
+        hand2TrackedController.MenuButtonClicked += HandleMenuClicked;
+        hand2TrackedController.TriggerClicked += HandleTriggerClicked;
     }
 
     private void HandleMenuClicked(object sender, ClickedEventArgs e)
     {
-        //Debug.Log("Controller index: " +  e.controllerIndex);
-
-        if (e.controllerIndex == leftHandIndex)
-        {
-            
-            if (laserPointer1.gameObject.activeSelf == true)
-                laserPointer1.gameObject.SetActive(false);
-            else
-                laserPointer1.gameObject.SetActive(true);
-
-        }
-        else if (e.controllerIndex == rightHandIndex)
-        {
-            if (laserPointer2.gameObject.activeSelf == true)
-                laserPointer2.gameObject.SetActive(false);
-            else
-                laserPointer2.gameObject.SetActive(true);
-        }
-        else
-        {
-
-        }
+        ToggleLaser(sender, e);
 
     }
 
@@ -193,28 +103,24 @@ public class InputListener : MonoBehaviour {
         laserPointer1.PointerOut -= HandlePointerOut;
         laserPointer2.PointerIn -= HandlePointerIn;
         laserPointer2.PointerOut -= HandlePointerOut;
-        if (handIndexesSet)
-        {
-            if (leftTrackedController)
-                leftTrackedController.TriggerClicked -= HandleTriggerClicked;
-            if (rightTrackedController)
-                rightTrackedController.TriggerClicked -= HandleTriggerClicked;
-        }
 
+        hand1TrackedController.MenuButtonClicked -= HandleMenuClicked;
+        hand1TrackedController.TriggerClicked -= HandleTriggerClicked;
+        hand2TrackedController.MenuButtonClicked -= HandleMenuClicked;
+        hand2TrackedController.TriggerClicked -= HandleTriggerClicked;
     }
 
     private void HandleTriggerClicked(object sender, ClickedEventArgs e)
 	{
-        if (e.controllerIndex == leftHandIndex)
+
+        if (e.controllerIndex == hand1Index)
         {
-            //Debug.Log("Left trigger clicked!");
-            SelectByLaser(laserPointer1, leftTargetedObject); 
+            SelectByLaser(laserPointer1, laser1TargetedObject); 
         }
 
-        if (e.controllerIndex == rightHandIndex)
+        if (e.controllerIndex == hand2Index)
         {
-            //Debug.Log("Right trigger clicked!");
-            SelectByLaser(laserPointer2, rightTargetedObject);
+            SelectByLaser(laserPointer2, laser2TargetedObject);
         }
     }
 
@@ -225,19 +131,21 @@ public class InputListener : MonoBehaviour {
             var highlightScript = targetedObject.GetComponent<HighlightSelection>();
             if (highlightScript != null)
             {
-                highlightScript.ToggleSelection();
+                highlightScript.ToggleSelection(this.gameObject);
             }
             else
-                Debug.Log("Could not find higlightscript!");
+            {
+                //Debug.Log("Could not find higlightscript!");
+            }
         }
     }
 
     private void HandlePointerIn(object sender, PointerEventArgs e)
     {
-        if (e.controllerIndex == leftHandIndex)
-            leftTargetedObject = e.target.gameObject;
-        if (e.controllerIndex == rightHandIndex)
-            rightTargetedObject = e.target.gameObject;
+        if (e.controllerIndex == hand1Index)
+            laser1TargetedObject = e.target.gameObject;
+        if (e.controllerIndex == hand2Index)
+            laser2TargetedObject = e.target.gameObject;
 
         var highlightScript = e.target.GetComponent<HighlightSelection>();
 
@@ -257,10 +165,10 @@ public class InputListener : MonoBehaviour {
 
     private void HandlePointerOut(object sender, PointerEventArgs e)
     {
-        if (e.controllerIndex == leftHandIndex)
-            leftTargetedObject = null;
-        if (e.controllerIndex == rightHandIndex)
-            rightTargetedObject = null;
+        if (e.controllerIndex == hand1Index)
+            laser1TargetedObject = null;
+        if (e.controllerIndex == hand2Index)
+            laser2TargetedObject = null;
 
         var highlightScript = e.target.GetComponent<HighlightSelection>();
         if (highlightScript != null)
@@ -277,41 +185,66 @@ public class InputListener : MonoBehaviour {
         }
     }
 
-    private void SwapHands()
+    private void ToggleLaser(object sender, ClickedEventArgs e)
     {
-        SubscriptionOff();
-        if (leftHand == hand2)
+        if (e.controllerIndex == hand1Index)
         {
-            leftHand = hand1;
-            rightHand = hand2;
+            if (laserPointer1.gameObject.activeSelf == true)
+            {
+                laserPointer1.gameObject.SetActive(false);
+                if (laserPointer2.gameObject.activeSelf == false)
+                {
+                    LasersOff(this, e);     //event for highlightselection
+                }
+            }
+            else
+                laserPointer1.gameObject.SetActive(true);
+        }
+        else if (e.controllerIndex == hand2Index)
+        {
+            if (laserPointer2.gameObject.activeSelf == true)
+            {
+                laserPointer2.gameObject.SetActive(false);
+                if (laserPointer1.gameObject.activeSelf == false)
+                {
+                    LasersOff(this, e);     //event for highlightselection
+                }
+            }
+            else
+                laserPointer2.gameObject.SetActive(true);
         }
         else
         {
-            leftHand = hand2;
-            rightHand = hand1;
+            Debug.Log("Laser toggle input not recognized!");
         }
-        UpdateHands();
-        SubscriptionOn();
-
     }
 
-    private void Update()
+    private void FindHandIndexes()
     {
-        if (swapHands)
+        var system = OpenVR.System;
+        if (system != null)
         {
-            SwapHands();
-            swapHands = false;
+            if (!leftHandExists)
+            {
+
+            }
+            leftHandIndex = system.GetTrackedDeviceIndexForControllerRole
+                (ETrackedControllerRole.LeftHand);
+            if (!rightHandExists)
+            {
+
+            }
+            rightHandIndex = system.GetTrackedDeviceIndexForControllerRole
+                (ETrackedControllerRole.RightHand);
         }
+    }
 
-        if (!handIndexesSet)
-        {
-            FindHandIndexes();
-            handIndexesSet = CheckIndex();
-            if (handIndexesSet)
-                UpdateHands();
-        }
-
-
+    private bool CompareHandToControllers(uint handNumber)
+    {
+        if (handNumber == leftHandIndex || handNumber == rightHandIndex)
+            return true;
+        return false;
     }
 
 }
+

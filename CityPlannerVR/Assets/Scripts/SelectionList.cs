@@ -11,36 +11,87 @@ public class SelectionList : MonoBehaviour
 {
 
     public List<GameObject> selectedList;
-    private CreateGrid grid;
+    private CreateGrid gridParent;
+    [SerializeField]
+    private bool onlyGrid;
 
-
-    public void AddToList(GameObject go, List<GameObject> list)
+    public bool AddToList(GameObject go, List<GameObject> list)
     {
         if (ContainsGameObject(go, list))
         {
             Debug.Log("The list already contains: " + go.name);
-            return;
+            return true;
         }
         else
-            list.Add(go);
+        {
+            if (list.Count == 0)
+            {
+                if (go.CompareTag("Grid"))
+                {
+                    onlyGrid = true;
+                }
+                else
+                    onlyGrid = false;
 
+                list.Add(go);
+                return true;
+            }
+
+            if (onlyGrid && go.CompareTag("Grid"))
+            {
+                list.Add(go);
+                return true;
+            }
+            else if (!onlyGrid && !go.CompareTag("Grid"))
+            {
+                list.Add(go);
+                return true;
+            }
+            else
+            {
+                if (go.CompareTag("Grid"))
+                {
+                    Debug.Log("Cannot add gridtile to a non-grid list!");
+                }
+                else if (onlyGrid)
+                {
+                    Debug.Log("Cannot add object to a gridlist!");
+                }
+                else
+                    Debug.Log("Could not add object!");
+                return false;
+            }
+        }
     }
 
     public void RemoveFromList(GameObject go, List<GameObject> list)
     {
         if (ContainsGameObject(go, list))
+        {
             list.Remove(go);
+
+        }
         else
             Debug.Log(go.name + " not found!");
     }
 
+    public GameObject GetObj(int index)
+    {
+        GameObject go = selectedList[index];
+        if (go == null)
+            Debug.Log("Object could not be find using index: " + index);
+        return go;
+    }
+
     public void DeSelectAll(List<GameObject> list)
     {
-        foreach (GameObject go in list)
-        {
-            RemoveFromList(go, list);
-        }
-        //list.Clear();  //better option? 
+        //foreach (GameObject go in list)
+        //{
+        //    RemoveFromList(go, list);
+        //}
+
+        list.Clear();
+
     }
 
     public void ChangeSelectionToList(List<GameObject> newSelectionsList, List<GameObject> list)
@@ -95,7 +146,7 @@ public class SelectionList : MonoBehaviour
 
             for (float j = xStart; j <= xEnd; j++)
             {
-                tempTile = grid.GetTileAt(j, i);
+                tempTile = gridParent.GetTileAt(j, i);
                 if (tempTile.State == GridTile.GridState.Empty)
                     continue;
 
@@ -114,12 +165,79 @@ public class SelectionList : MonoBehaviour
 
     }
 
+    public void UpdateGrid()
+    {
+        GameObject previousMarker = null;
+        GameObject newMarker = null;
+
+        foreach (GameObject go in selectedList)
+        {
+            newMarker = go.transform.Find("Marker(Clone)").gameObject;
+            if (newMarker == null)
+            {
+                Debug.Log("Could not find marker of " + go.name);
+                continue;
+            }
+
+            if (previousMarker == null)
+            {
+                previousMarker = newMarker;
+                continue;
+            }
+
+            if (!AddLine(previousMarker, newMarker))
+            {
+                Debug.Log("Could not add line from" + go.name);
+            }
+
+            previousMarker = newMarker;
+        }
+
+        previousMarker = GetObj(selectedList.Count - 1);
+        previousMarker = previousMarker.transform.Find("Marker(Clone)").gameObject;
+
+        newMarker = GetObj(0);
+        newMarker = newMarker.transform.Find("Marker(Clone)").gameObject;
+
+        newMarker.GetComponent<HighlightLine>().alreadySet = false;
+        if (!AddLine(previousMarker, newMarker))
+        {
+            Debug.Log("Could not add a line between first and last marker!");
+        }
+
+        
+    }
+
+
+    bool AddLine(GameObject go1, GameObject go2)
+    {
+        HighlightLine newLine = go2.GetComponent<HighlightLine>();
+        if (newLine == null)
+        {
+            Debug.Log("Could not find newline component of marker in " + go2.name);
+            return false;
+        }
+
+        if (!newLine.alreadySet)
+        {
+            newLine.go1 = go1;
+            newLine.go2 = go2;
+            newLine.UpdateLine();
+        }
+        else
+        {
+            Debug.Log("The line was already set!");
+        }
+        return true;
+    }
+
 
     // Use this for initialization 
     void Start()
     {
         selectedList = new List<GameObject>();
-        grid = GameObject.FindGameObjectWithTag("GridParent").GetComponent<CreateGrid>();
+        gridParent = GameObject.FindGameObjectWithTag("GridParent").GetComponent<CreateGrid>();
+        onlyGrid = false;
     }
 
 }

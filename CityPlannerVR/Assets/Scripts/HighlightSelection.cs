@@ -1,6 +1,9 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.EventSystems;
+
 
 /// <summary> 
 /// Attached gameobject can be selected and highlighted using hardcoded shaders. 
@@ -30,7 +33,7 @@ public class HighlightSelection : MonoBehaviour
     //  public bool toggleSelect; 
 
     //private GameObject gameController;
-    private GameObject localPlayer;
+    private GameObject owner;
     [SerializeField]
     private SelectionList lista;
 
@@ -55,11 +58,24 @@ public class HighlightSelection : MonoBehaviour
     }
 
 
-    public void ToggleSelection()
+    public void ToggleSelection(GameObject selectingPlayer)
     {
+        if (selectingPlayer == null)
+        {
+            Debug.Log("Selecting player is null!");
+            return;
+        }
+        if (owner != null && owner != selectingPlayer)
+        {
+            Debug.Log("Currently selected by someone else!");
+            return;
+        }
+
         if (isSelected)
         {
             isSelected = false;
+            owner.GetComponent<InputListener>().LasersOff -= HandleLasersOff;
+            owner = null;
             lista.RemoveFromList(this.gameObject, lista.selectedList);
             if (tag == "Grid")
             {
@@ -77,22 +93,32 @@ public class HighlightSelection : MonoBehaviour
         }
         else
         {
-            isSelected = true;
-            lista.AddToList(this.gameObject, lista.selectedList);
+            lista = selectingPlayer.GetComponent<SelectionList>();
+            isSelected = lista.AddToList(this.gameObject, lista.selectedList);
+            if (isSelected)
+            {
+                owner = selectingPlayer;
+                owner.GetComponent<InputListener>().LasersOff += HandleLasersOff;
+                if (tag == "Grid")
+                {
+                    //Instantiate(GameObject.CreatePrimitive(PrimitiveType.Sphere), (Vector3.up * 0.3f) + transform.position, transform.rotation, transform);
+                    var marker = Resources.Load("Prefabs/Marker", typeof(GameObject));
+                    Instantiate(marker, (Vector3.up * 0.3f) + transform.position, transform.rotation, transform);
+                    lista.UpdateGrid();
+                }
+                else
+                {
+                    ChangeShader(selected);
+                }
+            }
 
-            if (tag == "Grid")
-            {
-                //Instantiate(GameObject.CreatePrimitive(PrimitiveType.Sphere), (Vector3.up * 0.3f) + transform.position, transform.rotation, transform);
-                var marker = Resources.Load("Prefabs/Marker", typeof(GameObject));
-                Instantiate(marker, (Vector3.up * 0.3f) + transform.position, transform.rotation, transform);
-            }
-            else
-            {
-                ChangeShader(selected);
-            }
         }
     }
 
+    private void HandleLasersOff(object sender, ClickedEventArgs e)
+    {
+        ToggleSelection(owner);
+    }
 
     public void ChangeShader(Shader shaderToBe)
     {
@@ -128,11 +154,6 @@ public class HighlightSelection : MonoBehaviour
         selected = Shader.Find("FX/Flare");
         rend = this.GetComponent<MeshRenderer>();
         lineRend = this.GetComponent<XRLineRenderer>();
-
-        //gameController = GameObject.Find("GameController");
-        localPlayer = GameObject.Find("Player");
-        lista = localPlayer.GetComponent<SelectionList>();
-
 
     }
 
