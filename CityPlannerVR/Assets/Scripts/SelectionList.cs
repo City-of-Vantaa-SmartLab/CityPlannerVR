@@ -224,10 +224,6 @@ public class SelectionList : MonoBehaviour
             newLine.go2 = go2;
             newLine.UpdateLine();
         }
-        else
-        {
-            Debug.Log("The line was already set!");
-        }
         return true;
     }
 

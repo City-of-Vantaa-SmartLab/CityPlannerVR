@@ -42,7 +42,7 @@ public class InputListener : MonoBehaviour {
 
     //Put here the events broadcasted by this script
     public event ClickedEventHandler TriggerClicked;
-    public event ClickedEventHandler LasersOff;
+    public event ClickedEventHandler LasersAreOff;
     public event EventHandler Hand1Found;
     public event EventHandler Hand2Found;
 
@@ -194,7 +194,7 @@ public class InputListener : MonoBehaviour {
                 laserPointer1.gameObject.SetActive(false);
                 if (laserPointer2.gameObject.activeSelf == false)
                 {
-                    LasersOff(this, e);     //event for highlightselection
+                    LasersAreOff(this, e);     //event for highlightselection
                 }
             }
             else
@@ -207,7 +207,7 @@ public class InputListener : MonoBehaviour {
                 laserPointer2.gameObject.SetActive(false);
                 if (laserPointer1.gameObject.activeSelf == false)
                 {
-                    LasersOff(this, e);     //event for highlightselection
+                    LasersAreOff(this, e);     //event for highlightselection
                 }
             }
             else
@@ -226,16 +226,17 @@ public class InputListener : MonoBehaviour {
         {
             if (!leftHandExists)
             {
+                leftHandIndex = system.GetTrackedDeviceIndexForControllerRole
+                    (ETrackedControllerRole.LeftHand);
 
             }
-            leftHandIndex = system.GetTrackedDeviceIndexForControllerRole
-                (ETrackedControllerRole.LeftHand);
+
             if (!rightHandExists)
             {
-
+                rightHandIndex = system.GetTrackedDeviceIndexForControllerRole
+                    (ETrackedControllerRole.RightHand);
             }
-            rightHandIndex = system.GetTrackedDeviceIndexForControllerRole
-                (ETrackedControllerRole.RightHand);
+
         }
     }
 
@@ -244,6 +245,27 @@ public class InputListener : MonoBehaviour {
         if (handNumber == leftHandIndex || handNumber == rightHandIndex)
             return true;
         return false;
+    }
+
+
+
+    private void Start()
+    {
+        //ClickedEventArgs tempEvent;
+        //tempEvent.controllerIndex = 0;
+        //tempEvent.flags = 0;
+        //tempEvent.padX = 0;
+        //tempEvent.padY = 0;
+
+        if (laserPointer1)
+        {
+            laserPointer1.gameObject.SetActive(false);
+        }
+        if (laserPointer2)
+        {
+            laserPointer2.gameObject.SetActive(false);
+        }
+
     }
 
 }

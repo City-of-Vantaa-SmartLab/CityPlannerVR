@@ -9,6 +9,7 @@ public class HighlightLine : MonoBehaviour {
     private LineRenderer line;
     public float lineWidth;
     public bool alreadySet = false;
+    public Material material;
 
     void Awake()
     {
@@ -18,6 +19,8 @@ public class HighlightLine : MonoBehaviour {
         line.startWidth = lineWidth;
         line.endWidth = lineWidth;
         line.positionCount = 2;
+        material = gameObject.GetComponent<Renderer>().material;
+        line.material = material;
     }
 
     public void UpdateLine()
