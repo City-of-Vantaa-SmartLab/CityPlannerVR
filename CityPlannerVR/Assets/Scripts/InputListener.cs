@@ -19,6 +19,8 @@ public class InputListener : MonoBehaviour {
     private GameObject hand2;
     private uint hand1Index = 3;
     private uint hand2Index = 4;
+    private uint leftHandIndex = 0;
+    private uint rightHandIndex = 0;
 
     [SerializeField]
 	private SteamVR_TrackedController hand1TrackedController;
@@ -33,15 +35,20 @@ public class InputListener : MonoBehaviour {
     [SerializeField]
     private SteamVR_LaserPointer laserPointer2;
     [SerializeField]
-    private bool handExist = true;
+    private bool leftHandExists = true;
+    [SerializeField]
+    private bool rightHandExists = true;
+
 
     //Put here the events broadcasted by this script
     public event ClickedEventHandler TriggerClicked;
     public event ClickedEventHandler LasersOff;
+    public event EventHandler Hand1Found;
+    public event EventHandler Hand2Found;
 
 
 
-	private void OnEnable()
+    private void OnEnable()
     {
         hand1 = GameObject.Find("Player/SteamVRObjects/Hand1");
         hand2 = GameObject.Find("Player/SteamVRObjects/Hand2");
@@ -86,36 +93,7 @@ public class InputListener : MonoBehaviour {
 
     private void HandleMenuClicked(object sender, ClickedEventArgs e)
     {
-        if (e.controllerIndex == hand1Index)
-        {
-            if (laserPointer1.gameObject.activeSelf == true)
-            {
-                laserPointer1.gameObject.SetActive(false);
-                if (laserPointer2.gameObject.activeSelf == false)
-                {
-                    LasersOff(this, e);     //event for highlightselection
-                }
-            }
-            else
-                laserPointer1.gameObject.SetActive(true);
-        }
-        else if (e.controllerIndex == hand2Index)
-        {
-            if (laserPointer2.gameObject.activeSelf == true)
-            {
-                laserPointer2.gameObject.SetActive(false);
-                if (laserPointer1.gameObject.activeSelf == false)
-                {
-                    LasersOff(this, e);     //event for highlightselection
-                }
-            }
-            else
-                laserPointer2.gameObject.SetActive(true);
-        }
-        else
-        {
-            Debug.Log("Menuclick not recognized!");
-        }
+        ToggleLaser(sender, e);
 
     }
 
@@ -207,4 +185,66 @@ public class InputListener : MonoBehaviour {
         }
     }
 
+    private void ToggleLaser(object sender, ClickedEventArgs e)
+    {
+        if (e.controllerIndex == hand1Index)
+        {
+            if (laserPointer1.gameObject.activeSelf == true)
+            {
+                laserPointer1.gameObject.SetActive(false);
+                if (laserPointer2.gameObject.activeSelf == false)
+                {
+                    LasersOff(this, e);     //event for highlightselection
+                }
+            }
+            else
+                laserPointer1.gameObject.SetActive(true);
+        }
+        else if (e.controllerIndex == hand2Index)
+        {
+            if (laserPointer2.gameObject.activeSelf == true)
+            {
+                laserPointer2.gameObject.SetActive(false);
+                if (laserPointer1.gameObject.activeSelf == false)
+                {
+                    LasersOff(this, e);     //event for highlightselection
+                }
+            }
+            else
+                laserPointer2.gameObject.SetActive(true);
+        }
+        else
+        {
+            Debug.Log("Laser toggle input not recognized!");
+        }
+    }
+
+    private void FindHandIndexes()
+    {
+        var system = OpenVR.System;
+        if (system != null)
+        {
+            if (!leftHandExists)
+            {
+
+            }
+            leftHandIndex = system.GetTrackedDeviceIndexForControllerRole
+                (ETrackedControllerRole.LeftHand);
+            if (!rightHandExists)
+            {
+
+            }
+            rightHandIndex = system.GetTrackedDeviceIndexForControllerRole
+                (ETrackedControllerRole.RightHand);
+        }
+    }
+
+    private bool CompareHandToControllers(uint handNumber)
+    {
+        if (handNumber == leftHandIndex || handNumber == rightHandIndex)
+            return true;
+        return false;
+    }
+
 }
+

@@ -194,11 +194,13 @@ public class SelectionList : MonoBehaviour
         }
 
         previousMarker = GetObj(selectedList.Count - 1);
-        GameObject firstMarker = GetObj(0);
-        firstMarker = firstMarker.transform.Find("Marker(Clone)").gameObject;
+        previousMarker = previousMarker.transform.Find("Marker(Clone)").gameObject;
 
-        firstMarker.GetComponent<HighlightLine>().alreadySet = false;
-        if (!AddLine(previousMarker, firstMarker))
+        newMarker = GetObj(0);
+        newMarker = newMarker.transform.Find("Marker(Clone)").gameObject;
+
+        newMarker.GetComponent<HighlightLine>().alreadySet = false;
+        if (!AddLine(previousMarker, newMarker))
         {
             Debug.Log("Could not add a line between first and last marker!");
         }

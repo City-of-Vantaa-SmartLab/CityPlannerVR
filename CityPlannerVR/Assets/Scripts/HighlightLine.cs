@@ -10,7 +10,7 @@ public class HighlightLine : MonoBehaviour {
     public float lineWidth;
     public bool alreadySet = false;
 
-    void Start()
+    void Awake()
     {
         line = this.gameObject.AddComponent<LineRenderer>();
         if (lineWidth == 0)
@@ -22,7 +22,7 @@ public class HighlightLine : MonoBehaviour {
 
     public void UpdateLine()
     {
-        if (go1 != null && go2 != null)
+        if (go1 != null && go2 != null && line != null)
         {
             line.SetPosition(0, go1.transform.position);
             line.SetPosition(1, go2.transform.position);
