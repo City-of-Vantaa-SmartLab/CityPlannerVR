@@ -2,6 +2,10 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+/// <summary> 
+/// Connects selected grids' markers with each other.
+/// </summary> 
+
 public class HighlightLine : MonoBehaviour {
 
     public GameObject go1;
