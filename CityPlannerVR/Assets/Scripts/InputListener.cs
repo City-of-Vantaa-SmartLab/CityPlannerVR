@@ -8,28 +8,32 @@ using Valve.VR.InteractionSystem;
 using System;
 
 /// <summary>
-/// Part of an additional layer between networking, device input and eventsystem
+/// Part of an additional layer between networking and eventsystem based on various inputs
 /// </summary>
 
 public class InputListener : MonoBehaviour {
 
     public GameObject laser1TargetedObject;
     public GameObject laser2TargetedObject;
+    public GameObject hand1HoldObject;
     private GameObject hand1;
     private GameObject hand2;
-    private uint hand1Index = 3;
-    private uint hand2Index = 4;
+    public uint hand1Index = 3;
+    public uint hand2Index = 4;
     private uint leftHandIndex = 0;
     private uint rightHandIndex = 0;
+    public bool lasersAreActive;
+
+    
 
     [SerializeField]
 	private SteamVR_TrackedController hand1TrackedController;
 	[SerializeField]
 	private SteamVR_TrackedController hand2TrackedController;
-    [SerializeField]
-    private SteamVR_TrackedObject hand1TrackedObject;
-    [SerializeField]
-    private SteamVR_TrackedObject hand2TrackedObject;
+
+    public SteamVR_TrackedObject hand1TrackedObject;
+    public SteamVR_TrackedObject hand2TrackedObject;
+
     [SerializeField]
     private SteamVR_LaserPointer laserPointer1;
     [SerializeField]
@@ -41,8 +45,9 @@ public class InputListener : MonoBehaviour {
 
 
     //Put here the events broadcasted by this script
-    public event ClickedEventHandler TriggerClicked;
-    public event ClickedEventHandler LasersOff;
+    public event ClickedEventHandler TriggerClicked; //
+    public event ClickedEventHandler TriggerLifted;
+    public event ClickedEventHandler LasersAreOff;   //event for highlightselection
     public event EventHandler Hand1Found;
     public event EventHandler Hand2Found;
 
@@ -75,6 +80,7 @@ public class InputListener : MonoBehaviour {
         hand2TrackedController.SetDeviceIndex((int)hand2Index);
         hand1TrackedObject.SetDeviceIndex((int)hand1Index);
         hand2TrackedObject.SetDeviceIndex((int)hand2Index);
+
     }
         
 
@@ -87,8 +93,14 @@ public class InputListener : MonoBehaviour {
 
         hand1TrackedController.MenuButtonClicked += HandleMenuClicked;
         hand1TrackedController.TriggerClicked += HandleTriggerClicked;
+        hand1TrackedController.TriggerUnclicked += HandleTriggerUnClicked;
+        //OnGripped(e);
+
+
         hand2TrackedController.MenuButtonClicked += HandleMenuClicked;
         hand2TrackedController.TriggerClicked += HandleTriggerClicked;
+        hand2TrackedController.TriggerUnclicked += HandleTriggerUnClicked;
+
     }
 
     private void HandleMenuClicked(object sender, ClickedEventArgs e)
@@ -106,8 +118,13 @@ public class InputListener : MonoBehaviour {
 
         hand1TrackedController.MenuButtonClicked -= HandleMenuClicked;
         hand1TrackedController.TriggerClicked -= HandleTriggerClicked;
+        hand2TrackedController.TriggerUnclicked -= HandleTriggerUnClicked;
+
+
         hand2TrackedController.MenuButtonClicked -= HandleMenuClicked;
         hand2TrackedController.TriggerClicked -= HandleTriggerClicked;
+        hand2TrackedController.TriggerUnclicked -= HandleTriggerUnClicked;
+
     }
 
     private void HandleTriggerClicked(object sender, ClickedEventArgs e)
@@ -115,14 +132,24 @@ public class InputListener : MonoBehaviour {
 
         if (e.controllerIndex == hand1Index)
         {
-            SelectByLaser(laserPointer1, laser1TargetedObject); 
+            SelectByLaser(laserPointer1, laser1TargetedObject);
+            TriggerClicked(sender, e);
         }
 
         if (e.controllerIndex == hand2Index)
         {
             SelectByLaser(laserPointer2, laser2TargetedObject);
+            TriggerClicked(sender, e);
         }
     }
+
+    private void HandleTriggerUnClicked(object sender, ClickedEventArgs e)
+    {
+
+            TriggerLifted(sender, e);
+
+    }
+
 
     private void SelectByLaser(SteamVR_LaserPointer laserPointer, GameObject targetedObject)
     {
@@ -194,11 +221,15 @@ public class InputListener : MonoBehaviour {
                 laserPointer1.gameObject.SetActive(false);
                 if (laserPointer2.gameObject.activeSelf == false)
                 {
-                    LasersOff(this, e);     //event for highlightselection
+                    lasersAreActive = false;
+                    LasersAreOff(this, e);
                 }
             }
             else
+            {
                 laserPointer1.gameObject.SetActive(true);
+                lasersAreActive = true;
+            }
         }
         else if (e.controllerIndex == hand2Index)
         {
@@ -207,11 +238,15 @@ public class InputListener : MonoBehaviour {
                 laserPointer2.gameObject.SetActive(false);
                 if (laserPointer1.gameObject.activeSelf == false)
                 {
-                    LasersOff(this, e);     //event for highlightselection
+                    lasersAreActive = false;
+                    LasersAreOff(this, e);
                 }
             }
             else
+            {
                 laserPointer2.gameObject.SetActive(true);
+                lasersAreActive = true;
+            }
         }
         else
         {
@@ -226,16 +261,17 @@ public class InputListener : MonoBehaviour {
         {
             if (!leftHandExists)
             {
+                leftHandIndex = system.GetTrackedDeviceIndexForControllerRole
+                    (ETrackedControllerRole.LeftHand);
 
             }
-            leftHandIndex = system.GetTrackedDeviceIndexForControllerRole
-                (ETrackedControllerRole.LeftHand);
+
             if (!rightHandExists)
             {
-
+                rightHandIndex = system.GetTrackedDeviceIndexForControllerRole
+                    (ETrackedControllerRole.RightHand);
             }
-            rightHandIndex = system.GetTrackedDeviceIndexForControllerRole
-                (ETrackedControllerRole.RightHand);
+
         }
     }
 
@@ -244,6 +280,28 @@ public class InputListener : MonoBehaviour {
         if (handNumber == leftHandIndex || handNumber == rightHandIndex)
             return true;
         return false;
+    }
+
+
+
+    private void Start()
+    {
+        //ClickedEventArgs tempEvent;
+        //tempEvent.controllerIndex = 0;
+        //tempEvent.flags = 0;
+        //tempEvent.padX = 0;
+        //tempEvent.padY = 0;
+
+        if (laserPointer1)
+        {
+            laserPointer1.gameObject.SetActive(false);
+        }
+        if (laserPointer2)
+        {
+            laserPointer2.gameObject.SetActive(false);
+        }
+        lasersAreActive = false;
+
     }
 
 }

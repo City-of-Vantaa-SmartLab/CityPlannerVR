@@ -13534,6 +13534,7 @@ GameObject:
   - component: {fileID: 1323874200}
   - component: {fileID: 1323874204}
   - component: {fileID: 1323874199}
+  - component: {fileID: 1323874205}
   m_Layer: 0
   m_Name: Player
   m_TagString: Player
@@ -13641,13 +13642,32 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   laser1TargetedObject: {fileID: 0}
   laser2TargetedObject: {fileID: 0}
+  hand1HoldObject: {fileID: 0}
+  hand1Index: 3
+  hand2Index: 4
+  lasersAreActive: 0
   hand1TrackedController: {fileID: 0}
   hand2TrackedController: {fileID: 0}
   hand1TrackedObject: {fileID: 0}
   hand2TrackedObject: {fileID: 0}
   laserPointer1: {fileID: 0}
   laserPointer2: {fileID: 0}
-  handExist: 1
+  leftHandExists: 1
+  rightHandExists: 1
+--- !u!114 &1323874205
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1323874198}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 44d86733ee63be244a454c16d6ef6124, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  trackedObj1: {fileID: 0}
+  trackedObj2: {fileID: 0}
+  currentMaterial: {fileID: 2100000, guid: 432995c698b2d4e429e866ad408ed827, type: 2}
 --- !u!1001 &1328056090
 Prefab:
   m_ObjectHideFlags: 0

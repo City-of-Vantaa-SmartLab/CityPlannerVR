@@ -7,12 +7,12 @@ using UnityEngine.EventSystems;
 
 /// <summary> 
 /// Attached gameobject can be selected and highlighted using hardcoded shaders. 
-/// Selection also utilises SelectionList script, adding attached object to GameController object's selected list. 
+/// Selection also utilises SelectionList script, adding attached object to player's selected list. 
 /// </summary> 
 
-//TODO: booleans toggleHighlight and toggleSelect are only for debugging purposes, 
-//  therefore they will be removed with the update function later 
-//TODO?: add sound to selection function 
+//TODO: booleans toggleHighlight and toggleSelect are only for debugging purposes
+//TODO?: add sound to selection function
+//TODO: Instead of changing shaders, change materials
 
 
 public class HighlightSelection : MonoBehaviour
@@ -74,7 +74,7 @@ public class HighlightSelection : MonoBehaviour
         if (isSelected)
         {
             isSelected = false;
-            owner.GetComponent<InputListener>().LasersOff -= HandleLasersOff;
+            owner.GetComponent<InputListener>().LasersAreOff -= HandleLasersOff;  //releases ownership of selected item
             owner = null;
             lista.RemoveFromList(this.gameObject, lista.selectedList);
             if (tag == "Grid")
@@ -98,7 +98,7 @@ public class HighlightSelection : MonoBehaviour
             if (isSelected)
             {
                 owner = selectingPlayer;
-                owner.GetComponent<InputListener>().LasersOff += HandleLasersOff;
+                owner.GetComponent<InputListener>().LasersAreOff += HandleLasersOff;
                 if (tag == "Grid")
                 {
                     //Instantiate(GameObject.CreatePrimitive(PrimitiveType.Sphere), (Vector3.up * 0.3f) + transform.position, transform.rotation, transform);
