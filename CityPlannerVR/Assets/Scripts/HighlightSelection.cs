@@ -3,6 +3,8 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
+using Photon;
+using Hashtable = ExitGames.Client.Photon.Hashtable;
 
 
 /// <summary> 
@@ -15,7 +17,7 @@ using UnityEngine.EventSystems;
 //TODO: Instead of changing shaders, change materials
 
 
-public class HighlightSelection : MonoBehaviour
+public class HighlightSelection : PunBehaviour
 {
 
     //private Shader diffuse; 
@@ -28,14 +30,24 @@ public class HighlightSelection : MonoBehaviour
 
 
     public bool isHighlighted;
-    //  public bool toggleHighlight; 
     public bool isSelected;
-    //  public bool toggleSelect; 
 
-    //private GameObject gameController;
     private GameObject owner;
     [SerializeField]
     private SelectionList lista;
+
+    void Start()
+    {
+        isHighlighted = false;
+        isSelected = false;
+
+        standard = Shader.Find("Standard");
+        highlight = Shader.Find("Valve/VR/Highlight");
+        selected = Shader.Find("FX/Flare");
+        rend = this.GetComponent<MeshRenderer>();
+        lineRend = this.GetComponent<XRLineRenderer>();
+
+    }
 
 
     public void ToggleHighlight()
@@ -101,7 +113,6 @@ public class HighlightSelection : MonoBehaviour
                 owner.GetComponent<InputListener>().LasersAreOff += HandleLasersOff;
                 if (tag == "Grid")
                 {
-                    //Instantiate(GameObject.CreatePrimitive(PrimitiveType.Sphere), (Vector3.up * 0.3f) + transform.position, transform.rotation, transform);
                     var marker = Resources.Load("Prefabs/Marker", typeof(GameObject));
                     Instantiate(marker, (Vector3.up * 0.3f) + transform.position, transform.rotation, transform);
                     lista.UpdateGrid();
@@ -139,22 +150,6 @@ public class HighlightSelection : MonoBehaviour
             }
         }
         //Debug.Log ("Could not change shader to: " + shaderToBe.name); 
-    }
-
-
-    void Start()
-    {
-        isHighlighted = false;
-        //    toggleHighlight = false; 
-        isSelected = false;
-        //    toggleSelect = false; 
-
-        standard = Shader.Find("Standard");
-        highlight = Shader.Find("Valve/VR/Highlight");
-        selected = Shader.Find("FX/Flare");
-        rend = this.GetComponent<MeshRenderer>();
-        lineRend = this.GetComponent<XRLineRenderer>();
-
     }
 
 }
