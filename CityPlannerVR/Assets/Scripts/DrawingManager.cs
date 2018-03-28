@@ -11,13 +11,14 @@ using UnityEngine;
 using UnityEngine.EventSystems;
 using Valve.VR;
 using Valve.VR.InteractionSystem;
+using Photon;
 
 
 /// <summary> 
 /// Receives events from InputListener and draws on the active controller.
 /// </summary> 
 
-public class DrawingManager : MonoBehaviour {
+public class DrawingManager : PunBehaviour {
 
     public SteamVR_TrackedObject trackedObj1;
     public SteamVR_TrackedObject trackedObj2;
@@ -77,9 +78,6 @@ public class DrawingManager : MonoBehaviour {
                 StartDrawing(sender, e);
                 alreadyDrawing = true;
             }
-
-
-
         }
     }
 
@@ -161,6 +159,7 @@ public class DrawingManager : MonoBehaviour {
         currentGO.AddComponent<IsAttachedToHand>();
         currentGO.AddComponent<HighlightSelection>();
         addToPreviousObject = false;
+        AddPhotonComponents();
     }
 
     void CreateNewLine()
@@ -192,12 +191,18 @@ public class DrawingManager : MonoBehaviour {
         currentLineMesh.lmat = currentMaterial;
     }
 
+    void AddPhotonComponents()
+    {
+        PhotonView photonV = currentGO.AddComponent<PhotonView>();
+        PhotonTransformView photonTV = currentGO.AddComponent<PhotonTransformView>();
+        photonTV.m_PositionModel.SynchronizeEnabled = true;
+        photonTV.m_RotationModel.SynchronizeEnabled = true;
 
+        photonV.ObservedComponents = new List<Component>();
+        photonV.ObservedComponents.Add(photonTV);
+        photonV.synchronization = ViewSynchronization.UnreliableOnChange;
 
-
-
-
-
+    }
 
 
 
