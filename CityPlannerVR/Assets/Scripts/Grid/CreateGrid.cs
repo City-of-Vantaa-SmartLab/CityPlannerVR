@@ -6,6 +6,8 @@ public class CreateGrid : MonoBehaviour {
 
 	private GridTile[,] tiles;
 
+    ProceduralGrid grid;
+
     public int originalGridSizeX;
 	public int originalGridSizeZ;
 
@@ -27,6 +29,11 @@ public class CreateGrid : MonoBehaviour {
 			CreateGridTiles ();
 		}
 	}
+
+    private void Awake()
+    {
+        grid = GetComponentInChildren<ProceduralGrid>();
+    }
 
     // Use this for initialization
     void Start () {
@@ -63,6 +70,11 @@ public class CreateGrid : MonoBehaviour {
         gridSizeX = Mathf.FloorToInt(gridSizeX / CellSize);
         gridSizeZ = Mathf.FloorToInt(gridSizeZ / CellSize);
 
+        //Gives the ProceduralGrid important information about how to draw the grid
+        grid.CellSize = CellSize;
+        grid.GridSize_x = gridSizeX;
+        grid.GridSize_z = gridSizeZ;
+
         tiles = new GridTile[gridSizeX, gridSizeZ];
 
 		for (int x = 0; x < gridSizeX; x++) {
@@ -76,21 +88,11 @@ public class CreateGrid : MonoBehaviour {
 				tiles [x, z].tileObject.transform.localPosition = new Vector3(x * CellSize, transform.position.y, z * CellSize);
 				//This must be done because of all the scaling done in the scene
 				tiles [x, z].tileObject.transform.localScale = new Vector3(1, 1, 1);
-
-				//tiles [x, z].line.material = gridMaterial;
-
-				//DrawGrid (tiles[x, z]);
 			}
 		}
+
+        grid.MakeProceduralGrid();
 	}
-
-	void DrawGrid(/*GridTile tile*/){
-        //tile.line.SetPosition(0, new Vector3(CalculatePos(tile, 1), transform.position.y, CalculatePos(tile, 1)));
-        //tile.line.SetPosition(1, new Vector3(CalculatePos(tile, 1), transform.position.y, CalculatePos(tile, -1)));
-        //tile.line.SetPosition(2, new Vector3(CalculatePos(tile, -1), transform.position.y, CalculatePos(tile, -1)));
-        //tile.line.SetPosition(3, new Vector3(CalculatePos(tile, -1), transform.position.y, CalculatePos(tile, 1)));       
-}
-
 
 	public List<GridTile> GetNeighbours(GridTile tile){
 		List<GridTile> neighbours = new List<GridTile> ();
@@ -110,15 +112,6 @@ public class CreateGrid : MonoBehaviour {
 			}
 		}
 		return neighbours;
-	}
-
-	//Defines the size and position of the lines in the grid
-	//Multplier is 1 or -1
-	float CalculatePos(GridTile tile, int multiplier)
-	{
-		//We want to use the tiles own size just in case the cellSize of this object is changed when it should not be
-		float pos = CellSize * multiplier / 2;
-		return pos;
 	}
 
     //Gets a tile according to its position in the world from the array and returns it
