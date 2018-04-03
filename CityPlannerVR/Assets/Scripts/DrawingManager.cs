@@ -88,7 +88,8 @@ public class DrawingManager : PunBehaviour {
             triggerPressed = false;
             alreadyDrawing = false;
             Solidify();
-
+            currentLineMesh = null;
+            currentLineRenderer = null;
         }
 
     }

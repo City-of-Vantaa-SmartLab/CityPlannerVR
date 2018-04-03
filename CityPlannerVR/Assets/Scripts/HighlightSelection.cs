@@ -19,14 +19,14 @@ using Hashtable = ExitGames.Client.Photon.Hashtable;
 
 public class HighlightSelection : PunBehaviour
 {
-
+    
     //private Shader diffuse; 
     private Shader standard;
     private Shader highlight;
     private Shader selected;
     private Renderer rend;
     private XRLineRenderer lineRend;
-
+    private PhotonView photonV;
 
 
     public bool isHighlighted;
@@ -41,12 +41,11 @@ public class HighlightSelection : PunBehaviour
         isHighlighted = false;
         isSelected = false;
 
-        standard = Shader.Find("Standard");
-        highlight = Shader.Find("Valve/VR/Highlight");
-        selected = Shader.Find("FX/Flare");
+        //standard = Shader.Find("Standard");
+        //highlight = Shader.Find("Valve/VR/Highlight");
+        //selected = Shader.Find("FX/Flare");
         rend = this.GetComponent<MeshRenderer>();
         lineRend = this.GetComponent<XRLineRenderer>();
-
     }
 
 
@@ -57,14 +56,14 @@ public class HighlightSelection : PunBehaviour
             isHighlighted = false;
             //priorize selection shader over highlight 
             if (!isSelected)
-                ChangeShader(standard);
+                ChangeShaderRPC("Standard");
 
         }
         else
         {
             isHighlighted = true;
             if (!isSelected)
-                ChangeShader(highlight);
+                ChangeShaderRPC("Valve/VR/Highlight");
         }
 
     }
@@ -96,9 +95,9 @@ public class HighlightSelection : PunBehaviour
             else
             {
                 if (isHighlighted)
-                    ChangeShader(highlight);
+                    ChangeShaderRPC("Valve/VR/Highlight");
                 else
-                    ChangeShader(standard);
+                    ChangeShaderRPC("Standard");
             }
 
 
@@ -119,7 +118,7 @@ public class HighlightSelection : PunBehaviour
                 }
                 else
                 {
-                    ChangeShader(selected);
+                    ChangeShaderRPC("FX/Flare");
                 }
             }
 
@@ -131,24 +130,36 @@ public class HighlightSelection : PunBehaviour
         ToggleSelection(owner);
     }
 
-    public void ChangeShader(Shader shaderToBe)
+    public void ChangeShaderRPC(String shaderToBe)
     {
-        if (rend != null)
+        photonView.RPC("ChangeShader", PhotonTargets.All, shaderToBe);
+    }
+
+    [PunRPC]
+    public void ChangeShader(String shaderToBe)
+    {
+        Shader tempShader = Shader.Find(shaderToBe);
+
+        if (tempShader)
         {
-            int length = rend.materials.Length;
-            for (int i = 0; i < length; i++)
+            if (rend != null)
             {
-                rend.materials[i].shader = shaderToBe;
+                int length = rend.materials.Length;
+                for (int i = 0; i < length; i++)
+                {
+                    rend.materials[i].shader = tempShader;
+                }
+            }
+            else if (lineRend != null)
+            {
+                int length = lineRend.materials.Length;
+                for (int i = 0; i < length; i++)
+                {
+                    lineRend.materials[i].shader = tempShader;
+                }
             }
         }
-        else if (lineRend != null)
-        {
-            int length = lineRend.materials.Length;
-            for (int i = 0; i < length; i++)
-            {
-                lineRend.materials[i].shader = shaderToBe;
-            }
-        }
+        Debug.Log("Could not find shader: " + shaderToBe);
         //Debug.Log ("Could not change shader to: " + shaderToBe.name); 
     }
 

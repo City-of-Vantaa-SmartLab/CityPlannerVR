@@ -3,11 +3,11 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Photon;
 
 
 
-
-public class SelectionList : MonoBehaviour
+public class SelectionList : PunBehaviour
 {
 
     public List<GameObject> selectedList;
