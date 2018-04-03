@@ -18825,6 +18825,8 @@ GameObject:
   serializedVersion: 5
   m_Component:
   - component: {fileID: 1942035667}
+  - component: {fileID: 1942035670}
+  - component: {fileID: 1942035669}
   - component: {fileID: 1942035668}
   m_Layer: 0
   m_Name: GridLine
@@ -18854,10 +18856,50 @@ MonoBehaviour:
   m_GameObject: {fileID: 1942035666}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 412466fe44c41f444899c648ce58c6c1, type: 3}
+  m_Script: {fileID: 11500000, guid: 1d8db6c749de7b2488e5a096f484ba4f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  gridMaterial: {fileID: 2100000, guid: 811b99e4662ba184082e5e8bfe6045d1, type: 2}
+--- !u!23 &1942035669
+MeshRenderer:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1942035666}
+  m_Enabled: 1
+  m_CastShadows: 1
+  m_ReceiveShadows: 1
+  m_DynamicOccludee: 1
+  m_MotionVectors: 1
+  m_LightProbeUsage: 1
+  m_ReflectionProbeUsage: 1
+  m_Materials:
+  - {fileID: 2100000, guid: 7aa2044e03432794da6e0fecbf4909cd, type: 2}
+  m_StaticBatchInfo:
+    firstSubMesh: 0
+    subMeshCount: 0
+  m_StaticBatchRoot: {fileID: 0}
+  m_ProbeAnchor: {fileID: 0}
+  m_LightProbeVolumeOverride: {fileID: 0}
+  m_ScaleInLightmap: 1
+  m_PreserveUVs: 0
+  m_IgnoreNormalsForChartDetection: 0
+  m_ImportantGI: 0
+  m_StitchLightmapSeams: 0
+  m_SelectedEditorRenderState: 3
+  m_MinimumChartSize: 4
+  m_AutoUVMaxDistance: 0.5
+  m_AutoUVMaxAngle: 89
+  m_LightmapParameters: {fileID: 0}
+  m_SortingLayerID: 0
+  m_SortingLayer: 0
+  m_SortingOrder: 0
+--- !u!33 &1942035670
+MeshFilter:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1942035666}
+  m_Mesh: {fileID: 0}
 --- !u!1001 &1942446528
 Prefab:
   m_ObjectHideFlags: 0
