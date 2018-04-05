@@ -2546,6 +2546,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1695863806}
   - component: {fileID: 480622350}
+  - component: {fileID: 480622352}
   - component: {fileID: 480622349}
   - component: {fileID: 480622351}
   m_Layer: 26
@@ -2613,6 +2614,20 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   index: -1
   origin: {fileID: 0}
+--- !u!114 &480622352
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 480622348}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f530e1ef95262204c9a799bc2b19c0f3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  currentTool: 0
+  inputListener: {fileID: 0}
+  currentHandIndex: 0
 --- !u!1001 &483802380
 Prefab:
   m_ObjectHideFlags: 0
@@ -8833,6 +8848,7 @@ MonoBehaviour:
   myHand: {fileID: 0}
   otherHand: {fileID: 0}
   inputListener: {fileID: 0}
+  toolManager: {fileID: 0}
   laserCube: {fileID: 0}
   hand1Index: 3
   hand2Index: 4
@@ -13672,10 +13688,9 @@ MonoBehaviour:
   lasersAreActive: 0
   hand1TrackedController: {fileID: 0}
   hand2TrackedController: {fileID: 0}
+  selectionList: {fileID: 0}
   hand1TrackedObject: {fileID: 0}
   hand2TrackedObject: {fileID: 0}
-  laserPointer1: {fileID: 0}
-  laserPointer2: {fileID: 0}
   leftHandExists: 1
   rightHandExists: 1
 --- !u!114 &1323874205
@@ -16106,6 +16121,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1613533002}
   - component: {fileID: 1613533004}
+  - component: {fileID: 1613533006}
   - component: {fileID: 1613533003}
   - component: {fileID: 1613533005}
   m_Layer: 26
@@ -16190,6 +16206,20 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   index: -1
   origin: {fileID: 0}
+--- !u!114 &1613533006
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1613533001}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f530e1ef95262204c9a799bc2b19c0f3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  currentTool: 0
+  inputListener: {fileID: 0}
+  currentHandIndex: 0
 --- !u!1001 &1617754915
 Prefab:
   m_ObjectHideFlags: 0
@@ -17255,6 +17285,7 @@ MonoBehaviour:
   myHand: {fileID: 0}
   otherHand: {fileID: 0}
   inputListener: {fileID: 0}
+  toolManager: {fileID: 0}
   laserCube: {fileID: 0}
   hand1Index: 3
   hand2Index: 4

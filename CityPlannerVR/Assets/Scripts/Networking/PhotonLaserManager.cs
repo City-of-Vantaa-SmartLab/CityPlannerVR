@@ -18,10 +18,13 @@ public class PhotonLaserManager : PunBehaviour {
     [SerializeField]
     private InputListener inputListener;
     [SerializeField]
+    private ToolManager toolManager;
+    private ToolManager.ToolType myTool;
+    [SerializeField]
     private GameObject laserCube;
 
-    public uint hand1Index = 3;
-    public uint hand2Index = 4;
+    public uint hand1Index;
+    public uint hand2Index;
     public uint myHandIndex;
     public GameObject myTargetedObject;
     [SerializeField]
@@ -38,16 +41,17 @@ public class PhotonLaserManager : PunBehaviour {
 
     private void Start()
     {
-        myHandIndex = gameObject.GetComponentInParent<SteamVR_TrackedController>().controllerIndex;
-        WhichHandIsMine();
-        myPointer = myHand.GetComponentInChildren<SteamVR_LaserPointer>();
+        myPointer = gameObject.GetComponent<SteamVR_LaserPointer>();
         inputListener = GameObject.Find("Player").GetComponent<InputListener>();
+        hand1Index = inputListener.hand1Index;
+        hand2Index = inputListener.hand2Index;
+        WhichHandIsMine();
+
+        toolManager = gameObject.GetComponentInParent<ToolManager>();
+
+        myTool = toolManager.currentTool;
         SubscriptionOn();
-
-
         Invoke("FindOther", 1);
-
-
     }
 
     private void OnDestroy()
@@ -57,16 +61,27 @@ public class PhotonLaserManager : PunBehaviour {
 
     private void FindOther()
     {
-        otherPointer = otherHand.GetComponentInChildren<SteamVR_LaserPointer>();
-        otherLaserManager = otherPointer.gameObject.GetComponent<PhotonLaserManager>();
+        if (otherHand)
+        {
+            otherPointer = otherHand.GetComponentInChildren<SteamVR_LaserPointer>();
+            otherLaserManager = otherPointer.gameObject.GetComponent<PhotonLaserManager>();
+        }
+        else
+        {
+            Debug.Log("Could not find other hand! Trying again in 10s");
+            Invoke("WhichHandIsMine", 10f);
+            Invoke("FindOther", 10.5f);
+        }
         laserCube = gameObject.transform.GetChild(0).GetChild(0).gameObject;
         photonView.RPC("ActivateObject", PhotonTargets.All, false);
+
     }
 
     private void SubscriptionOn()
     {
-        inputListener.MenuButtonClicked += HandleMenuClicked;
         inputListener.TriggerClicked += HandleTriggerClicked;
+        toolManager.ToolChangeWithCE += HandleToolChangeWithCE;
+        toolManager.OnToolChange += HandleToolChange;
         myPointer.PointerIn += HandlePointerIn;
         myPointer.PointerOut += HandlePointerOut;
 
@@ -74,60 +89,82 @@ public class PhotonLaserManager : PunBehaviour {
 
     private void SubscriptionOff()
     {
-        inputListener.MenuButtonClicked -= HandleMenuClicked;
         inputListener.TriggerClicked -= HandleTriggerClicked;
+        toolManager.ToolChangeWithCE -= HandleToolChangeWithCE;
         myPointer.PointerIn -= HandlePointerIn;
         myPointer.PointerOut -= HandlePointerOut;
     }
 
     private void WhichHandIsMine()
     {
-        if (myHandIndex == hand1Index)
-        {
-            myHand = GameObject.Find("Player/SteamVRObjects/Hand1");
-            otherHand = GameObject.Find("Player/SteamVRObjects/Hand2");
-        }
-        else if (myHandIndex == hand2Index)
-        {
-            otherHand = GameObject.Find("Player/SteamVRObjects/Hand1");
-            myHand = GameObject.Find("Player/SteamVRObjects/Hand2");
-        }
-        else
-            Debug.Log("Could not determine hand for " + gameObject.name + " with index: " + myHandIndex);
-        if (!otherHand)
-            Debug.Log("Could not determine other hand!");
+        myHand = transform.parent.gameObject;
+        otherHand = myHand.GetComponent<Hand>().otherHand.gameObject;
+        //myHandIndex = gameObject.GetComponentInParent<SteamVR_TrackedController>().controllerIndex;
+        //if (myHandIndex == hand1Index)
+        //{
+        //    myHand = GameObject.Find("Player/SteamVRObjects/Hand1");
+        //    otherHand = GameObject.Find("Player/SteamVRObjects/Hand2");
+        //}
+        //else if (myHandIndex == hand2Index)
+        //{
+        //    otherHand = GameObject.Find("Player/SteamVRObjects/Hand1");
+        //    myHand = GameObject.Find("Player/SteamVRObjects/Hand2");
+        //}
+        //else
+        //    Debug.Log("Could not determine hand for " + gameObject.name + " with index: " + myHandIndex);
+        //if (!otherHand)
+        //    Debug.Log("Could not determine other hand!");
 
     }
 
-    private void ToggleLaser(object sender, ClickedEventArgs e)
+    private void ToggleLaser(uint handIndex)
+    {
+        if (myPointer.active == true)
+        {
+            photonView.RPC("ActivateObject", PhotonTargets.All, false);
+            if (otherPointer == null || otherPointer.active == false)
+            {
+                inputListener.lasersAreActive = false;
+                inputListener.InvokeLasersAreOff(handIndex);
+            }
+        }
+        else
+        {
+            photonView.RPC("ActivateObject", PhotonTargets.All, true);
+            inputListener.lasersAreActive = true;
+
+        }
+    }
+
+    private void HandleToolChange(uint handIndex)
+    {
+        if (handIndex == myHandIndex)
+        {
+            if (myTool == ToolManager.ToolType.Laser)
+                ToggleLaser(handIndex);
+            else if (toolManager.currentTool == ToolManager.ToolType.Laser)
+                ToggleLaser(handIndex);
+            myTool = toolManager.currentTool;
+        }
+
+    }
+
+    private void HandleToolChangeWithCE(object sender, ClickedEventArgs e)
     {
         if (e.controllerIndex == myHandIndex)
         {
-            if (myPointer.active == true)
-            {
-                photonView.RPC("ActivateObject", PhotonTargets.All, false);
-                if (otherPointer == null || otherPointer.active == false)
-                {
-                    inputListener.lasersAreActive = false;
-                    inputListener.InvokeLasersAreOff(sender, e);
-                }
-            }
-            else
-            {
-                photonView.RPC("ActivateObject", PhotonTargets.All, true);
-                inputListener.lasersAreActive = true;
-            }
+            if (myTool == ToolManager.ToolType.Laser)
+                ToggleLaser(myHandIndex);
+            else if (toolManager.currentTool == ToolManager.ToolType.Laser)
+                ToggleLaser(myHandIndex);
+            myTool = toolManager.currentTool;
         }
-    }
-
-    private void HandleMenuClicked(object sender, ClickedEventArgs e)
-    {
-        ToggleLaser(sender, e);
+        
     }
 
     private void HandlePointerOut(object sender, PointerEventArgs e)
     {
-        if (e.controllerIndex == myHandIndex)
+        if (myPointer.active && e.controllerIndex == myHandIndex)
         {
             myTargetedObject = null;
             var highlightScript = e.target.GetComponent<HighlightSelection>();
@@ -153,7 +190,7 @@ public class PhotonLaserManager : PunBehaviour {
 
     private void HandlePointerIn(object sender, PointerEventArgs e)
     {
-        if (e.controllerIndex == myHandIndex)
+        if (myPointer.active && e.controllerIndex == myHandIndex)
         {
             myTargetedObject = e.target.gameObject;
 

@@ -12,9 +12,8 @@ using Hashtable = ExitGames.Client.Photon.Hashtable;
 /// Selection also utilises SelectionList script, adding attached object to player's selected list. 
 /// </summary> 
 
-//TODO: booleans toggleHighlight and toggleSelect are only for debugging purposes
 //TODO?: add sound to selection function
-//TODO: Instead of changing shaders, change materials
+//TODO?: Different higlight implementation, maybe materials
 
 
 public class HighlightSelection : PunBehaviour
@@ -81,7 +80,7 @@ public class HighlightSelection : PunBehaviour
         if (isSelected)
         {
             isSelected = false;
-            owner.GetComponent<InputListener>().LasersAreOff -= HandleLasersOff;  //releases ownership of selected item
+            owner.GetComponent<InputListener>().OnClearSelections -= HandleClearSelection;  //releases ownership of selected item
             owner = null;
             lista.RemoveFromList(this.gameObject, lista.selectedList);
             if (tag == "Grid")
@@ -105,7 +104,7 @@ public class HighlightSelection : PunBehaviour
             if (isSelected)
             {
                 owner = selectingPlayer;
-                owner.GetComponent<InputListener>().LasersAreOff += HandleLasersOff;
+                owner.GetComponent<InputListener>().OnClearSelections += HandleClearSelection;
                 if (tag == "Grid")
                 {
                     var marker = Resources.Load("Prefabs/Marker", typeof(GameObject));
@@ -121,7 +120,7 @@ public class HighlightSelection : PunBehaviour
         }
     }
 
-    private void HandleLasersOff(object sender, ClickedEventArgs e)
+    private void HandleClearSelection(uint handIndex)
     {
         ToggleSelection(owner);
     }

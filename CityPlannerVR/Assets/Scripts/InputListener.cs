@@ -14,47 +14,27 @@ using Photon;
 
 public class InputListener : PunBehaviour {
 
-    public enum ToolState { Empty, Laser, Painter };
-
-    ToolState state = ToolState.Empty;
-
-    public ToolState State
-    {
-        get
-        {
-            return state;
-        }
-        set
-        {
-            state = value;
-        }
-    }
-
-
     public GameObject hand1HoldObject; //not yet implemented
     public GameObject hand2HoldObject;
     private GameObject hand1;
     private GameObject hand2;
-    public uint hand1Index = 3;
-    public uint hand2Index = 4;
-    private uint leftHandIndex = 0;
-    private uint rightHandIndex = 0;
+    public uint hand1Index;
+    public uint hand2Index;
+    private uint leftHandIndex;
+    private uint rightHandIndex;
+
     public bool lasersAreActive;
-    
-    
 
     [SerializeField]
 	private SteamVR_TrackedController hand1TrackedController;
 	[SerializeField]
 	private SteamVR_TrackedController hand2TrackedController;
+    [SerializeField]
+    private SelectionList selectionList;
 
     public SteamVR_TrackedObject hand1TrackedObject;
     public SteamVR_TrackedObject hand2TrackedObject;
 
-    [SerializeField]
-    private SteamVR_LaserPointer laserPointer1;
-    [SerializeField]
-    private SteamVR_LaserPointer laserPointer2;
     [SerializeField]
     private bool leftHandExists = true;
     [SerializeField]
@@ -65,27 +45,41 @@ public class InputListener : PunBehaviour {
     public event ClickedEventHandler TriggerClicked;
     public event ClickedEventHandler TriggerLifted;
     public event ClickedEventHandler MenuButtonClicked;
-    public event ClickedEventHandler LasersAreOff;   //event for highlightselection
-    public event EventHandler ToolChanged;
 
-    private void OnEnable()
+    public delegate void EventClearSelections(uint handIndex); //event for highlightselection
+    public event EventClearSelections OnClearSelections;
+
+    private void Start()
     {
         hand1 = GameObject.Find("Player/SteamVRObjects/Hand1");
         hand2 = GameObject.Find("Player/SteamVRObjects/Hand2");
-        laserPointer1 = hand1.GetComponentInChildren<SteamVR_LaserPointer>();
-        laserPointer2 = hand2.GetComponentInChildren<SteamVR_LaserPointer>();
         UpdateHands();
         SubscriptionOn();
         lasersAreActive = false;
-
     }
 
-    private void OnDisable()
+    private void OnDestroy()
     {
         SubscriptionOff();
     }
 
-    
+    private void GetCorrectHandIndices()
+    {
+        //hand1Index = (uint)hand1TrackedObject.index; //stays at none for some reason
+        //hand2Index = (uint)hand2TrackedObject.index;
+        var system = OpenVR.System;
+        if (system != null)
+        {
+            hand1Index = system.GetTrackedDeviceIndexForControllerRole(ETrackedControllerRole.LeftHand);
+            hand2Index = system.GetTrackedDeviceIndexForControllerRole(ETrackedControllerRole.RightHand);
+            Debug.Log("Index for left/hand1: " + hand1Index + " and for right/hand2: " + hand2Index);
+        }
+
+        //hand1Index = hand1Script.controller.index;
+        //hand2Index = hand2Script.controller.index;
+
+    }
+
     private void UpdateHands()
     {
         hand1TrackedController = hand1.GetComponent<SteamVR_TrackedController>();
@@ -93,10 +87,14 @@ public class InputListener : PunBehaviour {
         hand1TrackedObject = hand1.GetComponent<SteamVR_TrackedObject>();
         hand2TrackedObject = hand2.GetComponent<SteamVR_TrackedObject>();
 
+        GetCorrectHandIndices();
+
         hand1TrackedController.SetDeviceIndex((int)hand1Index);
         hand2TrackedController.SetDeviceIndex((int)hand2Index);
         hand1TrackedObject.SetDeviceIndex((int)hand1Index);
         hand2TrackedObject.SetDeviceIndex((int)hand2Index);
+
+
     }
 
 
@@ -116,7 +114,8 @@ public class InputListener : PunBehaviour {
 
     private void HandleMenuClicked(object sender, ClickedEventArgs e)
     {
-        MenuButtonClicked(sender, e);
+        if(MenuButtonClicked != null)
+            MenuButtonClicked(sender, e);
     }
 
     private void SubscriptionOff()
@@ -133,18 +132,20 @@ public class InputListener : PunBehaviour {
 
     private void HandleTriggerClicked(object sender, ClickedEventArgs e)
 	{
-        TriggerClicked(sender, e);
-
+        if (TriggerClicked != null)
+            TriggerClicked(sender, e);
     }
 
     private void HandleTriggerUnClicked(object sender, ClickedEventArgs e)
     {
-        TriggerLifted(sender, e);
+        if (TriggerLifted != null)
+            TriggerLifted(sender, e);
     }
 
-    public void InvokeLasersAreOff(object sender, ClickedEventArgs e)
+    public void InvokeLasersAreOff(uint handIndex)
     {
-        LasersAreOff(sender, e);
+        if (OnClearSelections != null)
+            OnClearSelections(handIndex);
     }
 
     public void SelectByLaser(SteamVR_LaserPointer laserPointer, GameObject targetedObject)
