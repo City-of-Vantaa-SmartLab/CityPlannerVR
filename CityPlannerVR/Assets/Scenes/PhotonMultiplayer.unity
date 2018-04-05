@@ -8685,6 +8685,7 @@ GameObject:
   m_Component:
   - component: {fileID: 748844237}
   - component: {fileID: 748844238}
+  - component: {fileID: 748844241}
   - component: {fileID: 748844240}
   - component: {fileID: 748844239}
   m_Layer: 0
@@ -8813,12 +8814,33 @@ MonoBehaviour:
   ownershipTransfer: 0
   ObservedComponents:
   - {fileID: 748844239}
-  - {fileID: 748844238}
   ObservedComponentsFoldoutOpen: 1
   viewIdField: 14
   instantiationId: 14
   currentMasterID: -1
   isRuntimeInstantiated: 0
+--- !u!114 &748844241
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 748844236}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6958d3f000f513042accf6ad3d38e302, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  myHand: {fileID: 0}
+  otherHand: {fileID: 0}
+  inputListener: {fileID: 0}
+  laserCube: {fileID: 0}
+  hand1Index: 3
+  hand2Index: 4
+  myHandIndex: 0
+  myTargetedObject: {fileID: 0}
+  otherLaserManager: {fileID: 0}
+  myPointer: {fileID: 0}
+  otherPointer: {fileID: 0}
 --- !u!1001 &752756485
 Prefab:
   m_ObjectHideFlags: 0
@@ -13643,9 +13665,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3563b74eb2c18bc4f83b42166b1dc615, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  laser1TargetedObject: {fileID: 0}
-  laser2TargetedObject: {fileID: 0}
   hand1HoldObject: {fileID: 0}
+  hand2HoldObject: {fileID: 0}
   hand1Index: 3
   hand2Index: 4
   lasersAreActive: 0
@@ -17086,6 +17107,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1711051662}
   - component: {fileID: 1711051663}
+  - component: {fileID: 1711051666}
   - component: {fileID: 1711051665}
   - component: {fileID: 1711051664}
   m_Layer: 0
@@ -17214,12 +17236,33 @@ MonoBehaviour:
   ownershipTransfer: 0
   ObservedComponents:
   - {fileID: 1711051664}
-  - {fileID: 1711051663}
   ObservedComponentsFoldoutOpen: 1
   viewIdField: 15
   instantiationId: 15
   currentMasterID: -1
   isRuntimeInstantiated: 0
+--- !u!114 &1711051666
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1711051661}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6958d3f000f513042accf6ad3d38e302, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  myHand: {fileID: 0}
+  otherHand: {fileID: 0}
+  inputListener: {fileID: 0}
+  laserCube: {fileID: 0}
+  hand1Index: 3
+  hand2Index: 4
+  myHandIndex: 0
+  myTargetedObject: {fileID: 0}
+  otherLaserManager: {fileID: 0}
+  myPointer: {fileID: 0}
+  otherPointer: {fileID: 0}
 --- !u!1001 &1716268251
 Prefab:
   m_ObjectHideFlags: 0

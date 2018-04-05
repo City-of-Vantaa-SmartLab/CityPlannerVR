@@ -20,13 +20,9 @@ using Hashtable = ExitGames.Client.Photon.Hashtable;
 public class HighlightSelection : PunBehaviour
 {
     
-    //private Shader diffuse; 
-    private Shader standard;
-    private Shader highlight;
-    private Shader selected;
+    //private Shader diffuse;
     private Renderer rend;
     private XRLineRenderer lineRend;
-    private PhotonView photonV;
 
 
     public bool isHighlighted;
@@ -159,7 +155,8 @@ public class HighlightSelection : PunBehaviour
                 }
             }
         }
-        Debug.Log("Could not find shader: " + shaderToBe);
+        else
+            Debug.Log("Could not find shader: " + shaderToBe);
         //Debug.Log ("Could not change shader to: " + shaderToBe.name); 
     }
 
