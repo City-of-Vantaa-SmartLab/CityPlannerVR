@@ -10,6 +10,8 @@ public class SnapToGrid : MonoBehaviour {
 
 	IsAttachedToHand attached;
 
+	public List<GameObject> triggeredTiles;
+
     [HideInInspector]
     public GameObject parent;
 
@@ -122,5 +124,17 @@ public class SnapToGrid : MonoBehaviour {
 	public void MoveObjectToPoint(){
 
 		transform.position = ObjectContainer.trashPoint;
+	}
+
+
+	void CheckList(){
+
+		if (triggeredTiles.Count == 0) {
+			//Vaihda objektin väri normaaliksi (sitten, kun on kunnon mallit)
+		}
+
+		else {
+			//Vaihda objektin väri punertavaksi
+		}
 	}
 }
