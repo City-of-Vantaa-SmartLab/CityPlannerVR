@@ -12,28 +12,30 @@ using UnityEngine.EventSystems;
 using Valve.VR;
 using Valve.VR.InteractionSystem;
 using Photon;
-
+using System;
 
 /// <summary> 
-/// Receives events from InputListener and draws on the active controller.
+/// Receives events from InputListener and draws on the active controller if painter tool is selected.
 /// </summary> 
 
 public class DrawingManager : PunBehaviour {
 
-    public SteamVR_TrackedObject trackedObj1;
-    public SteamVR_TrackedObject trackedObj2;
+    public int myHandNumber; //This should be set at inspector to either 1 or 2
+    public SteamVR_TrackedObject myTrackedObj;
     public Material currentMaterial;
     public GameObject currentGO;
 
-    private uint hand1Index;
-    private uint hand2Index;
-    private uint currentHandIndex;
+    [SerializeField]
+    private uint myDeviceIndex;
     private LineRenderer currentLineRenderer;
     private MeshLineRenderer currentLineMesh;
     public List<Vector3> colliderPoints;
     private int numClicks;
-    private InputListener inputList;
+    private InputListener inputListener;
+    private ToolManager toolManager;
+    private ToolManager.ToolType myTool;
 
+    private bool initOwnSuccess;
     private bool triggerPressed;
     private bool alreadyDrawing;
     private bool addToPreviousObject;
@@ -41,14 +43,13 @@ public class DrawingManager : PunBehaviour {
 
     // Use this for initialization
     void Start () {
-        inputList = gameObject.GetComponent<InputListener>();
-        inputList.TriggerClicked += HandleTriggerClicked;
-        inputList.TriggerLifted += HandleTriggerLifted;
-        hand1Index = inputList.hand1Index;
-        hand2Index = inputList.hand2Index;
-        trackedObj1 = inputList.hand1TrackedObject;
-        trackedObj2 = inputList.hand2TrackedObject;
+        initOwnSuccess = InitOwn();  //for later checking in script
+        if (!initOwnSuccess)
+            Debug.Log("Failed to initialize DrawingManager on hand" + myHandNumber);
+        //else
+        //    Debug.Log("Initialized DrawingManager");
 
+        Subscribe();
         triggerPressed = false;
         alreadyDrawing = false;
         addToPreviousObject = false;
@@ -58,19 +59,72 @@ public class DrawingManager : PunBehaviour {
         {
             currentMaterial = Resources.Load("Materials/Marker", typeof(Material)) as Material;
         }
+    }
+
+    private void OnDestroy()
+    {
+        Unsubscribe();
+    }
+
+    private bool InitOwn()
+    {
+        if (myHandNumber == 0)
+            Debug.Log("Hand number not set for DrawingManager! Set at inspector to either 1 or 2");
+        inputListener = GameObject.Find("Player").GetComponent<InputListener>();
+        toolManager = gameObject.GetComponentInParent<ToolManager>();
+        if (toolManager)
+            myTool = toolManager.currentTool;
+        myTrackedObj = gameObject.GetComponent<SteamVR_TrackedObject>();
+
+        if (!inputListener || !toolManager || !myTrackedObj)
+            return false;
+        return true;
+    }
+
+    private void Subscribe()
+    {
+        if (!inputListener)
+            inputListener = GameObject.Find("Player").GetComponent<InputListener>();
+
+        if (inputListener)
+        {
+            inputListener.TriggerClicked += HandleTriggerClicked;
+            inputListener.TriggerLifted += HandleTriggerLifted;
+            if (myHandNumber == 1)
+                inputListener.Hand1DeviceFound += HandleMyIndexFound;
+            if (myHandNumber == 2)
+                inputListener.Hand2DeviceFound += HandleMyIndexFound;
+        }
+        else
+        {
+            Debug.Log("Did not find inputlistener!");
+        }
+        toolManager.OnToolChange += HandleToolChange;
 
     }
 
-    private void OnDisable()
+    private void Unsubscribe()
     {
-        inputList.TriggerClicked -= HandleTriggerClicked;
-        inputList.TriggerLifted -= HandleTriggerLifted;
+        if (inputListener)
+        {
+            inputListener.TriggerClicked -= HandleTriggerClicked;
+            inputListener.TriggerLifted -= HandleTriggerLifted;
+            if (myHandNumber == 1)
+                inputListener.Hand1DeviceFound -= HandleMyIndexFound;
+            if (myHandNumber == 2)
+                inputListener.Hand2DeviceFound -= HandleMyIndexFound;
+        }
+        else
+        {
+            Debug.Log("Did not find inputlistener!");
+        }
+        toolManager.OnToolChange -= HandleToolChange;
     }
 
 
     private void HandleTriggerClicked(object sender, ClickedEventArgs e)
     {
-        if (!inputList.lasersAreActive)
+        if (myTool == ToolManager.ToolType.Painter)
         {
             if (!alreadyDrawing)
             {
@@ -83,7 +137,7 @@ public class DrawingManager : PunBehaviour {
 
     private void HandleTriggerLifted(object sender, ClickedEventArgs e)
     {
-        if (e.controllerIndex == currentHandIndex)
+        if (e.controllerIndex == myDeviceIndex)
         {
             triggerPressed = false;
             alreadyDrawing = false;
@@ -94,6 +148,25 @@ public class DrawingManager : PunBehaviour {
 
     }
 
+    private void HandleMyIndexFound(uint deviceIndex)
+    {
+        myDeviceIndex = deviceIndex;
+        if (myHandNumber == 1)
+            inputListener.Hand1DeviceFound -= HandleMyIndexFound;
+        if (myHandNumber == 2)
+            inputListener.Hand2DeviceFound -= HandleMyIndexFound;
+    }
+
+    private void HandleToolChange(uint deviceIndex, ToolManager.ToolType tool)
+    {
+        //Debug.Log("Tool change initiated");
+        if (deviceIndex == myDeviceIndex)
+        {
+            myTool = tool;
+            //Debug.Log("Tool change succesful");
+        }
+    }
+
     void StartDrawing(object sender, ClickedEventArgs e)
     {
         //Debug.Log("Start drawing");
@@ -102,21 +175,16 @@ public class DrawingManager : PunBehaviour {
             CreateNewLine();
             colliderPoints = new List<Vector3>();
         }
-        currentHandIndex = e.controllerIndex;
 
         if (currentLineRenderer)
         {
-            if (e.controllerIndex == hand1Index)
-                StartCoroutine(KeepDrawingLineRenderer(trackedObj1));
-            else if (e.controllerIndex == hand2Index)
-                StartCoroutine(KeepDrawingLineRenderer(trackedObj2));
+            if (e.controllerIndex == myDeviceIndex)
+                StartCoroutine(KeepDrawingLineRenderer(myTrackedObj));
         }
         else if (currentLineMesh)
         {
-            if (e.controllerIndex == hand1Index)
-                StartCoroutine(KeepDrawingLineMesh(trackedObj1));
-            else if (e.controllerIndex == hand2Index)
-                StartCoroutine(KeepDrawingLineMesh(trackedObj2));
+            if (e.controllerIndex == myDeviceIndex)
+                StartCoroutine(KeepDrawingLineMesh(myTrackedObj));
         }
 
     }

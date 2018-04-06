@@ -1,11 +1,18 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
 
+/// <summary>
+/// This script keeps track of what tool is in use in this hand.
+/// Subscribe for the event OnToolChange in scripts that uses tools
+/// and use the method ChangeTool to switch to a specific tool.
+/// </summary>
 
 public class ToolManager : MonoBehaviour {
 
+    public int myHandNumber; //This should be set at inspector to either 1 or 2
     public enum ToolType { Empty, Eraser, Laser, Painter };
     public ToolType currentTool;
 
@@ -26,20 +33,19 @@ public class ToolManager : MonoBehaviour {
     [SerializeField]
     private InputListener inputListener;
     [SerializeField]
-    private uint currentHandIndex;
+    private uint myDeviceIndex;
 
-    public delegate void EventChangeTool(uint handIndex);
-    public event EventChangeTool OnToolChange;
-    public event ClickedEventHandler ToolChangeWithCE;
+    public delegate void EventWithIndexTool(uint deviceIndex, ToolManager.ToolType tool);
+    public event EventWithIndexTool OnToolChange;
 
 
     // Use this for initialization
     void Start () {
-        inputListener = gameObject.GetComponentInParent<InputListener>(); //should find components in grandparents, did not work
+        if (myHandNumber == 0)
+            Debug.Log("Hand number not set for toolmanager! Set at inspector to either 1 or 2");
         inputListener = GameObject.Find("Player").GetComponent<InputListener>();
         SubscriptionOn();
         currentTool = ToolType.Eraser;
-        Invoke("GetHandIndex", 1);
     }
 
     private void OnDestroy()
@@ -50,46 +56,53 @@ public class ToolManager : MonoBehaviour {
     private void SubscriptionOn()
     {
         inputListener.MenuButtonClicked += HandleMenuClicked;
+        if (myHandNumber == 1)
+            inputListener.Hand1DeviceFound += HandleMyIndexFound;
+        if (myHandNumber == 2)
+            inputListener.Hand2DeviceFound += HandleMyIndexFound;
+
     }
 
     private void SubscriptionOff()
     {
         inputListener.MenuButtonClicked -= HandleMenuClicked;
+        if (myHandNumber == 1)
+            inputListener.Hand1DeviceFound -= HandleMyIndexFound;
+        if (myHandNumber == 2)
+            inputListener.Hand2DeviceFound -= HandleMyIndexFound;
     }
 
-    private void HandleMenuClicked(object sender, ClickedEventArgs e)
+   private void HandleMenuClicked(object sender, ClickedEventArgs e)
     {
         RotateTool(sender, e);
     }
 
-    private void GetHandIndex()
+    private void HandleMyIndexFound(uint deviceIndex)
     {
-        currentHandIndex = gameObject.GetComponent<SteamVR_TrackedController>().controllerIndex;
-
+        myDeviceIndex = deviceIndex;
+        if (myHandNumber == 1)
+            inputListener.Hand1DeviceFound -= HandleMyIndexFound;
+        if (myHandNumber == 2)
+            inputListener.Hand2DeviceFound -= HandleMyIndexFound;
     }
 
-    public void ChangeTool(ToolType toolType, uint handIndex)
+    public void ChangeTool(ToolType toolType)
     {
-        if (currentHandIndex == handIndex)
-        {
-            currentTool = toolType;
-            OnToolChange(handIndex);
-        }
-
+        currentTool = toolType;
+        if (myDeviceIndex != 0 && OnToolChange != null)
+            OnToolChange(myDeviceIndex, currentTool);
+        Debug.Log("Tool changed to " + currentTool + " on DeviceIndex " + myDeviceIndex + " on hand" + myHandNumber);
     }
 
     public void RotateTool(object sender, ClickedEventArgs e)
     {
-        if (currentHandIndex == e.controllerIndex)
+        if (myDeviceIndex == e.controllerIndex)
         {
-            //Debug.Log("Starting to change tool");
             int tool = (int)currentTool;
             tool++;
             if (tool >= numberOfTools)
                 tool = 0;
-            currentTool = (ToolType)tool;
-            ToolChangeWithCE(sender, e);
-            Debug.Log("Tool changed to index: " + tool + " " + currentTool);
+            ChangeTool((ToolType)tool);
         }
     }
 

@@ -2549,6 +2549,7 @@ GameObject:
   - component: {fileID: 480622352}
   - component: {fileID: 480622349}
   - component: {fileID: 480622351}
+  - component: {fileID: 480622353}
   m_Layer: 26
   m_Name: Hand1
   m_TagString: Untagged
@@ -2625,9 +2626,28 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f530e1ef95262204c9a799bc2b19c0f3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  myHandNumber: 1
   currentTool: 0
   inputListener: {fileID: 0}
-  currentHandIndex: 0
+  myDeviceIndex: 0
+--- !u!114 &480622353
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 480622348}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 44d86733ee63be244a454c16d6ef6124, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  myHandNumber: 1
+  myTrackedObj: {fileID: 0}
+  currentMaterial: {fileID: 2100000, guid: 432995c698b2d4e429e866ad408ed827, type: 2}
+  currentGO: {fileID: 0}
+  myDeviceIndex: 0
+  colliderPoints: []
+  useMeshes: 0
 --- !u!1001 &483802380
 Prefab:
   m_ObjectHideFlags: 0
@@ -8845,14 +8865,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6958d3f000f513042accf6ad3d38e302, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  myHandNumber: 2
   myHand: {fileID: 0}
   otherHand: {fileID: 0}
   inputListener: {fileID: 0}
   toolManager: {fileID: 0}
+  myTool: 0
   laserCube: {fileID: 0}
-  hand1Index: 3
-  hand2Index: 4
-  myHandIndex: 0
+  myDeviceIndex: 0
   myTargetedObject: {fileID: 0}
   otherLaserManager: {fileID: 0}
   myPointer: {fileID: 0}
@@ -13575,7 +13595,6 @@ GameObject:
   - component: {fileID: 1323874200}
   - component: {fileID: 1323874204}
   - component: {fileID: 1323874199}
-  - component: {fileID: 1323874205}
   m_Layer: 0
   m_Name: Player
   m_TagString: Player
@@ -13681,10 +13700,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3563b74eb2c18bc4f83b42166b1dc615, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  hand1HoldObject: {fileID: 0}
-  hand2HoldObject: {fileID: 0}
-  hand1Index: 3
-  hand2Index: 4
+  hand1Index: 0
+  hand2Index: 0
   lasersAreActive: 0
   hand1TrackedController: {fileID: 0}
   hand2TrackedController: {fileID: 0}
@@ -13693,23 +13710,6 @@ MonoBehaviour:
   hand2TrackedObject: {fileID: 0}
   leftHandExists: 1
   rightHandExists: 1
---- !u!114 &1323874205
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 1323874198}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 44d86733ee63be244a454c16d6ef6124, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  trackedObj1: {fileID: 0}
-  trackedObj2: {fileID: 0}
-  currentMaterial: {fileID: 2100000, guid: 432995c698b2d4e429e866ad408ed827, type: 2}
-  currentGO: {fileID: 0}
-  colliderPoints: []
-  useMeshes: 0
 --- !u!1001 &1328056090
 Prefab:
   m_ObjectHideFlags: 0
@@ -16124,6 +16124,7 @@ GameObject:
   - component: {fileID: 1613533006}
   - component: {fileID: 1613533003}
   - component: {fileID: 1613533005}
+  - component: {fileID: 1613533007}
   m_Layer: 26
   m_Name: Hand2
   m_TagString: Untagged
@@ -16217,9 +16218,28 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f530e1ef95262204c9a799bc2b19c0f3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  myHandNumber: 2
   currentTool: 0
   inputListener: {fileID: 0}
-  currentHandIndex: 0
+  myDeviceIndex: 0
+--- !u!114 &1613533007
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1613533001}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 44d86733ee63be244a454c16d6ef6124, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  myHandNumber: 2
+  myTrackedObj: {fileID: 0}
+  currentMaterial: {fileID: 2100000, guid: 432995c698b2d4e429e866ad408ed827, type: 2}
+  currentGO: {fileID: 0}
+  myDeviceIndex: 0
+  colliderPoints: []
+  useMeshes: 0
 --- !u!1001 &1617754915
 Prefab:
   m_ObjectHideFlags: 0
@@ -17282,14 +17302,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6958d3f000f513042accf6ad3d38e302, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  myHandNumber: 1
   myHand: {fileID: 0}
   otherHand: {fileID: 0}
   inputListener: {fileID: 0}
   toolManager: {fileID: 0}
+  myTool: 0
   laserCube: {fileID: 0}
-  hand1Index: 3
-  hand2Index: 4
-  myHandIndex: 0
+  myDeviceIndex: 0
   myTargetedObject: {fileID: 0}
   otherLaserManager: {fileID: 0}
   myPointer: {fileID: 0}
