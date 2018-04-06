@@ -124,6 +124,15 @@ public class InputListener : PunBehaviour {
             yield return new WaitForSeconds(2);
         }
         //Debug.Log("Both hand indexes found!");
+        Invoke("FinalBroadcast", 1); //some scripts might have not had enough time to subscribe
+    }
+
+    private void FinalBroadcast()
+    {
+        if (Hand1DeviceFound != null)
+            Hand1DeviceFound(hand1Index);
+        if (Hand2DeviceFound != null)
+            Hand2DeviceFound(hand2Index);
     }
 
     private void SetIndexForComponents(int index, SteamVR_TrackedController trackedController, SteamVR_TrackedObject trackedObject)

@@ -126,7 +126,7 @@ public class DrawingManager : PunBehaviour {
     {
         if (myTool == ToolManager.ToolType.Painter)
         {
-            if (!alreadyDrawing)
+            if (!alreadyDrawing && e.controllerIndex == myDeviceIndex)
             {
                 triggerPressed = true;
                 StartDrawing(sender, e);
