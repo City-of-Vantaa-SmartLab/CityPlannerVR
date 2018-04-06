@@ -12,21 +12,16 @@ using Hashtable = ExitGames.Client.Photon.Hashtable;
 /// Selection also utilises SelectionList script, adding attached object to player's selected list. 
 /// </summary> 
 
-//TODO: booleans toggleHighlight and toggleSelect are only for debugging purposes
 //TODO?: add sound to selection function
-//TODO: Instead of changing shaders, change materials
+//TODO?: Different higlight implementation, maybe materials
 
 
 public class HighlightSelection : PunBehaviour
 {
     
-    //private Shader diffuse; 
-    private Shader standard;
-    private Shader highlight;
-    private Shader selected;
+    //private Shader diffuse;
     private Renderer rend;
     private XRLineRenderer lineRend;
-    private PhotonView photonV;
 
 
     public bool isHighlighted;
@@ -85,7 +80,7 @@ public class HighlightSelection : PunBehaviour
         if (isSelected)
         {
             isSelected = false;
-            owner.GetComponent<InputListener>().LasersAreOff -= HandleLasersOff;  //releases ownership of selected item
+            owner.GetComponent<InputListener>().OnClearSelections -= HandleClearSelection;  //releases ownership of selected item
             owner = null;
             lista.RemoveFromList(this.gameObject, lista.selectedList);
             if (tag == "Grid")
@@ -109,7 +104,7 @@ public class HighlightSelection : PunBehaviour
             if (isSelected)
             {
                 owner = selectingPlayer;
-                owner.GetComponent<InputListener>().LasersAreOff += HandleLasersOff;
+                owner.GetComponent<InputListener>().OnClearSelections += HandleClearSelection;
                 if (tag == "Grid")
                 {
                     var marker = Resources.Load("Prefabs/Marker", typeof(GameObject));
@@ -125,7 +120,7 @@ public class HighlightSelection : PunBehaviour
         }
     }
 
-    private void HandleLasersOff(object sender, ClickedEventArgs e)
+    private void HandleClearSelection(uint deviceIndex)
     {
         ToggleSelection(owner);
     }
@@ -159,7 +154,8 @@ public class HighlightSelection : PunBehaviour
                 }
             }
         }
-        Debug.Log("Could not find shader: " + shaderToBe);
+        else
+            Debug.Log("Could not find shader: " + shaderToBe);
         //Debug.Log ("Could not change shader to: " + shaderToBe.name); 
     }
 
