@@ -24,12 +24,15 @@ public class DrawingManager : PunBehaviour {
     public SteamVR_TrackedObject myTrackedObj;
     public Material currentMaterial;
     public GameObject currentGO;
+    public GameObject colliderHolder;
+    public List<BoxCollider> colliderList;
+    public List<Vector3> vectorList;
+
 
     [SerializeField]
     private uint myDeviceIndex;
     private LineRenderer currentLineRenderer;
     private MeshLineRenderer currentLineMesh;
-    public List<Vector3> colliderPoints;
     private int numClicks;
     private InputListener inputListener;
     private ToolManager toolManager;
@@ -173,7 +176,7 @@ public class DrawingManager : PunBehaviour {
         if (!addToPreviousObject)
         {
             CreateNewLine();
-            colliderPoints = new List<Vector3>();
+            vectorList = new List<Vector3>();
         }
 
         if (currentLineRenderer)
@@ -195,7 +198,7 @@ public class DrawingManager : PunBehaviour {
         {
             //Debug.Log("Still drawing");
             currentLineRenderer.positionCount = numClicks + 1;
-            colliderPoints.Add(trackedObject.transform.position);
+            vectorList.Add(trackedObject.transform.position);
             currentLineRenderer.SetPosition(numClicks, trackedObject.transform.position);
             numClicks++;
             
@@ -214,14 +217,34 @@ public class DrawingManager : PunBehaviour {
 
     }
 
-
+    //Moves current object to drawings holder and creates colliders
     void Solidify()
     {
+        GameObject drawings = GameObject.Find("Drawings");
+        if (!drawings)
+        {
+            Debug.Log("Creating drawings holder");
+            drawings = new GameObject("Drawings");
+        }
+        if (drawings)
+        {
+            currentGO.transform.parent = drawings.transform;
+            Debug.Log("Transferred"+ currentGO.name + " to new parent: " + drawings.name);
+        }
+        else
+            Debug.Log("Could not find drawings holder at root!");
+
         if (currentLineMesh)
         {
             MeshCollider coll = currentGO.AddComponent<MeshCollider>();
             coll.convex = true;
         }
+
+        if(currentLineRenderer)
+        {
+            CreateColliders();
+        }
+
 
         currentGO.AddComponent<Interactable>();
         currentGO.AddComponent<Throwable>();
@@ -230,6 +253,8 @@ public class DrawingManager : PunBehaviour {
         addToPreviousObject = false;
         AddPhotonComponents();
     }
+
+
 
     void CreateNewLine()
     {
@@ -248,6 +273,10 @@ public class DrawingManager : PunBehaviour {
         currentLineRenderer.startWidth = 0.02f;
         currentLineRenderer.endWidth = 0.02f;
         numClicks = 0;
+
+        colliderHolder = new GameObject();
+        colliderHolder.transform.parent = currentGO.transform;
+        colliderList = new List<BoxCollider>();
     }
 
     void CreateLineMesh()
@@ -263,16 +292,28 @@ public class DrawingManager : PunBehaviour {
     void AddPhotonComponents()
     {
         PhotonView photonV = currentGO.AddComponent<PhotonView>();
-        PhotonTransformView photonTV = currentGO.AddComponent<PhotonTransformView>();
-        photonTV.m_PositionModel.SynchronizeEnabled = true;
-        photonTV.m_RotationModel.SynchronizeEnabled = true;
+        //PhotonTransformView photonTV = currentGO.AddComponent<PhotonTransformView>();  //replaced by photon networked object script
+        currentGO.AddComponent<PhotonObjectOwnershipHandler>();
+        PhotonNetworkedObject netObject = currentGO.AddComponent<PhotonNetworkedObject>();
+
+        //photonTV.m_PositionModel.SynchronizeEnabled = true;
+        //photonTV.m_RotationModel.SynchronizeEnabled = true;
 
         photonV.ObservedComponents = new List<Component>();
-        photonV.ObservedComponents.Add(photonTV);
+        //photonV.ObservedComponents.Add(photonTV);
+        photonV.ObservedComponents.Add(netObject);
         photonV.synchronization = ViewSynchronization.UnreliableOnChange;
+
 
     }
 
+    private void CreateColliders()
+    {
+        //public GameObject colliderHolder;
+        //public List<BoxCollider> colliderList;
+        //public List<Vector3> vectorList;
 
+
+    }
 
 }
