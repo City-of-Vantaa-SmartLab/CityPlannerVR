@@ -10,6 +10,7 @@ public class SnapToGrid : MonoBehaviour {
 
 	IsAttachedToHand attached;
 
+    [HideInInspector]
 	public List<GameObject> triggeredTiles;
 
     [HideInInspector]

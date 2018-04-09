@@ -35,6 +35,8 @@ public class ScreenshotCamera : MonoBehaviour {
 
         quadMaterial.mainTexture = rt;
         quad.GetComponent<MeshRenderer>().material = quadMaterial;
+
+		//subscribaa inputManageriin ja poista lateUpdate
     }
 
     //This can be removed when it works on vive controller
