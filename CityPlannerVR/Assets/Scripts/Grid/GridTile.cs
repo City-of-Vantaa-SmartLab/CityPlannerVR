@@ -24,6 +24,7 @@ public class GridTile : IHeapItem<GridTile> {
     public BoxCollider collider;
     //Is used to indicate to the player if object can be placed here
     public BoxCollider trigger;
+    IndicateGridState indicator;
 
     public float xPos;
 	public float zPos;
@@ -57,6 +58,7 @@ public class GridTile : IHeapItem<GridTile> {
 		checkGridState = tileObject.AddComponent<GridTileStateCheck> ();
 		checkGridState.tile = this;
         highLight = tileObject.AddComponent<HighlightSelection>();
+        indicator = tileObject.AddComponent<IndicateGridState>();
 
         InitializeTileObject (cellSize);
     }

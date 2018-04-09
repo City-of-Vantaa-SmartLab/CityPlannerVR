@@ -14,8 +14,15 @@ public class GridTileStateCheck : MonoBehaviour {
     //This is part of the option1
     GameObject objectOnThisTile = null;
 
-    //I broke the project down on purpose from here
-    private string objectTag = "Untagged";
+    public GameObject ObjectOnThisTile
+    {
+        get
+        {
+            return objectOnThisTile;
+        }
+    }
+
+    private string objectTag = "Building";
 
     //If something that is building collides with me, I'm full
     void OnCollisionEnter(Collision other){
