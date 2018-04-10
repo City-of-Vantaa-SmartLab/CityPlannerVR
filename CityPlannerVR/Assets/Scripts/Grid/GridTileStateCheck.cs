@@ -32,6 +32,7 @@ public class GridTileStateCheck : MonoBehaviour {
             if(tile.State == GridTile.GridState.Full)
             {
                 objectOnThisTile.transform.position = ObjectContainer.trashPoint;
+                other.gameObject.GetComponent<SnapToGrid>().triggeredTiles.Clear();
             }
             #endregion
 

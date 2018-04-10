@@ -2,6 +2,12 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+/// <summary>
+/// Creates the visual grid
+/// 
+/// Tutorial used: https://www.youtube.com/watch?v=8PlpCbxB6tY
+/// </summary>
+
 [RequireComponent(typeof(MeshFilter), typeof(MeshRenderer))]
 public class ProceduralGrid : MonoBehaviour {
 

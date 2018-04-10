@@ -101,7 +101,6 @@ public class SnapToGrid : MonoBehaviour {
 
 			CheckRotation();
 
-            triggeredTiles.Clear();
         }
     }
 

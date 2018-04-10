@@ -2,6 +2,11 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+/// <summary>
+/// Creates the grid tiles and puts them in order
+/// 
+/// Tutorial: https://www.youtube.com/watch?v=3Dw5d7PlcTM (other videos in the series were also used)
+/// </summary>
 public class CreateGrid : MonoBehaviour {
 
 	private GridTile[,] tiles;

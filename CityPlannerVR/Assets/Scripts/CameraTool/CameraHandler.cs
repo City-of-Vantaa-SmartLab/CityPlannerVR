@@ -35,7 +35,7 @@ public class CameraHandler : MonoBehaviour {
 		NormalCameraModeActive = false;
 		VideoCameraModeActive = false;
 
-		//Subscribe to toolManager
+		
     }
 	//-------------------------------------------------------------------------------------------------------------------------------------
 

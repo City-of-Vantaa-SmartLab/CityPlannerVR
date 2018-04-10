@@ -3,6 +3,14 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+/// <summary>
+/// 
+/// 
+/// 
+/// Tutorial for the class (also other videos on the series used): https://www.youtube.com/watch?v=_lQw3YA7Jok&list=PLbghT7MmckI4_VM5q3va043FgAwRim6yX
+/// Tutorial for the pathfinding stuff: https://www.youtube.com/watch?v=3Dw5d7PlcTM
+/// </summary>
+
 public class GridTile : IHeapItem<GridTile> {
 
     public enum GridState { Empty, Full };
