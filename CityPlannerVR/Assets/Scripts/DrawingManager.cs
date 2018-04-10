@@ -24,14 +24,15 @@ public class DrawingManager : PunBehaviour {
     public SteamVR_TrackedObject myTrackedObj;
     public Material currentMaterial;
     public GameObject currentGO;
-    public GameObject colliderHolder;
-    public List<BoxCollider> colliderList;
+    //public GameObject colliderHolder;
+    //public List<BoxCollider> colliderList;
     public List<Vector3> vectorList;
 
 
     [SerializeField]
     private uint myDeviceIndex;
     private LineRenderer currentLineRenderer;
+    private float lineRendererWidth = 0.02f;
     private MeshLineRenderer currentLineMesh;
     private int numClicks;
     private InputListener inputListener;
@@ -228,6 +229,7 @@ public class DrawingManager : PunBehaviour {
         }
         if (drawings)
         {
+            currentGO.name = "Doodle" + drawings.transform.childCount;
             currentGO.transform.parent = drawings.transform;
             Debug.Log("Transferred"+ currentGO.name + " to new parent: " + drawings.name);
         }
@@ -244,7 +246,6 @@ public class DrawingManager : PunBehaviour {
         {
             CreateColliders();
         }
-
 
         currentGO.AddComponent<Interactable>();
         currentGO.AddComponent<Throwable>();
@@ -270,13 +271,9 @@ public class DrawingManager : PunBehaviour {
     {
         currentLineRenderer = currentGO.AddComponent<LineRenderer>();
         currentLineRenderer.material = currentMaterial;
-        currentLineRenderer.startWidth = 0.02f;
-        currentLineRenderer.endWidth = 0.02f;
+        currentLineRenderer.startWidth = lineRendererWidth;
+        currentLineRenderer.endWidth = lineRendererWidth;
         numClicks = 0;
-
-        colliderHolder = new GameObject();
-        colliderHolder.transform.parent = currentGO.transform;
-        colliderList = new List<BoxCollider>();
     }
 
     void CreateLineMesh()
@@ -303,8 +300,6 @@ public class DrawingManager : PunBehaviour {
         //photonV.ObservedComponents.Add(photonTV);
         photonV.ObservedComponents.Add(netObject);
         photonV.synchronization = ViewSynchronization.UnreliableOnChange;
-
-
     }
 
     private void CreateColliders()
@@ -312,8 +307,41 @@ public class DrawingManager : PunBehaviour {
         //public GameObject colliderHolder;
         //public List<BoxCollider> colliderList;
         //public List<Vector3> vectorList;
+        //List<BoxCollider> colliderList = new List<BoxCollider>();
+
+        //LineRenderer linRend = gameObject.GetComponent<LineRenderer>();
+
+        //List<Vector3> vectorList2 = new List<Vector3>(linRend.positionCount);
+        //linRend.GetPositions(vectorList2); // List<Vector3> vs. Vector3[] !!!
+
+        Vector3 previousVector = vectorList[0];
+        Vector3 link;
+        int counter = 0;
+
+        foreach (Vector3 vector in vectorList)
+        {
+
+            if (counter < 4)
+            {
+                counter++;
+                continue;
+            }
+            counter = 0;
+            GameObject colliderHolder = new GameObject("Collider" + currentGO.transform.childCount);
+            colliderHolder.transform.parent = currentGO.transform;
+            BoxCollider box = colliderHolder.AddComponent<BoxCollider>();
+            box.size = Vector3.one * lineRendererWidth;
 
 
+            link = vector - previousVector;
+            //box.center = link / 2;
+            box.transform.SetPositionAndRotation(currentGO.transform.position + previousVector + (link / 2), Quaternion.identity); //Quaternion.LookRotation(link) flipped them to a weird location -> not local rotation!
+            previousVector = vector;
+
+
+        }
+
+        //vectorList.Clear();
     }
 
 }
