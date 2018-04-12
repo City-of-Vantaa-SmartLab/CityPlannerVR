@@ -6,7 +6,7 @@ using UnityEngine;
 public class CameraHandler : MonoBehaviour {
 
     public GameObject normalCamera;
-    public GameObject videoCamera;
+    //public GameObject videoCamera;
 
     ToolManager toolManager;
 
@@ -22,21 +22,21 @@ public class CameraHandler : MonoBehaviour {
 		}
 	}
 	//-------------------------------------------------------------------------------------------------------------------------------------
-	private bool videoCameraModeActive = false;
-	public bool VideoCameraModeActive {
-		get {
-			return videoCameraModeActive;
-		}
-		private set{ 
-			videoCameraModeActive = value;
-			videoCamera.SetActive (videoCameraModeActive);
-		}
-	}
+	//private bool videoCameraModeActive = false;
+	//public bool VideoCameraModeActive {
+	//	get {
+	//		return videoCameraModeActive;
+	//	}
+	//	private set{ 
+	//		videoCameraModeActive = value;
+	//		//videoCamera.SetActive (videoCameraModeActive);
+	//	}
+	//}
 	//-------------------------------------------------------------------------------------------------------------------------------------
     void Awake()
     {
 		NormalCameraModeActive = false;
-		VideoCameraModeActive = false;
+		//VideoCameraModeActive = false;
 
         toolManager = GetComponent<ToolManager>();
         toolManager.OnToolChange += ActivateCameraTool;
@@ -52,10 +52,10 @@ public class CameraHandler : MonoBehaviour {
             NormalCameraModeActive = true;
         }
 
-        else if(tool == ToolManager.ToolType.VideoCamera)
-        {
-            VideoCameraModeActive = true;
-        }
+        //else if(tool == ToolManager.ToolType.VideoCamera)
+        //{
+        //    VideoCameraModeActive = true;
+        //}
         //if camera is not selected
         else
         {
@@ -67,7 +67,7 @@ public class CameraHandler : MonoBehaviour {
 	public void DeactivateCameraTool()
 	{
 		NormalCameraModeActive = false;
-		VideoCameraModeActive = false;
+		//VideoCameraModeActive = false;
 	}
 	//-------------------------------------------------------------------------------------------------------------------------------------
 	//Switches between normal camera and video camera
