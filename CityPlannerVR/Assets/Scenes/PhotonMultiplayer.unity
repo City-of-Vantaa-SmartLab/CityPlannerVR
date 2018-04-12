@@ -13506,6 +13506,7 @@ GameObject:
   - component: {fileID: 1323874200}
   - component: {fileID: 1323874204}
   - component: {fileID: 1323874199}
+  - component: {fileID: 1323874205}
   m_Layer: 0
   m_Name: Player
   m_TagString: Player
@@ -13618,6 +13619,17 @@ MonoBehaviour:
   selectionList: {fileID: 0}
   hand1TrackedObject: {fileID: 0}
   hand2TrackedObject: {fileID: 0}
+--- !u!114 &1323874205
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1323874198}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 95f4dd01581bb6f43b8c374b9adf679a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1001 &1328056090
 Prefab:
   m_ObjectHideFlags: 0
