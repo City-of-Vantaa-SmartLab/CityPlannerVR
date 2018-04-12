@@ -10,8 +10,16 @@ public class SnapToGrid : MonoBehaviour {
 
 	IsAttachedToHand attached;
 
+    //[HideInInspector]
+	public List<GameObject> triggeredTiles;
+
     [HideInInspector]
     public GameObject parent;
+
+    Material[] materials;
+    Shader indicatorShader;
+    string shaderName = "Unlit/IndicatorShader";
+    Shader standardShader;
 
     private bool isOnGrid = false;
     public bool IsOnGrid
@@ -48,13 +56,21 @@ public class SnapToGrid : MonoBehaviour {
     {
         SnapPosition();
 		attached = GetComponent<IsAttachedToHand> ();
+        materials = GetComponent<MeshRenderer>().materials;
+        indicatorShader = Shader.Find(shaderName);
+        standardShader = Shader.Find("Standard");
 
-		if (attached != null) {
+        if (attached != null) {
 			attached.OnSnapToGrid += CheckIfSnapping;
 		}
     }
 
-	void OnDestroy(){
+    private void Update()
+    {
+        CheckList();
+    }
+
+    void OnDestroy(){
 
         //Removes this object from the static list
         ObjectContainer.objects.Remove(gameObject);
@@ -84,6 +100,7 @@ public class SnapToGrid : MonoBehaviour {
             //transform.parent = parent.transform;
 
 			CheckRotation();
+
         }
     }
 
@@ -122,5 +139,34 @@ public class SnapToGrid : MonoBehaviour {
 	public void MoveObjectToPoint(){
 
 		transform.position = ObjectContainer.trashPoint;
+	}
+
+
+	void CheckList(){
+
+		if (triggeredTiles.Count == 0) {
+            //If the first materials shader is red, the we assume all of them are red
+            if (materials[0].shader == indicatorShader)
+            {
+                //Change the color of the object to normal
+                foreach (var material in materials)
+                {
+                    material.shader = standardShader;
+                    
+                }
+            }
+		}
+
+		else {
+            //If the first material is normal, then we assume all of them are normal
+            if (materials[0].shader == standardShader)
+            {
+                //Change the color of the object to red
+                foreach (var material in materials)
+                {
+                    material.shader = indicatorShader;
+                }
+            }
+        }
 	}
 }

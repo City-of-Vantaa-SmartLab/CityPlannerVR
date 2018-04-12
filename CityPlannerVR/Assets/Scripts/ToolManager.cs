@@ -13,7 +13,7 @@ using UnityEngine.EventSystems;
 public class ToolManager : MonoBehaviour {
 
     public int myHandNumber; //This should be set at inspector to either 1 or 2
-    public enum ToolType { Empty, Eraser, Laser, Painter };
+    public enum ToolType { Empty, Eraser, Laser, Painter, Camera };
     public ToolType currentTool;
 
     public ToolType Tool

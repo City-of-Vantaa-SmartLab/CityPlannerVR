@@ -3,6 +3,14 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+/// <summary>
+/// 
+/// 
+/// 
+/// Tutorial for the class (also other videos on the series used): https://www.youtube.com/watch?v=_lQw3YA7Jok&list=PLbghT7MmckI4_VM5q3va043FgAwRim6yX
+/// Tutorial for the pathfinding stuff: https://www.youtube.com/watch?v=3Dw5d7PlcTM
+/// </summary>
+
 public class GridTile : IHeapItem<GridTile> {
 
     public enum GridState { Empty, Full };
@@ -22,24 +30,27 @@ public class GridTile : IHeapItem<GridTile> {
     public GameObject tileObject;
     public GameObject containedObject;
     public BoxCollider collider;
-    //public XRLineRenderer line;
+    //Is used to indicate to the player if object can be placed here
+    public BoxCollider trigger;
+    IndicateGridState indicator;
 
     public float xPos;
 	public float zPos;
 
+    //Pathfinding stuff
 	public float gCost;
 	public float hCost;
-	public GridTile parent;
-    HighlightSelection highLight;
-
+    public float fCost
+    {
+        get
+        {
+            return gCost + hCost;
+        }
+    }
     int heapIndex;
 
-
-	public float fCost{
-		get{ 
-			return gCost + hCost;
-		}
-	}
+    public GridTile parent;
+    HighlightSelection highLight;
 
 	private GridTileStateCheck checkGridState;
 
@@ -49,14 +60,15 @@ public class GridTile : IHeapItem<GridTile> {
 		xPos = x;
 		zPos = z;
 
+        //All the components that are added to this object
 		collider = tileObject.AddComponent<BoxCollider> ();
-		//line = tileObject.AddComponent<XRLineRenderer> ();
+        trigger = tileObject.AddComponent<BoxCollider> ();
 		checkGridState = tileObject.AddComponent<GridTileStateCheck> ();
 		checkGridState.tile = this;
         highLight = tileObject.AddComponent<HighlightSelection>();
+        indicator = tileObject.AddComponent<IndicateGridState>();
 
         InitializeTileObject (cellSize);
-		InitializeLineRenderer ();
     }
 
 	//All the grids will have these values and they are not changed
@@ -67,16 +79,14 @@ public class GridTile : IHeapItem<GridTile> {
 		collider.size = new Vector3(cellSize, 0, cellSize);
 		//This is hardcoded value. It makes sure the collider is in right place 
 		collider.center = new Vector3 (0, 0, 0);
+
+        //trigger height should be a bit taller than the tallest object on the grid (to avoid confusion with users)
+        float triggerHeight = 20f;
+
+        trigger.isTrigger = true;
+        trigger.size = new Vector3(cellSize, triggerHeight, cellSize);
+        trigger.center = new Vector3(0, triggerHeight * 0.5f, 0);
     }
-
-	private void InitializeLineRenderer(){
-		//Defines how many points we have to draw the line through
-		//line.SetVertexCount(4);
-		//line.SetTotalWidth(0.1f);
-		//Draws a line from last point to the first (so we get a square)
-		//line.loop = true;
-	}
-
 
     //For the pathfinding
     public int HeapIndex
