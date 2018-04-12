@@ -30,6 +30,7 @@ public class ScreenshotCamera : MonoBehaviour {
 
     int index = 0;
     //All the fixed points where the screenshot camera can be (first 2 are in players hands)
+    public GameObject[] points;
 
 
     public static string ScreenshotName(int width, int height){
