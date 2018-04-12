@@ -6,7 +6,10 @@ using UnityEngine;
 public class CameraHandler : MonoBehaviour {
 
     public GameObject normalCamera;
-    public GameObject videoCamera;
+    //public GameObject videoCamera;
+
+    ToolManager toolManager;
+
 	//-------------------------------------------------------------------------------------------------------------------------------------
 	private bool normalCameraModeActive = false;
 	public bool NormalCameraModeActive {
@@ -19,68 +22,69 @@ public class CameraHandler : MonoBehaviour {
 		}
 	}
 	//-------------------------------------------------------------------------------------------------------------------------------------
-	private bool videoCameraModeActive = false;
-	public bool VideoCameraModeActive {
-		get {
-			return videoCameraModeActive;
-		}
-		private set{ 
-			videoCameraModeActive = value;
-			videoCamera.SetActive (videoCameraModeActive);
-		}
-	}
+	//private bool videoCameraModeActive = false;
+	//public bool VideoCameraModeActive {
+	//	get {
+	//		return videoCameraModeActive;
+	//	}
+	//	private set{ 
+	//		videoCameraModeActive = value;
+	//		//videoCamera.SetActive (videoCameraModeActive);
+	//	}
+	//}
 	//-------------------------------------------------------------------------------------------------------------------------------------
     void Awake()
     {
 		NormalCameraModeActive = false;
-		VideoCameraModeActive = false;
+		//VideoCameraModeActive = false;
 
-		//Subscribe to toolManager
+        toolManager = GetComponent<ToolManager>();
+        toolManager.OnToolChange += ActivateCameraTool;
+		
     }
 	//-------------------------------------------------------------------------------------------------------------------------------------
-
-	//Function that keeps track of if cameras need to be active or not (used for the subscription)
-	void IsActive(){
-		//Aktivoi ja deaktivoi kamerat sitä mukaan kun CameraTool valitaan tai otetaan pois
-		//if(kamera on aktiivinen){
-		//	ActivateCameraTool(); 
-		//}
-		//else{
-		//	DeactivateCameraTool();
-		//}
-
-		//Subscribaa ehkä input manageriin tässä (switchCameras vaikka)
-	}
-
-	//-------------------------------------------------------------------------------------------------------------------------------------
 	//Is called when the cameraTool is switched on
-	public void ActivateCameraTool()
+	public void ActivateCameraTool(uint deviceIndex, ToolManager.ToolType tool)
 	{
-		NormalCameraModeActive = true;
+        //If camera is selected
+        if(tool == ToolManager.ToolType.Camera)
+        {
+            NormalCameraModeActive = true;
+        }
+
+        //else if(tool == ToolManager.ToolType.VideoCamera)
+        //{
+        //    VideoCameraModeActive = true;
+        //}
+        //if camera is not selected
+        else
+        {
+            DeactivateCameraTool();
+        }
 	}
 	//-------------------------------------------------------------------------------------------------------------------------------------
 	//Is called when the cameraTool is switched off
 	public void DeactivateCameraTool()
 	{
 		NormalCameraModeActive = false;
-		VideoCameraModeActive = false;
+		//VideoCameraModeActive = false;
 	}
 	//-------------------------------------------------------------------------------------------------------------------------------------
 	//Switches between normal camera and video camera
-	public void SwitchCameras(){
-		//If normal camera is active disable it and enable videoCamera
-		if (NormalCameraModeActive == true)
-		{
-			NormalCameraModeActive = false;
-			VideoCameraModeActive = true;
-		} 
+	//public void SwitchCameras(){
+	//	//If normal camera is active disable it and enable videoCamera
+	//	if (NormalCameraModeActive == true)
+	//	{
+	//		NormalCameraModeActive = false;
+	//		VideoCameraModeActive = true;
+	//	} 
 
-		//Otherwise enable normal camera and disable video camera
-		else 
-		{
-			NormalCameraModeActive = true;
-			VideoCameraModeActive = false;
-		}
-	}
-	//-------------------------------------------------------------------------------------------------------------------------------------
+	//	//Otherwise enable normal camera and disable video camera
+	//	else 
+	//	{
+	//		NormalCameraModeActive = true;
+	//		VideoCameraModeActive = false;
+	//	}
+	//}
+    //-------------------------------------------------------------------------------------------------------------------------------------
 }

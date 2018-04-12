@@ -3,6 +3,14 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+/// <summary>
+/// 
+/// 
+/// 
+/// Tutorial for the class (also other videos on the series used): https://www.youtube.com/watch?v=_lQw3YA7Jok&list=PLbghT7MmckI4_VM5q3va043FgAwRim6yX
+/// Tutorial for the pathfinding stuff: https://www.youtube.com/watch?v=3Dw5d7PlcTM
+/// </summary>
+
 public class GridTile : IHeapItem<GridTile> {
 
     public enum GridState { Empty, Full };
@@ -24,6 +32,7 @@ public class GridTile : IHeapItem<GridTile> {
     public BoxCollider collider;
     //Is used to indicate to the player if object can be placed here
     public BoxCollider trigger;
+    IndicateGridState indicator;
 
     public float xPos;
 	public float zPos;
@@ -57,6 +66,7 @@ public class GridTile : IHeapItem<GridTile> {
 		checkGridState = tileObject.AddComponent<GridTileStateCheck> ();
 		checkGridState.tile = this;
         highLight = tileObject.AddComponent<HighlightSelection>();
+        indicator = tileObject.AddComponent<IndicateGridState>();
 
         InitializeTileObject (cellSize);
     }

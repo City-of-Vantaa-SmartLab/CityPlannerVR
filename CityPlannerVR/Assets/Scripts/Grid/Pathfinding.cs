@@ -2,6 +2,13 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+/// <summary>
+/// Pathfinding for the Measurement points to find the path
+/// 
+/// Tutorial: https://www.youtube.com/watch?v=mZfyt03LDH4
+/// </summary>
+
+
 public class Pathfinding : MonoBehaviour {
     
     private CreateGrid createGrid;

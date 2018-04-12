@@ -3,6 +3,8 @@ using System;
 using UnityEngine;
 /// <summary>
 /// This makes it easier for the computer to find the path. It's generic so it can be used on other things than GridTile
+/// 
+/// Tutorial: https://www.youtube.com/watch?v=3Dw5d7PlcTM
 /// </summary>
 /// 
 public class Heap<T> where T : IHeapItem<T> {

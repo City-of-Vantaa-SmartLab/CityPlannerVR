@@ -8,6 +8,13 @@ using System.IO;
 using System.Xml;
 using System.Xml.Serialization;
 
+/// <summary>
+/// Handles the saving of some data and loading it later
+/// 
+/// Tutorials used: https://www.youtube.com/watch?v=sWWZZByVvlU
+/// (Debugging version) https://www.youtube.com/watch?v=6vl1IYMpwVQ
+/// </summary>
+
 
 //TODO: tehdään vain hostilla/serverillä ja clientit saa valmiina kaikki tiedot
 

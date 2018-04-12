@@ -16,22 +16,34 @@ public class IndicateGridState : MonoBehaviour {
 		state = GetComponent<GridTileStateCheck> ();
     }
 
-	void OnCollisionEnter(Collision other){
-		if(state.tile.State == GridTile.GridState.Full){
-			snapToGrid = other.gameObject.GetComponent<SnapToGrid> ();
+	void OnTriggerEnter(Collider other){
+        if (state.tile.State == GridTile.GridState.Full)
+        {
+            if (state.ObjectOnThisTile != other.gameObject)
+            {
+                snapToGrid = other.gameObject.GetComponent<SnapToGrid>();
 
-			if (snapToGrid != null) {
-				snapToGrid.triggeredTiles.Add (gameObject);
-			}
-		}
+                if (snapToGrid != null)
+                {
+                    snapToGrid.triggeredTiles.Add(gameObject);
+                }
+            }
+        }
 	}
 
-	void OnCollisionExit(Collision other){
-		if(state.tile.State == GridTile.GridState.Full){
-			if (snapToGrid != null) {
-				snapToGrid.triggeredTiles.Remove (gameObject);
-			}
-		}
+	void OnTriggerExit(Collider other){
+        if (state.tile.State == GridTile.GridState.Full)
+        {
+
+            if (state.ObjectOnThisTile != other.gameObject)
+            {
+
+                if (snapToGrid != null)
+                {
+                    snapToGrid.triggeredTiles.Remove(gameObject);
+                }
+            }
+        }
 	}
 
 
