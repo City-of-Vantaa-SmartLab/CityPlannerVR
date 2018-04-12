@@ -5,71 +5,107 @@ using UnityEngine;
 
 public class Erasable : MonoBehaviour {
 
-    Collider myCollider;
-    bool alreadyHovering;
-    Eraser eraser;
-    
-    // Use this for initialization
-    void Start () {
-        myCollider = gameObject.GetComponent<Collider>();
-        alreadyHovering = false;
-	}
+    //Collider myCollider;
+    List<Eraser> terminators;
+
+
+    void Start() {
+        //myCollider = gameObject.GetComponent<Collider>();
+    }
 
     private void OnDestroy()
     {
-        Unsubscribe();
+        UnsubscribeAll();
     }
 
     private void OnTriggerEnter(Collider other)
     {
-        if (!alreadyHovering && other.CompareTag("Eraser"))
+        if (other.CompareTag("Eraser"))
         {
-            eraser = other.GetComponent<Eraser>();
-            if (eraser)
-            {
-                Subscribe();
-            }
-            
+            Eraser tryEraser;
+            tryEraser = other.GetComponent<Eraser>();
+            if (tryEraser)
+                BeginHovering(tryEraser);
         }
     }
 
     private void OnTriggerExit(Collider other)
     {
-        if (alreadyHovering && other.CompareTag("Eraser"))
+        if (other.CompareTag("Eraser"))
         {
-
+            Eraser tryEraser;
+            tryEraser = other.GetComponent<Eraser>();
+            if (tryEraser)
+                EndHovering(tryEraser);
         }
     }
 
-
-    private void Subscribe()
+    private void Subscribe(Eraser eraser)
     {
         eraser.DestroyObjects += HandleDestroyObjects;
-        eraser.ClearList += HandleClearList;
+        eraser.RemoveFromList += HandleRemoveFromList;
     }
 
-    private void Unsubscribe()
+    private void Unsubscribe(Eraser eraser)
     {
         eraser.DestroyObjects -= HandleDestroyObjects;
-        eraser.ClearList -= HandleClearList;
+        eraser.RemoveFromList -= HandleRemoveFromList;
+    }
 
+    private void UnsubscribeAll()
+    {
+        foreach(Eraser eraser in terminators)
+        {
+            Unsubscribe(eraser);
+        }
+        terminators.Clear();
     }
 
 
 
-    private void HandleDestroyObjects(uint deviceIndex)
+    private void HandleDestroyObjects(uint deviceIndex, Eraser eraser)
     {
         Destroy(gameObject, 0.1f);
     }
 
-    private void HandleClearList(uint deviceIndex)
+    private void HandleRemoveFromList(uint deviceIndex, Eraser eraser)
     {
-        Unsubscribe();
+        Unsubscribe(eraser);
     }
 
+    public void BeginHovering(Eraser eraser)
+    {
+        if (eraser == null)
+        {
+            Debug.Log("Cannot add to terminators, eraser is null!");
+            return;
+        }
 
-    // Update is called once per frame
-    void Update () {
-		
-	}
+        if (!terminators.Contains(eraser))
+        {
+            terminators.Add(eraser);
+            Subscribe(eraser);
+        }
+        else
+            Debug.Log("eraser already in the list");
+    }
+
+    private void EndHovering(Eraser eraser)
+    {
+        if (eraser == null)
+        {
+            Debug.Log("Cannot remove from terminators, eraser is null!");
+            return;
+        }
+
+        if (terminators.Contains(eraser))
+        {
+            terminators.Add(eraser);
+            terminators.Remove(eraser);
+            Unsubscribe(eraser);
+        }
+        else
+            Debug.Log("eraser already in the list");
+    }
+
 }

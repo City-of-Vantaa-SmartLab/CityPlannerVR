@@ -14,9 +14,9 @@ public class Eraser : MonoBehaviour {
     MeshRenderer myMesh;
     CapsuleCollider myCollider;
 
-    public delegate void EventWithIndex(uint deviceIndex);
-    public event EventWithIndex DestroyObjects;
-    public event EventWithIndex ClearList;
+    public delegate void EventWithEraser(uint deviceIndex, Eraser eraser);
+    public event EventWithEraser DestroyObjects;
+    public event EventWithEraser RemoveFromList;
 
 
     // Use this for initialization
@@ -89,7 +89,7 @@ public class Eraser : MonoBehaviour {
     {
         if (DestroyObjects != null)
         {
-            DestroyObjects(0);
+            DestroyObjects(e.controllerIndex, this);
         }
     }
 
@@ -108,7 +108,8 @@ public class Eraser : MonoBehaviour {
             else
             {
                 ToggleEraser(false);
-                ClearList(0);
+                if (RemoveFromList != null)
+                    RemoveFromList(deviceIndex, this);
             }
         }
             
