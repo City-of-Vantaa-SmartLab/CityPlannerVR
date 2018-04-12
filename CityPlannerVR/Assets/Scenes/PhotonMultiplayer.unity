@@ -13509,6 +13509,7 @@ GameObject:
   - component: {fileID: 1323874207}
   - component: {fileID: 1323874206}
   - component: {fileID: 1323874205}
+  - component: {fileID: 1323874208}
   m_Layer: 0
   m_Name: Player
   m_TagString: Player
@@ -13565,7 +13566,7 @@ Transform:
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 1323874198}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -6.24, y: 0, z: 0}
+  m_LocalPosition: {x: -4.74, y: 0, z: -0.13}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 495224142}
@@ -13646,7 +13647,7 @@ MonoBehaviour:
   _tokens:
     _tokens: []
   _roomName: Global
-  _useTrigger: 0
+  _useTrigger: 1
 --- !u!114 &1323874207
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -13669,13 +13670,25 @@ MonoBehaviour:
     _fadeInTicks: 7500000
     _fadeOutTicks: 11500000
   _broadcastPosition: 1
-  _channelType: 0
+  _channelType: 2
   _inputName: 
   _mode: 1
   _playerId: 
   _useTrigger: 0
   _roomName: Global
   _priority: -2
+--- !u!135 &1323874208
+SphereCollider:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1323874198}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Radius: 30
+  m_Center: {x: 0, y: 0, z: 0}
 --- !u!1001 &1328056090
 Prefab:
   m_ObjectHideFlags: 0
