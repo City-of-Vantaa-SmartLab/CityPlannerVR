@@ -126,9 +126,9 @@ public class SaveAndLoadObjects : MonoBehaviour {
     //            };
     //            //Hardcoded for now
     //            parent.transform.parent = table.transform;
-    //            parent.transform.localPosition = new Vector3(0, 0, 0);
+    //            parent.transform.localPosition = Vector3.zero;
     //            parent.transform.localRotation = Quaternion.identity;
-    //            parent.transform.localScale = new Vector3(1, 1, 1);
+    //            parent.transform.localScale = Vector3.one;
 
     //            for (int i = 0; i < dataDB.list.Count; ++i)
     //            {
@@ -216,9 +216,9 @@ public class SaveAndLoadObjects : MonoBehaviour {
                     };
                     //Hardcoded
                     parent.transform.parent = table.transform;
-                    parent.transform.localPosition = new Vector3(0, 0, 0);
+                    parent.transform.localPosition = Vector3.zero;
                     parent.transform.localRotation = Quaternion.identity;
-                    parent.transform.localScale = new Vector3(1, 1, 1);
+                    parent.transform.localScale = Vector3.one;
 
                     for (int i = 0; i < dataDB.list.Count; ++i)
                     {

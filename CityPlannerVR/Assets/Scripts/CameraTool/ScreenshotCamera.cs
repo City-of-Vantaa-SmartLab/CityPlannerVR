@@ -19,11 +19,17 @@ public class ScreenshotCamera : MonoBehaviour {
 
     InputListener inputListener;
 
-    public GameObject quad;
-    public Material quadMaterial;
+    Valve.VR.InteractionSystem.Teleport teleport;
 
+    public GameObject cameraScreen;
+    public Material cameraScreenMaterial;
+
+    //This value is got from the cameraHandler that activates this object
     public int myHandNumber;
     private uint myDeviceIndex;
+
+    int index = 0;
+    //All the fixed points where the screenshot camera can be (first 2 are in players hands)
 
 
     public static string ScreenshotName(int width, int height){
@@ -33,22 +39,51 @@ public class ScreenshotCamera : MonoBehaviour {
 
 	void Awake(){
         ssCamera = GetComponent<Camera> ();
+
         rt = new RenderTexture(resWidth, resHeight, 24);
         ssCamera.targetTexture = rt;
         ssCamera.fieldOfView = 60;
 
         clickSound = GetComponent<AudioSource>();
 
-        quadMaterial.mainTexture = rt;
-        quad.GetComponent<MeshRenderer>().material = quadMaterial;
+        teleport = GameObject.Find("Teleporting").GetComponent<Valve.VR.InteractionSystem.Teleport>();
 
-        //subscribaa inputManageriin ja poista lateUpdate
+        cameraScreenMaterial.mainTexture = rt;
+        cameraScreen.GetComponent<MeshRenderer>().material = cameraScreenMaterial;
+
+        cameraScreen.SetActive(false);
+
         inputListener = GameObject.Find("Player").GetComponent<InputListener>();
+    }
+
+    private void OnEnable()
+    {
+        gameObject.transform.parent = points[myHandNumber - 1].transform;
+        gameObject.transform.localPosition = Vector3.zero;
+        gameObject.transform.localRotation = Quaternion.identity;
+
+        cameraScreen.transform.parent = points[myHandNumber - 1].transform;
+        cameraScreen.transform.localRotation = Quaternion.identity;
+
+        //Left hand
+        if(myHandNumber == 1)
+        {
+            cameraScreen.transform.localPosition = new Vector3(0.15f, 0, 0);
+        }
+        else
+        {
+            cameraScreen.transform.localPosition = new Vector3(-0.15f, 0, 0);
+        }
+        
+        cameraScreen.SetActive(true);
+
         Subscribe();
     }
 
-    private void OnDestroy()
+    private void OnDisable()
     {
+        cameraScreen.SetActive(false);
+
         Unsubscribe();
     }
 
@@ -56,8 +91,12 @@ public class ScreenshotCamera : MonoBehaviour {
     {
         if (inputListener)
         {
+            teleport.disableTeleport = true;
+
             inputListener.TriggerClicked += TakeScreenshot;
-            inputListener.TriggerLifted += TakeScreenshot;
+
+            inputListener.PadClicked += ChangePoint;
+
             if (myHandNumber == 1)
                 inputListener.Hand1DeviceFound += HandleMyIndexFound;
             if (myHandNumber == 2)
@@ -73,8 +112,12 @@ public class ScreenshotCamera : MonoBehaviour {
     {
         if (inputListener)
         {
+            teleport.disableTeleport = false;
+
             inputListener.TriggerClicked -= TakeScreenshot;
-            inputListener.TriggerLifted -= TakeScreenshot;
+
+            inputListener.PadClicked -= ChangePoint;
+
             if (myHandNumber == 1)
                 inputListener.Hand1DeviceFound -= HandleMyIndexFound;
             if (myHandNumber == 2)
@@ -89,16 +132,15 @@ public class ScreenshotCamera : MonoBehaviour {
     private void HandleMyIndexFound(uint deviceIndex)
     {
         myDeviceIndex = deviceIndex;
-        if (myHandNumber == 1)
-            inputListener.Hand1DeviceFound -= HandleMyIndexFound;
-        if (myHandNumber == 2)
-            inputListener.Hand2DeviceFound -= HandleMyIndexFound;
+        //if (myHandNumber == 1)
+        //    inputListener.Hand1DeviceFound -= HandleMyIndexFound;
+        //if (myHandNumber == 2)
+        //    inputListener.Hand2DeviceFound -= HandleMyIndexFound;
     }
 
     void TakeScreenshot(object sender, ClickedEventArgs e)
     {
-        if (gameObject.GetActive() == true)
-        {
+        
             Texture2D screenShot = new Texture2D(resWidth, resHeight, TextureFormat.RGB24, false);
             ssCamera.Render();
             RenderTexture.active = rt;
@@ -115,42 +157,24 @@ public class ScreenshotCamera : MonoBehaviour {
             //New texture for the next picture
             rt = new RenderTexture(resWidth, resHeight, 24);
             ssCamera.targetTexture = rt;
-            quadMaterial.mainTexture = rt;
-            quad.GetComponent<MeshRenderer>().material = quadMaterial;
-        }
+            cameraScreenMaterial.mainTexture = rt;
+            cameraScreen.GetComponent<MeshRenderer>().material = cameraScreenMaterial;
+        
     }
     //---------------------------------------------------------------------------------------------------------------------------------------------------------
 
-    private void Update()
-    {
-        int temp = 0;
 
-        if (temp == 0)
+    void ChangePoint(object sender, ClickedEventArgs e) {
+        if(e.padX > 0.7f)
         {
-
-            if (Input.GetKey(KeyCode.K))
-            {
-                Debug.Log("K was pressed");
-                ChangePointRight();
-            }
-
-            else if (Input.GetKey(KeyCode.L))
-            {
-                Debug.Log("L was pressed");
-                ChangePointLeft();
-            }
+            ChangePointRight();
         }
-        
-        temp++;
-        if(temp >= 2)
+        else if(e.padX < -0.7f)
         {
-            temp = 0;
+            ChangePointLeft();
         }
-        
     }
 
-    int index = 0;
-    public GameObject[] points;
 
     void ChangePointRight()
     {

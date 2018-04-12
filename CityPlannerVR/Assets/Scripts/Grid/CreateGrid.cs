@@ -92,7 +92,7 @@ public class CreateGrid : MonoBehaviour {
 				tiles [x, z].tileObject.transform.parent = transform;
 				tiles [x, z].tileObject.transform.localPosition = new Vector3(x * CellSize, transform.position.y, z * CellSize);
 				//This must be done because of all the scaling done in the scene
-				tiles [x, z].tileObject.transform.localScale = new Vector3(1, 1, 1);
+				tiles [x, z].tileObject.transform.localScale = Vector3.one;
 			}
 		}
 

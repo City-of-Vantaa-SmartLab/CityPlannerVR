@@ -78,7 +78,7 @@ public class GridTile : IHeapItem<GridTile> {
 
 		collider.size = new Vector3(cellSize, 0, cellSize);
 		//This is hardcoded value. It makes sure the collider is in right place 
-		collider.center = new Vector3 (0, 0, 0);
+		collider.center = Vector3.zero;
 
         //trigger height should be a bit taller than the tallest object on the grid (to avoid confusion with users)
         float triggerHeight = 20f;

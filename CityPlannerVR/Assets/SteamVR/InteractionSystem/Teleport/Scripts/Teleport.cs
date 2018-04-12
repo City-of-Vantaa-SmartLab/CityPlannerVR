@@ -13,6 +13,13 @@ namespace Valve.VR.InteractionSystem
 	//-------------------------------------------------------------------------
 	public class Teleport : MonoBehaviour
 	{
+        //---------------
+        //Tarun koodia
+        public bool disableTeleport = false;
+
+        //---------------
+
+
 		public LayerMask traceLayerMask;
 		public LayerMask floorFixupTraceLayerMask;
 		public float floorFixupMaximumTraceDistance = 1.0f;
@@ -1109,6 +1116,7 @@ namespace Valve.VR.InteractionSystem
 				}
 				else
 				{
+                    if(!disableTeleport)
 					return hand.controller.GetPress( SteamVR_Controller.ButtonMask.Touchpad );
 				}
 			}
@@ -1128,6 +1136,7 @@ namespace Valve.VR.InteractionSystem
 				}
 				else
 				{
+                    if(!disableTeleport)
 					return hand.controller.GetPressDown( SteamVR_Controller.ButtonMask.Touchpad );
 				}
 			}
@@ -1143,10 +1152,14 @@ namespace Valve.VR.InteractionSystem
 			{
 				return hand.noSteamVRFallbackCamera.transform;
 			}
-			else
+			else if(!disableTeleport)
 			{
 				return pointerHand.GetAttachmentTransform( "Attach_ControllerTip" );
 			}
+            else
+            {
+                return null;
+            }
 		}
 	}
 }
