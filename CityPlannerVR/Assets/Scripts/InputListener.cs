@@ -40,6 +40,10 @@ public class InputListener : PunBehaviour {
     public event ClickedEventHandler MenuButtonClicked;
     public event ClickedEventHandler Gripped;
     public event ClickedEventHandler Ungripped;
+    public event ClickedEventHandler PadClicked;
+    public event ClickedEventHandler PadUnclicked;
+    public event ClickedEventHandler PadTouched;
+    public event ClickedEventHandler PadUntouched;
 
     public delegate void EventWithIndex(uint deviceIndex); 
     public event EventWithIndex OnClearSelections; //event for highlightselection
@@ -154,13 +158,22 @@ public class InputListener : PunBehaviour {
         hand1TrackedController.TriggerUnclicked += HandleTriggerUnClicked;
         hand1TrackedController.Gripped += HandleGripped;
         hand1TrackedController.Ungripped += HandleUngripped;
-        //OnGripped(e);
+
+        hand1TrackedController.PadClicked += HandlePadClicked;
+        hand1TrackedController.PadUnclicked += HandlePadUnclicked;
+        hand1TrackedController.PadTouched += HandlePadTouched;
+        hand1TrackedController.PadUntouched += HandlePadUntouched;
 
         hand2TrackedController.MenuButtonClicked += HandleMenuClicked;
         hand2TrackedController.TriggerClicked += HandleTriggerClicked;
         hand2TrackedController.TriggerUnclicked += HandleTriggerUnClicked;
         hand2TrackedController.Gripped += HandleGripped;
         hand2TrackedController.Ungripped += HandleUngripped;
+
+        hand2TrackedController.PadClicked += HandlePadClicked;
+        hand2TrackedController.PadUnclicked += HandlePadUnclicked;
+        hand2TrackedController.PadTouched += HandlePadTouched;
+        hand2TrackedController.PadUntouched += HandlePadUntouched;
 
     }
 
@@ -172,11 +185,21 @@ public class InputListener : PunBehaviour {
         hand1TrackedController.Gripped -= HandleGripped;
         hand1TrackedController.Ungripped -= HandleUngripped;
 
+        hand1TrackedController.PadClicked -= HandlePadClicked;
+        hand1TrackedController.PadUnclicked -= HandlePadUnclicked;
+        hand1TrackedController.PadTouched -= HandlePadTouched;
+        hand1TrackedController.PadUntouched -= HandlePadUntouched;
+
         hand2TrackedController.MenuButtonClicked -= HandleMenuClicked;
         hand2TrackedController.TriggerClicked -= HandleTriggerClicked;
         hand2TrackedController.TriggerUnclicked -= HandleTriggerUnClicked;
         hand2TrackedController.Gripped -= HandleGripped;
         hand2TrackedController.Ungripped -= HandleUngripped;
+
+        hand2TrackedController.PadClicked -= HandlePadClicked;
+        hand2TrackedController.PadUnclicked -= HandlePadUnclicked;
+        hand2TrackedController.PadTouched -= HandlePadTouched;
+        hand2TrackedController.PadUntouched -= HandlePadUntouched;
     }
 
     private void HandleMenuClicked(object sender, ClickedEventArgs e)
@@ -208,6 +231,31 @@ public class InputListener : PunBehaviour {
         if (Ungripped != null)
             Ungripped(sender, e);
     }
+
+    private void HandlePadClicked(object sender, ClickedEventArgs e)
+    {
+        if (PadClicked != null)
+            PadClicked(sender, e);
+    }
+
+    private void HandlePadUnclicked(object sender, ClickedEventArgs e)
+    {
+        if (PadUnclicked != null)
+            PadUnclicked(sender, e);
+    }
+
+    private void HandlePadTouched(object sender, ClickedEventArgs e)
+    {
+        if (PadTouched != null)
+            PadTouched(sender, e);
+    }
+
+    private void HandlePadUntouched(object sender, ClickedEventArgs e)
+    {
+        if (PadUntouched != null)
+            PadUntouched(sender, e);
+    }
+
 
     public void LaserIsOff()
     {

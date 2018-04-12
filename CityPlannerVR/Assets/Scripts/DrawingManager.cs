@@ -141,7 +141,8 @@ public class DrawingManager : PunBehaviour {
 
     private void HandleTriggerLifted(object sender, ClickedEventArgs e)
     {
-        if (e.controllerIndex == myDeviceIndex)
+
+        if (e.controllerIndex == myDeviceIndex && alreadyDrawing)
         {
             triggerPressed = false;
             alreadyDrawing = false;
@@ -155,10 +156,10 @@ public class DrawingManager : PunBehaviour {
     private void HandleMyIndexFound(uint deviceIndex)
     {
         myDeviceIndex = deviceIndex;
-        if (myHandNumber == 1)
-            inputListener.Hand1DeviceFound -= HandleMyIndexFound;
-        if (myHandNumber == 2)
-            inputListener.Hand2DeviceFound -= HandleMyIndexFound;
+        //if (myHandNumber == 1)
+        //    inputListener.Hand1DeviceFound -= HandleMyIndexFound;
+        //if (myHandNumber == 2)
+        //    inputListener.Hand2DeviceFound -= HandleMyIndexFound;
     }
 
     private void HandleToolChange(uint deviceIndex, ToolManager.ToolType tool)
@@ -226,15 +227,17 @@ public class DrawingManager : PunBehaviour {
         {
             Debug.Log("Creating drawings holder");
             drawings = new GameObject("Drawings");
+            AddPhotonComponents(drawings);
         }
         if (drawings)
         {
             currentGO.name = "Doodle" + drawings.transform.childCount;
             currentGO.transform.parent = drawings.transform;
-            Debug.Log("Transferred"+ currentGO.name + " to new parent: " + drawings.name);
+            Debug.Log("Transferred "+ currentGO.name + " to new parent: " + drawings.name);
         }
         else
             Debug.Log("Could not find drawings holder at root!");
+
 
         if (currentLineMesh)
         {
@@ -244,18 +247,24 @@ public class DrawingManager : PunBehaviour {
 
         if(currentLineRenderer)
         {
-            CreateColliders();
+            //CreateColliders();
         }
-
-        currentGO.AddComponent<Interactable>();
-        currentGO.AddComponent<Throwable>();
-        currentGO.AddComponent<IsAttachedToHand>();
-        currentGO.AddComponent<HighlightSelection>();
         addToPreviousObject = false;
-        AddPhotonComponents();
+
+        Rigidbody rigidbody = currentGO.AddComponent<Rigidbody>();
+        rigidbody.useGravity = false;
+
+        AddInteractionComponents(currentGO);
+        AddPhotonComponents(currentGO);
     }
 
-
+    private void AddInteractionComponents(GameObject go)
+    {
+        go.AddComponent<Interactable>();
+        go.AddComponent<Throwable>();
+        go.AddComponent<IsAttachedToHand>();
+        go.AddComponent<HighlightSelection>();
+    }
 
     void CreateNewLine()
     {
@@ -286,12 +295,12 @@ public class DrawingManager : PunBehaviour {
         currentLineMesh.lmat = currentMaterial;
     }
 
-    void AddPhotonComponents()
+    void AddPhotonComponents(GameObject go)
     {
-        PhotonView photonV = currentGO.AddComponent<PhotonView>();
-        //PhotonTransformView photonTV = currentGO.AddComponent<PhotonTransformView>();  //replaced by photon networked object script
-        currentGO.AddComponent<PhotonObjectOwnershipHandler>();
-        PhotonNetworkedObject netObject = currentGO.AddComponent<PhotonNetworkedObject>();
+        PhotonView photonV = go.AddComponent<PhotonView>();
+        //PhotonTransformView photonTV = go.AddComponent<PhotonTransformView>();  //replaced by photon networked object script
+        go.AddComponent<PhotonObjectOwnershipHandler>();
+        PhotonNetworkedObject netObject = go.AddComponent<PhotonNetworkedObject>();
 
         //photonTV.m_PositionModel.SynchronizeEnabled = true;
         //photonTV.m_RotationModel.SynchronizeEnabled = true;
@@ -321,7 +330,7 @@ public class DrawingManager : PunBehaviour {
         foreach (Vector3 vector in vectorList)
         {
 
-            if (counter < 4)
+            if (counter < 1)
             {
                 counter++;
                 continue;
@@ -330,15 +339,15 @@ public class DrawingManager : PunBehaviour {
             GameObject colliderHolder = new GameObject("Collider" + currentGO.transform.childCount);
             colliderHolder.transform.parent = currentGO.transform;
             BoxCollider box = colliderHolder.AddComponent<BoxCollider>();
-            box.size = Vector3.one * lineRendererWidth;
-
-
+            box.isTrigger = true;
             link = vector - previousVector;
-            //box.center = link / 2;
-            box.transform.SetPositionAndRotation(currentGO.transform.position + previousVector + (link / 2), Quaternion.identity); //Quaternion.LookRotation(link) flipped them to a weird location -> not local rotation!
+
+            //box.size = Vector3.one * lineRendererWidth;
+            box.size = new Vector3(link.magnitude, lineRendererWidth, lineRendererWidth);
+            //box.transform.LookAt(vector);
+            box.center = currentGO.transform.position + previousVector + (link / 2);
+
             previousVector = vector;
-
-
         }
 
         //vectorList.Clear();
