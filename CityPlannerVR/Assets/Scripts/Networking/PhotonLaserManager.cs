@@ -120,10 +120,10 @@ public class PhotonLaserManager : PunBehaviour {
     private void HandleMyIndexFound(uint deviceIndex)
     {
         myDeviceIndex = deviceIndex;
-        if (myHandNumber == 1)
-            inputListener.Hand1DeviceFound -= HandleMyIndexFound;
-        if (myHandNumber == 2)
-            inputListener.Hand2DeviceFound -= HandleMyIndexFound;
+        //if (myHandNumber == 1)
+        //    inputListener.Hand1DeviceFound -= HandleMyIndexFound;
+        //if (myHandNumber == 2)
+        //    inputListener.Hand2DeviceFound -= HandleMyIndexFound;
     }
 
     private void ToggleLaser(uint deviceIndex, bool turnOn)
