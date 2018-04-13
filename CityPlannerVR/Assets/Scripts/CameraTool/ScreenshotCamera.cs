@@ -59,6 +59,7 @@ public class ScreenshotCamera : MonoBehaviour {
 
     private void OnEnable()
     {
+        //                            myHandNumber is 1 or 2, but the place for them in the array are 0 and 1
         gameObject.transform.parent = points[myHandNumber - 1].transform;
         gameObject.transform.localPosition = Vector3.zero;
         gameObject.transform.localRotation = Quaternion.identity;
@@ -71,6 +72,7 @@ public class ScreenshotCamera : MonoBehaviour {
         {
             cameraScreen.transform.localPosition = new Vector3(0.15f, 0, 0);
         }
+        //Right hand
         else
         {
             cameraScreen.transform.localPosition = new Vector3(-0.15f, 0, 0);
@@ -141,7 +143,8 @@ public class ScreenshotCamera : MonoBehaviour {
 
     void TakeScreenshot(object sender, ClickedEventArgs e)
     {
-        
+        if((sender.ToString().Equals("Hand1 (SteamVR_TrackedController)") && myHandNumber == 1) || (sender.ToString().Equals("Hand2 (SteamVR_TrackedController)") && myHandNumber == 2))
+        {
             Texture2D screenShot = new Texture2D(resWidth, resHeight, TextureFormat.RGB24, false);
             ssCamera.Render();
             RenderTexture.active = rt;
@@ -160,19 +163,24 @@ public class ScreenshotCamera : MonoBehaviour {
             ssCamera.targetTexture = rt;
             cameraScreenMaterial.mainTexture = rt;
             cameraScreen.GetComponent<MeshRenderer>().material = cameraScreenMaterial;
+        }
         
     }
     //---------------------------------------------------------------------------------------------------------------------------------------------------------
 
 
     void ChangePoint(object sender, ClickedEventArgs e) {
-        if(e.padX > 0.7f)
+
+        if ((sender.ToString().Equals("Hand1 (SteamVR_TrackedController)") && myHandNumber == 1) || (sender.ToString().Equals("Hand2 (SteamVR_TrackedController)") && myHandNumber == 2))
         {
-            ChangePointRight();
-        }
-        else if(e.padX < -0.7f)
-        {
-            ChangePointLeft();
+            if (e.padX > 0.7f)
+            {
+                ChangePointRight();
+            }
+            else if (e.padX < -0.7f)
+            {
+                ChangePointLeft();
+            }
         }
     }
 

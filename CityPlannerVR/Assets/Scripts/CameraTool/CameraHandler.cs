@@ -8,8 +8,9 @@ public class CameraHandler : MonoBehaviour {
     public GameObject normalCamera;
     //public GameObject videoCamera;
 
-    ScreenshotCamera screenshot;
+    ScreenshotCamera screenshotCamera;
 
+    
     ToolManager toolManager;
     int handNumber;
 
@@ -45,7 +46,7 @@ public class CameraHandler : MonoBehaviour {
         toolManager.OnToolChange += ActivateCameraTool;
         handNumber = toolManager.myHandNumber;
 
-        screenshot = normalCamera.GetComponent<ScreenshotCamera>();
+        screenshotCamera = normalCamera.GetComponent<ScreenshotCamera>();
 
     }
 	//-------------------------------------------------------------------------------------------------------------------------------------
@@ -56,7 +57,7 @@ public class CameraHandler : MonoBehaviour {
         if(tool == ToolManager.ToolType.Camera)
         {
             //When camera is activated we give it the number of the hand that activated it
-            screenshot.myHandNumber = handNumber;
+            screenshotCamera.myHandNumber = handNumber;
             NormalCameraModeActive = true;
         }
 
@@ -74,7 +75,8 @@ public class CameraHandler : MonoBehaviour {
 	//Is called when the cameraTool is switched off
 	public void DeactivateCameraTool()
 	{
-		NormalCameraModeActive = false;
+        if(toolManager.myHandNumber == screenshotCamera.myHandNumber)
+		    NormalCameraModeActive = false;
 		//VideoCameraModeActive = false;
 	}
 	//-------------------------------------------------------------------------------------------------------------------------------------
