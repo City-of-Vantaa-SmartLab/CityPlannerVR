@@ -81,6 +81,7 @@ GameObject:
   - component: {fileID: 114820040401563860}
   - component: {fileID: 114402711076313984}
   - component: {fileID: 114652331593546864}
+  - component: {fileID: 114888762932045548}
   m_Layer: 0
   m_Name: PhotonAvatar
   m_TagString: VRLocalPlayer
@@ -167,7 +168,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1942861374699594}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: -1.8093297, y: 1.542, z: -4.1079016}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 4142736722830646}
@@ -399,8 +400,8 @@ MonoBehaviour:
   ObservedComponents:
   - {fileID: 114207202415685206}
   ObservedComponentsFoldoutOpen: 1
-  viewIdField: 0
-  instantiationId: -1
+  viewIdField: 19
+  instantiationId: 19
   currentMasterID: -1
   isRuntimeInstantiated: 0
 --- !u!114 &114166596621132380
@@ -425,8 +426,8 @@ MonoBehaviour:
   ObservedComponents:
   - {fileID: 114699690335845280}
   ObservedComponentsFoldoutOpen: 1
-  viewIdField: 0
-  instantiationId: -1
+  viewIdField: 17
+  instantiationId: 17
   currentMasterID: -1
   isRuntimeInstantiated: 0
 --- !u!114 &114207202415685206
@@ -462,8 +463,8 @@ MonoBehaviour:
   ObservedComponents:
   - {fileID: 114835014417950256}
   ObservedComponentsFoldoutOpen: 1
-  viewIdField: 0
-  instantiationId: -1
+  viewIdField: 16
+  instantiationId: 16
   currentMasterID: -1
   isRuntimeInstantiated: 0
 --- !u!114 &114402711076313984
@@ -643,8 +644,8 @@ MonoBehaviour:
   ObservedComponents:
   - {fileID: 114652331593546864}
   ObservedComponentsFoldoutOpen: 1
-  viewIdField: 0
-  instantiationId: -1
+  viewIdField: 20
+  instantiationId: 20
   currentMasterID: -1
   isRuntimeInstantiated: 0
 --- !u!114 &114835014417950256
@@ -680,7 +681,18 @@ MonoBehaviour:
   ObservedComponents:
   - {fileID: 0}
   ObservedComponentsFoldoutOpen: 1
-  viewIdField: 0
-  instantiationId: -1
+  viewIdField: 18
+  instantiationId: 18
   currentMasterID: -1
   isRuntimeInstantiated: 0
+--- !u!114 &114888762932045548
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1942861374699594}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 95f4dd01581bb6f43b8c374b9adf679a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
