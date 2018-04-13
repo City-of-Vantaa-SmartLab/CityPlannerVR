@@ -258,13 +258,7 @@ public class DrawingManager : PunBehaviour {
         AddPhotonComponents(currentGO);
     }
 
-    private void AddInteractionComponents(GameObject go)
-    {
-        go.AddComponent<Interactable>();
-        go.AddComponent<Throwable>();
-        go.AddComponent<IsAttachedToHand>();
-        go.AddComponent<HighlightSelection>();
-    }
+
 
     void CreateNewLine()
     {
@@ -293,6 +287,15 @@ public class DrawingManager : PunBehaviour {
         currentLineMesh = currentGO.AddComponent<MeshLineRenderer>();
         currentLineMesh.setWidth(0.05f);
         currentLineMesh.lmat = currentMaterial;
+    }
+
+    private void AddInteractionComponents(GameObject go)
+    {
+        go.AddComponent<Interactable>();
+        go.AddComponent<Throwable>();
+        go.AddComponent<IsAttachedToHand>();
+        go.AddComponent<HighlightSelection>();
+        go.AddComponent<Erasable>();
     }
 
     void AddPhotonComponents(GameObject go)

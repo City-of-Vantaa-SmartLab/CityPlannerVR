@@ -32,7 +32,9 @@ public class Eraser : MonoBehaviour {
 
     private bool InitOwn()
     {
-        
+        myMesh = gameObject.GetComponent<MeshRenderer>();
+        myCollider = gameObject.GetComponent<CapsuleCollider>();
+
         if (myHandNumber == 0)
             Debug.Log("Hand number not set for Eraser! Set at inspector to either 1 or 2");
         inputListener = GameObject.Find("Player").GetComponent<InputListener>();
