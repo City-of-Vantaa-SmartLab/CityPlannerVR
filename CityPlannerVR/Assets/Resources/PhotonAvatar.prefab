@@ -81,6 +81,8 @@ GameObject:
   - component: {fileID: 114820040401563860}
   - component: {fileID: 114402711076313984}
   - component: {fileID: 114652331593546864}
+  - component: {fileID: 114797607355297360}
+  - component: {fileID: 114888762932045548}
   m_Layer: 0
   m_Name: PhotonAvatar
   m_TagString: VRLocalPlayer
@@ -167,7 +169,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1942861374699594}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: -1.8093297, y: 1.542, z: -4.1079016}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 4142736722830646}
@@ -621,6 +623,35 @@ MonoBehaviour:
   node: 3
   localPlayerBodyMaterial: {fileID: 2100000, guid: 538d7730a6286a14291ea313fa79969c,
     type: 2}
+--- !u!114 &114797607355297360
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1942861374699594}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6a066ddbf125f9546bcadc947418566b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _tokens:
+    _tokens: []
+  _activationFaderSettings:
+    _volume: 1
+    _fadeInTicks: 0
+    _fadeOutTicks: 1500000
+  _triggerFaderSettings:
+    _volume: 1
+    _fadeInTicks: 7500000
+    _fadeOutTicks: 11500000
+  _broadcastPosition: 1
+  _channelType: 2
+  _inputName: 
+  _mode: 1
+  _playerId: 
+  _useTrigger: 0
+  _roomName: 
+  _priority: -2
 --- !u!114 &114820040401563860
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -684,3 +715,14 @@ MonoBehaviour:
   instantiationId: -1
   currentMasterID: -1
   isRuntimeInstantiated: 0
+--- !u!114 &114888762932045548
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1942861374699594}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 95f4dd01581bb6f43b8c374b9adf679a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
