@@ -81,6 +81,7 @@ GameObject:
   - component: {fileID: 114820040401563860}
   - component: {fileID: 114402711076313984}
   - component: {fileID: 114652331593546864}
+  - component: {fileID: 114797607355297360}
   - component: {fileID: 114888762932045548}
   m_Layer: 0
   m_Name: PhotonAvatar
@@ -400,8 +401,8 @@ MonoBehaviour:
   ObservedComponents:
   - {fileID: 114207202415685206}
   ObservedComponentsFoldoutOpen: 1
-  viewIdField: 19
-  instantiationId: 19
+  viewIdField: 0
+  instantiationId: -1
   currentMasterID: -1
   isRuntimeInstantiated: 0
 --- !u!114 &114166596621132380
@@ -426,8 +427,8 @@ MonoBehaviour:
   ObservedComponents:
   - {fileID: 114699690335845280}
   ObservedComponentsFoldoutOpen: 1
-  viewIdField: 17
-  instantiationId: 17
+  viewIdField: 0
+  instantiationId: -1
   currentMasterID: -1
   isRuntimeInstantiated: 0
 --- !u!114 &114207202415685206
@@ -463,8 +464,8 @@ MonoBehaviour:
   ObservedComponents:
   - {fileID: 114835014417950256}
   ObservedComponentsFoldoutOpen: 1
-  viewIdField: 16
-  instantiationId: 16
+  viewIdField: 0
+  instantiationId: -1
   currentMasterID: -1
   isRuntimeInstantiated: 0
 --- !u!114 &114402711076313984
@@ -622,6 +623,35 @@ MonoBehaviour:
   node: 3
   localPlayerBodyMaterial: {fileID: 2100000, guid: 538d7730a6286a14291ea313fa79969c,
     type: 2}
+--- !u!114 &114797607355297360
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1942861374699594}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6a066ddbf125f9546bcadc947418566b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _tokens:
+    _tokens: []
+  _activationFaderSettings:
+    _volume: 1
+    _fadeInTicks: 0
+    _fadeOutTicks: 1500000
+  _triggerFaderSettings:
+    _volume: 1
+    _fadeInTicks: 7500000
+    _fadeOutTicks: 11500000
+  _broadcastPosition: 1
+  _channelType: 2
+  _inputName: 
+  _mode: 1
+  _playerId: 
+  _useTrigger: 0
+  _roomName: 
+  _priority: -2
 --- !u!114 &114820040401563860
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -644,8 +674,8 @@ MonoBehaviour:
   ObservedComponents:
   - {fileID: 114652331593546864}
   ObservedComponentsFoldoutOpen: 1
-  viewIdField: 20
-  instantiationId: 20
+  viewIdField: 0
+  instantiationId: -1
   currentMasterID: -1
   isRuntimeInstantiated: 0
 --- !u!114 &114835014417950256
@@ -681,8 +711,8 @@ MonoBehaviour:
   ObservedComponents:
   - {fileID: 0}
   ObservedComponentsFoldoutOpen: 1
-  viewIdField: 18
-  instantiationId: 18
+  viewIdField: 0
+  instantiationId: -1
   currentMasterID: -1
   isRuntimeInstantiated: 0
 --- !u!114 &114888762932045548
