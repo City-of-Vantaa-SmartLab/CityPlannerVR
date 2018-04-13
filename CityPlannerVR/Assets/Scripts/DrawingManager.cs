@@ -247,7 +247,7 @@ public class DrawingManager : PunBehaviour {
 
         if(currentLineRenderer)
         {
-            //CreateColliders();
+            CreateColliders();
         }
         addToPreviousObject = false;
 
