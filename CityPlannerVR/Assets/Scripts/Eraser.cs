@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -23,7 +24,9 @@ public class Eraser : MonoBehaviour {
     void Start () {
         InitOwn();
         Subscribe();
+        CheckTool();
 	}
+
 
     private void OnDestroy()
     {
@@ -127,6 +130,12 @@ public class Eraser : MonoBehaviour {
     {
         myMesh.enabled = truth;
         myCollider.enabled = truth;
+    }
+
+    private void CheckTool()
+    {
+        myTool = toolManager.currentTool;
+        ToggleEraser(myTool == ToolManager.ToolType.Eraser);
     }
 
 }
