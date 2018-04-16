@@ -6,10 +6,12 @@ using UnityEngine;
 public class Erasable : MonoBehaviour {
 
     //Collider myCollider;
-    List<Eraser> terminators;
+    [SerializeField]
+    private List<Eraser> terminators;
 
 
     void Start() {
+        terminators = new List<Eraser>();
         //myCollider = gameObject.GetComponent<Collider>();
     }
 
@@ -65,11 +67,13 @@ public class Erasable : MonoBehaviour {
 
     private void HandleDestroyObjects(uint deviceIndex, Eraser eraser)
     {
+        //Debug.Log("Reveived event: destroy objects");
         Destroy(gameObject, 0.1f);
     }
 
     private void HandleRemoveFromList(uint deviceIndex, Eraser eraser)
     {
+        //Debug.Log("Reveived event: remove from list");
         Unsubscribe(eraser);
     }
 
@@ -83,11 +87,12 @@ public class Erasable : MonoBehaviour {
 
         if (!terminators.Contains(eraser))
         {
+            //Debug.Log("Adding "+ eraser.name + " to terminators on object: " + this.name);
             terminators.Add(eraser);
             Subscribe(eraser);
         }
-        else
-            Debug.Log("eraser already in the list");
+        //else
+            //Debug.Log("eraser already in the list");
     }
 
     private void EndHovering(Eraser eraser)
@@ -100,12 +105,12 @@ public class Erasable : MonoBehaviour {
 
         if (terminators.Contains(eraser))
         {
-            terminators.Add(eraser);
+            //Debug.Log("Removing " + eraser.name + " from terminators on object: " + this.name);
             terminators.Remove(eraser);
             Unsubscribe(eraser);
         }
-        else
-            Debug.Log("eraser already in the list");
+        //else
+        //    Debug.Log("eraser already in the list");
     }
 
 }

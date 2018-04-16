@@ -88,7 +88,6 @@ public class InputListener : PunBehaviour {
                     hand1Index = system.GetTrackedDeviceIndexForControllerRole(ETrackedControllerRole.LeftHand);
                 if (!foundHand2)
                     hand2Index = system.GetTrackedDeviceIndexForControllerRole(ETrackedControllerRole.RightHand);
-                Debug.Log("Index for left/hand1: " + (int)hand1Index + " and for right/hand2: " + (int)hand2Index);
             }
             else
             {
@@ -127,7 +126,7 @@ public class InputListener : PunBehaviour {
             }
             yield return new WaitForSeconds(2);
         }
-        //Debug.Log("Both hand indexes found!");
+        Debug.Log("Index for left/hand1: " + (int)hand1Index + " and for right/hand2: " + (int)hand2Index);
         Invoke("FinalBroadcast", 1); //some scripts might have not had enough time to subscribe
     }
 

@@ -45,7 +45,7 @@ public class ToolManager : MonoBehaviour {
             Debug.Log("Hand number not set for toolmanager! Set at inspector to either 1 or 2");
         inputListener = GameObject.Find("Player").GetComponent<InputListener>();
         SubscriptionOn();
-        currentTool = ToolType.Eraser;
+        currentTool = ToolType.Empty;
     }
 
     private void OnDestroy()
