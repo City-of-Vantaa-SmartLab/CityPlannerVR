@@ -10,27 +10,40 @@ using Dissonance;
 public class VoiceController : MonoBehaviour {
 
 	DissonanceComms comms;
+    VoicePlayerState player;
 
-	GameObject indicator;
+
+    GameObject indicator;
 
     private void Start()
     {
-        indicator = GetComponent<GameObject>();
+        comms = GameObject.Find("DissonanceSetup").GetComponent<DissonanceComms>();
+        indicator = GameObject.Find("VoiceIndicator");
+        indicator.SetActive(false);
 
-        VoicePlayerState player = comms.FindPlayer(comms.LocalPlayerName);
+        player = comms.FindPlayer(comms.LocalPlayerName);
 
         player.OnStartedSpeaking += ToggleIndicator;
         player.OnStoppedSpeaking += ToggleIndicator;
+    }
+
+    private void OnDestroy()
+    {
+        //When a player stops playing, we don't need to know if they are still talking
+        player.OnStartedSpeaking -= ToggleIndicator;
+        player.OnStoppedSpeaking -= ToggleIndicator;
     }
 
     //TODO: Subscribe to a button which will be used to toggle mute
     void ToggleMutePlayer(){
 		if (comms.IsMuted == false) {
 			comms.IsMuted = true;
+            //indikoi pelaajille mute
 		}
 
 		else {
 			comms.IsMuted = false;
+            //indikoi pelaajille unmute
 		}
 	}
 
