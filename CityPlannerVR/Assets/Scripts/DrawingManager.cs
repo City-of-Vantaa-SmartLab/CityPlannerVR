@@ -135,6 +135,7 @@ public class DrawingManager : PunBehaviour {
                 triggerPressed = true;
                 StartDrawing(sender, e);
                 alreadyDrawing = true;
+                Debug.Log("Starting to draw with hand" + myHandNumber + " with index: " + myDeviceIndex);
             }
         }
     }
@@ -198,6 +199,7 @@ public class DrawingManager : PunBehaviour {
     {
         while (triggerPressed)
         {
+           
             //Debug.Log("Still drawing");
             currentLineRenderer.positionCount = numClicks + 1;
             vectorList.Add(trackedObject.transform.position);
