@@ -2255,7 +2255,7 @@ Prefab:
       objectReference: {fileID: 0}
     - target: {fileID: 4645814657101282, guid: f2c43a827bdb29a4dbafe24d73817ab9, type: 2}
       propertyPath: m_RootOrder
-      value: 14
+      value: 15
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: f2c43a827bdb29a4dbafe24d73817ab9, type: 2}
@@ -11474,6 +11474,35 @@ Prefab:
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: f62058cb710fd1745a24102fff0edd46, type: 2}
   m_IsPrefabParent: 0
+--- !u!1 &1049584597
+GameObject:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 1490457674}
+  serializedVersion: 5
+  m_Component:
+  - component: {fileID: 1049584598}
+  m_Layer: 0
+  m_Name: Missing Prefab
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1049584598
+Transform:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 1490457674}
+  m_GameObject: {fileID: 1049584597}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children:
+  - {fileID: 1490457678}
+  m_Father: {fileID: 0}
+  m_RootOrder: 13
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1064239598
 GameObject:
   m_ObjectHideFlags: 0
@@ -12272,7 +12301,7 @@ Prefab:
       objectReference: {fileID: 0}
     - target: {fileID: 4883248512129830, guid: 17a9b0c131c5e31429834faffd5ac429, type: 2}
       propertyPath: m_RootOrder
-      value: 13
+      value: 14
       objectReference: {fileID: 0}
     - target: {fileID: 114384534672421694, guid: 17a9b0c131c5e31429834faffd5ac429,
         type: 2}
@@ -13612,8 +13641,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3563b74eb2c18bc4f83b42166b1dc615, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  hand1Index: 0
-  hand2Index: 0
+  hand1IndexViaRole: 0
+  hand2IndexViaRole: 0
+  hand1IndexViaPos: 0
+  hand2IndexViaPos: 0
+  hand1Role: 0
+  hand2Role: 0
   hand1TrackedController: {fileID: 0}
   hand2TrackedController: {fileID: 0}
   selectionList: {fileID: 0}
@@ -14402,10 +14435,23 @@ Prefab:
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: cc2b9f84f04070441acc55fd0b9f8797, type: 2}
   m_IsPrefabParent: 0
---- !u!1 &1490457675 stripped
+--- !u!1 &1490457675
 GameObject:
+  m_ObjectHideFlags: 0
   m_PrefabParentObject: {fileID: 102228, guid: cc2b9f84f04070441acc55fd0b9f8797, type: 2}
   m_PrefabInternal: {fileID: 1490457674}
+  serializedVersion: 5
+  m_Component:
+  - component: {fileID: 1490457678}
+  - component: {fileID: 1490457676}
+  - component: {fileID: 1490457677}
+  m_Layer: 0
+  m_Name: Missing Prefab (Dummy)
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 0
 --- !u!114 &1490457676
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -14417,10 +14463,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3737438748cf23f448d18cd2c6192e95, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _tokens:
-    _tokens: []
-  _roomName: Global
-  _useTrigger: 0
 --- !u!114 &1490457677
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -14432,24 +14474,19 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6a066ddbf125f9546bcadc947418566b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _tokens:
-    _tokens: []
-  _activationFaderSettings:
-    _volume: 1
-    _fadeInTicks: 0
-    _fadeOutTicks: 1500000
-  _triggerFaderSettings:
-    _volume: 1
-    _fadeInTicks: 7500000
-    _fadeOutTicks: 11500000
-  _broadcastPosition: 1
-  _channelType: 0
-  _inputName: 
-  _mode: 1
-  _playerId: 
-  _useTrigger: 0
-  _roomName: Global
-  _priority: -2
+--- !u!4 &1490457678
+Transform:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 1490457674}
+  m_GameObject: {fileID: 1490457675}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 1049584598}
+  m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &1492421242
 Prefab:
   m_ObjectHideFlags: 0
@@ -17262,8 +17299,7 @@ GameObject:
   - component: {fileID: 1711051662}
   - component: {fileID: 1711051663}
   - component: {fileID: 1711051666}
-  - component: {fileID: 1711051665}
-  - component: {fileID: 1711051664}
+  - component: {fileID: 1711051667}
   m_Layer: 0
   m_Name: Laserpointer1
   m_TagString: Untagged
@@ -17304,97 +17340,6 @@ MonoBehaviour:
   pointer: {fileID: 0}
   addRigidBody: 0
   reference: {fileID: 0}
---- !u!114 &1711051664
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 1711051661}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 627855c7f81362d41938ffe0b1475957, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_PositionModel:
-    SynchronizeEnabled: 1
-    TeleportEnabled: 1
-    TeleportIfDistanceGreaterThan: 3
-    InterpolateOption: 2
-    InterpolateMoveTowardsSpeed: 1
-    InterpolateLerpSpeed: 1
-    InterpolateMoveTowardsAcceleration: 2
-    InterpolateMoveTowardsDeceleration: 2
-    InterpolateSpeedCurve:
-      serializedVersion: 2
-      m_Curve:
-      - serializedVersion: 2
-        time: -1
-        value: 0
-        inSlope: 0
-        outSlope: Infinity
-        tangentMode: 0
-      - serializedVersion: 2
-        time: 0
-        value: 1
-        inSlope: 0
-        outSlope: 0
-        tangentMode: 0
-      - serializedVersion: 2
-        time: 1
-        value: 1
-        inSlope: 0
-        outSlope: 1
-        tangentMode: 0
-      - serializedVersion: 2
-        time: 4
-        value: 4
-        inSlope: 1
-        outSlope: 0
-        tangentMode: 0
-      m_PreInfinity: 2
-      m_PostInfinity: 2
-      m_RotationOrder: 4
-    ExtrapolateOption: 0
-    ExtrapolateSpeed: 1
-    ExtrapolateIncludingRoundTripTime: 1
-    ExtrapolateNumberOfStoredPositions: 1
-    DrawErrorGizmo: 1
-  m_RotationModel:
-    SynchronizeEnabled: 1
-    InterpolateOption: 1
-    InterpolateRotateTowardsSpeed: 180
-    InterpolateLerpSpeed: 5
-  m_ScaleModel:
-    SynchronizeEnabled: 0
-    InterpolateOption: 0
-    InterpolateMoveTowardsSpeed: 1
-    InterpolateLerpSpeed: 0
---- !u!114 &1711051665
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 1711051661}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: aa584fbee541324448dd18d8409c7a41, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  ownerId: 0
-  group: 0
-  OwnerShipWasTransfered: 0
-  prefixBackup: -1
-  synchronization: 3
-  onSerializeTransformOption: 3
-  onSerializeRigidBodyOption: 2
-  ownershipTransfer: 0
-  ObservedComponents:
-  - {fileID: 1711051664}
-  ObservedComponentsFoldoutOpen: 1
-  viewIdField: 15
-  instantiationId: 15
-  currentMasterID: -1
-  isRuntimeInstantiated: 0
 --- !u!114 &1711051666
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -17416,6 +17361,22 @@ MonoBehaviour:
   myTargetedObject: {fileID: 0}
   otherLaserManager: {fileID: 0}
   myPointer: {fileID: 0}
+--- !u!114 &1711051667
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1711051661}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a4819f2fdf7af9c49b6d6a423a06101d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  active: 1
+  color: {r: 1, g: 0, b: 0, a: 0}
+  thickness: 0.002
+  holder: {fileID: 0}
+  pointer: {fileID: 0}
 --- !u!1001 &1716268251
 Prefab:
   m_ObjectHideFlags: 0
@@ -20781,7 +20742,7 @@ Transform:
   - {fileID: 722001241}
   - {fileID: 1754003000}
   m_Father: {fileID: 0}
-  m_RootOrder: 15
+  m_RootOrder: 16
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &2054858428
 Prefab:

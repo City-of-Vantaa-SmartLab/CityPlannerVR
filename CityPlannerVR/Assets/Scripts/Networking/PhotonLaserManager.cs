@@ -26,12 +26,12 @@ public class PhotonLaserManager : PunBehaviour {
 
     //public uint hand1Index;
     //public uint hand2Index;
-    public uint myDeviceIndex;
+    public uint myHandIndex;
     public GameObject myTargetedObject;
     [SerializeField]
     private PhotonLaserManager otherLaserManager;
     [SerializeField]
-    private SteamVR_LaserPointer myPointer;
+    private LaserPointer myPointer;
     private bool initOwnSuccess;
     private bool initOtherSuccess;
 
@@ -58,7 +58,7 @@ public class PhotonLaserManager : PunBehaviour {
     {
         if (myHandNumber == 0)
             Debug.Log("Hand number not set for PhotonLaserManager! Set at inspector to either 1 or 2");
-        myPointer = gameObject.GetComponent<SteamVR_LaserPointer>();
+        myPointer = gameObject.GetComponent<LaserPointer>();
         inputListener = GameObject.Find("Player").GetComponent<InputListener>();
         laserCube = gameObject.transform.GetChild(0).GetChild(0).gameObject;
         toolManager = gameObject.GetComponentInParent<ToolManager>();
@@ -119,7 +119,7 @@ public class PhotonLaserManager : PunBehaviour {
 
     private void HandleMyIndexFound(uint deviceIndex)
     {
-        myDeviceIndex = deviceIndex;
+        myHandIndex = deviceIndex;
         //if (myHandNumber == 1)
         //    inputListener.Hand1DeviceFound -= HandleMyIndexFound;
         //if (myHandNumber == 2)
@@ -141,7 +141,7 @@ public class PhotonLaserManager : PunBehaviour {
 
     private void HandleToolChange(uint deviceIndex, ToolManager.ToolType tool)
     {
-        if (deviceIndex == myDeviceIndex)
+        if (deviceIndex == myHandIndex)
         {
             myTool = tool;
             if (tool == ToolManager.ToolType.Laser)
@@ -155,7 +155,7 @@ public class PhotonLaserManager : PunBehaviour {
 
     private void HandlePointerOut(object sender, PointerEventArgs e)
     {
-        if (myPointer.active && e.controllerIndex == myDeviceIndex)
+        if (myPointer.active && e.controllerIndex == myHandIndex)
         {
             myTargetedObject = null;
             var highlightScript = e.target.GetComponent<HighlightSelection>();
@@ -181,7 +181,7 @@ public class PhotonLaserManager : PunBehaviour {
 
     private void HandlePointerIn(object sender, PointerEventArgs e)
     {
-        if (myPointer.active && e.controllerIndex == myDeviceIndex)
+        if (myPointer.active && e.controllerIndex == myHandIndex)
         {
             myTargetedObject = e.target.gameObject;
 
@@ -215,7 +215,7 @@ public class PhotonLaserManager : PunBehaviour {
 
     private void HandleTriggerClicked(object sender, ClickedEventArgs e)
     {
-        if (e.controllerIndex == myDeviceIndex && myPointer.active)
+        if (e.controllerIndex == myHandIndex && myPointer.active)
         {
             inputListener.SelectByLaser(myPointer, myTargetedObject);
         }
