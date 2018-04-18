@@ -2208,9 +2208,40 @@ Prefab:
       propertyPath: instantiationId
       value: 11
       objectReference: {fileID: 0}
+    - target: {fileID: 114612427931954150, guid: 8ba1d40fda0afca4d85c5efc71866ef4,
+        type: 2}
+      propertyPath: ownershipTransfer
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 114612427931954150, guid: 8ba1d40fda0afca4d85c5efc71866ef4,
+        type: 2}
+      propertyPath: onSerializeTransformOption
+      value: 4
+      objectReference: {fileID: 0}
+    - target: {fileID: 114612427931954150, guid: 8ba1d40fda0afca4d85c5efc71866ef4,
+        type: 2}
+      propertyPath: ObservedComponents.Array.data[0]
+      value: 
+      objectReference: {fileID: 283009277}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 8ba1d40fda0afca4d85c5efc71866ef4, type: 2}
   m_IsPrefabParent: 0
+--- !u!1 &283009276 stripped
+GameObject:
+  m_PrefabParentObject: {fileID: 1563246108618754, guid: 8ba1d40fda0afca4d85c5efc71866ef4,
+    type: 2}
+  m_PrefabInternal: {fileID: 283009275}
+--- !u!114 &283009277
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 283009276}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2474917abc445a64b94d68b916a22d62, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1001 &288577274
 Prefab:
   m_ObjectHideFlags: 0

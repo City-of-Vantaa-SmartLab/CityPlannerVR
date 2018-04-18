@@ -44,7 +44,7 @@ GameObject:
   - component: {fileID: 114460631165652446}
   - component: {fileID: 114980998932935312}
   - component: {fileID: 114560785911740292}
-  - component: {fileID: 114797251008788500}
+  - component: {fileID: 114143835664897752}
   - component: {fileID: 114227299461548308}
   m_Layer: 0
   m_Name: talvikki_lehdokkitie
@@ -100,6 +100,7 @@ GameObject:
   - component: {fileID: 114818994078835870}
   - component: {fileID: 114417601701174232}
   - component: {fileID: 114442708571917894}
+  - component: {fileID: 114817078227750354}
   - component: {fileID: 114627876287287514}
   m_Layer: 0
   m_Name: r_kioski
@@ -181,6 +182,7 @@ GameObject:
   - component: {fileID: 114335933730657838}
   - component: {fileID: 114210172328294422}
   - component: {fileID: 114612427931954150}
+  - component: {fileID: 114281316790445022}
   - component: {fileID: 114942688612193532}
   - component: {fileID: 114077782073223220}
   - component: {fileID: 65402649221600754}
@@ -1497,6 +1499,17 @@ MonoBehaviour:
   velocityAverageFrames: 5
   angularVelocityAverageFrames: 11
   estimateOnAwake: 0
+--- !u!114 &114143835664897752
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1046784085685614}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2474917abc445a64b94d68b916a22d62, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!114 &114151118821722806
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -1717,6 +1730,17 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   triggeredTiles: []
   parent: {fileID: 0}
+--- !u!114 &114281316790445022
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1563246108618754}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2474917abc445a64b94d68b916a22d62, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!114 &114307525522182406
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -1844,9 +1868,9 @@ MonoBehaviour:
   synchronization: 3
   onSerializeTransformOption: 3
   onSerializeRigidBodyOption: 2
-  ownershipTransfer: 0
+  ownershipTransfer: 1
   ObservedComponents:
-  - {fileID: 4010702550339856}
+  - {fileID: 114162848000304822}
   ObservedComponentsFoldoutOpen: 1
   viewIdField: 0
   instantiationId: -1
@@ -1939,9 +1963,9 @@ MonoBehaviour:
   synchronization: 3
   onSerializeTransformOption: 3
   onSerializeRigidBodyOption: 2
-  ownershipTransfer: 0
+  ownershipTransfer: 1
   ObservedComponents:
-  - {fileID: 4710158390392740}
+  - {fileID: 114817078227750354}
   ObservedComponentsFoldoutOpen: 1
   viewIdField: 0
   instantiationId: -1
@@ -2203,9 +2227,9 @@ MonoBehaviour:
   synchronization: 3
   onSerializeTransformOption: 3
   onSerializeRigidBodyOption: 2
-  ownershipTransfer: 0
+  ownershipTransfer: 1
   ObservedComponents:
-  - {fileID: 4082090473693908}
+  - {fileID: 114143835664897752}
   ObservedComponentsFoldoutOpen: 1
   viewIdField: 0
   instantiationId: -1
@@ -2300,9 +2324,9 @@ MonoBehaviour:
   synchronization: 3
   onSerializeTransformOption: 3
   onSerializeRigidBodyOption: 2
-  ownershipTransfer: 0
+  ownershipTransfer: 1
   ObservedComponents:
-  - {fileID: 4785532848224216}
+  - {fileID: 114281316790445022}
   ObservedComponentsFoldoutOpen: 1
   viewIdField: 0
   instantiationId: -1
@@ -2476,17 +2500,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b93b6a877adcbf94c89a9d6e0c0e844d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!114 &114797251008788500
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1046784085685614}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 2474917abc445a64b94d68b916a22d62, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!114 &114801357956288318
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -2559,6 +2572,17 @@ MonoBehaviour:
     m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
       Culture=neutral, PublicKeyToken=null
   snapAttachEaseInCompleted: 0
+--- !u!114 &114817078227750354
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1392901112307694}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2474917abc445a64b94d68b916a22d62, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!114 &114817105555490734
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -2768,9 +2792,9 @@ MonoBehaviour:
   synchronization: 3
   onSerializeTransformOption: 3
   onSerializeRigidBodyOption: 2
-  ownershipTransfer: 0
+  ownershipTransfer: 1
   ObservedComponents:
-  - {fileID: 4450567984226956}
+  - {fileID: 114807176817373994}
   ObservedComponentsFoldoutOpen: 1
   viewIdField: 0
   instantiationId: -1
@@ -2819,9 +2843,9 @@ MonoBehaviour:
   synchronization: 3
   onSerializeTransformOption: 3
   onSerializeRigidBodyOption: 2
-  ownershipTransfer: 0
+  ownershipTransfer: 1
   ObservedComponents:
-  - {fileID: 4603419318371968}
+  - {fileID: 114867398017554024}
   ObservedComponentsFoldoutOpen: 1
   viewIdField: 0
   instantiationId: -1
@@ -2845,9 +2869,9 @@ MonoBehaviour:
   synchronization: 3
   onSerializeTransformOption: 3
   onSerializeRigidBodyOption: 2
-  ownershipTransfer: 0
+  ownershipTransfer: 1
   ObservedComponents:
-  - {fileID: 4544750475047874}
+  - {fileID: 114232884478276672}
   ObservedComponentsFoldoutOpen: 1
   viewIdField: 0
   instantiationId: -1
@@ -2962,9 +2986,9 @@ MonoBehaviour:
   synchronization: 3
   onSerializeTransformOption: 3
   onSerializeRigidBodyOption: 2
-  ownershipTransfer: 0
+  ownershipTransfer: 1
   ObservedComponents:
-  - {fileID: 4655075768446694}
+  - {fileID: 114092454190772710}
   ObservedComponentsFoldoutOpen: 1
   viewIdField: 0
   instantiationId: -1
@@ -3002,9 +3026,9 @@ MonoBehaviour:
   synchronization: 3
   onSerializeTransformOption: 3
   onSerializeRigidBodyOption: 2
-  ownershipTransfer: 0
+  ownershipTransfer: 1
   ObservedComponents:
-  - {fileID: 4108159753742700}
+  - {fileID: 114838577470652026}
   ObservedComponentsFoldoutOpen: 1
   viewIdField: 0
   instantiationId: -1
