@@ -85,18 +85,22 @@ public class VideoCamera : MonoBehaviour {
 		Debug.Log ("jotain alkoi");
 		if (cameraState == CameraState.Normal)
 		{
+            Debug.Log("Kamera on normaali");
 			if (VideoCaptureProCtrl.instance.status == VideoCaptureProCtrl.StatusType.NOT_START ||
 				VideoCaptureProCtrl.instance.status == VideoCaptureProCtrl.StatusType.FINISH)
 			{
 				VideoCaptureCtrl.instance.StartCapture();
 				applicationMenuButton.SetActive(false);
+                Debug.Log("jotain");
 			}
 			else if (VideoCaptureProCtrl.instance.status == VideoCaptureProCtrl.StatusType.STARTED)
 			{
 				VideoCaptureProCtrl.instance.StopCapture();
+                Debug.Log("jotain muuta");
 			}
 			else if (VideoCaptureProCtrl.instance.status == VideoCaptureProCtrl.StatusType.STOPPED)
 			{
+                Debug.Log("jotain lisää");
 				return;
 			}
 		}

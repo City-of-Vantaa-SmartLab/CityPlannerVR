@@ -35,7 +35,20 @@ public class ScreenshotCamera : MonoBehaviour {
 
     public static string ScreenshotName(int width, int height){
 
-		return string.Format ("{0}/screenshots/screen_{1}x{2}_{3}.png", Application.dataPath, width, height, System.DateTime.Now.ToString("yyyy-MM-dd_HH-mm-ss"));
+        string folder = "Screenshots";
+        string fileExtender = ".png";
+        string fileName = "screen_" + width + "x" + height + "_" + System.DateTime.Now.ToString("yyyy-MM-dd_HH-mm-ss") + fileExtender;
+        string pathName = Application.persistentDataPath;
+        char slash = System.IO.Path.DirectorySeparatorChar;
+
+        string folderPathName = pathName + slash + folder;
+
+        if (!System.IO.Directory.Exists(folderPathName))
+        {
+            System.IO.Directory.CreateDirectory(folderPathName);
+        }
+
+		return folderPathName + slash + fileName;
 	}
 
 	void Awake(){
