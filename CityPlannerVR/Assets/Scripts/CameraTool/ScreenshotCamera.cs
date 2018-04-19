@@ -19,8 +19,6 @@ public class ScreenshotCamera : MonoBehaviour {
 
     InputListener inputListener;
 
-    Valve.VR.InteractionSystem.Teleport teleport;
-
     public GameObject cameraScreen;
     public Material cameraScreenMaterial;
 
@@ -60,8 +58,6 @@ public class ScreenshotCamera : MonoBehaviour {
 
         clickSound = GetComponent<AudioSource>();
 
-        teleport = GameObject.Find("Teleporting").GetComponent<Valve.VR.InteractionSystem.Teleport>();
-
         cameraScreenMaterial.mainTexture = rt;
         cameraScreen.GetComponent<MeshRenderer>().material = cameraScreenMaterial;
 
@@ -98,17 +94,15 @@ public class ScreenshotCamera : MonoBehaviour {
 
     private void OnDisable()
     {
-        cameraScreen.SetActive(false);
-
         Unsubscribe();
+
+        cameraScreen.SetActive(false);
     }
 
     private void Subscribe()
     {
         if (inputListener)
         {
-            teleport.disableTeleport = true;
-
             inputListener.TriggerClicked += TakeScreenshot;
 
             inputListener.PadClicked += ChangePoint;
@@ -128,8 +122,6 @@ public class ScreenshotCamera : MonoBehaviour {
     {
         if (inputListener)
         {
-            teleport.disableTeleport = false;
-
             inputListener.TriggerClicked -= TakeScreenshot;
 
             inputListener.PadClicked -= ChangePoint;

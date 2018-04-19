@@ -10,15 +10,14 @@ public class VideoCamera : MonoBehaviour {
 	InputListener inputListener;
     public CameraProSetUpCtrl cameraProSetUpCtrl;
 
-    Valve.VR.InteractionSystem.Teleport teleport;
-
 	public ControllerState controllerState = ControllerState.Normal;
 	private CameraState cameraState = CameraState.Normal;
-	//public GameObject applicationMenuButton;
 
 	//This value is got from the cameraHandler that activates this object
 	public int myHandNumber;
 	private uint myDeviceIndex;
+
+    public GameObject videoCameraScreen;
 
     int index = 0;
     //All the fixed points where the screenshot camera can be (first 2 are in players hands)
@@ -26,18 +25,29 @@ public class VideoCamera : MonoBehaviour {
 
     void Awake(){
 
-		teleport = GameObject.Find("Teleporting").GetComponent<Valve.VR.InteractionSystem.Teleport>();
-
 		inputListener = GameObject.Find("Player").GetComponent<InputListener>();
 	}
 
 	private void OnEnable()
 	{
-        Debug.Log("MyHandNumber is " + myHandNumber);
         //                            myHandNumber is 1 or 2, but the place for them in the array are 0 and 1
         gameObject.transform.parent = points[myHandNumber - 1].transform;
         gameObject.transform.localPosition = Vector3.zero;
         gameObject.transform.localRotation = Quaternion.identity;
+
+        videoCameraScreen.transform.parent = points[myHandNumber - 1].transform;
+        videoCameraScreen.transform.localRotation = Quaternion.identity;
+
+        //Left hand
+        if (myHandNumber == 1)
+        {
+            videoCameraScreen.transform.localPosition = new Vector3(0.25f, 0, 0);
+        }
+        //Right hand
+        else
+        {
+            videoCameraScreen.transform.localPosition = new Vector3(-0.25f, 0, 0);
+        }
 
 
         cameraProSetUpCtrl.EnableCamera();
@@ -46,19 +56,17 @@ public class VideoCamera : MonoBehaviour {
 
 	private void OnDisable()
 	{
+        Unsubscribe();
         cameraProSetUpCtrl.DisableCamera();
-		Unsubscribe();
 	}
 
 	private void Subscribe()
 	{
 		if (inputListener)
 		{
-			teleport.disableTeleport = true;
+			inputListener.TriggerClicked += StartAndStopVideo;
 
-			inputListener.TriggerClicked += OnPressApplicationMenuDown;
-
-            inputListener.PadClicked -= ChangePoint;
+            inputListener.PadClicked += ChangePoint;
 
             if (myHandNumber == 1)
 				inputListener.Hand1DeviceFound += HandleMyIndexFound;
@@ -75,11 +83,11 @@ public class VideoCamera : MonoBehaviour {
 	{
 		if (inputListener)
 		{
-			teleport.disableTeleport = false;
+			inputListener.TriggerClicked -= StartAndStopVideo;
 
-			inputListener.TriggerClicked -= OnPressApplicationMenuDown;
+            inputListener.PadClicked -= ChangePoint;
 
-			if (myHandNumber == 1)
+            if (myHandNumber == 1)
 				inputListener.Hand1DeviceFound -= HandleMyIndexFound;
 			if (myHandNumber == 2)
 				inputListener.Hand2DeviceFound -= HandleMyIndexFound;
@@ -96,7 +104,7 @@ public class VideoCamera : MonoBehaviour {
 	}
 
 
-	private void OnPressApplicationMenuDown(object sender, ClickedEventArgs e)
+	private void StartAndStopVideo(object sender, ClickedEventArgs e)
 	{
 		if (cameraState == CameraState.Normal)
 		{
@@ -104,7 +112,6 @@ public class VideoCamera : MonoBehaviour {
 				VideoCaptureProCtrl.instance.status == VideoCaptureProCtrl.StatusType.FINISH)
 			{
 				VideoCaptureProCtrl.instance.StartCapture();
-				//applicationMenuButton.SetActive(false);
 			}
 			else if (VideoCaptureProCtrl.instance.status == VideoCaptureProCtrl.StatusType.STARTED)
 			{
