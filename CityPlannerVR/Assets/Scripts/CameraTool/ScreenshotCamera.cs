@@ -19,6 +19,8 @@ public class ScreenshotCamera : MonoBehaviour {
 
     InputListener inputListener;
 
+    Valve.VR.InteractionSystem.Teleport teleport;
+
     public GameObject cameraScreen;
     public Material cameraScreenMaterial;
 
@@ -33,20 +35,7 @@ public class ScreenshotCamera : MonoBehaviour {
 
     public static string ScreenshotName(int width, int height){
 
-        string folder = "Screenshots";
-        string fileExtender = ".png";
-        string fileName = "screen_" + width + "x" + height + "_" + System.DateTime.Now.ToString("yyyy-MM-dd_HH-mm-ss") + fileExtender;
-        string pathName = Application.persistentDataPath;
-        char slash = System.IO.Path.DirectorySeparatorChar;
-
-        string folderPathName = pathName + slash + folder;
-
-        if (!System.IO.Directory.Exists(folderPathName))
-        {
-            System.IO.Directory.CreateDirectory(folderPathName);
-        }
-
-		return folderPathName + slash + fileName;
+		return string.Format ("{0}/screenshots/screen_{1}x{2}_{3}.png", Application.dataPath, width, height, System.DateTime.Now.ToString("yyyy-MM-dd_HH-mm-ss"));
 	}
 
 	void Awake(){
@@ -58,6 +47,8 @@ public class ScreenshotCamera : MonoBehaviour {
 
         clickSound = GetComponent<AudioSource>();
 
+        teleport = GameObject.Find("Teleporting").GetComponent<Valve.VR.InteractionSystem.Teleport>();
+
         cameraScreenMaterial.mainTexture = rt;
         cameraScreen.GetComponent<MeshRenderer>().material = cameraScreenMaterial;
 
@@ -68,7 +59,6 @@ public class ScreenshotCamera : MonoBehaviour {
 
     private void OnEnable()
     {
-        //                            myHandNumber is 1 or 2, but the place for them in the array are 0 and 1
         gameObject.transform.parent = points[myHandNumber - 1].transform;
         gameObject.transform.localPosition = Vector3.zero;
         gameObject.transform.localRotation = Quaternion.identity;
@@ -81,7 +71,6 @@ public class ScreenshotCamera : MonoBehaviour {
         {
             cameraScreen.transform.localPosition = new Vector3(0.15f, 0, 0);
         }
-        //Right hand
         else
         {
             cameraScreen.transform.localPosition = new Vector3(-0.15f, 0, 0);
@@ -94,15 +83,17 @@ public class ScreenshotCamera : MonoBehaviour {
 
     private void OnDisable()
     {
-        Unsubscribe();
-
         cameraScreen.SetActive(false);
+
+        Unsubscribe();
     }
 
     private void Subscribe()
     {
         if (inputListener)
         {
+            teleport.disableTeleport = true;
+
             inputListener.TriggerClicked += TakeScreenshot;
 
             inputListener.PadClicked += ChangePoint;
@@ -122,6 +113,8 @@ public class ScreenshotCamera : MonoBehaviour {
     {
         if (inputListener)
         {
+            teleport.disableTeleport = false;
+
             inputListener.TriggerClicked -= TakeScreenshot;
 
             inputListener.PadClicked -= ChangePoint;
@@ -148,8 +141,7 @@ public class ScreenshotCamera : MonoBehaviour {
 
     void TakeScreenshot(object sender, ClickedEventArgs e)
     {
-        if((sender.ToString().Equals("Hand1 (SteamVR_TrackedController)") && myHandNumber == 1) || (sender.ToString().Equals("Hand2 (SteamVR_TrackedController)") && myHandNumber == 2))
-        {
+        
             Texture2D screenShot = new Texture2D(resWidth, resHeight, TextureFormat.RGB24, false);
             ssCamera.Render();
             RenderTexture.active = rt;
@@ -168,24 +160,19 @@ public class ScreenshotCamera : MonoBehaviour {
             ssCamera.targetTexture = rt;
             cameraScreenMaterial.mainTexture = rt;
             cameraScreen.GetComponent<MeshRenderer>().material = cameraScreenMaterial;
-        }
         
     }
     //---------------------------------------------------------------------------------------------------------------------------------------------------------
 
 
     void ChangePoint(object sender, ClickedEventArgs e) {
-
-        if ((sender.ToString().Equals("Hand1 (SteamVR_TrackedController)") && myHandNumber == 1) || (sender.ToString().Equals("Hand2 (SteamVR_TrackedController)") && myHandNumber == 2))
+        if(e.padX > 0.7f)
         {
-            if (e.padX > 0.7f)
-            {
-                ChangePointRight();
-            }
-            else if (e.padX < -0.7f)
-            {
-                ChangePointLeft();
-            }
+            ChangePointRight();
+        }
+        else if(e.padX < -0.7f)
+        {
+            ChangePointLeft();
         }
     }
 

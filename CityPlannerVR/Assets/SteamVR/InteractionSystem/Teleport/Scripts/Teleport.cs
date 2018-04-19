@@ -15,8 +15,6 @@ namespace Valve.VR.InteractionSystem
 	{
         //---------------
         //Tarun koodia
-        //Used to disable the teleporter if the touchpad is used for something else"
-        [HideInInspector]
         public bool disableTeleport = false;
 
         //---------------
@@ -1049,14 +1047,6 @@ namespace Valve.VR.InteractionSystem
 				return false;
 			}
 
-            //----------------------
-            //Tarun koodia
-            if (disableTeleport)
-            {
-                return false;
-            }
-            //----------------------
-
 			if ( hand.noSteamVRFallbackCamera == null )
 			{
 				if ( hand.controller == null )
@@ -1126,6 +1116,7 @@ namespace Valve.VR.InteractionSystem
 				}
 				else
 				{
+                    if(!disableTeleport)
 					return hand.controller.GetPress( SteamVR_Controller.ButtonMask.Touchpad );
 				}
 			}
@@ -1145,6 +1136,7 @@ namespace Valve.VR.InteractionSystem
 				}
 				else
 				{
+                    if(!disableTeleport)
 					return hand.controller.GetPressDown( SteamVR_Controller.ButtonMask.Touchpad );
 				}
 			}
@@ -1160,10 +1152,14 @@ namespace Valve.VR.InteractionSystem
 			{
 				return hand.noSteamVRFallbackCamera.transform;
 			}
-			else
+			else if(!disableTeleport)
 			{
 				return pointerHand.GetAttachmentTransform( "Attach_ControllerTip" );
 			}
+            else
+            {
+                return null;
+            }
 		}
 	}
 }
