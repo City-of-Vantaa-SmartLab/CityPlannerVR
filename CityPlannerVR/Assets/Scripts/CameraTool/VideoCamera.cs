@@ -19,6 +19,9 @@ public class VideoCamera : MonoBehaviour {
 
     public GameObject videoCameraScreen;
 
+    public RenderTexture screenTexture;
+    public Camera captureCamera;
+
     int index = 0;
     //All the fixed points where the screenshot camera can be (first 2 are in players hands)
     public GameObject[] points;
@@ -26,6 +29,7 @@ public class VideoCamera : MonoBehaviour {
     void Awake(){
 
 		inputListener = GameObject.Find("Player").GetComponent<InputListener>();
+        captureCamera.targetTexture = screenTexture;
 	}
 
 	private void OnEnable()
