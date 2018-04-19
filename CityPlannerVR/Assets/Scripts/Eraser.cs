@@ -7,7 +7,7 @@ public class Eraser : MonoBehaviour {
 
     [SerializeField]
     private uint myDeviceIndex;
-    private InputListener inputListener;
+    private InputMaster inputMaster;
     private ToolManager toolManager;
     private ToolManager.ToolType myTool;
     public int myHandNumber;
@@ -35,34 +35,31 @@ public class Eraser : MonoBehaviour {
 
     private bool InitOwn()
     {
-        myMesh = gameObject.GetComponent<MeshRenderer>();
-        myCollider = gameObject.GetComponent<CapsuleCollider>();
-
-        if (myHandNumber == 0)
-            Debug.Log("Hand number not set for Eraser! Set at inspector to either 1 or 2");
-        inputListener = GameObject.Find("Player").GetComponent<InputListener>();
-        toolManager = gameObject.GetComponentInParent<ToolManager>();
+        toolManager = GetComponentInParent<ToolManager>();
         if (toolManager)
             myTool = toolManager.currentTool;
 
-        if (!inputListener || !toolManager)
+        myHandNumber = toolManager.myHandNumber;
+        myMesh = gameObject.GetComponent<MeshRenderer>();
+        myCollider = gameObject.GetComponent<CapsuleCollider>();
+
+        inputMaster = GameObject.Find("Player").GetComponent<InputMaster>();
+        if (!inputMaster || !toolManager)
             return false;
         return true;
     }
 
+
+
     private void Subscribe()
     {
-        if (!inputListener)
-            inputListener = GameObject.Find("Player").GetComponent<InputListener>();
+        if (!inputMaster)
+            inputMaster = GameObject.Find("Player").GetComponent<InputMaster>();
 
-        if (inputListener)
+        if (inputMaster)
         {
-            inputListener.TriggerClicked += HandleTriggerClicked;
-            inputListener.TriggerLifted += HandleTriggerLifted;
-            if (myHandNumber == 1)
-                inputListener.Hand1DeviceFound += HandleMyIndexFound;
-            if (myHandNumber == 2)
-                inputListener.Hand2DeviceFound += HandleMyIndexFound;
+            inputMaster.TriggerClicked += HandleTriggerClicked;
+            inputMaster.TriggerUnclicked += HandleTriggerUnclicked;
         }
         else
         {
@@ -74,14 +71,10 @@ public class Eraser : MonoBehaviour {
 
     private void Unsubscribe()
     {
-        if (inputListener)
+        if (inputMaster)
         {
-            inputListener.TriggerClicked -= HandleTriggerClicked;
-            inputListener.TriggerLifted -= HandleTriggerLifted;
-            if (myHandNumber == 1)
-                inputListener.Hand1DeviceFound -= HandleMyIndexFound;
-            if (myHandNumber == 2)
-                inputListener.Hand2DeviceFound -= HandleMyIndexFound;
+            inputMaster.TriggerClicked -= HandleTriggerClicked;
+            inputMaster.TriggerUnclicked -= HandleTriggerUnclicked;
         }
         else
         {
@@ -98,14 +91,14 @@ public class Eraser : MonoBehaviour {
         }
     }
 
-    private void HandleTriggerLifted(object sender, ClickedEventArgs e)
+    private void HandleTriggerUnclicked(object sender, ClickedEventArgs e)
     {
-
+        //Keeping trigger pressed would add objects to a list, releasing trigger would destroy them
     }
 
-    private void HandleToolChange(uint deviceIndex, ToolManager.ToolType tool)
+    private void HandleToolChange(uint handNumber, ToolManager.ToolType tool)
     {
-        if (myDeviceIndex == deviceIndex)
+        if (myHandNumber == handNumber)
         {
             myTool = tool;
             if (tool == ToolManager.ToolType.Eraser)
@@ -114,15 +107,10 @@ public class Eraser : MonoBehaviour {
             {
                 ToggleEraser(false);
                 if (RemoveFromList != null)
-                    RemoveFromList(deviceIndex, this);
+                    RemoveFromList(handNumber, this);
             }
         }
             
-    }
-
-    private void HandleMyIndexFound(uint deviceIndex)
-    {
-        myDeviceIndex = deviceIndex;
     }
 
 

@@ -17,10 +17,6 @@ public class InputMaster : MonoBehaviour {
     [SerializeField]
     private Hand hand2;
     [SerializeField]
-    private GameObject playerGO;
-    [SerializeField]
-    private SelectionList selectionList;
-    [SerializeField]
     private CheckPlayerSize playerSize;
     [SerializeField]
     private UnityEngine.XR.XRNode leftHandNode;
@@ -42,9 +38,10 @@ public class InputMaster : MonoBehaviour {
     [SerializeField]
     private int menubutton;
     [SerializeField]
-    private float padx;
+    private float padX;
     [SerializeField]
-    private float pady;
+    private float padY;
+    private bool trackCoordinates;
 
     //Put here the events broadcasted by this script
     public event ClickedEventHandler TriggerClicked;
@@ -67,16 +64,16 @@ public class InputMaster : MonoBehaviour {
     void Start () {
         GameObject hand1GO;
         GameObject hand2GO;
-        hand1Found = true;
-        hand2Found = true;
-
 
         // Get gameobject handling player VR stuff
-        playerGO = gameObject; 
         hand1GO = GameObject.Find("Player/SteamVRObjects/Hand1");
         hand2GO = GameObject.Find("Player/SteamVRObjects/Hand2");
         hand1 = hand1GO.GetComponent<Hand>();
         hand2 = hand2GO.GetComponent<Hand>();
+        if (hand1)
+            hand1Found = true;
+        if (hand2)
+            hand2Found = true;
 
         leftHandNode = UnityEngine.XR.XRNode.LeftHand;
         rightHandNode = UnityEngine.XR.XRNode.RightHand;
@@ -88,8 +85,8 @@ public class InputMaster : MonoBehaviour {
         //playerSize = playerVR.GetComponent<CheckPlayerSize>();
 
         //StartCoroutine(TrackHeadCoroutine());
-        StartCoroutine(TrackHandNodeCoroutine(UnityEngine.XR.XRNode.LeftHand, hand1GO));  //Left hand
-        StartCoroutine(TrackHandNodeCoroutine(UnityEngine.XR.XRNode.RightHand, hand2GO));  //Right hand
+        //StartCoroutine(TrackHandNodeCoroutine(UnityEngine.XR.XRNode.LeftHand, hand1GO));  //Left hand
+        //StartCoroutine(TrackHandNodeCoroutine(UnityEngine.XR.XRNode.RightHand, hand2GO));  //Right hand
 
     }
 
@@ -97,7 +94,7 @@ public class InputMaster : MonoBehaviour {
 	void Update () {
         if (hand1Found)
             GetInput(hand1, 1);
-        if (hand2Found)
+        if (hand2)
             GetInput(hand2, 2);
     }
 
@@ -191,11 +188,11 @@ public class InputMaster : MonoBehaviour {
             e.flags = (uint)controllerState.ulButtonPressed;
             e.padX = controllerState.rAxis0.x;
             e.padY = controllerState.rAxis0.y;
-            OnPadTouched(e);
+            OnPadTouched(e, hand);
             //Debug.Log("Hand" + handIndex + " pad touched with coordinates x: " + e.padX + " and y: " + e.padY);
             padtouched = handIndex;
-            padx = e.padX;
-            pady = e.padY;
+            //padx = e.padX;
+            //pady = e.padY;
         }
 
         if (hand.controller.GetTouchUp(SteamVR_Controller.ButtonMask.Touchpad))
@@ -275,14 +272,15 @@ public class InputMaster : MonoBehaviour {
             PadUnclicked(this, e);
     }
 
-    public virtual void OnPadTouched(ClickedEventArgs e)
+    public virtual void OnPadTouched(ClickedEventArgs e, Hand hand)
     {
-        if (PadTouched != null)
-            PadTouched(this, e);
+        trackCoordinates = true;
+        StartCoroutine(TrackCoordinates(e, hand));
     }
 
     public virtual void OnPadUntouched(ClickedEventArgs e)
     {
+        trackCoordinates = false;
         if (PadUntouched != null)
             PadUntouched(this, e);
     }
@@ -299,35 +297,80 @@ public class InputMaster : MonoBehaviour {
             Ungripped(this, e);
     }
 
-    //this could be added to scripts that need them, or centralized here if there are too many
-    IEnumerator TrackHandNodeCoroutine(UnityEngine.XR.XRNode node, GameObject hand)
+    public void LaserIsOff()
     {
-        while (true)
+        if (OnClearSelections != null)
         {
-            hand.transform.rotation = UnityEngine.XR.InputTracking.GetLocalRotation(node);
-
-            if (playerSize.isSmall)
-            {
-                //all the axes are same for scale, so no matter which one is used. (If they're not, something is wrong and it should be fixed)
-                hand.transform.position = playerGO.transform.position + UnityEngine.XR.InputTracking.GetLocalPosition(node) * playerGO.transform.localScale.x;
-                //Now player won't be able to pick up building or other stuff we don't want when they are shrinked down on the table
-                //hand1.hoverLayerMask = finalMask;
-                //hand2.hoverLayerMask = finalMask;
-            }
-
-            //Check if we are in god mode (big)
-            else
-            {
-                hand.transform.position = playerGO.transform.position + UnityEngine.XR.InputTracking.GetLocalPosition(node);
-                //Player is normal sized again and must be able to move everything again
-                //hand1.hoverLayerMask = -1;
-                //hand2.hoverLayerMask = -1;
-            }
-
-            //CmdScaleHands(playerVR.transform.localScale * 0.07f);
-
-            yield return null;
+            LaserPointer temp1, temp2;
+            temp1 = hand1.GetComponent<LaserPointer>();
+            temp2 = hand2.GetComponent<LaserPointer>();
+            if ((temp1 == null || !temp1.active) && (temp2 == null || !temp2.active))
+                OnClearSelections(0);
         }
     }
+
+    public void SelectByLaser(LaserPointer laserPointer, GameObject targetedObject)
+    {
+        if (laserPointer.gameObject.activeSelf && targetedObject != null)
+        {
+            var highlightScript = targetedObject.GetComponent<HighlightSelection>();
+            if (highlightScript != null)
+            {
+                highlightScript.ToggleSelection(this.gameObject);
+            }
+        }
+    }
+
+    IEnumerator TrackCoordinates(ClickedEventArgs e, Hand hand)
+    {
+        Vector2 coordinates = hand.controller.GetAxis();
+        while (trackCoordinates)
+        {
+            //Vector2 coordinates = hand.controller.GetAxis();
+            coordinates = hand.controller.GetAxis();
+            e.padX = coordinates.x;
+            e.padY = coordinates.y;
+            //Debug.Log("Hand" + handIndex + " pad touched with coordinates x: " + e.padX + " and y: " + e.padY);
+            padX = e.padX;
+            padY = e.padY;
+
+            if (PadTouched != null)
+                PadTouched(this, e);
+            //Debug.Log("tracking...");
+            yield return new WaitForSeconds(.1f);
+        }
+    }
+
+
+    ////this could be added to scripts that need them, or centralized here if there are too many
+    //IEnumerator TrackHandNodeCoroutine(UnityEngine.XR.XRNode node, GameObject hand)
+    //{
+    //    while (true)
+    //    {
+    //        hand.transform.rotation = UnityEngine.XR.InputTracking.GetLocalRotation(node);
+
+    //        if (playerSize.isSmall)
+    //        {
+    //            //all the axes are same for scale, so no matter which one is used. (If they're not, something is wrong and it should be fixed)
+    //            hand.transform.position = playerGO.transform.position + UnityEngine.XR.InputTracking.GetLocalPosition(node) * playerGO.transform.localScale.x;
+    //            //Now player won't be able to pick up building or other stuff we don't want when they are shrinked down on the table
+    //            //hand1.hoverLayerMask = finalMask;
+    //            //hand2.hoverLayerMask = finalMask;
+    //        }
+
+    //        //Check if we are in god mode (big)
+    //        else
+    //        {
+    //            hand.transform.position = playerGO.transform.position + UnityEngine.XR.InputTracking.GetLocalPosition(node);
+    //            //Player is normal sized again and must be able to move everything again
+    //            //hand1.hoverLayerMask = -1;
+    //            //hand2.hoverLayerMask = -1;
+    //        }
+
+    //        //CmdScaleHands(playerVR.transform.localScale * 0.07f);
+
+    //        yield return null;
+    //    }
+    //}
 
 }

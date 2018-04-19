@@ -38,8 +38,6 @@ public class InputListener : PunBehaviour {
 	private SteamVR_TrackedController hand1TrackedController;
 	[SerializeField]
 	private SteamVR_TrackedController hand2TrackedController;
-    [SerializeField]
-    private SelectionList selectionList;
 
     public SteamVR_TrackedObject hand1TrackedObject;
     public SteamVR_TrackedObject hand2TrackedObject;
@@ -282,15 +280,15 @@ public class InputListener : PunBehaviour {
     {
         if (OnClearSelections != null)
         {
-            SteamVR_LaserPointer temp1, temp2;
-            temp1 = hand1.GetComponent<SteamVR_LaserPointer>();
-            temp2 = hand2.GetComponent<SteamVR_LaserPointer>();
+            LaserPointer temp1, temp2;
+            temp1 = hand1.GetComponent<LaserPointer>();
+            temp2 = hand2.GetComponent<LaserPointer>();
             if ((temp1 == null || !temp1.active) && (temp2 == null || !temp2.active))
                 OnClearSelections(0);
         }
     }
 
-    public void SelectByLaser(SteamVR_LaserPointer laserPointer, GameObject targetedObject)
+    public void SelectByLaser(LaserPointer laserPointer, GameObject targetedObject)
     {
         if (laserPointer.gameObject.activeSelf && targetedObject != null)
         {

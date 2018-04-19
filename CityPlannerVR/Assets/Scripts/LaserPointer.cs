@@ -5,7 +5,7 @@ using UnityEngine;
 
 public struct LaserEventArgs
 {
-    public uint handIndex;
+    public uint handNumber;
     public float distance;
     public Transform target;
 }
@@ -16,6 +16,7 @@ public delegate void LaserEventHandler(object sender, LaserEventArgs e);
 public class LaserPointer : MonoBehaviour
 {
     public bool active = true;
+    public bool triggered;
     public Color color;
     public float thickness = 0.002f;
     public GameObject holder;
@@ -23,6 +24,9 @@ public class LaserPointer : MonoBehaviour
     bool isActive = false;
     public event LaserEventHandler PointerIn;
     public event LaserEventHandler PointerOut;
+
+    [SerializeField]
+    private InputMaster inputMaster;
 
     Transform previousContact = null;
 
@@ -42,6 +46,14 @@ public class LaserPointer : MonoBehaviour
         Material newMaterial = new Material(Shader.Find("Unlit/Color"));
         newMaterial.SetColor("_Color", color);
         pointer.GetComponent<MeshRenderer>().material = newMaterial;
+
+        BoxCollider collider = pointer.GetComponent<BoxCollider>();
+        if (collider)
+        {
+            Object.Destroy(collider);
+        }
+
+        triggered = false;
     }
 
     public virtual void OnPointerIn(LaserEventArgs e)
@@ -60,11 +72,11 @@ public class LaserPointer : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (!isActive)
-        {
-            isActive = true;
-            this.transform.GetChild(0).gameObject.SetActive(true);
-        }
+        //if (!isActive)
+        //{
+        //    isActive = true;
+        //    this.transform.GetChild(0).gameObject.SetActive(true);
+        //}
 
         float dist = 100f;
 
@@ -98,15 +110,28 @@ public class LaserPointer : MonoBehaviour
             dist = hit.distance;
         }
 
-        //if (controller != null && controller.triggerPressed)
-        //{
-        //    pointer.transform.localScale = new Vector3(thickness * 5f, thickness * 5f, dist);
-        //}
-        //else
-        //{
-        //    pointer.transform.localScale = new Vector3(thickness, thickness, dist);
-        //}
+        if (triggered)
+        {
+            pointer.transform.localScale = new Vector3(thickness * 5f, thickness * 5f, dist);
+        }
+        else
+        {
+            pointer.transform.localScale = new Vector3(thickness, thickness, dist);
+        }
 
         pointer.transform.localPosition = new Vector3(0f, 0f, dist / 2f);
     }
+
+    public void ActivateCube(bool status)
+    {
+        //if (pointer)
+        //{
+            pointer.SetActive(status);
+        //}
+        //else
+        //    Debug.Log("Pointer not set!");
+        
+    }
+
+
 }

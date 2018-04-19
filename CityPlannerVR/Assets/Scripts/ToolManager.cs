@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-using UnityEngine.EventSystems;
+﻿using UnityEngine;
 
 /// <summary>
 /// This script keeps track of what tool is in use in this hand.
@@ -31,19 +27,17 @@ public class ToolManager : MonoBehaviour {
 
     private int numberOfTools = System.Enum.GetValues(typeof(ToolType)).Length;
     [SerializeField]
-    private InputListener inputListener;
+    private InputMaster inputMaster;
     [SerializeField]
-    private uint myDeviceIndex;
 
-    public delegate void EventWithIndexTool(uint deviceIndex, ToolManager.ToolType tool);
+    public delegate void EventWithIndexTool(uint handNumber, ToolManager.ToolType tool);
     public event EventWithIndexTool OnToolChange;
 
 
     // Use this for initialization
     void Start () {
-        if (myHandNumber == 0)
-            Debug.Log("Hand number not set for toolmanager! Set at inspector to either 1 or 2");
-        inputListener = GameObject.Find("Player").GetComponent<InputListener>();
+        FindHandNumber();
+        inputMaster = GameObject.Find("Player").GetComponent<InputMaster>();
         SubscriptionOn();
         currentTool = ToolType.Empty;
     }
@@ -55,48 +49,40 @@ public class ToolManager : MonoBehaviour {
 
     private void SubscriptionOn()
     {
-        inputListener.MenuButtonClicked += HandleMenuClicked;
-        if (myHandNumber == 1)
-            inputListener.Hand1DeviceFound += HandleMyIndexFound;
-        if (myHandNumber == 2)
-            inputListener.Hand2DeviceFound += HandleMyIndexFound;
-
+        inputMaster.MenuButtonClicked += HandleMenuClicked;
     }
 
     private void SubscriptionOff()
     {
-        inputListener.MenuButtonClicked -= HandleMenuClicked;
-        if (myHandNumber == 1)
-            inputListener.Hand1DeviceFound -= HandleMyIndexFound;
-        if (myHandNumber == 2)
-            inputListener.Hand2DeviceFound -= HandleMyIndexFound;
+        inputMaster.MenuButtonClicked -= HandleMenuClicked;
     }
 
-   private void HandleMenuClicked(object sender, ClickedEventArgs e)
+    private void FindHandNumber()
+    {
+        if (gameObject.name == "Hand1")
+            myHandNumber = 1;
+        else if (gameObject.name == "Hand2")
+            myHandNumber = 2;
+        if (myHandNumber == 0)
+            Debug.Log("Hand number could not be determined for toolmanager!");
+    }
+
+    private void HandleMenuClicked(object sender, ClickedEventArgs e)
     {
         RotateTool(sender, e);
-    }
-
-    private void HandleMyIndexFound(uint deviceIndex)
-    {
-        myDeviceIndex = deviceIndex;
-        //if (myHandNumber == 1)
-        //    inputListener.Hand1DeviceFound -= HandleMyIndexFound;
-        //if (myHandNumber == 2)
-        //    inputListener.Hand2DeviceFound -= HandleMyIndexFound;
     }
 
     public void ChangeTool(ToolType toolType)
     {
         currentTool = toolType;
-        if (myDeviceIndex != 0 && OnToolChange != null)
-            OnToolChange(myDeviceIndex, currentTool);
-        Debug.Log("Tool changed to " + currentTool + " on DeviceIndex " + myDeviceIndex + " on hand" + myHandNumber);
+        if (myHandNumber != 0 && OnToolChange != null)
+            OnToolChange((uint)myHandNumber, currentTool);
+        Debug.Log("Tool changed to " + currentTool + " on hand" + myHandNumber);
     }
 
     public void RotateTool(object sender, ClickedEventArgs e)
     {
-        if (myDeviceIndex == e.controllerIndex)
+        if (myHandNumber == e.controllerIndex)
         {
             int tool = (int)currentTool;
             tool++;
