@@ -25,8 +25,8 @@ GameObject:
   - component: {fileID: 20051993254176086}
   - component: {fileID: 92636839351941824}
   - component: {fileID: 124252481369291038}
-  - component: {fileID: 114060044012363138}
-  - component: {fileID: 114628104158879966}
+  - component: {fileID: 114815528037903080}
+  - component: {fileID: 114804480346314292}
   m_Layer: 8
   m_Name: CaptureCamera
   m_TagString: Untagged
@@ -476,22 +476,6 @@ Light:
   m_UseColorTemperature: 0
   m_ShadowRadius: 0
   m_ShadowAngle: 0
---- !u!114 &114060044012363138
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1114548993885066}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 43e8f060b6af56d4285a0407697babb1, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  cameraScreen: {fileID: 1189805892739886}
-  cameraSphere: {fileID: 1978480839297558}
-  captureText: {fileID: 1894002420624714}
-  handParent: {fileID: 0}
-  screenPosition: {x: -0.3, y: 0, z: 0.1}
 --- !u!114 &114272620188016516
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -513,34 +497,6 @@ MonoBehaviour:
   m_FallbackScreenDPI: 96
   m_DefaultSpriteDPI: 96
   m_DynamicPixelsPerUnit: 15
---- !u!114 &114628104158879966
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1114548993885066}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f0d01430cb7446d4787e1549b55f0a70, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  format: 0
-  stereo: 0
-  stereoFormat: 1
-  frameSize: 3
-  _cubemapSize: 1
-  panoramaProjection: 0
-  encodeQuality: 1
-  _antiAliasing: 0
-  _targetFramerate: 2
-  isDedicated: 1
-  captureGUI: 1
-  mode: 0
-  customPath: 0
-  customPathFolder: 
-  streamingAddress: 
-  interPupillaryDistance: 0.0635
-  offlineRender: 0
 --- !u!114 &114670470467676362
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -574,6 +530,55 @@ MonoBehaviour:
     m_VerticalOverflow: 0
     m_LineSpacing: 1
   m_Text: Recording...
+--- !u!114 &114804480346314292
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1114548993885066}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 03814fd2c5b108f48ab628a76842d1e5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  format: 0
+  stereo: 0
+  stereoFormat: 1
+  frameSize: 3
+  _cubemapSize: 1
+  panoramaProjection: 0
+  encodeQuality: 1
+  _antiAliasing: 0
+  _targetFramerate: 2
+  isDedicated: 1
+  captureGUI: 1
+  mode: 0
+  customPath: 0
+  customPathFolder: 
+  streamingAddress: 
+  interPupillaryDistance: 0.0635
+  sphereOffset: {x: 0, y: 0}
+  sphereScale: {x: 1, y: 1}
+  sceneCamera: {fileID: 0}
+  capturingStart: 0
+  captureAudioInGPUEncoder: 1
+  _audioCapture: {fileID: 0}
+--- !u!114 &114815528037903080
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1114548993885066}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 89fc65ccde05e8443a2d587e22bdbf81, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  cameraScreen: {fileID: 0}
+  cameraSphere: {fileID: 0}
+  captureText: {fileID: 0}
+  handParent: {fileID: 0}
+  screenPosition: {x: -0.3, y: 0, z: 0.1}
 --- !u!124 &124252481369291038
 Behaviour:
   m_ObjectHideFlags: 1
