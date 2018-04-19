@@ -6,9 +6,10 @@ using UnityEngine;
 public class CameraHandler : MonoBehaviour {
 
     public GameObject normalCamera;
-    //public GameObject videoCamera;
+    public GameObject videoCameraObject;
 
     ScreenshotCamera screenshotCamera;
+    VideoCamera videoCamera;
 
     
     ToolManager toolManager;
@@ -25,28 +26,32 @@ public class CameraHandler : MonoBehaviour {
 			normalCamera.SetActive (normalCameraModeActive);
 		}
 	}
-	//-------------------------------------------------------------------------------------------------------------------------------------
-	//private bool videoCameraModeActive = false;
-	//public bool VideoCameraModeActive {
-	//	get {
-	//		return videoCameraModeActive;
-	//	}
-	//	private set{ 
-	//		videoCameraModeActive = value;
-	//		//videoCamera.SetActive (videoCameraModeActive);
-	//	}
-	//}
-	//-------------------------------------------------------------------------------------------------------------------------------------
+    //-------------------------------------------------------------------------------------------------------------------------------------
+    private bool videoCameraModeActive = false;
+    public bool VideoCameraModeActive
+    {
+        get
+        {
+            return videoCameraModeActive;
+        }
+        private set
+        {
+            videoCameraModeActive = value;
+            videoCameraObject.SetActive (videoCameraModeActive);
+        }
+    }
+    //-------------------------------------------------------------------------------------------------------------------------------------
     void Awake()
     {
 		NormalCameraModeActive = false;
-		//VideoCameraModeActive = false;
+		VideoCameraModeActive = false;
 
         toolManager = GetComponent<ToolManager>();
         toolManager.OnToolChange += ActivateCameraTool;
         handNumber = toolManager.myHandNumber;
 
         screenshotCamera = normalCamera.GetComponent<ScreenshotCamera>();
+        videoCamera = videoCameraObject.GetComponent<VideoCamera>();
 
     }
 	//-------------------------------------------------------------------------------------------------------------------------------------
@@ -59,12 +64,15 @@ public class CameraHandler : MonoBehaviour {
             //When camera is activated we give it the number of the hand that activated it
             screenshotCamera.myHandNumber = handNumber;
             NormalCameraModeActive = true;
+            VideoCameraModeActive = false;
         }
 
-        //else if(tool == ToolManager.ToolType.VideoCamera)
-        //{
-        //    VideoCameraModeActive = true;
-        //}
+        else if (tool == ToolManager.ToolType.VideoCamera)
+        {
+            videoCamera.myHandNumber = handNumber;
+            VideoCameraModeActive = true;
+            NormalCameraModeActive = false;
+        }
         //if camera is not selected
         else
         {
@@ -75,9 +83,11 @@ public class CameraHandler : MonoBehaviour {
 	//Is called when the cameraTool is switched off
 	public void DeactivateCameraTool()
 	{
-        if(toolManager.myHandNumber == screenshotCamera.myHandNumber)
-		    NormalCameraModeActive = false;
-		//VideoCameraModeActive = false;
+        if (toolManager.myHandNumber == screenshotCamera.myHandNumber)
+        {
+            NormalCameraModeActive = false;
+            VideoCameraModeActive = false;
+        }
 	}
 	//-------------------------------------------------------------------------------------------------------------------------------------
 	//Switches between normal camera and video camera

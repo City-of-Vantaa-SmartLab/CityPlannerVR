@@ -8,18 +8,23 @@ using RockVR.Vive.Demo;
 public class VideoCamera : MonoBehaviour {
 
 	InputListener inputListener;
+    public CameraProSetUpCtrl cameraProSetUpCtrl;
 
-	Valve.VR.InteractionSystem.Teleport teleport;
+    Valve.VR.InteractionSystem.Teleport teleport;
 
 	public ControllerState controllerState = ControllerState.Normal;
 	private CameraState cameraState = CameraState.Normal;
-	public GameObject applicationMenuButton;
+	//public GameObject applicationMenuButton;
 
 	//This value is got from the cameraHandler that activates this object
 	public int myHandNumber;
 	private uint myDeviceIndex;
 
-	void Awake(){
+    int index = 0;
+    //All the fixed points where the screenshot camera can be (first 2 are in players hands)
+    public GameObject[] points;
+
+    void Awake(){
 
 		teleport = GameObject.Find("Teleporting").GetComponent<Valve.VR.InteractionSystem.Teleport>();
 
@@ -28,11 +33,20 @@ public class VideoCamera : MonoBehaviour {
 
 	private void OnEnable()
 	{
+        Debug.Log("MyHandNumber is " + myHandNumber);
+        //                            myHandNumber is 1 or 2, but the place for them in the array are 0 and 1
+        gameObject.transform.parent = points[myHandNumber - 1].transform;
+        gameObject.transform.localPosition = Vector3.zero;
+        gameObject.transform.localRotation = Quaternion.identity;
+
+
+        cameraProSetUpCtrl.EnableCamera();
 		Subscribe();
 	}
 
 	private void OnDisable()
 	{
+        cameraProSetUpCtrl.DisableCamera();
 		Unsubscribe();
 	}
 
@@ -44,7 +58,9 @@ public class VideoCamera : MonoBehaviour {
 
 			inputListener.TriggerClicked += OnPressApplicationMenuDown;
 
-			if (myHandNumber == 1)
+            inputListener.PadClicked -= ChangePoint;
+
+            if (myHandNumber == 1)
 				inputListener.Hand1DeviceFound += HandleMyIndexFound;
 			if (myHandNumber == 2)
 				inputListener.Hand2DeviceFound += HandleMyIndexFound;
@@ -82,28 +98,79 @@ public class VideoCamera : MonoBehaviour {
 
 	private void OnPressApplicationMenuDown(object sender, ClickedEventArgs e)
 	{
-		Debug.Log ("jotain alkoi");
 		if (cameraState == CameraState.Normal)
 		{
-            Debug.Log("Kamera on normaali");
 			if (VideoCaptureProCtrl.instance.status == VideoCaptureProCtrl.StatusType.NOT_START ||
 				VideoCaptureProCtrl.instance.status == VideoCaptureProCtrl.StatusType.FINISH)
 			{
-				VideoCaptureCtrl.instance.StartCapture();
-				applicationMenuButton.SetActive(false);
-                Debug.Log("jotain");
+				VideoCaptureProCtrl.instance.StartCapture();
+				//applicationMenuButton.SetActive(false);
 			}
 			else if (VideoCaptureProCtrl.instance.status == VideoCaptureProCtrl.StatusType.STARTED)
 			{
 				VideoCaptureProCtrl.instance.StopCapture();
-                Debug.Log("jotain muuta");
 			}
 			else if (VideoCaptureProCtrl.instance.status == VideoCaptureProCtrl.StatusType.STOPPED)
 			{
-                Debug.Log("jotain lisää");
 				return;
 			}
 		}
-		Debug.Log ("jotain loppui");
 	}
+
+    //----------------------------------------------------------------------------------------------------------------------------------------//
+
+    void ChangePoint(object sender, ClickedEventArgs e)
+    {
+
+        if ((sender.ToString().Equals("Hand1 (SteamVR_TrackedController)") && myHandNumber == 1) || (sender.ToString().Equals("Hand2 (SteamVR_TrackedController)") && myHandNumber == 2))
+        {
+            if (e.padX > 0.7f)
+            {
+                ChangePointRight();
+            }
+            else if (e.padX < -0.7f)
+            {
+                ChangePointLeft();
+            }
+        }
+    }
+
+
+    void ChangePointRight()
+    {
+        if (index >= points.Length - 1)
+        {
+            //We have looped around
+            index = 0;
+        }
+        else
+        {
+            index++;
+        }
+
+        Debug.Log("index is " + index);
+
+        gameObject.transform.parent = points[index].transform;
+        gameObject.transform.localPosition = Vector3.zero;
+        gameObject.transform.localRotation = Quaternion.identity;
+    }
+
+    void ChangePointLeft()
+    {
+        if (index <= 0)
+        {
+            //We have looped around
+            index = points.Length - 1;
+        }
+        else
+        {
+            index--;
+        }
+
+        Debug.Log("index is " + index);
+
+        gameObject.transform.parent = points[index].transform;
+        gameObject.transform.localPosition = Vector3.zero;
+        gameObject.transform.localRotation = Quaternion.identity;
+    }
 }
