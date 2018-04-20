@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using Valve.VR.InteractionSystem;
@@ -14,7 +15,7 @@ public class MenuSpawner : MonoBehaviour
     public GameObject menu2;
     private bool menu1Active = false;
     private bool menu2Active = false;
-
+    private InputMaster inputMaster;
 
 
     void Start()
@@ -30,14 +31,31 @@ public class MenuSpawner : MonoBehaviour
         menu2.SetActive(false);
         menu1.SetActive(false);
 
+        inputMaster = GameObject.Find("Player").GetComponent<InputMaster>();
+        if (inputMaster)
+            Subscribe();
+            
+    }
+
+    private void OnDestroy()
+    {
+        Unsubscribe();
+    }
+
+    private void Subscribe()
+    {
+        inputMaster.Gripped += HandleGripped;
+    }
+
+    private void Unsubscribe()
+    {
+        inputMaster.Gripped -= HandleGripped;
     }
 
 
-
-
-    private void Update()
+    private void HandleGripped(object sender, ClickedEventArgs e)
     {
-        if (hand1.controller.GetPressDown(SteamVR_Controller.ButtonMask.Grip))
+        if (e.controllerIndex == 1)
         {
             if (menu1Active == false)
             {
@@ -55,7 +73,7 @@ public class MenuSpawner : MonoBehaviour
             Debug.Log("Gripped1");
         }
 
-        if (hand2.controller.GetPressDown(SteamVR_Controller.ButtonMask.Grip))
+        else if (e.controllerIndex == 2)
         {
             if (menu2Active == false)
             {
@@ -80,7 +98,6 @@ public class MenuSpawner : MonoBehaviour
 
             Debug.Log("Gripped2");
         }
-
     }
 
 };

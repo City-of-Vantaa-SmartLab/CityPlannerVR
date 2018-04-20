@@ -56,6 +56,7 @@ public class CameraHandler : MonoBehaviour {
         if(tool == ToolManager.ToolType.Camera)
         {
             //When camera is activated we give it the number of the hand that activated it
+            handNumber = toolManager.myHandNumber;
             screenshot.myHandNumber = handNumber;
             NormalCameraModeActive = true;
         }

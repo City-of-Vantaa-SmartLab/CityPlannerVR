@@ -77,10 +77,6 @@ public class InputMaster : MonoBehaviour {
 
         leftHandNode = UnityEngine.XR.XRNode.LeftHand;
         rightHandNode = UnityEngine.XR.XRNode.RightHand;
-        //gripDown1 = false;
-        //gripDown2 = false;
-        //triggerDown1 = false;
-        //triggerDown2 = false;
 
         //playerSize = playerVR.GetComponent<CheckPlayerSize>();
 
@@ -94,7 +90,7 @@ public class InputMaster : MonoBehaviour {
 	void Update () {
         if (hand1Found)
             GetInput(hand1, 1);
-        if (hand2)
+        if (hand2Found)
             GetInput(hand2, 2);
     }
 

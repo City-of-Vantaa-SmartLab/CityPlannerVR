@@ -33,16 +33,15 @@ public class ToolManager : MonoBehaviour {
     public delegate void EventWithIndexTool(uint handNumber, ToolManager.ToolType tool);
     public event EventWithIndexTool OnToolChange;
 
-
     // Use this for initialization
     void Start () {
         FindHandNumber();
         inputMaster = GameObject.Find("Player").GetComponent<InputMaster>();
         SubscriptionOn();
         currentTool = ToolType.Empty;
-    }
+}
 
-    private void OnDestroy()
+private void OnDestroy()
     {
         SubscriptionOff();
     }

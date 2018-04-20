@@ -2489,8 +2489,6 @@ GameObject:
   - component: {fileID: 1695863806}
   - component: {fileID: 480622350}
   - component: {fileID: 480622352}
-  - component: {fileID: 480622349}
-  - component: {fileID: 480622351}
   - component: {fileID: 480622353}
   - component: {fileID: 480622354}
   m_Layer: 26
@@ -2500,25 +2498,6 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!114 &480622349
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 114633792475360194, guid: dc06161b6d97feb419f45f03b62e14b9,
-    type: 2}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 480622348}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 7346a42905a29b347b1f492e8ad7b49f, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  controllerIndex: 0
-  triggerPressed: 0
-  steamPressed: 0
-  menuPressed: 0
-  padPressed: 0
-  padTouched: 0
-  gripped: 0
 --- !u!114 &480622350
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2545,19 +2524,6 @@ MonoBehaviour:
   controllerPrefab: {fileID: 168468, guid: 3f39fc63a93686e4a8e9168ee73f24d9, type: 2}
   showDebugText: 0
   spewDebugText: 0
---- !u!114 &480622351
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 480622348}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d37c2cf88f7c59f4c8cf5d3812568143, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  index: -1
-  origin: {fileID: 0}
 --- !u!114 &480622352
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2569,10 +2535,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f530e1ef95262204c9a799bc2b19c0f3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  myHandNumber: 1
+  myHandNumber: 0
   currentTool: 0
-  inputListener: {fileID: 0}
-  myDeviceIndex: 0
+  inputMaster: {fileID: 0}
 --- !u!114 &480622353
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2584,12 +2549,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 44d86733ee63be244a454c16d6ef6124, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  myHandNumber: 1
-  myTrackedObj: {fileID: 0}
+  myHandNumber: 0
   currentMaterial: {fileID: 2100000, guid: 432995c698b2d4e429e866ad408ed827, type: 2}
   currentGO: {fileID: 0}
   vectorList: []
-  myDeviceIndex: 0
   useMeshes: 0
 --- !u!114 &480622354
 MonoBehaviour:
@@ -8721,171 +8684,6 @@ Prefab:
 Transform:
   m_PrefabParentObject: {fileID: 431114, guid: f62058cb710fd1745a24102fff0edd46, type: 2}
   m_PrefabInternal: {fileID: 928705634}
---- !u!1 &748844236
-GameObject:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 1402618360699476, guid: dc06161b6d97feb419f45f03b62e14b9,
-    type: 2}
-  m_PrefabInternal: {fileID: 0}
-  serializedVersion: 5
-  m_Component:
-  - component: {fileID: 748844237}
-  - component: {fileID: 748844238}
-  - component: {fileID: 748844241}
-  - component: {fileID: 748844240}
-  - component: {fileID: 748844239}
-  m_Layer: 0
-  m_Name: Laserpointer2
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &748844237
-Transform:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 4618720448627846, guid: dc06161b6d97feb419f45f03b62e14b9,
-    type: 2}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 748844236}
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: -0.01700002, z: 0.0332}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_Children: []
-  m_Father: {fileID: 1613533002}
-  m_RootOrder: 3
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &748844238
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 114624156821951100, guid: dc06161b6d97feb419f45f03b62e14b9,
-    type: 2}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 748844236}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d4e8a839a7c5b7e4580c59e305fb5f01, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  active: 1
-  color: {r: 1, g: 0, b: 0, a: 0}
-  thickness: 0.002
-  holder: {fileID: 0}
-  pointer: {fileID: 0}
-  addRigidBody: 0
-  reference: {fileID: 0}
---- !u!114 &748844239
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 748844236}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 627855c7f81362d41938ffe0b1475957, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_PositionModel:
-    SynchronizeEnabled: 1
-    TeleportEnabled: 1
-    TeleportIfDistanceGreaterThan: 3
-    InterpolateOption: 2
-    InterpolateMoveTowardsSpeed: 1
-    InterpolateLerpSpeed: 1
-    InterpolateMoveTowardsAcceleration: 2
-    InterpolateMoveTowardsDeceleration: 2
-    InterpolateSpeedCurve:
-      serializedVersion: 2
-      m_Curve:
-      - serializedVersion: 2
-        time: -1
-        value: 0
-        inSlope: 0
-        outSlope: Infinity
-        tangentMode: 0
-      - serializedVersion: 2
-        time: 0
-        value: 1
-        inSlope: 0
-        outSlope: 0
-        tangentMode: 0
-      - serializedVersion: 2
-        time: 1
-        value: 1
-        inSlope: 0
-        outSlope: 1
-        tangentMode: 0
-      - serializedVersion: 2
-        time: 4
-        value: 4
-        inSlope: 1
-        outSlope: 0
-        tangentMode: 0
-      m_PreInfinity: 2
-      m_PostInfinity: 2
-      m_RotationOrder: 4
-    ExtrapolateOption: 0
-    ExtrapolateSpeed: 1
-    ExtrapolateIncludingRoundTripTime: 1
-    ExtrapolateNumberOfStoredPositions: 1
-    DrawErrorGizmo: 1
-  m_RotationModel:
-    SynchronizeEnabled: 1
-    InterpolateOption: 1
-    InterpolateRotateTowardsSpeed: 180
-    InterpolateLerpSpeed: 5
-  m_ScaleModel:
-    SynchronizeEnabled: 0
-    InterpolateOption: 0
-    InterpolateMoveTowardsSpeed: 1
-    InterpolateLerpSpeed: 0
---- !u!114 &748844240
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 748844236}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: aa584fbee541324448dd18d8409c7a41, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  ownerId: 0
-  group: 0
-  OwnerShipWasTransfered: 0
-  prefixBackup: -1
-  synchronization: 3
-  onSerializeTransformOption: 3
-  onSerializeRigidBodyOption: 2
-  ownershipTransfer: 0
-  ObservedComponents:
-  - {fileID: 748844239}
-  ObservedComponentsFoldoutOpen: 1
-  viewIdField: 14
-  instantiationId: 14
-  currentMasterID: -1
-  isRuntimeInstantiated: 0
---- !u!114 &748844241
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 748844236}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 6958d3f000f513042accf6ad3d38e302, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  myHandNumber: 2
-  myHand: {fileID: 0}
-  inputListener: {fileID: 0}
-  toolManager: {fileID: 0}
-  myTool: 0
-  laserCube: {fileID: 0}
-  myDeviceIndex: 0
-  myTargetedObject: {fileID: 0}
-  otherLaserManager: {fileID: 0}
-  myPointer: {fileID: 0}
 --- !u!1001 &752756485
 Prefab:
   m_ObjectHideFlags: 0
@@ -13504,10 +13302,7 @@ GameObject:
   - component: {fileID: 1323874203}
   - component: {fileID: 1323874201}
   - component: {fileID: 1323874200}
-  - component: {fileID: 1323874204}
   - component: {fileID: 1323874199}
-  - component: {fileID: 1323874207}
-  - component: {fileID: 1323874206}
   - component: {fileID: 1323874205}
   - component: {fileID: 1323874208}
   m_Layer: 0
@@ -13604,24 +13399,6 @@ MonoBehaviour:
   rig2DFallback: {fileID: 909146320}
   audioListener: {fileID: 90713897}
   allowToggleTo2D: 1
---- !u!114 &1323874204
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 1323874198}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 3563b74eb2c18bc4f83b42166b1dc615, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  hand1Index: 0
-  hand2Index: 0
-  hand1TrackedController: {fileID: 0}
-  hand2TrackedController: {fileID: 0}
-  selectionList: {fileID: 0}
-  hand1TrackedObject: {fileID: 0}
-  hand2TrackedObject: {fileID: 0}
 --- !u!114 &1323874205
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -13630,53 +13407,23 @@ MonoBehaviour:
   m_GameObject: {fileID: 1323874198}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 95f4dd01581bb6f43b8c374b9adf679a, type: 3}
+  m_Script: {fileID: 11500000, guid: 294311483f0253c4e92096d155c5d677, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!114 &1323874206
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 1323874198}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 3737438748cf23f448d18cd2c6192e95, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _tokens:
-    _tokens: []
-  _roomName: Global
-  _useTrigger: 1
---- !u!114 &1323874207
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 1323874198}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 6a066ddbf125f9546bcadc947418566b, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _tokens:
-    _tokens: []
-  _activationFaderSettings:
-    _volume: 1
-    _fadeInTicks: 0
-    _fadeOutTicks: 1500000
-  _triggerFaderSettings:
-    _volume: 1
-    _fadeInTicks: 7500000
-    _fadeOutTicks: 11500000
-  _broadcastPosition: 1
-  _channelType: 2
-  _inputName: 
-  _mode: 1
-  _playerId: 
-  _useTrigger: 0
-  _roomName: Global
-  _priority: -2
+  hand1: {fileID: 0}
+  hand2: {fileID: 0}
+  playerSize: {fileID: 0}
+  leftHandNode: 0
+  rightHandNode: 0
+  hand1Found: 0
+  hand2Found: 0
+  trigger: 0
+  grip: 0
+  padclicked: 0
+  padtouched: 0
+  menubutton: 0
+  padX: 0
+  padY: 0
 --- !u!135 &1323874208
 SphereCollider:
   m_ObjectHideFlags: 0
@@ -14455,11 +14202,59 @@ Prefab:
       objectReference: {fileID: 0}
     - target: {fileID: 420108, guid: cc2b9f84f04070441acc55fd0b9f8797, type: 2}
       propertyPath: m_RootOrder
-      value: 16
+      value: 15
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: cc2b9f84f04070441acc55fd0b9f8797, type: 2}
   m_IsPrefabParent: 0
+--- !u!1 &1490457675 stripped
+GameObject:
+  m_PrefabParentObject: {fileID: 102228, guid: cc2b9f84f04070441acc55fd0b9f8797, type: 2}
+  m_PrefabInternal: {fileID: 1490457674}
+--- !u!114 &1490457676
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1490457675}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3737438748cf23f448d18cd2c6192e95, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _tokens:
+    _tokens: []
+  _roomName: 
+  _useTrigger: 0
+--- !u!114 &1490457677
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1490457675}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6a066ddbf125f9546bcadc947418566b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _tokens:
+    _tokens: []
+  _activationFaderSettings:
+    _volume: 1
+    _fadeInTicks: 0
+    _fadeOutTicks: 1500000
+  _triggerFaderSettings:
+    _volume: 1
+    _fadeInTicks: 7500000
+    _fadeOutTicks: 11500000
+  _broadcastPosition: 1
+  _channelType: 0
+  _inputName: 
+  _mode: 1
+  _playerId: 
+  _useTrigger: 0
+  _roomName: 
+  _priority: -2
 --- !u!1001 &1492421242
 Prefab:
   m_ObjectHideFlags: 0
@@ -14584,6 +14379,95 @@ Prefab:
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: f62058cb710fd1745a24102fff0edd46, type: 2}
   m_IsPrefabParent: 0
+--- !u!1 &1497816911
+GameObject:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 1147092044187000, guid: dc06161b6d97feb419f45f03b62e14b9,
+    type: 2}
+  m_PrefabInternal: {fileID: 0}
+  serializedVersion: 5
+  m_Component:
+  - component: {fileID: 1497816912}
+  - component: {fileID: 1497816915}
+  - component: {fileID: 1497816913}
+  - component: {fileID: 1497816914}
+  m_Layer: 0
+  m_Name: Laserpointer2
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1497816912
+Transform:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 4885881360640430, guid: dc06161b6d97feb419f45f03b62e14b9,
+    type: 2}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1497816911}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 1613533002}
+  m_RootOrder: 3
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1497816913
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1497816911}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a4819f2fdf7af9c49b6d6a423a06101d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  active: 1
+  triggered: 0
+  color: {r: 1, g: 0, b: 0, a: 0}
+  thickness: 0.002
+  holder: {fileID: 0}
+  pointer: {fileID: 0}
+  inputMaster: {fileID: 0}
+--- !u!114 &1497816914
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1497816911}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6958d3f000f513042accf6ad3d38e302, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  myHandNumber: 0
+  myHandGO: {fileID: 0}
+  inputMaster: {fileID: 0}
+  toolManager: {fileID: 0}
+  myTool: 0
+  myTargetedObject: {fileID: 0}
+  otherLaserManager: {fileID: 0}
+  myPointer: {fileID: 0}
+--- !u!114 &1497816915
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 114235036997075304, guid: dc06161b6d97feb419f45f03b62e14b9,
+    type: 2}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1497816911}
+  m_Enabled: 0
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d4e8a839a7c5b7e4580c59e305fb5f01, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  active: 0
+  color: {r: 1, g: 0, b: 0, a: 0}
+  thickness: 0.002
+  holder: {fileID: 0}
+  pointer: {fileID: 0}
+  addRigidBody: 0
+  reference: {fileID: 0}
 --- !u!1 &1497889930
 GameObject:
   m_ObjectHideFlags: 0
@@ -16091,7 +15975,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b43b87d71b91453489dfc1c2a04f1b80, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  myDeviceIndex: 0
   myHandNumber: 2
 --- !u!23 &1608404842
 MeshRenderer:
@@ -16219,8 +16102,6 @@ GameObject:
   - component: {fileID: 1613533002}
   - component: {fileID: 1613533004}
   - component: {fileID: 1613533006}
-  - component: {fileID: 1613533003}
-  - component: {fileID: 1613533005}
   - component: {fileID: 1613533007}
   - component: {fileID: 1613533008}
   m_Layer: 26
@@ -16243,31 +16124,12 @@ Transform:
   - {fileID: 1603765348}
   - {fileID: 1672541867}
   - {fileID: 951566510}
-  - {fileID: 748844237}
+  - {fileID: 1497816912}
   - {fileID: 1790873806}
   - {fileID: 1608404840}
   m_Father: {fileID: 495224142}
   m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &1613533003
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 114221269866685544, guid: dc06161b6d97feb419f45f03b62e14b9,
-    type: 2}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 1613533001}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 7346a42905a29b347b1f492e8ad7b49f, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  controllerIndex: 0
-  triggerPressed: 0
-  steamPressed: 0
-  menuPressed: 0
-  padPressed: 0
-  padTouched: 0
-  gripped: 0
 --- !u!114 &1613533004
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -16294,19 +16156,6 @@ MonoBehaviour:
   controllerPrefab: {fileID: 168468, guid: 3f39fc63a93686e4a8e9168ee73f24d9, type: 2}
   showDebugText: 0
   spewDebugText: 0
---- !u!114 &1613533005
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 1613533001}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d37c2cf88f7c59f4c8cf5d3812568143, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  index: -1
-  origin: {fileID: 0}
 --- !u!114 &1613533006
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -16318,10 +16167,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f530e1ef95262204c9a799bc2b19c0f3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  myHandNumber: 2
+  myHandNumber: 0
   currentTool: 0
-  inputListener: {fileID: 0}
-  myDeviceIndex: 0
+  inputMaster: {fileID: 0}
 --- !u!114 &1613533007
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -16333,12 +16181,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 44d86733ee63be244a454c16d6ef6124, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  myHandNumber: 2
-  myTrackedObj: {fileID: 0}
+  myHandNumber: 0
   currentMaterial: {fileID: 2100000, guid: 432995c698b2d4e429e866ad408ed827, type: 2}
   currentGO: {fileID: 0}
   vectorList: []
-  myDeviceIndex: 0
   useMeshes: 0
 --- !u!114 &1613533008
 MonoBehaviour:
@@ -17271,9 +17117,8 @@ GameObject:
   m_Component:
   - component: {fileID: 1711051662}
   - component: {fileID: 1711051663}
+  - component: {fileID: 1711051667}
   - component: {fileID: 1711051666}
-  - component: {fileID: 1711051665}
-  - component: {fileID: 1711051664}
   m_Layer: 0
   m_Name: Laserpointer1
   m_TagString: Untagged
@@ -17289,7 +17134,7 @@ Transform:
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 1711051661}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: -0.01700002, z: 0.0332}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 1695863806}
@@ -17302,109 +17147,18 @@ MonoBehaviour:
     type: 2}
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 1711051661}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: d4e8a839a7c5b7e4580c59e305fb5f01, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  active: 1
+  active: 0
   color: {r: 1, g: 0, b: 0, a: 0}
   thickness: 0.002
   holder: {fileID: 0}
   pointer: {fileID: 0}
   addRigidBody: 0
   reference: {fileID: 0}
---- !u!114 &1711051664
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 1711051661}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 627855c7f81362d41938ffe0b1475957, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_PositionModel:
-    SynchronizeEnabled: 1
-    TeleportEnabled: 1
-    TeleportIfDistanceGreaterThan: 3
-    InterpolateOption: 2
-    InterpolateMoveTowardsSpeed: 1
-    InterpolateLerpSpeed: 1
-    InterpolateMoveTowardsAcceleration: 2
-    InterpolateMoveTowardsDeceleration: 2
-    InterpolateSpeedCurve:
-      serializedVersion: 2
-      m_Curve:
-      - serializedVersion: 2
-        time: -1
-        value: 0
-        inSlope: 0
-        outSlope: Infinity
-        tangentMode: 0
-      - serializedVersion: 2
-        time: 0
-        value: 1
-        inSlope: 0
-        outSlope: 0
-        tangentMode: 0
-      - serializedVersion: 2
-        time: 1
-        value: 1
-        inSlope: 0
-        outSlope: 1
-        tangentMode: 0
-      - serializedVersion: 2
-        time: 4
-        value: 4
-        inSlope: 1
-        outSlope: 0
-        tangentMode: 0
-      m_PreInfinity: 2
-      m_PostInfinity: 2
-      m_RotationOrder: 4
-    ExtrapolateOption: 0
-    ExtrapolateSpeed: 1
-    ExtrapolateIncludingRoundTripTime: 1
-    ExtrapolateNumberOfStoredPositions: 1
-    DrawErrorGizmo: 1
-  m_RotationModel:
-    SynchronizeEnabled: 1
-    InterpolateOption: 1
-    InterpolateRotateTowardsSpeed: 180
-    InterpolateLerpSpeed: 5
-  m_ScaleModel:
-    SynchronizeEnabled: 0
-    InterpolateOption: 0
-    InterpolateMoveTowardsSpeed: 1
-    InterpolateLerpSpeed: 0
---- !u!114 &1711051665
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 1711051661}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: aa584fbee541324448dd18d8409c7a41, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  ownerId: 0
-  group: 0
-  OwnerShipWasTransfered: 0
-  prefixBackup: -1
-  synchronization: 3
-  onSerializeTransformOption: 3
-  onSerializeRigidBodyOption: 2
-  ownershipTransfer: 0
-  ObservedComponents:
-  - {fileID: 1711051664}
-  ObservedComponentsFoldoutOpen: 1
-  viewIdField: 15
-  instantiationId: 15
-  currentMasterID: -1
-  isRuntimeInstantiated: 0
 --- !u!114 &1711051666
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -17416,16 +17170,32 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6958d3f000f513042accf6ad3d38e302, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  myHandNumber: 1
-  myHand: {fileID: 0}
-  inputListener: {fileID: 0}
+  myHandNumber: 0
+  myHandGO: {fileID: 0}
+  inputMaster: {fileID: 0}
   toolManager: {fileID: 0}
   myTool: 0
-  laserCube: {fileID: 0}
-  myDeviceIndex: 0
   myTargetedObject: {fileID: 0}
   otherLaserManager: {fileID: 0}
   myPointer: {fileID: 0}
+--- !u!114 &1711051667
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1711051661}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a4819f2fdf7af9c49b6d6a423a06101d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  active: 1
+  triggered: 0
+  color: {r: 1, g: 0, b: 0, a: 0}
+  thickness: 0.002
+  holder: {fileID: 0}
+  pointer: {fileID: 0}
+  inputMaster: {fileID: 0}
 --- !u!1001 &1716268251
 Prefab:
   m_ObjectHideFlags: 0
@@ -20699,7 +20469,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b43b87d71b91453489dfc1c2a04f1b80, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  myDeviceIndex: 0
   myHandNumber: 1
 --- !u!1001 &2049961321
 Prefab:
@@ -20791,7 +20560,7 @@ Transform:
   - {fileID: 722001241}
   - {fileID: 1754003000}
   m_Father: {fileID: 0}
-  m_RootOrder: 15
+  m_RootOrder: 16
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &2054858428
 Prefab:

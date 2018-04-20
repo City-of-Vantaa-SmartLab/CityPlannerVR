@@ -5,8 +5,6 @@ using UnityEngine;
 
 public class Eraser : MonoBehaviour {
 
-    [SerializeField]
-    private uint myDeviceIndex;
     private InputMaster inputMaster;
     private ToolManager toolManager;
     private ToolManager.ToolType myTool;
@@ -22,7 +20,8 @@ public class Eraser : MonoBehaviour {
 
     // Use this for initialization
     void Start () {
-        InitOwn();
+        if (!InitOwn())
+            Debug.Log("Failed to initialize eraser!");
         Subscribe();
         CheckTool();
 	}
@@ -37,9 +36,11 @@ public class Eraser : MonoBehaviour {
     {
         toolManager = GetComponentInParent<ToolManager>();
         if (toolManager)
+        {
             myTool = toolManager.currentTool;
+            myHandNumber = toolManager.myHandNumber;
 
-        myHandNumber = toolManager.myHandNumber;
+        }
         myMesh = gameObject.GetComponent<MeshRenderer>();
         myCollider = gameObject.GetComponent<CapsuleCollider>();
 
@@ -53,8 +54,8 @@ public class Eraser : MonoBehaviour {
 
     private void Subscribe()
     {
-        if (!inputMaster)
-            inputMaster = GameObject.Find("Player").GetComponent<InputMaster>();
+        //if (!inputMaster)
+        //    inputMaster = GameObject.Find("Player").GetComponent<InputMaster>();
 
         if (inputMaster)
         {
@@ -63,7 +64,7 @@ public class Eraser : MonoBehaviour {
         }
         else
         {
-            Debug.Log("Did not find inputlistener!");
+            Debug.Log("Did not find inputmaster!");
         }
         toolManager.OnToolChange += HandleToolChange;
 
@@ -98,17 +99,15 @@ public class Eraser : MonoBehaviour {
 
     private void HandleToolChange(uint handNumber, ToolManager.ToolType tool)
     {
-        if (myHandNumber == handNumber)
+        myHandNumber = (int)handNumber;
+        myTool = tool;
+        if (tool == ToolManager.ToolType.Eraser)
+            ToggleEraser(true);
+        else
         {
-            myTool = tool;
-            if (tool == ToolManager.ToolType.Eraser)
-                ToggleEraser(true);
-            else
-            {
-                ToggleEraser(false);
-                if (RemoveFromList != null)
-                    RemoveFromList(handNumber, this);
-            }
+            ToggleEraser(false);
+            if (RemoveFromList != null)
+                RemoveFromList(handNumber, this);
         }
             
     }

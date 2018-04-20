@@ -2489,8 +2489,6 @@ GameObject:
   - component: {fileID: 1695863806}
   - component: {fileID: 480622350}
   - component: {fileID: 480622352}
-  - component: {fileID: 480622349}
-  - component: {fileID: 480622351}
   - component: {fileID: 480622353}
   - component: {fileID: 480622354}
   m_Layer: 26
@@ -2500,25 +2498,6 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!114 &480622349
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 114633792475360194, guid: dc06161b6d97feb419f45f03b62e14b9,
-    type: 2}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 480622348}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 7346a42905a29b347b1f492e8ad7b49f, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  controllerIndex: 0
-  triggerPressed: 0
-  steamPressed: 0
-  menuPressed: 0
-  padPressed: 0
-  padTouched: 0
-  gripped: 0
 --- !u!114 &480622350
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2545,19 +2524,6 @@ MonoBehaviour:
   controllerPrefab: {fileID: 168468, guid: 3f39fc63a93686e4a8e9168ee73f24d9, type: 2}
   showDebugText: 0
   spewDebugText: 0
---- !u!114 &480622351
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 480622348}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d37c2cf88f7c59f4c8cf5d3812568143, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  index: -1
-  origin: {fileID: 0}
 --- !u!114 &480622352
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2569,7 +2535,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f530e1ef95262204c9a799bc2b19c0f3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  myHandNumber: 1
+  myHandNumber: 0
   currentTool: 0
   inputMaster: {fileID: 0}
 --- !u!114 &480622353
@@ -2583,12 +2549,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 44d86733ee63be244a454c16d6ef6124, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  myHandNumber: 1
-  myTrackedObj: {fileID: 0}
+  myHandNumber: 0
   currentMaterial: {fileID: 2100000, guid: 432995c698b2d4e429e866ad408ed827, type: 2}
   currentGO: {fileID: 0}
   vectorList: []
-  myDeviceIndex: 0
   useMeshes: 0
 --- !u!114 &480622354
 MonoBehaviour:
@@ -13338,7 +13302,6 @@ GameObject:
   - component: {fileID: 1323874203}
   - component: {fileID: 1323874201}
   - component: {fileID: 1323874200}
-  - component: {fileID: 1323874204}
   - component: {fileID: 1323874199}
   - component: {fileID: 1323874205}
   - component: {fileID: 1323874208}
@@ -13436,27 +13399,6 @@ MonoBehaviour:
   rig2DFallback: {fileID: 909146320}
   audioListener: {fileID: 90713897}
   allowToggleTo2D: 1
---- !u!114 &1323874204
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 1323874198}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 3563b74eb2c18bc4f83b42166b1dc615, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  hand1IndexViaRole: 0
-  hand2IndexViaRole: 0
-  hand1IndexViaPos: 0
-  hand2IndexViaPos: 0
-  hand1Role: 0
-  hand2Role: 0
-  hand1TrackedController: {fileID: 0}
-  hand2TrackedController: {fileID: 0}
-  hand1TrackedObject: {fileID: 0}
-  hand2TrackedObject: {fileID: 0}
 --- !u!114 &1323874205
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -14464,7 +14406,7 @@ Transform:
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 1497816911}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -0.5, y: -0.01700002, z: 0.033199996}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 1613533002}
@@ -14481,7 +14423,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a4819f2fdf7af9c49b6d6a423a06101d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  active: 0
+  active: 1
   triggered: 0
   color: {r: 1, g: 0, b: 0, a: 0}
   thickness: 0.002
@@ -14500,11 +14442,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   myHandNumber: 0
-  myHand: {fileID: 0}
+  myHandGO: {fileID: 0}
   inputMaster: {fileID: 0}
   toolManager: {fileID: 0}
   myTool: 0
-  myHandIndex: 0
   myTargetedObject: {fileID: 0}
   otherLaserManager: {fileID: 0}
   myPointer: {fileID: 0}
@@ -16034,7 +15975,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b43b87d71b91453489dfc1c2a04f1b80, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  myDeviceIndex: 0
   myHandNumber: 2
 --- !u!23 &1608404842
 MeshRenderer:
@@ -16162,8 +16102,6 @@ GameObject:
   - component: {fileID: 1613533002}
   - component: {fileID: 1613533004}
   - component: {fileID: 1613533006}
-  - component: {fileID: 1613533003}
-  - component: {fileID: 1613533005}
   - component: {fileID: 1613533007}
   - component: {fileID: 1613533008}
   m_Layer: 26
@@ -16192,25 +16130,6 @@ Transform:
   m_Father: {fileID: 495224142}
   m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &1613533003
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 114221269866685544, guid: dc06161b6d97feb419f45f03b62e14b9,
-    type: 2}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 1613533001}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 7346a42905a29b347b1f492e8ad7b49f, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  controllerIndex: 0
-  triggerPressed: 0
-  steamPressed: 0
-  menuPressed: 0
-  padPressed: 0
-  padTouched: 0
-  gripped: 0
 --- !u!114 &1613533004
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -16237,19 +16156,6 @@ MonoBehaviour:
   controllerPrefab: {fileID: 168468, guid: 3f39fc63a93686e4a8e9168ee73f24d9, type: 2}
   showDebugText: 0
   spewDebugText: 0
---- !u!114 &1613533005
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 1613533001}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d37c2cf88f7c59f4c8cf5d3812568143, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  index: -1
-  origin: {fileID: 0}
 --- !u!114 &1613533006
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -16261,7 +16167,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f530e1ef95262204c9a799bc2b19c0f3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  myHandNumber: 2
+  myHandNumber: 0
   currentTool: 0
   inputMaster: {fileID: 0}
 --- !u!114 &1613533007
@@ -16275,12 +16181,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 44d86733ee63be244a454c16d6ef6124, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  myHandNumber: 2
-  myTrackedObj: {fileID: 0}
+  myHandNumber: 0
   currentMaterial: {fileID: 2100000, guid: 432995c698b2d4e429e866ad408ed827, type: 2}
   currentGO: {fileID: 0}
   vectorList: []
-  myDeviceIndex: 0
   useMeshes: 0
 --- !u!114 &1613533008
 MonoBehaviour:
@@ -17230,7 +17134,7 @@ Transform:
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 1711051661}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: -0.01700002, z: 0.0332}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 1695863806}
@@ -17267,11 +17171,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   myHandNumber: 0
-  myHand: {fileID: 0}
+  myHandGO: {fileID: 0}
   inputMaster: {fileID: 0}
   toolManager: {fileID: 0}
   myTool: 0
-  myHandIndex: 0
   myTargetedObject: {fileID: 0}
   otherLaserManager: {fileID: 0}
   myPointer: {fileID: 0}
@@ -20566,7 +20469,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b43b87d71b91453489dfc1c2a04f1b80, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  myDeviceIndex: 0
   myHandNumber: 1
 --- !u!1001 &2049961321
 Prefab:

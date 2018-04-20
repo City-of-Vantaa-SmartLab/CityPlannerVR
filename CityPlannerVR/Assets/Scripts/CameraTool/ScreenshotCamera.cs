@@ -17,7 +17,7 @@ public class ScreenshotCamera : MonoBehaviour {
     RenderTexture rt;
     AudioSource clickSound;
 
-    InputListener inputListener;
+    InputMaster inputMaster;
 
     Valve.VR.InteractionSystem.Teleport teleport;
 
@@ -26,7 +26,6 @@ public class ScreenshotCamera : MonoBehaviour {
 
     //This value is got from the cameraHandler that activates this object
     public int myHandNumber;
-    private uint myDeviceIndex;
 
     int index = 0;
     //All the fixed points where the screenshot camera can be (first 2 are in players hands)
@@ -54,7 +53,7 @@ public class ScreenshotCamera : MonoBehaviour {
 
         cameraScreen.SetActive(false);
 
-        inputListener = GameObject.Find("Player").GetComponent<InputListener>();
+        inputMaster = GameObject.Find("Player").GetComponent<InputMaster>();
     }
 
     private void OnEnable()
@@ -90,53 +89,36 @@ public class ScreenshotCamera : MonoBehaviour {
 
     private void Subscribe()
     {
-        if (inputListener)
+        if (inputMaster)
         {
             teleport.disableTeleport = true;
 
-            inputListener.TriggerClicked += TakeScreenshot;
+            inputMaster.TriggerClicked += TakeScreenshot;
 
-            inputListener.PadClicked += ChangePoint;
+            inputMaster.PadClicked += ChangePoint;
 
-            if (myHandNumber == 1)
-                inputListener.Hand1DeviceFound += HandleMyIndexFound;
-            if (myHandNumber == 2)
-                inputListener.Hand2DeviceFound += HandleMyIndexFound;
         }
         else
         {
-            Debug.LogError("Did not find inputlistener!");
+            Debug.LogError("Did not find inputmaster!");
         }
     }
 
     private void Unsubscribe()
     {
-        if (inputListener)
+        if (inputMaster)
         {
             teleport.disableTeleport = false;
 
-            inputListener.TriggerClicked -= TakeScreenshot;
+            inputMaster.TriggerClicked -= TakeScreenshot;
 
-            inputListener.PadClicked -= ChangePoint;
+            inputMaster.PadClicked -= ChangePoint;
 
-            if (myHandNumber == 1)
-                inputListener.Hand1DeviceFound -= HandleMyIndexFound;
-            if (myHandNumber == 2)
-                inputListener.Hand2DeviceFound -= HandleMyIndexFound;
         }
         else
         {
-            Debug.LogError("Did not find inputlistener!");
+            Debug.LogError("Did not find inputmaster!");
         }
-    }
-
-    private void HandleMyIndexFound(uint deviceIndex)
-    {
-        myDeviceIndex = deviceIndex;
-        //if (myHandNumber == 1)
-        //    inputListener.Hand1DeviceFound -= HandleMyIndexFound;
-        //if (myHandNumber == 2)
-        //    inputListener.Hand2DeviceFound -= HandleMyIndexFound;
     }
 
     void TakeScreenshot(object sender, ClickedEventArgs e)

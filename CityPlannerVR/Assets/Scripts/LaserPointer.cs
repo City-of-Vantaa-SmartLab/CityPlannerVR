@@ -124,13 +124,7 @@ public class LaserPointer : MonoBehaviour
 
     public void ActivateCube(bool status)
     {
-        //if (pointer)
-        //{
-            pointer.SetActive(status);
-        //}
-        //else
-        //    Debug.Log("Pointer not set!");
-        
+            pointer.SetActive(status);     
     }
 
 

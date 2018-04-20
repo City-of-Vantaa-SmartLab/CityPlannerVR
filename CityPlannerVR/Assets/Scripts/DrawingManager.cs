@@ -20,22 +20,19 @@ using System;
 
 public class DrawingManager : PunBehaviour {
 
-    public int myHandNumber; //This should be set at inspector to either 1 or 2
-    public SteamVR_TrackedObject myTrackedObj;
+    public int myHandNumber;
     public Material currentMaterial;
     public GameObject currentGO;
     //public GameObject colliderHolder;
     //public List<BoxCollider> colliderList;
     public List<Vector3> vectorList;
 
-
-    [SerializeField]
-    private uint myDeviceIndex;
     private LineRenderer currentLineRenderer;
     private float lineRendererWidth = 0.02f;
     private MeshLineRenderer currentLineMesh;
     private int numClicks;
-    private InputListener inputListener;
+    private Hand myhand;
+    private InputMaster inputMaster;
     private ToolManager toolManager;
     private ToolManager.ToolType myTool;
 
@@ -72,36 +69,38 @@ public class DrawingManager : PunBehaviour {
 
     private bool InitOwn()
     {
-        if (myHandNumber == 0)
-            Debug.Log("Hand number not set for DrawingManager! Set at inspector to either 1 or 2");
-        inputListener = GameObject.Find("Player").GetComponent<InputListener>();
         toolManager = gameObject.GetComponentInParent<ToolManager>();
         if (toolManager)
+        {
             myTool = toolManager.currentTool;
-        myTrackedObj = gameObject.GetComponent<SteamVR_TrackedObject>();
+            myHandNumber = toolManager.myHandNumber;
+        }
+        myhand = gameObject.GetComponentInParent<Hand>();
 
-        if (!inputListener || !toolManager || !myTrackedObj)
+        if (myHandNumber == 0)
+            Debug.Log("Hand number not set for DrawingManager! Changing tool should set it");
+        inputMaster = GameObject.Find("Player").GetComponent<InputMaster>();
+
+
+        if (!inputMaster || !toolManager )
             return false;
         return true;
     }
 
     private void Subscribe()
     {
-        if (!inputListener)
-            inputListener = GameObject.Find("Player").GetComponent<InputListener>();
+        //if (!inputMaster)
+        //    inputMaster = GameObject.Find("Player").GetComponent<InputMaster>();
 
-        if (inputListener)
+        if (inputMaster)
         {
-            inputListener.TriggerClicked += HandleTriggerClicked;
-            inputListener.TriggerLifted += HandleTriggerLifted;
-            if (myHandNumber == 1)
-                inputListener.Hand1DeviceFound += HandleMyIndexFound;
-            if (myHandNumber == 2)
-                inputListener.Hand2DeviceFound += HandleMyIndexFound;
+            inputMaster.TriggerClicked += HandleTriggerClicked;
+            inputMaster.TriggerUnclicked += HandleTriggerLifted;
+
         }
         else
         {
-            Debug.Log("Did not find inputlistener!");
+            Debug.Log("Did not find inputmaster for drawingmanager!");
         }
         toolManager.OnToolChange += HandleToolChange;
 
@@ -109,14 +108,11 @@ public class DrawingManager : PunBehaviour {
 
     private void Unsubscribe()
     {
-        if (inputListener)
+        if (inputMaster)
         {
-            inputListener.TriggerClicked -= HandleTriggerClicked;
-            inputListener.TriggerLifted -= HandleTriggerLifted;
-            if (myHandNumber == 1)
-                inputListener.Hand1DeviceFound -= HandleMyIndexFound;
-            if (myHandNumber == 2)
-                inputListener.Hand2DeviceFound -= HandleMyIndexFound;
+            inputMaster.TriggerClicked -= HandleTriggerClicked;
+            inputMaster.TriggerUnclicked -= HandleTriggerLifted;
+
         }
         else
         {
@@ -130,12 +126,12 @@ public class DrawingManager : PunBehaviour {
     {
         if (myTool == ToolManager.ToolType.Painter)
         {
-            if (!alreadyDrawing && e.controllerIndex == myDeviceIndex)
+            if (!alreadyDrawing && e.controllerIndex == myHandNumber)
             {
                 triggerPressed = true;
                 StartDrawing(sender, e);
                 alreadyDrawing = true;
-                Debug.Log("Starting to draw with hand" + myHandNumber + " with index: " + myDeviceIndex);
+                Debug.Log("Starting to draw with hand" + myHandNumber);
             }
         }
     }
@@ -143,7 +139,7 @@ public class DrawingManager : PunBehaviour {
     private void HandleTriggerLifted(object sender, ClickedEventArgs e)
     {
 
-        if (e.controllerIndex == myDeviceIndex && alreadyDrawing)
+        if (e.controllerIndex == myHandNumber && alreadyDrawing)
         {
             triggerPressed = false;
             alreadyDrawing = false;
@@ -154,23 +150,11 @@ public class DrawingManager : PunBehaviour {
 
     }
 
-    private void HandleMyIndexFound(uint deviceIndex)
-    {
-        myDeviceIndex = deviceIndex;
-        //if (myHandNumber == 1)
-        //    inputListener.Hand1DeviceFound -= HandleMyIndexFound;
-        //if (myHandNumber == 2)
-        //    inputListener.Hand2DeviceFound -= HandleMyIndexFound;
-    }
 
-    private void HandleToolChange(uint deviceIndex, ToolManager.ToolType tool)
+    private void HandleToolChange(uint handNumber, ToolManager.ToolType tool)
     {
-        //Debug.Log("Tool change initiated");
-        if (deviceIndex == myDeviceIndex)
-        {
-            myTool = tool;
-            //Debug.Log("Tool change succesful");
-        }
+        myHandNumber = (int)handNumber;
+        myTool = tool;
     }
 
     void StartDrawing(object sender, ClickedEventArgs e)
@@ -184,26 +168,29 @@ public class DrawingManager : PunBehaviour {
 
         if (currentLineRenderer)
         {
-            if (e.controllerIndex == myDeviceIndex)
-                StartCoroutine(KeepDrawingLineRenderer(myTrackedObj));
+            if (e.controllerIndex == myHandNumber)
+                StartCoroutine(KeepDrawingLineRenderer());
         }
         else if (currentLineMesh)
         {
-            if (e.controllerIndex == myDeviceIndex)
-                StartCoroutine(KeepDrawingLineMesh(myTrackedObj));
+            if (e.controllerIndex == myHandNumber)
+                StartCoroutine(KeepDrawingLineMesh());
         }
 
     }
 
-    IEnumerator KeepDrawingLineRenderer(SteamVR_TrackedObject trackedObject)
+    IEnumerator KeepDrawingLineRenderer()
     {
         while (triggerPressed)
         {
            
             //Debug.Log("Still drawing");
             currentLineRenderer.positionCount = numClicks + 1;
-            vectorList.Add(trackedObject.transform.position);
-            currentLineRenderer.SetPosition(numClicks, trackedObject.transform.position);
+            //vectorList.Add(trackedObject.transform.position);
+            vectorList.Add(myhand.controller.transform.pos);
+
+            //currentLineRenderer.SetPosition(numClicks, trackedObject.transform.position);
+            currentLineRenderer.SetPosition(numClicks, myhand.controller.transform.pos);
             numClicks++;
             
             yield return new WaitForSeconds(.01f);
@@ -211,11 +198,12 @@ public class DrawingManager : PunBehaviour {
 
     }
 
-    IEnumerator KeepDrawingLineMesh(SteamVR_TrackedObject trackedObject)
+    IEnumerator KeepDrawingLineMesh()
     {
         while (triggerPressed)
         {
-            currentLineMesh.AddPoint(trackedObject.transform.position);
+            //currentLineMesh.AddPoint(trackedObject.transform.position);
+            currentLineMesh.AddPoint(myhand.controller.transform.pos);
             yield return new WaitForSeconds(.05f);
         }
 
@@ -279,6 +267,8 @@ public class DrawingManager : PunBehaviour {
         currentLineRenderer.startWidth = lineRendererWidth;
         currentLineRenderer.endWidth = lineRendererWidth;
         numClicks = 0;
+        currentLineRenderer.useWorldSpace = false;
+        currentLineRenderer.transform.position = myhand.transform.position - myhand.controller.transform.pos;
     }
 
     void CreateLineMesh()
