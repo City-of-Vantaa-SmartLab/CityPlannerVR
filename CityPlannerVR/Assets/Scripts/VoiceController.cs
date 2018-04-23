@@ -11,6 +11,9 @@ public class VoiceController : MonoBehaviour {
 
 	DissonanceComms comms;
     VoicePlayerState player;
+    VoiceBroadcastTrigger voiceTrigger;
+
+    string whisperTarget;
 
 
     GameObject indicator;
@@ -20,6 +23,8 @@ public class VoiceController : MonoBehaviour {
         comms = GameObject.Find("DissonanceSetup").GetComponent<DissonanceComms>();
         indicator = GameObject.Find("VoiceIndicator");
         indicator.SetActive(false);
+
+        voiceTrigger = GetComponent<VoiceBroadcastTrigger>();
 
         player = comms.FindPlayer(comms.LocalPlayerName);
 
@@ -35,6 +40,7 @@ public class VoiceController : MonoBehaviour {
     }
 
     //TODO: Subscribe to a button which will be used to toggle mute
+    //TODO: If a player is recording a comment, mute player
     void ToggleMutePlayer(){
 		if (comms.IsMuted == false) {
 			comms.IsMuted = true;
@@ -61,5 +67,15 @@ public class VoiceController : MonoBehaviour {
         }
 	}
 
-	//TODO: puheen kohdennus (sitten kun tiedetään yksityiskohtia toteutuksesta)
+    //TODO: how is it determined who's the target
+    void Whisper()
+    {
+        //if(joku ehto täyttyy, että voidaan kuiskata)
+        voiceTrigger.ChannelType = CommTriggerTarget.Player;
+        voiceTrigger.PlayerId = comms.FindPlayer(whisperTarget).Name;
+
+        //else
+        //Let's change it back when we are done whispering
+        voiceTrigger.ChannelType = CommTriggerTarget.Self;
+    }
 }

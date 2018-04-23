@@ -56,7 +56,7 @@ public class ScaleObject : MonoBehaviour {
 
         foreach (GameObject player in players)
         {
-            if (player.GetComponent<NetworkIdentity>().isLocalPlayer)
+            if (player.GetComponent<PhotonView>().isMine)
             {
                 localPlayer = player;
                 //Debug.Log("ScaleObject::FindLocalPlayer: Local player found! netID: " + player.GetComponent<NetworkIdentity>().netId);

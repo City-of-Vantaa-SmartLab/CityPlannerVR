@@ -45,12 +45,12 @@ public class VideoCamera : MonoBehaviour {
         //Left hand
         if (myHandNumber == 1)
         {
-            videoCameraScreen.transform.localPosition = new Vector3(0.25f, 0, 0);
+            videoCameraScreen.transform.localPosition = new Vector3(0.15f, 0, 0);
         }
         //Right hand
         else
         {
-            videoCameraScreen.transform.localPosition = new Vector3(-0.25f, 0, 0);
+            videoCameraScreen.transform.localPosition = new Vector3(-0.15f, 0, 0);
         }
 
 
