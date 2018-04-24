@@ -5,12 +5,47 @@ using UnityEngine.VR;
 using UnityEngine.EventSystems;
 using Valve.VR.InteractionSystem;
 using System;
+using Photon;
 
 /// <summary>
-/// Replaces inputlistener. CONTROLLER INDEX IN EVENTARGS e IS USED FOR HAND INDEX (1 or 2!)
+/// Replaces inputlistener. Controller index in EVENTARGS e IS USED FOR HAND INDEX (1 or 2!)
 /// </summary>
+/// 
+// toolRights table v0.3
+// 0000 0001 = moving objects
+// 0000 0010 = laser & peukutus
+// 0000 0100 = commenting
+// 0000 1000 = painter/eraser
 
-public class InputMaster : MonoBehaviour {
+// 0001 0000 = camera
+// 0010 0000 = spawn objects
+// 0100 0000 = reset/change scene
+// 1000 0000 = change rights
+
+// tools by role
+// 0000 0010 : Bystander
+// 0001 0110 : Spectator
+// 0011 0111 : Builder
+// 0001 1110 : Painter
+// 0011 1111 : Worker
+// 0111 1111 : Senior
+// 1111 1111 : Admin
+
+public class InputMaster : PunBehaviour {
+
+    public enum RoleType { Bystander, Spectator, Builder, Painter, Worker, Senior, Admin };
+
+    public RoleType Role
+    {
+        get
+        {
+            return currentRole;
+        }
+        set
+        {
+            currentRole = value;
+        }
+    }
 
     [SerializeField]
     private Hand hand1;
@@ -22,6 +57,8 @@ public class InputMaster : MonoBehaviour {
     private UnityEngine.XR.XRNode leftHandNode;
     [SerializeField]
     private UnityEngine.XR.XRNode rightHandNode;
+    [SerializeField]
+    private RoleType currentRole;
 
     public bool hand1Found;
     public bool hand2Found;
@@ -55,15 +92,19 @@ public class InputMaster : MonoBehaviour {
     public event ClickedEventHandler PadTouched;
     public event ClickedEventHandler PadUntouched;
 
-    public delegate void EventWithIndex(uint deviceIndex);
+    public delegate void EventWithIndex(int deviceIndex);
     public event EventWithIndex OnClearSelections; //event for highlightselection
-    public event EventWithIndex Hand1DeviceFound;
-    public event EventWithIndex Hand2DeviceFound;
+    //public event EventWithIndex Hand1DeviceFound;
+    //public event EventWithIndex Hand2DeviceFound;
+
+    public delegate void EventWithBits(BitArray bitArray);
+    public event EventWithBits ToolRights;
 
 
     void Start () {
         GameObject hand1GO;
         GameObject hand2GO;
+        currentRole = RoleType.Admin;
 
         // Get gameobject handling player VR stuff
         hand1GO = GameObject.Find("Player/SteamVRObjects/Hand1");
@@ -335,6 +376,22 @@ public class InputMaster : MonoBehaviour {
             //Debug.Log("tracking...");
             yield return new WaitForSeconds(.1f);
         }
+    }
+
+    public void ChangeToolRights(BitArray bitArray)
+    {
+        if (ToolRights != null)
+            ToolRights(bitArray);
+        // toolRights table v0.3
+        // 0000 0001 = moving objects
+        // 0000 0010 = laser & peukutus
+        // 0000 0100 = commenting
+        // 0000 1000 = painter/eraser
+
+        // 0001 0000 = camera
+        // 0010 0000 = spawn objects
+        // 0100 0000 = reset/change scene
+        // 1000 0000 = change rights
     }
 
 

@@ -120,7 +120,7 @@ public class HighlightSelection : PunBehaviour
         }
     }
 
-    private void HandleClearSelection(uint deviceIndex)
+    private void HandleClearSelection(int deviceIndex)
     {
         ToggleSelection(owner);
     }
