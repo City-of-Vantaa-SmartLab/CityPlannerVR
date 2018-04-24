@@ -37,12 +37,12 @@ public class ScaleObject : MonoBehaviour {
         {
             FindLocalPlayer();
         }
-
-        PlayerAvatar pa = localPlayer.GetComponent<PlayerAvatar>();
+                                                 
+        PhotonPlayerAvatar pa = localPlayer.GetComponent<PhotonPlayerAvatar>();
         if(pa != null)
         {
             //Debug.Log("ScaleObject::ScaleNetworkedPlayerAvatar: Scaling player! (" + pa.gameObject.name + ")");
-            pa.CmdUpdateScale(newScale);
+            pa.UpdateScale(newScale);
         } else
         {
             Debug.LogError("ScaleObject::ScaleNetworkedPlayerAvatar: Player avatar was null");
