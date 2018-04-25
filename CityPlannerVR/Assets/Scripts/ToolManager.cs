@@ -28,6 +28,13 @@ public class ToolManager : MonoBehaviour {
         }
     }
 
+    //For disabling object interactions when holding a tool in a hand
+    //Values come from the layer list
+    int buildingLayer = 9;
+    int measurePointLayer = 11;
+    int finalMask;
+    Valve.VR.InteractionSystem.Hand hand;
+
 
     private int numberOfTools = System.Enum.GetValues(typeof(ToolType)).Length;
     [SerializeField]
@@ -46,6 +53,14 @@ public class ToolManager : MonoBehaviour {
         inputListener = GameObject.Find("Player").GetComponent<InputListener>();
         SubscriptionOn();
         currentTool = ToolType.Empty;
+
+        int buildingLayerMask = 1 << buildingLayer;
+        int measureLayerMask = 1 << measurePointLayer;
+        finalMask = ~(buildingLayerMask | measureLayerMask);
+
+        hand = gameObject.GetComponent<Valve.VR.InteractionSystem.Hand>();
+
+        OnToolChange += PreventInteraction;
     }
 
     private void OnDestroy()
@@ -103,6 +118,20 @@ public class ToolManager : MonoBehaviour {
             if (tool >= numberOfTools)
                 tool = 0;
             ChangeTool((ToolType)tool);
+        }
+    }
+
+
+    void PreventInteraction(uint deviceIndex, ToolType tool)
+    {
+        //If there is no tool in players hand, they can interact with objects
+        if(Tool == ToolType.Empty)
+        {
+            hand.hoverLayerMask = -1;
+        }
+        else
+        {
+            hand.hoverLayerMask = finalMask;
         }
     }
 
