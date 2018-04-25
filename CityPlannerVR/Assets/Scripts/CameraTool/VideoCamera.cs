@@ -61,7 +61,7 @@ public class VideoCamera : MonoBehaviour {
 	private void OnDisable()
 	{
         Unsubscribe();
-        cameraProSetUpCtrl.DisableCamera();
+        //cameraProSetUpCtrl.DisableCamera();
 	}
 
 	private void Subscribe()
