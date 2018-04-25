@@ -8,26 +8,27 @@ using UnityEngine;
 /// and use the method ChangeTool to switch to a specific tool.
 /// </summary>
 
-// toolRights table v0.3
-// 0000 0001 = moving objects
-// 0000 0010 = laser & peukutus
-// 0000 0100 = commenting
-// 0000 1000 = painter/eraser
+// toolRights table v0.4
+// 0000 0000 0000 0001 = moving objects
+// 0000 0000 0000 0010 = laser
+// 0000 0000 0000 0100 = peukutus
+// 0000 0000 0000 1000 = commenting
 
-// 0001 0000 = camera
-// 0010 0000 = spawn objects
-// 0100 0000 = reset/change scene
-// 1000 0000 = change rights
+// 0000 0000 0001 0000 = painter
+// 0000 0000 0010 0000 = eraser
+// 0000 0000 0100 0000 = camera
+// 0000 0000 1000 0000 = 
 
-// toolStatus table
-// 0000 0001 = hand hover/interactions
-// 0000 0010 = teleporting
-// 0000 0100 = 
-// 0000 1000 = 
-// 0001 0000 = 
-// 0010 0000 =
-// 0100 0000 =
-// 1000 0000 = 
+// 0000 0001 0000 0000 = 
+// 0000 0010 0000 0000 = 
+// 0000 0100 0000 0000 = 
+// 0000 1000 0000 0000 = 
+
+// 0001 0000 0000 0000 = 
+// 0010 0000 0000 0000 = spawn objects
+// 0100 0000 0000 0000 = reset/change scene
+// 1000 0000 0000 0000 = change rights
+
 public class ToolManager : MonoBehaviour {
 
     public int myHandNumber; //This should be set at inspector to either 1 or 2
@@ -53,7 +54,12 @@ public class ToolManager : MonoBehaviour {
     [SerializeField]
     private InputMaster inputMaster;
     [SerializeField]
-    public ToolType currentTool;
+    private ToolType currentTool;
+    [SerializeField]
+    private bool handhoverEnabled;
+    [SerializeField]
+    private bool teleportEnabled;
+
 
     public delegate void EventWithIndexTool(uint handNumber, ToolManager.ToolType tool);
     public event EventWithIndexTool OnToolChange;
@@ -64,8 +70,7 @@ public class ToolManager : MonoBehaviour {
         inputMaster = GameObject.Find("Player").GetComponent<InputMaster>();
         SubscriptionOn();
         currentTool = ToolType.Empty;
-        
-}
+    }
 
 private void OnDestroy()
     {
@@ -104,28 +109,33 @@ private void OnDestroy()
 
     private void HandleNewRights(BitArray newRights)
     {
-        toolRights = getIntFromBitArray(newRights);
+        toolRights = GetIntFromBitArray(newRights);
         toolRights2 = newRights;
-        Debug.Log("New Rights int: " + toolRights + " and bitarray: " + toolRights2);
+        Debug.Log("New Rights int: " + toolRights + " and bitarray: " + toolRights2.Count);
     }
-    // toolRights table v0.3
-    // 0000 0001 = moving objects
-    // 0000 0010 = laser & peukutus
-    // 0000 0100 = commenting
-    // 0000 1000 = painter/eraser
-
-    // 0001 0000 = camera
-    // 0010 0000 = spawn objects
-    // 0100 0000 = reset/change scene
-    // 1000 0000 = change rights
 
     // move under Tool property?
     public bool ChangeTool(ToolType toolType)
     {
-        int test = 0;
-        test = test << (int)toolType;
+        int test;
+        BitArray test2;
+        if (toolType != ToolType.Empty)
+        {
+            test2 = GetBitMaskForTool(toolType);
+            test = GetIntFromBitArray(test2);
+            //test = 1;
+            //test = test << (int)toolType - 1 ; //bitmask for toolrights changed
+        }
+        else
+        {
+            test = 0;
+            test2 = null;
+        }
+
         Debug.Log("Tool enum entered:" + test + " and testresult: " + (toolRights & test));
-        if ((toolRights & test) != 0)
+        //if (toolType == ToolType.Empty || (toolRights & test) != 0)
+        if (toolType == ToolType.Empty || GetIntFromBitArray((test2.And(toolRights2))) != 0)
+
         {
             Tool = toolType;
             if (myHandNumber != 0 && OnToolChange != null)
@@ -147,24 +157,59 @@ private void OnDestroy()
     {
         if (myHandNumber == e.controllerIndex)
         {
-            int tool = (int)Tool;
-            tool++;
-            if (tool >= numberOfTools)
-                tool = 0;
-            ChangeTool((ToolType)tool);
+            int toolToBe = (int)Tool;
+            toolToBe++;
+            if (toolToBe >= numberOfTools)
+                toolToBe = 0;
+            while (!ChangeTool((ToolType)toolToBe))
+            {
+                toolToBe++;
+                if (toolToBe >= numberOfTools)
+                    toolToBe = 0;
+            }
+
+
         }
     }
 
-    private int getIntFromBitArray(BitArray bitArray)
+    private int GetIntFromBitArray(BitArray bitArray)
     {
-
         if (bitArray.Length > 32)
             throw new ArgumentException("Argument length shall be at most 32 bits.");
 
         int[] array = new int[1];
         bitArray.CopyTo(array, 0);
         return array[0];
-
     }
+
+    private BitArray GetBitMaskForTool(ToolType tool)
+    {
+        int[] boolArray;
+        switch (tool)
+        {
+            case ToolType.Painter:
+                boolArray = new int[16] { 0,0,0,0, 0,0,0,0, 0,0,0,1, 0,0,0,0 };
+                break;
+
+            case ToolType.Eraser:
+                boolArray = new int[16] { 0,0,0,0, 0,0,0,0, 0,0,1,0, 0,0,0,0 };
+                break;
+
+            case ToolType.Camera:
+                boolArray = new int[16] { 0,0,0,0, 0,0,0,0, 0,1,0,0, 0,0,0,0 };
+                break;
+
+            default:
+                boolArray = new int[16] { 0,0,0,0, 0,0,0,0, 0,0,0,0, 0,0,0,0 };
+                Debug.Log("Invalid tool!");
+                break;
+        }
+        BitArray temp = new BitArray(boolArray);
+        return temp;
+    }
+
+    // 0000 0000 0001 0000 = painter
+    // 0000 0000 0010 0000 = eraser
+    // 0000 0000 0100 0000 = camera
 
 }

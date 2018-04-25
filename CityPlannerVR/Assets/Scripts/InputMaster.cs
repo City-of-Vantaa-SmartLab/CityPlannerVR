@@ -11,25 +11,35 @@ using Photon;
 /// Replaces inputlistener. Controller index in EVENTARGS e IS USED FOR HAND INDEX (1 or 2!)
 /// </summary>
 /// 
-// toolRights table v0.3
-// 0000 0001 = moving objects
-// 0000 0010 = laser & peukutus
-// 0000 0100 = commenting
-// 0000 1000 = painter/eraser
+// toolRights table v0.4
+// 0000 0000 0000 0001 = moving objects
+// 0000 0000 0000 0010 = laser
+// 0000 0000 0000 0100 = peukutus
+// 0000 0000 0000 1000 = commenting
 
-// 0001 0000 = camera
-// 0010 0000 = spawn objects
-// 0100 0000 = reset/change scene
-// 1000 0000 = change rights
+// 0000 0000 0001 0000 = painter
+// 0000 0000 0010 0000 = eraser
+// 0000 0000 0100 0000 = camera
+// 0000 0000 1000 0000 = 
 
-// tools by role
-// 0000 0010 : Bystander
-// 0001 0110 : Spectator
-// 0011 0111 : Builder
-// 0001 1110 : Painter
-// 0011 1111 : Worker
-// 0111 1111 : Senior
-// 1111 1111 : Admin
+// 0000 0001 0000 0000 = 
+// 0000 0010 0000 0000 = 
+// 0000 0100 0000 0000 = 
+// 0000 1000 0000 0000 = 
+
+// 0001 0000 0000 0000 = 
+// 0010 0000 0000 0000 = spawn objects
+// 0100 0000 0000 0000 = reset/change scene
+// 1000 0000 0000 0000 = change rights
+
+// tools by role v0.4
+// 0000 0000 0000 0010 : Bystander
+// 0000 0000 0000 0110 : Spectator
+// 0010 0000 0100 1111 : Builder
+// 0000 0000 0111 1110 : Painter
+// 0010 0000 0111 1111 : Worker
+// 0111 1111 1111 1111 : Senior
+// 1111 1111 1111 1111 : Admin
 
 public class InputMaster : PunBehaviour {
 
@@ -44,6 +54,7 @@ public class InputMaster : PunBehaviour {
         set
         {
             currentRole = value;
+            SendToolRights();
         }
     }
 
@@ -102,9 +113,15 @@ public class InputMaster : PunBehaviour {
 
 
     void Start () {
+
         GameObject hand1GO;
         GameObject hand2GO;
-        currentRole = RoleType.Admin;
+        Role = RoleType.Bystander;
+        Role = RoleType.Spectator;
+        Role = RoleType.Builder;
+        Role = RoleType.Admin;
+
+        Invoke("SendToolRights", 0.5f);  
 
         // Get gameobject handling player VR stuff
         hand1GO = GameObject.Find("Player/SteamVRObjects/Hand1");
@@ -378,20 +395,94 @@ public class InputMaster : PunBehaviour {
         }
     }
 
-    public void ChangeToolRights(BitArray bitArray)
+    private BitArray GetBitArrayForRole(RoleType newRole)
     {
-        if (ToolRights != null)
-            ToolRights(bitArray);
-        // toolRights table v0.3
-        // 0000 0001 = moving objects
-        // 0000 0010 = laser & peukutus
-        // 0000 0100 = commenting
-        // 0000 1000 = painter/eraser
+        int[] intArray;
+        int magic;
+        //int intValue3 = 0b0001_0110_0011_0100_0010; //binary literal too new (C#7) for this project (C#4)! 
+        switch (newRole)
+        {
+            case RoleType.Bystander:
+                intArray = new int[16] { 0,0,0,0, 0,0,0,0, 0,0,0,0, 0,0,1,0 };
+                magic = Convert.ToInt32("0000000000000010", 2);
+                break;
 
-        // 0001 0000 = camera
-        // 0010 0000 = spawn objects
-        // 0100 0000 = reset/change scene
-        // 1000 0000 = change rights
+            case RoleType.Spectator:
+                intArray = new int[16] { 0,0,0,0, 0,0,0,0, 0,0,0,0, 0,1,1,0 };
+                magic = Convert.ToInt32("0000000000000110", 2);
+                break;
+
+            case RoleType.Builder:
+                intArray = new int[16] { 0, 0, 1, 0, 0, 0, 0, 0, 0, 1, 0, 0, 1, 1, 1, 1 };
+                magic = Convert.ToInt32("0010000001001111", 2);
+                break;
+
+            case RoleType.Painter:
+                intArray = new int[16] { 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 0 };
+                magic = Convert.ToInt32("0000000001111110", 2);
+                break;
+
+            case RoleType.Worker:
+                intArray = new int[16] { 0, 0, 1, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1 };
+                magic = Convert.ToInt32("0010000001111111", 2);
+                break;
+
+            case RoleType.Senior:
+                intArray = new int[16] { 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1 };
+                magic = Convert.ToInt32("0111111111111111", 2);
+                break;
+
+            case RoleType.Admin:
+                intArray = new int[16] { 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1 };
+                magic = Convert.ToInt32("1111111111111111", 2);
+                break;
+
+            default:
+                Debug.LogError("Invalid role!");
+                intArray = new int[16] { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
+                magic = Convert.ToInt32("0000000000000000", 2);
+                break;
+        }
+        BitArray bitArray = new BitArray(intArray);
+        Debug.Log("Changed to role " + newRole + ": " + bitArray.Count);
+
+        return bitArray; //send the int/int[] instead?
+    }
+    // toolRights table v0.4
+    // 0000 0000 0000 0001 = moving objects
+    // 0000 0000 0000 0010 = laser
+    // 0000 0000 0000 0100 = peukutus
+    // 0000 0000 0000 1000 = commenting
+
+    // 0000 0000 0001 0000 = painter
+    // 0000 0000 0010 0000 = eraser
+    // 0000 0000 0100 0000 = camera
+    // 0000 0000 1000 0000 = 
+
+    // 0000 0001 0000 0000 = 
+    // 0000 0010 0000 0000 = 
+    // 0000 0100 0000 0000 = 
+    // 0000 1000 0000 0000 = 
+
+    // 0001 0000 0000 0000 = 
+    // 0010 0000 0000 0000 = spawn objects
+    // 0100 0000 0000 0000 = reset/change scene
+    // 1000 0000 0000 0000 = change rights
+
+    // tools by role v0.4
+    // 0000 0000 0000 0010 : Bystander
+    // 0000 0000 0000 0110 : Spectator
+    // 0010 0000 0100 1111 : Builder
+    // 0000 0000 0111 1110 : Painter
+    // 0010 0000 0111 1111 : Worker
+    // 0111 1111 1111 1111 : Senior
+    // 1111 1111 1111 1111 : Admin
+
+    public void SendToolRights()
+    {
+        BitArray rights = GetBitArrayForRole(Role);
+        if (ToolRights != null)
+            ToolRights(rights);
     }
 
 

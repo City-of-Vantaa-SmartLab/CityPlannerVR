@@ -72,7 +72,7 @@ public class DrawingManager : PunBehaviour {
         toolManager = gameObject.GetComponentInParent<ToolManager>();
         if (toolManager)
         {
-            myTool = toolManager.currentTool;
+            myTool = toolManager.Tool;
             myHandNumber = toolManager.myHandNumber;
         }
         myhand = gameObject.GetComponentInParent<Hand>();

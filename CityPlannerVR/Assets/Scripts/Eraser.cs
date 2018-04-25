@@ -37,7 +37,7 @@ public class Eraser : MonoBehaviour {
         toolManager = GetComponentInParent<ToolManager>();
         if (toolManager)
         {
-            myTool = toolManager.currentTool;
+            myTool = toolManager.Tool;
             myHandNumber = toolManager.myHandNumber;
 
         }
@@ -121,7 +121,7 @@ public class Eraser : MonoBehaviour {
 
     private void CheckTool()
     {
-        myTool = toolManager.currentTool;
+        myTool = toolManager.Tool;
         ToggleEraser(myTool == ToolManager.ToolType.Eraser);
     }
 

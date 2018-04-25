@@ -55,7 +55,7 @@ public class PhotonLaserManager : PunBehaviour {
             toolManager = myHandGO.GetComponent<ToolManager>();
             if (toolManager)
             {
-                myTool = toolManager.currentTool;
+                myTool = toolManager.Tool;
                 myHandNumber = toolManager.myHandNumber;
             }
         }
