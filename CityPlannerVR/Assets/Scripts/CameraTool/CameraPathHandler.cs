@@ -46,7 +46,7 @@ public class CameraPathHandler : MonoBehaviour {
 
 		videoCamera.SetActive (false);
 
-		Subscribe ();
+		//Subscribe ();
 	}
 
 	void Subscribe(){
