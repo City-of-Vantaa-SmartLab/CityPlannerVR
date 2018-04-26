@@ -102,7 +102,7 @@ public class ScreenshotCamera : MonoBehaviour {
     {
         if (inputMaster)
         {
-            inputListener.TriggerClicked += TakeScreenshot;
+            inputMaster.TriggerClicked += TakeScreenshot;
 
             inputMaster.PadClicked += ChangePoint;
 
@@ -117,7 +117,7 @@ public class ScreenshotCamera : MonoBehaviour {
     {
         if (inputMaster)
         {
-            inputListener.TriggerClicked -= TakeScreenshot;
+            inputMaster.TriggerClicked -= TakeScreenshot;
 
             inputMaster.PadClicked -= ChangePoint;
 

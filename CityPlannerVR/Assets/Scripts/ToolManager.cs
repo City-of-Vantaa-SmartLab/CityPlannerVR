@@ -11,11 +11,10 @@ using UnityEngine;
 public class ToolManager : MonoBehaviour {
 
     public int myHandNumber; //This should be set at inspector to either 1 or 2
-    public enum ToolType { Empty, Eraser, EditingLaser, Painter, Camera, CommentLaser };  //includes modes for tools
+    public enum ToolType { Empty, Camera, CommentLaser, EditingLaser, Eraser, Painter, VideoCamera };  //includes modes for tools
     public int toolRights;
     public BitArray toolRights2;
     public int toolStatus;
-    public enum ToolType { Empty, Eraser, Laser, Painter, Camera, VideoCamera };
 
     public ToolType Tool
     {
@@ -70,7 +69,7 @@ public class ToolManager : MonoBehaviour {
 
         hand = gameObject.GetComponent<Valve.VR.InteractionSystem.Hand>();
 
-        OnToolChange += PreventInteraction;
+        AnnounceToolChanged += PreventInteraction;
     }
 
     private void OnDestroy()
@@ -167,72 +166,30 @@ public class ToolManager : MonoBehaviour {
 
     private int GetBitMaskForTool(ToolType tool)
     {
-        //int[] boolArray;
         int magic;
-        switch (tool)
-        {
-            case ToolType.Empty:
-                magic = 1; // same as "0000000000000001" as in empty
-                break;
-
-            case ToolType.Painter:
-                magic = Convert.ToInt32("0000000000010000", 2);
-                break;
-
-            case ToolType.Eraser:
-                magic = Convert.ToInt32("0000000000100000", 2);
-                break;
-
-            case ToolType.Camera:
-                magic = Convert.ToInt32("0000000001000000", 2);
-                break;
-
-            case ToolType.EditingLaser:
-                magic = Convert.ToInt32("0000000000000010", 2);
-                break;
-
-            case ToolType.CommentLaser:
-                magic = Convert.ToInt32("0000000010000000", 2);
-                break;
-
-            default:
-                magic = 1; // same as "0000000000000001" as in empty
-                Debug.Log("Invalid tool: " + tool);
-                break;
-        }
+        magic = 1 << (int)tool;
         return magic;
     }
 
-    // toolRights table v0.5
-    // 0000 0000 0000 0001 = empty
-    // 0000 0000 0000 0010 = duunarilaser
-    // 0000 0000 0000 0100 = peukutus (included in commentlaser?)
-    // 0000 0000 0000 1000 = commenting (included in commentlaser?)
+    // toolRights table v0.6
+    // 0000 0001 = Empty
+    // 0000 0010 = Camera
+    // 0000 0100 = CommentLaser
+    // 0000 1000 = EditingLaser
 
-    // 0000 0000 0001 0000 = painter
-    // 0000 0000 0010 0000 = eraser
-    // 0000 0000 0100 0000 = camera
-    // 0000 0000 1000 0000 = commentlaser
+    // 0001 0000 = Eraser
+    // 0010 0000 = Painter
+    // 0100 0000 = VideoCamera
+    // 1000 0000 = Admin specific stuff (resetting)
 
-    // 0000 0001 0000 0000 = 
-    // 0000 0010 0000 0000 = 
-    // 0000 0100 0000 0000 = 
-    // 0000 1000 0000 0000 = 
+    // tools by role v0.6
+    // 0000 0101 : Spectator
+    // 0111 1111 : Worker
+    // 1111 1111 : Admin
 
-    // 0001 0000 0000 0000 = move objects
-    // 0010 0000 0000 0000 = spawn objects
-    // 0100 0000 0000 0000 = reset/change scene
-    // 1000 0000 0000 0000 = change rights (rights from roles/hats?)
-
-    // tools by role v0.5
-    // 0000 0000 1000 0101 : Bystander
-    // 0010 0000 1111 1111 : Worker
-    // 1111 1111 1111 1111 : Admin
-
-    // tool input properties v0.5
-    // 0000 0000 1111 1110 : Teleport // currently every tool except "empty"
-    // 0000 0000 1111 1110 : Grab
-
+    // tool input properties v0.6 // every tool except "empty"
+    // 1111 1110 : Teleport
+    // 1111 1110 : Grab
 
     private int GetIntForRole(InputMaster.RoleType newRole)
     {
@@ -240,20 +197,20 @@ public class ToolManager : MonoBehaviour {
         switch (newRole)
         {
             case InputMaster.RoleType.Spectator:
-                magic = Convert.ToInt32("0000000010000101", 2);
+                magic = Convert.ToInt32("00000101", 2);
                 break;
 
             case InputMaster.RoleType.Worker:
-                magic = Convert.ToInt32("0010000011111111", 2);
+                magic = Convert.ToInt32("01111111", 2);
                 break;
 
             case InputMaster.RoleType.Admin:
-                magic = Convert.ToInt32("1111111111111111", 2);
+                magic = Convert.ToInt32("11111111", 2);
                 break;
 
             default:
                 Debug.LogError("Invalid role!");
-                magic = 1; // same as "0000000000000001" as in empty
+                magic = 1; // same as "00000001" as in empty
                 break;
         }
         //Debug.Log("Changed to role " + newRole + ": " + magic);
