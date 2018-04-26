@@ -21,15 +21,23 @@ public class InputListener : PunBehaviour {
     //public GameObject hand2HoldObject;
     private GameObject hand1;
     private GameObject hand2;
-    public uint hand1Index;
-    public uint hand2Index;
+    [SerializeField]
+    public uint hand1IndexViaRole;
+    [SerializeField]
+    public uint hand2IndexViaRole;
+    [SerializeField]
+    public uint hand1IndexViaPos;
+    [SerializeField]
+    public uint hand2IndexViaPos;
+    [SerializeField]
+    private ETrackedControllerRole hand1Role;
+    [SerializeField]
+    private ETrackedControllerRole hand2Role;
 
     [SerializeField]
 	private SteamVR_TrackedController hand1TrackedController;
 	[SerializeField]
 	private SteamVR_TrackedController hand2TrackedController;
-    [SerializeField]
-    private SelectionList selectionList;
 
     public SteamVR_TrackedObject hand1TrackedObject;
     public SteamVR_TrackedObject hand2TrackedObject;
@@ -85,57 +93,69 @@ public class InputListener : PunBehaviour {
             if (system != null)
             {
                 if (!foundHand1)
-                    hand1Index = system.GetTrackedDeviceIndexForControllerRole(ETrackedControllerRole.LeftHand);
+                    hand1IndexViaRole = system.GetTrackedDeviceIndexForControllerRole(ETrackedControllerRole.LeftHand);
                 if (!foundHand2)
-                    hand2Index = system.GetTrackedDeviceIndexForControllerRole(ETrackedControllerRole.RightHand);
+                    hand2IndexViaRole = system.GetTrackedDeviceIndexForControllerRole(ETrackedControllerRole.RightHand);
             }
             else
             {
                 Debug.Log("OpenVR.System not found!");
             }
             
-            if ((int)hand1Index != -1) //-1 is the same as none
+            if ((int)hand1IndexViaRole != -1) //-1 is the same as none
             {
                 if (!foundHand1)
                 {
-                    SetIndexForComponents((int)hand1Index, hand1TrackedController, hand1TrackedObject);
+                    SetIndexForComponents((int)hand1IndexViaRole, hand1TrackedController, hand1TrackedObject);
                     foundHand1 = true;
                 }
                 //"Hand1Found != null" checks that there are subscribers for the event
                 if (foundHand1 && Hand1DeviceFound != null)
                 {
                     //Debug.Log("Broadcasting Hand1Found");
-                    Hand1DeviceFound(hand1Index);
+                    Hand1DeviceFound(hand1IndexViaRole);
                 }
 
             }
 
-            if ((int)hand2Index != -1)
+            if ((int)hand2IndexViaRole != -1)
             {
                 if (!foundHand2)
                 {
-                    SetIndexForComponents((int)hand2Index, hand2TrackedController, hand2TrackedObject);
+                    SetIndexForComponents((int)hand2IndexViaRole, hand2TrackedController, hand2TrackedObject);
                     foundHand2 = true;
                 }
 
                 if (foundHand2 && Hand2DeviceFound != null)
                 {
                     //Debug.Log("Broadcasting Hand2Found");
-                    Hand2DeviceFound(hand2Index);
+                    Hand2DeviceFound(hand2IndexViaRole);
                 }
             }
             yield return new WaitForSeconds(2);
         }
-        Debug.Log("Index for left/hand1: " + (int)hand1Index + " and for right/hand2: " + (int)hand2Index);
+        Debug.Log("Index for left/hand1: " + (int)hand1IndexViaRole + " and for right/hand2: " + (int)hand2IndexViaRole);
         Invoke("FinalBroadcast", 1); //some scripts might have not had enough time to subscribe
+
+        //The script below is used for debugging purposes and checking what method is the most robust
+        hand1Role = system.GetControllerRoleForTrackedDeviceIndex(hand1IndexViaRole);
+        hand2Role = system.GetControllerRoleForTrackedDeviceIndex(hand2IndexViaRole);
+        Debug.Log("Hand 1: " + hand1Role + " and hand 2: " + hand2Role);
+
+        hand1IndexViaPos = (uint)SteamVR_Controller.GetDeviceIndex(
+            SteamVR_Controller.DeviceRelation.Leftmost);
+        hand2IndexViaPos = (uint)SteamVR_Controller.GetDeviceIndex(
+            SteamVR_Controller.DeviceRelation.Rightmost);
+        Debug.Log("Leftmost index (hand1): " + hand1IndexViaPos + " and rightmost index ( hand2): " + hand2IndexViaPos);
+
     }
 
     private void FinalBroadcast()
     {
         if (Hand1DeviceFound != null)
-            Hand1DeviceFound(hand1Index);
+            Hand1DeviceFound(hand1IndexViaRole);
         if (Hand2DeviceFound != null)
-            Hand2DeviceFound(hand2Index);
+            Hand2DeviceFound(hand2IndexViaRole);
     }
 
     private void SetIndexForComponents(int index, SteamVR_TrackedController trackedController, SteamVR_TrackedObject trackedObject)
@@ -260,15 +280,15 @@ public class InputListener : PunBehaviour {
     {
         if (OnClearSelections != null)
         {
-            SteamVR_LaserPointer temp1, temp2;
-            temp1 = hand1.GetComponent<SteamVR_LaserPointer>();
-            temp2 = hand2.GetComponent<SteamVR_LaserPointer>();
+            LaserPointer temp1, temp2;
+            temp1 = hand1.GetComponent<LaserPointer>();
+            temp2 = hand2.GetComponent<LaserPointer>();
             if ((temp1 == null || !temp1.active) && (temp2 == null || !temp2.active))
                 OnClearSelections(0);
         }
     }
 
-    public void SelectByLaser(SteamVR_LaserPointer laserPointer, GameObject targetedObject)
+    public void SelectByLaser(LaserPointer laserPointer, GameObject targetedObject)
     {
         if (laserPointer.gameObject.activeSelf && targetedObject != null)
         {

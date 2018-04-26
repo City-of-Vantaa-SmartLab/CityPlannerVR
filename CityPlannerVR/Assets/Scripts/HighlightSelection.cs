@@ -80,7 +80,7 @@ public class HighlightSelection : PunBehaviour
         if (isSelected)
         {
             isSelected = false;
-            owner.GetComponent<InputListener>().OnClearSelections -= HandleClearSelection;  //releases ownership of selected item
+            owner.GetComponent<InputMaster>().ClearSelections -= HandleClearSelection;  //releases ownership of selected item
             owner = null;
             lista.RemoveFromList(this.gameObject, lista.selectedList);
             if (tag == "Grid")
@@ -104,7 +104,7 @@ public class HighlightSelection : PunBehaviour
             if (isSelected)
             {
                 owner = selectingPlayer;
-                owner.GetComponent<InputListener>().OnClearSelections += HandleClearSelection;
+                owner.GetComponent<InputMaster>().ClearSelections += HandleClearSelection;
                 if (tag == "Grid")
                 {
                     var marker = Resources.Load("Prefabs/Marker", typeof(GameObject));
@@ -120,7 +120,7 @@ public class HighlightSelection : PunBehaviour
         }
     }
 
-    private void HandleClearSelection(uint deviceIndex)
+    private void HandleClearSelection(int deviceIndex)
     {
         ToggleSelection(owner);
     }

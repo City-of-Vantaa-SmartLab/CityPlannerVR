@@ -5,9 +5,7 @@ using UnityEngine;
 
 public class Eraser : MonoBehaviour {
 
-    [SerializeField]
-    private uint myDeviceIndex;
-    private InputListener inputListener;
+    private InputMaster inputMaster;
     private ToolManager toolManager;
     private ToolManager.ToolType myTool;
     public int myHandNumber;
@@ -22,7 +20,8 @@ public class Eraser : MonoBehaviour {
 
     // Use this for initialization
     void Start () {
-        InitOwn();
+        if (!InitOwn())
+            Debug.Log("Failed to initialize eraser!");
         Subscribe();
         CheckTool();
 	}
@@ -35,59 +34,54 @@ public class Eraser : MonoBehaviour {
 
     private bool InitOwn()
     {
+        toolManager = GetComponentInParent<ToolManager>();
+        if (toolManager)
+        {
+            myTool = toolManager.Tool;
+            myHandNumber = toolManager.myHandNumber;
+
+        }
         myMesh = gameObject.GetComponent<MeshRenderer>();
         myCollider = gameObject.GetComponent<CapsuleCollider>();
 
-        if (myHandNumber == 0)
-            Debug.Log("Hand number not set for Eraser! Set at inspector to either 1 or 2");
-        inputListener = GameObject.Find("Player").GetComponent<InputListener>();
-        toolManager = gameObject.GetComponentInParent<ToolManager>();
-        if (toolManager)
-            myTool = toolManager.currentTool;
-
-        if (!inputListener || !toolManager)
+        inputMaster = GameObject.Find("Player").GetComponent<InputMaster>();
+        if (!inputMaster || !toolManager)
             return false;
         return true;
     }
 
+
+
     private void Subscribe()
     {
-        if (!inputListener)
-            inputListener = GameObject.Find("Player").GetComponent<InputListener>();
+        //if (!inputMaster)
+        //    inputMaster = GameObject.Find("Player").GetComponent<InputMaster>();
 
-        if (inputListener)
+        if (inputMaster)
         {
-            inputListener.TriggerClicked += HandleTriggerClicked;
-            inputListener.TriggerLifted += HandleTriggerLifted;
-            if (myHandNumber == 1)
-                inputListener.Hand1DeviceFound += HandleMyIndexFound;
-            if (myHandNumber == 2)
-                inputListener.Hand2DeviceFound += HandleMyIndexFound;
+            inputMaster.TriggerClicked += HandleTriggerClicked;
+            inputMaster.TriggerUnclicked += HandleTriggerUnclicked;
         }
         else
         {
-            Debug.Log("Did not find inputlistener!");
+            Debug.Log("Did not find inputmaster!");
         }
-        toolManager.OnToolChange += HandleToolChange;
+        toolManager.AnnounceToolChanged += HandleToolChange;
 
     }
 
     private void Unsubscribe()
     {
-        if (inputListener)
+        if (inputMaster)
         {
-            inputListener.TriggerClicked -= HandleTriggerClicked;
-            inputListener.TriggerLifted -= HandleTriggerLifted;
-            if (myHandNumber == 1)
-                inputListener.Hand1DeviceFound -= HandleMyIndexFound;
-            if (myHandNumber == 2)
-                inputListener.Hand2DeviceFound -= HandleMyIndexFound;
+            inputMaster.TriggerClicked -= HandleTriggerClicked;
+            inputMaster.TriggerUnclicked -= HandleTriggerUnclicked;
         }
         else
         {
             Debug.Log("Did not find inputlistener!");
         }
-        toolManager.OnToolChange -= HandleToolChange;
+        toolManager.AnnounceToolChanged -= HandleToolChange;
     }
 
     private void HandleTriggerClicked(object sender, ClickedEventArgs e)
@@ -98,31 +92,24 @@ public class Eraser : MonoBehaviour {
         }
     }
 
-    private void HandleTriggerLifted(object sender, ClickedEventArgs e)
+    private void HandleTriggerUnclicked(object sender, ClickedEventArgs e)
     {
-
+        //Keeping trigger pressed would add objects to a list, releasing trigger would destroy them
     }
 
-    private void HandleToolChange(uint deviceIndex, ToolManager.ToolType tool)
+    private void HandleToolChange(uint handNumber, ToolManager.ToolType tool)
     {
-        if (myDeviceIndex == deviceIndex)
+        myHandNumber = (int)handNumber;
+        myTool = tool;
+        if (tool == ToolManager.ToolType.Eraser)
+            ToggleEraser(true);
+        else
         {
-            myTool = tool;
-            if (tool == ToolManager.ToolType.Eraser)
-                ToggleEraser(true);
-            else
-            {
-                ToggleEraser(false);
-                if (RemoveFromList != null)
-                    RemoveFromList(deviceIndex, this);
-            }
+            ToggleEraser(false);
+            if (RemoveFromList != null)
+                RemoveFromList(handNumber, this);
         }
             
-    }
-
-    private void HandleMyIndexFound(uint deviceIndex)
-    {
-        myDeviceIndex = deviceIndex;
     }
 
 
@@ -134,7 +121,7 @@ public class Eraser : MonoBehaviour {
 
     private void CheckTool()
     {
-        myTool = toolManager.currentTool;
+        myTool = toolManager.Tool;
         ToggleEraser(myTool == ToolManager.ToolType.Eraser);
     }
 

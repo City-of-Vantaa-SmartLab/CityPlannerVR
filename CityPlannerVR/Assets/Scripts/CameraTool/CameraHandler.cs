@@ -52,7 +52,7 @@ public class CameraHandler : MonoBehaviour {
 		VideoCameraModeActive = false;
 
         toolManager = GetComponent<ToolManager>();
-        toolManager.OnToolChange += ActivateCameraTool;
+        toolManager.AnnounceToolChanged += ActivateCameraTool;
         handNumber = toolManager.myHandNumber;
 
         screenshotCamera = normalCamera.GetComponent<ScreenshotCamera>();

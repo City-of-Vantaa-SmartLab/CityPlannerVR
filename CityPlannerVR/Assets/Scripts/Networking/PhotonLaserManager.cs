@@ -12,41 +12,32 @@ using Photon;
 
 public class PhotonLaserManager : PunBehaviour {
 
-    public int myHandNumber; //This should be set at inspector to either 1 or 2
+    public int myHandNumber;
     [SerializeField]
-    private GameObject myHand;
+    private GameObject myHandGO;
     [SerializeField]
-    private InputListener inputListener;
+    private InputMaster inputMaster;
     [SerializeField]
     private ToolManager toolManager;
     [SerializeField]
     private ToolManager.ToolType myTool;
-    [SerializeField]
-    private GameObject laserCube;
 
-    //public uint hand1Index;
-    //public uint hand2Index;
-    public uint myDeviceIndex;
     public GameObject myTargetedObject;
     [SerializeField]
     private PhotonLaserManager otherLaserManager;
     [SerializeField]
-    private SteamVR_LaserPointer myPointer;
-    private bool initOwnSuccess;
-    private bool initOtherSuccess;
+    private LaserPointer myPointer;
 
     private void Start()
     {
-        initOwnSuccess = InitOwn();
-        if (!initOwnSuccess)
+        if (!InitOwn())
             Debug.Log("Failed to initialize PhotonLaserManager on hand" + myHandNumber);
-        //else
-        //    Debug.Log("Initialized PhotonLaserManager");
 
         SubscriptionOn();
-        Invoke("InitOther", 1);
-        if (myTool != ToolManager.ToolType.Laser)
-            photonView.RPC("ActivateObject", PhotonTargets.All, false);
+        Invoke("InitOther", 0.5f);
+        if (myTool != ToolManager.ToolType.EditingLaser)
+            //photonView.RPC("ActivateObject", PhotonTargets.All, false);
+            Invoke("DeactivateObject", 0.5f);
     }
 
     private void OnDestroy()
@@ -56,17 +47,22 @@ public class PhotonLaserManager : PunBehaviour {
 
     private bool InitOwn()
     {
-        if (myHandNumber == 0)
-            Debug.Log("Hand number not set for PhotonLaserManager! Set at inspector to either 1 or 2");
-        myPointer = gameObject.GetComponent<SteamVR_LaserPointer>();
-        inputListener = GameObject.Find("Player").GetComponent<InputListener>();
-        laserCube = gameObject.transform.GetChild(0).GetChild(0).gameObject;
-        toolManager = gameObject.GetComponentInParent<ToolManager>();
-        if (toolManager)
-            myTool = toolManager.currentTool;
-        myHand = transform.parent.gameObject;
-
-        if (!myPointer || !inputListener || !toolManager || !laserCube || !myHand)
+        inputMaster = GameObject.Find("Player").GetComponent<InputMaster>();
+        myPointer = gameObject.GetComponent<LaserPointer>();
+        myHandGO = transform.parent.gameObject;
+        if (myHandGO)
+        {
+            toolManager = myHandGO.GetComponent<ToolManager>();
+            if (toolManager)
+            {
+                myTool = toolManager.Tool;
+                myHandNumber = toolManager.myHandNumber;
+            }
+        }
+        else
+            Debug.Log(this.name + " could not find hand GameObject!");
+        
+        if (!myHandGO || !myPointer || !inputMaster || !toolManager)
         {
             return false;
         }
@@ -76,8 +72,8 @@ public class PhotonLaserManager : PunBehaviour {
     private bool InitOther()
     {
         GameObject otherHand;
-        if (myHand)
-            otherHand = myHand.GetComponent<Hand>().otherHand.gameObject;
+        if (myHandGO)
+            otherHand = myHandGO.GetComponent<Hand>().otherHand.gameObject;
         else
             return false;
 
@@ -93,69 +89,55 @@ public class PhotonLaserManager : PunBehaviour {
 
     private void SubscriptionOn()
     {
-        inputListener.TriggerClicked += HandleTriggerClicked;
-        if (myHandNumber == 1)
-            inputListener.Hand1DeviceFound += HandleMyIndexFound;
-        if (myHandNumber == 2)
-            inputListener.Hand2DeviceFound += HandleMyIndexFound;
+        inputMaster.TriggerClicked += HandleTriggerClicked;
+        inputMaster.TriggerUnclicked += HandleTriggerUnclicked;
 
-        toolManager.OnToolChange += HandleToolChange;
+        toolManager.AnnounceToolChanged += HandleToolChange;
         myPointer.PointerIn += HandlePointerIn;
         myPointer.PointerOut += HandlePointerOut;
     }
 
     private void SubscriptionOff()
     {
-        inputListener.TriggerClicked -= HandleTriggerClicked;
-        if (myHandNumber == 1)
-            inputListener.Hand1DeviceFound -= HandleMyIndexFound;
-        if (myHandNumber == 2)
-            inputListener.Hand2DeviceFound -= HandleMyIndexFound;
+        inputMaster.TriggerClicked -= HandleTriggerClicked;
+        inputMaster.TriggerUnclicked -= HandleTriggerUnclicked;
 
-        toolManager.OnToolChange -= HandleToolChange;
+        toolManager.AnnounceToolChanged -= HandleToolChange;
         myPointer.PointerIn -= HandlePointerIn;
         myPointer.PointerOut -= HandlePointerOut;
     }
 
-    private void HandleMyIndexFound(uint deviceIndex)
+    private void ToggleLaser(uint deviceIndex, bool status)
     {
-        myDeviceIndex = deviceIndex;
-        //if (myHandNumber == 1)
-        //    inputListener.Hand1DeviceFound -= HandleMyIndexFound;
-        //if (myHandNumber == 2)
-        //    inputListener.Hand2DeviceFound -= HandleMyIndexFound;
-    }
-
-    private void ToggleLaser(uint deviceIndex, bool turnOn)
-    {
-        //Debug.Log("Toggling laser on: " + turnOn);
-        if (turnOn != myPointer.active)  //checks if it is already on/off
+        if (myPointer)
         {
-            photonView.RPC("ActivateObject", PhotonTargets.All, turnOn);
+            if (myPointer.active == status)
+                return;
+            //photonView.RPC("ActivateObject", PhotonTargets.All, status);
+            ActivateObject(status);
             if (myPointer.active == false)
             {
-                inputListener.LaserIsOff();
+                inputMaster.LaserIsOff();
             }
         }
+        else
+            Debug.Log("myPointer not set for lasermanager on" + gameObject.name);
     }
 
-    private void HandleToolChange(uint deviceIndex, ToolManager.ToolType tool)
+    private void HandleToolChange(uint handNumber, ToolManager.ToolType tool)
     {
-        if (deviceIndex == myDeviceIndex)
-        {
-            myTool = tool;
-            if (tool == ToolManager.ToolType.Laser)
-                ToggleLaser(deviceIndex, true);
-            else
-                ToggleLaser(deviceIndex, false);
-        }
-
+        myHandNumber = (int)handNumber;
+        myTool = tool;
+        if (tool == ToolManager.ToolType.EditingLaser)
+            ToggleLaser(handNumber, true);
+        else
+            ToggleLaser(handNumber, false);
     }
 
 
-    private void HandlePointerOut(object sender, PointerEventArgs e)
+    private void HandlePointerOut(object sender, LaserEventArgs e)
     {
-        if (myPointer.active && e.controllerIndex == myDeviceIndex)
+        if (myPointer.active && e.handNumber == myHandNumber)
         {
             myTargetedObject = null;
             var highlightScript = e.target.GetComponent<HighlightSelection>();
@@ -179,9 +161,9 @@ public class PhotonLaserManager : PunBehaviour {
     }
 
 
-    private void HandlePointerIn(object sender, PointerEventArgs e)
+    private void HandlePointerIn(object sender, LaserEventArgs e)
     {
-        if (myPointer.active && e.controllerIndex == myDeviceIndex)
+        if (myPointer.active && e.handNumber == myHandNumber)
         {
             myTargetedObject = e.target.gameObject;
 
@@ -209,17 +191,30 @@ public class PhotonLaserManager : PunBehaviour {
     public void ActivateObject(Boolean active)
     {
         myPointer.active = active;
-        laserCube.SetActive(active);
-        //gameObject.SetActive(active);
+        myPointer.ActivateCube(active);
+    }
+
+    public void DeactivateObject()
+    {
+        ActivateObject(false);
     }
 
     private void HandleTriggerClicked(object sender, ClickedEventArgs e)
     {
-        if (e.controllerIndex == myDeviceIndex && myPointer.active)
+        if (e.controllerIndex == myHandNumber && myPointer.active)
         {
-            inputListener.SelectByLaser(myPointer, myTargetedObject);
+            inputMaster.SelectByLaser(myPointer, myTargetedObject);
+            myPointer.triggered = true;
         }
 
+    }
+
+    private void HandleTriggerUnclicked(object sender, ClickedEventArgs e)
+    {
+        if (e.controllerIndex == myHandNumber && myPointer.active)
+        {
+            myPointer.triggered = false;
+        }
     }
 
 }
