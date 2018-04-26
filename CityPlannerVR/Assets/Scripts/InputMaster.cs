@@ -14,7 +14,7 @@ using Photon;
 
 public class InputMaster : PunBehaviour {
 
-    public enum RoleType { Bystander, Spectator, Builder, Painter, Worker, Senior, Admin };
+    public enum RoleType { Bystander, TEST, Worker, Admin };
 
     public RoleType Role
     {
@@ -84,10 +84,8 @@ public class InputMaster : PunBehaviour {
 
         GameObject hand1GO;
         GameObject hand2GO;
-        //Role = RoleType.Bystander;
-        //Role = RoleType.Spectator;
-        //Role = RoleType.Builder;
-        Role = RoleType.Admin;
+        Role = RoleType.TEST;
+        //Role = RoleType.Admin;
         Invoke("AnnounceRoleChanged", 0.5f);  //for late subscribers
 
         // Get gameobject handling player VR stuff

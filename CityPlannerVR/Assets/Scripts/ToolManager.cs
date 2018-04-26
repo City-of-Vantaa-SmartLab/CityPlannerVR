@@ -13,8 +13,6 @@ public class ToolManager : MonoBehaviour {
     public int myHandNumber; //This should be set at inspector to either 1 or 2
     public enum ToolType { Empty, Camera, CommentLaser, EditingLaser, Eraser, Painter, VideoCamera };  //includes modes for tools
     public int toolRights;
-    public BitArray toolRights2;
-    public int toolStatus;
 
     public ToolType Tool
     {
@@ -68,8 +66,6 @@ public class ToolManager : MonoBehaviour {
         finalMask = ~(buildingLayerMask | measureLayerMask);
 
         hand = gameObject.GetComponent<Valve.VR.InteractionSystem.Hand>();
-
-        AnnounceToolChanged += PreventInteraction;
     }
 
     private void OnDestroy()
@@ -107,7 +103,7 @@ public class ToolManager : MonoBehaviour {
     private void HandleNewRole(int index)
     {
         toolRights = GetIntForRole(inputMaster.Role);
-        Debug.Log("New Rights int: " + toolRights);
+        //Debug.Log("New Rights int: " + toolRights);
     }
 
     // move under Tool property?
@@ -116,12 +112,12 @@ public class ToolManager : MonoBehaviour {
         int test;
         test = GetBitMaskForTool(toolType);
 
-        Debug.Log("Tool " + toolType +" test:" + test + " and testresult: " + (toolRights & test));
+        //Debug.Log("Tool " + toolType +" test:" + test + " and testresult: " + (toolRights & test));
         if ((toolRights & test) != 0)
         //if (toolType == ToolType.Empty || GetIntFromBitArray((test2.And(toolRights2))) != 0)
         {
             Tool = toolType;  //setting value triggers event onToolChange
-            SetInputPropertiesByTool();
+            SetInputPropertiesByToolType();
             Debug.Log("Tool changed to " + Tool + " on hand" + myHandNumber);
             return true;
         }
@@ -150,20 +146,6 @@ public class ToolManager : MonoBehaviour {
         }
     }
 
-
-    void PreventInteraction(uint deviceIndex, ToolType tool)
-    {
-        //If there is no tool in players hand, they can interact with objects
-        if(Tool == ToolType.Empty)
-        {
-            hand.hoverLayerMask = -1;
-        }
-        else
-        {
-            hand.hoverLayerMask = finalMask;
-        }
-    }
-
     private int GetBitMaskForTool(ToolType tool)
     {
         int magic;
@@ -180,7 +162,7 @@ public class ToolManager : MonoBehaviour {
     // 0001 0000 = Eraser
     // 0010 0000 = Painter
     // 0100 0000 = VideoCamera
-    // 1000 0000 = Admin specific stuff (resetting)
+    // 1000 0000 = Admin specific tool (resetting?)
 
     // tools by role v0.6
     // 0000 0101 : Spectator
@@ -196,7 +178,11 @@ public class ToolManager : MonoBehaviour {
         int magic;
         switch (newRole)
         {
-            case InputMaster.RoleType.Spectator:
+            case InputMaster.RoleType.TEST:
+                magic = Convert.ToInt32("01000011", 2);
+                break;
+
+            case InputMaster.RoleType.Bystander:
                 magic = Convert.ToInt32("00000101", 2);
                 break;
 
@@ -217,13 +203,14 @@ public class ToolManager : MonoBehaviour {
         return magic;
     }
 
-    private void SetInputPropertiesByTool()
+
+    private void SetInputPropertiesByToolType()
     {
         bool teleport;
         bool grab;
         int toolMask = GetBitMaskForTool(Tool);
-        int teleportMask = Convert.ToInt32("0000000011111110", 2);
-        int grabMask = Convert.ToInt32("0000000011111110", 2); 
+        int teleportMask = Convert.ToInt32("11111110", 2);
+        int grabMask = Convert.ToInt32("11111110", 2); 
 
         if ((toolMask & teleportMask) != 0)
             teleport = false;
@@ -242,13 +229,22 @@ public class ToolManager : MonoBehaviour {
     private void ActivateTeleporting(bool status)
     {
         teleport.disableTeleport = !status;
-        Debug.Log("Teleporting active: " + status);
+        //Debug.Log("Teleporting active: " + status);
     }
 
     private void ActivateGrabbing(bool status)
     {
-
-        Debug.Log("Grabbing active(not implemented!): " + status);
+        //If there is no tool in players hand, they can interact with objects
+        //if (Tool == ToolType.Empty)
+        if (status)
+        {
+            hand.hoverLayerMask = -1;
+        }
+        else
+        {
+            hand.hoverLayerMask = finalMask;
+        }
+        //Debug.Log("Grabbing active: " + status);
     }
 
 

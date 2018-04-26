@@ -7,7 +7,7 @@ using RockVR.Vive.Demo;
 
 public class VideoCamera : MonoBehaviour {
 
-	InputListener inputListener;
+	InputMaster inputMaster;
     public CameraProSetUpCtrl cameraProSetUpCtrl;
 
 	public ControllerState controllerState = ControllerState.Normal;
@@ -28,7 +28,7 @@ public class VideoCamera : MonoBehaviour {
 
     void Awake(){
 
-		inputListener = GameObject.Find("Player").GetComponent<InputListener>();
+		inputMaster = GameObject.Find("Player").GetComponent<InputMaster>();
         captureCamera.targetTexture = screenTexture;
 	}
 
@@ -66,16 +66,10 @@ public class VideoCamera : MonoBehaviour {
 
 	private void Subscribe()
 	{
-		if (inputListener)
+		if (inputMaster)
 		{
-			inputListener.TriggerClicked += StartAndStopVideo;
-
-            inputListener.PadClicked += ChangePoint;
-
-            if (myHandNumber == 1)
-				inputListener.Hand1DeviceFound += HandleMyIndexFound;
-			if (myHandNumber == 2)
-				inputListener.Hand2DeviceFound += HandleMyIndexFound;
+			inputMaster.TriggerClicked += StartAndStopVideo;
+            inputMaster.PadClicked += ChangePoint;
 		}
 		else
 		{
@@ -85,28 +79,16 @@ public class VideoCamera : MonoBehaviour {
 
 	private void Unsubscribe()
 	{
-		if (inputListener)
+		if (inputMaster)
 		{
-			inputListener.TriggerClicked -= StartAndStopVideo;
-
-            inputListener.PadClicked -= ChangePoint;
-
-            if (myHandNumber == 1)
-				inputListener.Hand1DeviceFound -= HandleMyIndexFound;
-			if (myHandNumber == 2)
-				inputListener.Hand2DeviceFound -= HandleMyIndexFound;
+			inputMaster.TriggerClicked -= StartAndStopVideo;
+            inputMaster.PadClicked -= ChangePoint;
 		}
 		else
 		{
 			Debug.LogError("Did not find inputlistener!");
 		}
 	}
-
-	private void HandleMyIndexFound(uint deviceIndex)
-	{
-		myDeviceIndex = deviceIndex;
-	}
-
 
 	private void StartAndStopVideo(object sender, ClickedEventArgs e)
 	{
