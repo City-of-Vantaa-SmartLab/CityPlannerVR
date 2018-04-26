@@ -47,8 +47,9 @@ public class ScaleObject : MonoBehaviour {
             PhotonView photonView;
             photonView = pa.GetComponent<PhotonView>();
 
-            photonView.RPC("SetScale", PhotonTargets.All, newScale);
-            //pa.UpdateScale();
+            //photonView.RPC("SetScale", PhotonTargets.All, newScale);
+            pa.SetScale(newScale);
+            photonView.RPC("UpdateScale", PhotonTargets.All);
         }
 
         else

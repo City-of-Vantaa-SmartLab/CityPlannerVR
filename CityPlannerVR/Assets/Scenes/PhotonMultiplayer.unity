@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.23380288, g: 0.26192933, b: 0.31441426, a: 1}
+  m_IndirectSpecularColor: {r: 0, g: 0, b: 0, a: 1}
 --- !u!157 &3
 LightmapSettings:
   m_ObjectHideFlags: 0
@@ -3473,8 +3473,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   myHandNumber: 0
-  currentTool: 0
+  toolRights: 0
+  toolStatus: 0
   inputMaster: {fileID: 0}
+  currentTool: 0
+  grabEnabled: 0
+  teleportEnabled: 0
 --- !u!114 &480622353
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -10606,7 +10610,7 @@ Transform:
   - {fileID: 1938939171}
   - {fileID: 313976281}
   m_Father: {fileID: 0}
-  m_RootOrder: 2
+  m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &817901805
 Prefab:
@@ -11753,7 +11757,7 @@ Transform:
   m_LocalScale: {x: 0.01, y: 0.19, z: 0.54}
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 4
+  m_RootOrder: 5
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 15}
 --- !u!1 &944171845
 GameObject:
@@ -12599,7 +12603,7 @@ Transform:
   - {fileID: 997413095}
   - {fileID: 546970340}
   m_Father: {fileID: 0}
-  m_RootOrder: 15
+  m_RootOrder: 16
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &1003071795
 Prefab:
@@ -15534,6 +15538,7 @@ MonoBehaviour:
   playerSize: {fileID: 0}
   leftHandNode: 0
   rightHandNode: 0
+  currentRole: 0
   hand1Found: 0
   hand2Found: 0
   trigger: 0
@@ -18861,8 +18866,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   myHandNumber: 0
-  currentTool: 0
+  toolRights: 0
+  toolStatus: 0
   inputMaster: {fileID: 0}
+  currentTool: 0
+  grabEnabled: 0
+  teleportEnabled: 0
 --- !u!114 &1613533007
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -21497,7 +21506,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &1855374559
 Transform:
   m_ObjectHideFlags: 0
@@ -22106,7 +22115,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 8
+  m_RootOrder: 9
   m_LocalEulerAnglesHint: {x: 70, y: 125, z: 0}
 --- !u!4 &1905635972 stripped
 Transform:
