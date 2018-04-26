@@ -35,7 +35,7 @@ public class PhotonLaserManager : PunBehaviour {
 
         SubscriptionOn();
         Invoke("InitOther", 0.5f);
-        if (myTool != ToolManager.ToolType.Laser)
+        if (myTool != ToolManager.ToolType.EditingLaser)
             //photonView.RPC("ActivateObject", PhotonTargets.All, false);
             Invoke("DeactivateObject", 0.5f);
     }
@@ -92,7 +92,7 @@ public class PhotonLaserManager : PunBehaviour {
         inputMaster.TriggerClicked += HandleTriggerClicked;
         inputMaster.TriggerUnclicked += HandleTriggerUnclicked;
 
-        toolManager.OnToolChange += HandleToolChange;
+        toolManager.AnnounceToolChanged += HandleToolChange;
         myPointer.PointerIn += HandlePointerIn;
         myPointer.PointerOut += HandlePointerOut;
     }
@@ -100,8 +100,9 @@ public class PhotonLaserManager : PunBehaviour {
     private void SubscriptionOff()
     {
         inputMaster.TriggerClicked -= HandleTriggerClicked;
+        inputMaster.TriggerUnclicked -= HandleTriggerUnclicked;
 
-        toolManager.OnToolChange -= HandleToolChange;
+        toolManager.AnnounceToolChanged -= HandleToolChange;
         myPointer.PointerIn -= HandlePointerIn;
         myPointer.PointerOut -= HandlePointerOut;
     }
@@ -110,6 +111,8 @@ public class PhotonLaserManager : PunBehaviour {
     {
         if (myPointer)
         {
+            if (myPointer.active == status)
+                return;
             //photonView.RPC("ActivateObject", PhotonTargets.All, status);
             ActivateObject(status);
             if (myPointer.active == false)
@@ -125,7 +128,7 @@ public class PhotonLaserManager : PunBehaviour {
     {
         myHandNumber = (int)handNumber;
         myTool = tool;
-        if (tool == ToolManager.ToolType.Laser)
+        if (tool == ToolManager.ToolType.EditingLaser)
             ToggleLaser(handNumber, true);
         else
             ToggleLaser(handNumber, false);

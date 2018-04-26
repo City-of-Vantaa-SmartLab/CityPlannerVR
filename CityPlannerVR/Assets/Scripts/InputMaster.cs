@@ -11,35 +11,6 @@ using Photon;
 /// Replaces inputlistener. Controller index in EVENTARGS e IS USED FOR HAND INDEX (1 or 2!)
 /// </summary>
 /// 
-// toolRights table v0.4
-// 0000 0000 0000 0001 = moving objects
-// 0000 0000 0000 0010 = laser
-// 0000 0000 0000 0100 = peukutus
-// 0000 0000 0000 1000 = commenting
-
-// 0000 0000 0001 0000 = painter
-// 0000 0000 0010 0000 = eraser
-// 0000 0000 0100 0000 = camera
-// 0000 0000 1000 0000 = 
-
-// 0000 0001 0000 0000 = 
-// 0000 0010 0000 0000 = 
-// 0000 0100 0000 0000 = 
-// 0000 1000 0000 0000 = 
-
-// 0001 0000 0000 0000 = 
-// 0010 0000 0000 0000 = spawn objects
-// 0100 0000 0000 0000 = reset/change scene
-// 1000 0000 0000 0000 = change rights
-
-// tools by role v0.4
-// 0000 0000 0000 0010 : Bystander
-// 0000 0000 0000 0110 : Spectator
-// 0010 0000 0100 1111 : Builder
-// 0000 0000 0111 1110 : Painter
-// 0010 0000 0111 1111 : Worker
-// 0111 1111 1111 1111 : Senior
-// 1111 1111 1111 1111 : Admin
 
 public class InputMaster : PunBehaviour {
 
@@ -54,7 +25,7 @@ public class InputMaster : PunBehaviour {
         set
         {
             currentRole = value;
-            SendToolRights();
+            AnnounceRoleChanged();
         }
     }
 
@@ -104,24 +75,20 @@ public class InputMaster : PunBehaviour {
     public event ClickedEventHandler PadUntouched;
 
     public delegate void EventWithIndex(int deviceIndex);
-    public event EventWithIndex OnClearSelections; //event for highlightselection
+    public event EventWithIndex ClearSelections; //event for highlightselection
+    public event EventWithIndex RoleChanged;
     //public event EventWithIndex Hand1DeviceFound;
     //public event EventWithIndex Hand2DeviceFound;
-
-    public delegate void EventWithBits(BitArray bitArray);
-    public event EventWithBits ToolRights;
-
 
     void Start () {
 
         GameObject hand1GO;
         GameObject hand2GO;
-        Role = RoleType.Bystander;
-        Role = RoleType.Spectator;
-        Role = RoleType.Builder;
+        //Role = RoleType.Bystander;
+        //Role = RoleType.Spectator;
+        //Role = RoleType.Builder;
         Role = RoleType.Admin;
-
-        Invoke("SendToolRights", 0.5f);  
+        Invoke("AnnounceRoleChanged", 0.5f);  //for late subscribers
 
         // Get gameobject handling player VR stuff
         hand1GO = GameObject.Find("Player/SteamVRObjects/Hand1");
@@ -154,8 +121,6 @@ public class InputMaster : PunBehaviour {
 
     void GetInput(Hand hand, int handIndex)
     {
-        //if (hand.controller.GetHairTriggerDown(SteamVR_Controller.ButtonMask.Trigger)) //might be better, investigate!
-
         if (hand.controller.GetPressDown(SteamVR_Controller.ButtonMask.Trigger))
         {
             Valve.VR.VRControllerState_t controllerState = hand.controller.GetState();
@@ -290,76 +255,82 @@ public class InputMaster : PunBehaviour {
         }
     }
 
-    public virtual void OnTriggerClicked(ClickedEventArgs e)
+    private void OnTriggerClicked(ClickedEventArgs e)
     {
         if (TriggerClicked != null)
             TriggerClicked(this, e);
     }
 
-    public virtual void OnTriggerUnclicked(ClickedEventArgs e)
+    private void OnTriggerUnclicked(ClickedEventArgs e)
     {
         if (TriggerUnclicked != null)
             TriggerUnclicked(this, e);
     }
 
-    public virtual void OnMenuClicked(ClickedEventArgs e)
+    private void OnMenuClicked(ClickedEventArgs e)
     {
         if (MenuButtonClicked != null)
             MenuButtonClicked(this, e);
     }
 
-    public virtual void OnMenuUnclicked(ClickedEventArgs e)
+    private void OnMenuUnclicked(ClickedEventArgs e)
     {
         if (MenuButtonUnclicked != null)
             MenuButtonUnclicked(this, e);
     }
 
-    public virtual void OnPadClicked(ClickedEventArgs e)
+    private void OnPadClicked(ClickedEventArgs e)
     {
         if (PadClicked != null)
             PadClicked(this, e);
     }
 
-    public virtual void OnPadUnclicked(ClickedEventArgs e)
+    private void OnPadUnclicked(ClickedEventArgs e)
     {
         if (PadUnclicked != null)
             PadUnclicked(this, e);
     }
 
-    public virtual void OnPadTouched(ClickedEventArgs e, Hand hand)
+    private void OnPadTouched(ClickedEventArgs e, Hand hand)
     {
         trackCoordinates = true;
         StartCoroutine(TrackCoordinates(e, hand));
     }
 
-    public virtual void OnPadUntouched(ClickedEventArgs e)
+    private void OnPadUntouched(ClickedEventArgs e)
     {
         trackCoordinates = false;
         if (PadUntouched != null)
             PadUntouched(this, e);
     }
 
-    public virtual void OnGripped(ClickedEventArgs e)
+    private void OnGripped(ClickedEventArgs e)
     {
         if (Gripped != null)
             Gripped(this, e);
     }
 
-    public virtual void OnUngripped(ClickedEventArgs e)
+    private void OnUngripped(ClickedEventArgs e)
     {
         if (Ungripped != null)
             Ungripped(this, e);
     }
 
+    private void AnnounceRoleChanged()
+    {
+        if (RoleChanged != null)
+            RoleChanged(0);
+    }
+
     public void LaserIsOff()
     {
-        if (OnClearSelections != null)
+        if (ClearSelections != null)
         {
             LaserPointer temp1, temp2;
             temp1 = hand1.GetComponent<LaserPointer>();
             temp2 = hand2.GetComponent<LaserPointer>();
             if ((temp1 == null || !temp1.active) && (temp2 == null || !temp2.active))
-                OnClearSelections(0);
+                ClearSelections(0);
         }
     }
 
@@ -394,98 +365,7 @@ public class InputMaster : PunBehaviour {
             yield return new WaitForSeconds(.1f);
         }
     }
-
-    private BitArray GetBitArrayForRole(RoleType newRole)
-    {
-        int[] intArray;
-        int magic;
-        //int intValue3 = 0b0001_0110_0011_0100_0010; //binary literal too new (C#7) for this project (C#4)! 
-        switch (newRole)
-        {
-            case RoleType.Bystander:
-                intArray = new int[16] { 0,0,0,0, 0,0,0,0, 0,0,0,0, 0,0,1,0 };
-                magic = Convert.ToInt32("0000000000000010", 2);
-                break;
-
-            case RoleType.Spectator:
-                intArray = new int[16] { 0,0,0,0, 0,0,0,0, 0,0,0,0, 0,1,1,0 };
-                magic = Convert.ToInt32("0000000000000110", 2);
-                break;
-
-            case RoleType.Builder:
-                intArray = new int[16] { 0, 0, 1, 0, 0, 0, 0, 0, 0, 1, 0, 0, 1, 1, 1, 1 };
-                magic = Convert.ToInt32("0010000001001111", 2);
-                break;
-
-            case RoleType.Painter:
-                intArray = new int[16] { 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 0 };
-                magic = Convert.ToInt32("0000000001111110", 2);
-                break;
-
-            case RoleType.Worker:
-                intArray = new int[16] { 0, 0, 1, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1 };
-                magic = Convert.ToInt32("0010000001111111", 2);
-                break;
-
-            case RoleType.Senior:
-                intArray = new int[16] { 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1 };
-                magic = Convert.ToInt32("0111111111111111", 2);
-                break;
-
-            case RoleType.Admin:
-                intArray = new int[16] { 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1 };
-                magic = Convert.ToInt32("1111111111111111", 2);
-                break;
-
-            default:
-                Debug.LogError("Invalid role!");
-                intArray = new int[16] { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
-                magic = Convert.ToInt32("0000000000000000", 2);
-                break;
-        }
-        BitArray bitArray = new BitArray(intArray);
-        Debug.Log("Changed to role " + newRole + ": " + bitArray.Count);
-
-        return bitArray; //send the int/int[] instead?
-    }
-    // toolRights table v0.4
-    // 0000 0000 0000 0001 = moving objects
-    // 0000 0000 0000 0010 = laser
-    // 0000 0000 0000 0100 = peukutus
-    // 0000 0000 0000 1000 = commenting
-
-    // 0000 0000 0001 0000 = painter
-    // 0000 0000 0010 0000 = eraser
-    // 0000 0000 0100 0000 = camera
-    // 0000 0000 1000 0000 = 
-
-    // 0000 0001 0000 0000 = 
-    // 0000 0010 0000 0000 = 
-    // 0000 0100 0000 0000 = 
-    // 0000 1000 0000 0000 = 
-
-    // 0001 0000 0000 0000 = 
-    // 0010 0000 0000 0000 = spawn objects
-    // 0100 0000 0000 0000 = reset/change scene
-    // 1000 0000 0000 0000 = change rights
-
-    // tools by role v0.4
-    // 0000 0000 0000 0010 : Bystander
-    // 0000 0000 0000 0110 : Spectator
-    // 0010 0000 0100 1111 : Builder
-    // 0000 0000 0111 1110 : Painter
-    // 0010 0000 0111 1111 : Worker
-    // 0111 1111 1111 1111 : Senior
-    // 1111 1111 1111 1111 : Admin
-
-    public void SendToolRights()
-    {
-        BitArray rights = GetBitArrayForRole(Role);
-        if (ToolRights != null)
-            ToolRights(rights);
-    }
-
-
+    
     ////this could be added to scripts that need them, or centralized here if there are too many
     //IEnumerator TrackHandNodeCoroutine(UnityEngine.XR.XRNode node, GameObject hand)
     //{

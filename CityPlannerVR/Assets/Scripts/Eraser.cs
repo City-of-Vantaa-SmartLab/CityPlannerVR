@@ -66,7 +66,7 @@ public class Eraser : MonoBehaviour {
         {
             Debug.Log("Did not find inputmaster!");
         }
-        toolManager.OnToolChange += HandleToolChange;
+        toolManager.AnnounceToolChanged += HandleToolChange;
 
     }
 
@@ -81,7 +81,7 @@ public class Eraser : MonoBehaviour {
         {
             Debug.Log("Did not find inputlistener!");
         }
-        toolManager.OnToolChange -= HandleToolChange;
+        toolManager.AnnounceToolChanged -= HandleToolChange;
     }
 
     private void HandleTriggerClicked(object sender, ClickedEventArgs e)

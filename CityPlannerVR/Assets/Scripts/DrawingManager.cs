@@ -102,7 +102,7 @@ public class DrawingManager : PunBehaviour {
         {
             Debug.Log("Did not find inputmaster for drawingmanager!");
         }
-        toolManager.OnToolChange += HandleToolChange;
+        toolManager.AnnounceToolChanged += HandleToolChange;
 
     }
 
@@ -118,7 +118,7 @@ public class DrawingManager : PunBehaviour {
         {
             Debug.Log("Did not find inputlistener!");
         }
-        toolManager.OnToolChange -= HandleToolChange;
+        toolManager.AnnounceToolChanged -= HandleToolChange;
     }
 
 
