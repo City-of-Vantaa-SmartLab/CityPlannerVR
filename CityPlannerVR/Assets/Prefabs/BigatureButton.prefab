@@ -52,7 +52,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4205223463073826}
   m_Layer: 0
-  m_Name: TeleportPosition
+  m_Name: CityTeleportPos
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -116,7 +116,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1570466627461502}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: -3.16, z: -3.91}
+  m_LocalPosition: {x: 0.047, y: -0.11, z: -0.536}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 4803887623522580}
@@ -129,7 +129,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1041482282535660}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: -0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 4803887623522580}
@@ -154,9 +154,9 @@ Transform:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1914867471726522}
-  m_LocalRotation: {x: 0, y: 0.7071068, z: 0, w: 0.7071068}
-  m_LocalPosition: {x: 4.7821, y: 1.0232, z: 0.334}
-  m_LocalScale: {x: 0.3, y: 0.3, z: 0.3}
+  m_LocalRotation: {x: -0, y: 0.7071068, z: -0, w: 0.7071068}
+  m_LocalPosition: {x: 8.954433, y: 0.8851919, z: 6.0111246}
+  m_LocalScale: {x: 2, y: 2, z: 2}
   m_Children:
   - {fileID: 4071548835129364}
   - {fileID: 4205223463073826}
@@ -177,7 +177,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   objectToScale: {fileID: 0}
-  newScale: {x: 1, y: 1, z: 1}
+  newScale: {x: 0.074, y: 0.074, z: 0.074}
 --- !u!114 &114084039059266322
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -202,8 +202,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   teleportScript: {fileID: 0}
   teleportAreaScript: {fileID: 0}
-  newArcDistance: 10
-  newArcThickness: 0.01
+  newArcDistance: 2
+  newArcThickness: 0.001
 --- !u!114 &114249810310671564
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -257,7 +257,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   objectToScale: {fileID: 0}
-  newScale: {x: 0.5, y: 0.5, z: 0.5}
+  newScale: {x: 0.05, y: 0.05, z: 0.05}
 --- !u!114 &114611546938079314
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -352,7 +352,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   objectToScale: {fileID: 0}
-  newScale: {x: 0.5, y: 0.5, z: 0.5}
+  newScale: {x: 0.05, y: 0.05, z: 0.05}
 --- !u!114 &114911769741069926
 MonoBehaviour:
   m_ObjectHideFlags: 1

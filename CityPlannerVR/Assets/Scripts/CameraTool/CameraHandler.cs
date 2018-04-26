@@ -2,13 +2,20 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+/// <summary>
+/// Handles the activation and deactivation of the Screenshot camera and the video camera
+/// </summary>
 
 public class CameraHandler : MonoBehaviour {
 
     public GameObject normalCamera;
-    //public GameObject videoCamera;
+    public GameObject videoCameraObject;
 
-    ScreenshotCamera screenshot;
+    ScreenshotCamera screenshotCamera;
+    VideoCamera videoCamera;
+
+    //Needed to disable the teleport temporarily so it won't interfere with the camera controls
+    Valve.VR.InteractionSystem.Teleport teleport;
 
     ToolManager toolManager;
     int handNumber;
@@ -24,48 +31,61 @@ public class CameraHandler : MonoBehaviour {
 			normalCamera.SetActive (normalCameraModeActive);
 		}
 	}
-	//-------------------------------------------------------------------------------------------------------------------------------------
-	//private bool videoCameraModeActive = false;
-	//public bool VideoCameraModeActive {
-	//	get {
-	//		return videoCameraModeActive;
-	//	}
-	//	private set{ 
-	//		videoCameraModeActive = value;
-	//		//videoCamera.SetActive (videoCameraModeActive);
-	//	}
-	//}
-	//-------------------------------------------------------------------------------------------------------------------------------------
+    //-------------------------------------------------------------------------------------------------------------------------------------
+    private bool videoCameraModeActive = false;
+    public bool VideoCameraModeActive
+    {
+        get
+        {
+            return videoCameraModeActive;
+        }
+        private set
+        {
+            videoCameraModeActive = value;
+            videoCameraObject.SetActive (videoCameraModeActive);
+        }
+    }
+    //-------------------------------------------------------------------------------------------------------------------------------------
     void Awake()
     {
 		NormalCameraModeActive = false;
-		//VideoCameraModeActive = false;
+		VideoCameraModeActive = false;
 
         toolManager = GetComponent<ToolManager>();
         toolManager.AnnounceToolChanged += ActivateCameraTool;
         handNumber = toolManager.myHandNumber;
 
-        screenshot = normalCamera.GetComponent<ScreenshotCamera>();
+        screenshotCamera = normalCamera.GetComponent<ScreenshotCamera>();
+        videoCamera = videoCameraObject.GetComponent<VideoCamera>();
+
+        teleport = GameObject.Find("Teleporting").GetComponent<Valve.VR.InteractionSystem.Teleport>();
 
     }
 	//-------------------------------------------------------------------------------------------------------------------------------------
 	//Is called when the cameraTool is switched on
 	public void ActivateCameraTool(uint deviceIndex, ToolManager.ToolType tool)
 	{
-        //If camera is selected
+        //If screenshot camera is selected
         if(tool == ToolManager.ToolType.Camera)
         {
             //When camera is activated we give it the number of the hand that activated it
-            handNumber = toolManager.myHandNumber;
-            screenshot.myHandNumber = handNumber;
+            screenshotCamera.myHandNumber = handNumber;
             NormalCameraModeActive = true;
+            VideoCameraModeActive = false;
+
+            teleport.disableTeleport = true;
         }
 
-        //else if(tool == ToolManager.ToolType.VideoCamera)
-        //{
-        //    VideoCameraModeActive = true;
-        //}
-        //if camera is not selected
+        //if video camera is selected
+        else if (tool == ToolManager.ToolType.VideoCamera)
+        {
+            videoCamera.myHandNumber = handNumber;
+            VideoCameraModeActive = true;
+            NormalCameraModeActive = false;
+
+            teleport.disableTeleport = true;
+        }
+        //if neither camera is selected
         else
         {
             DeactivateCameraTool();
@@ -75,25 +95,12 @@ public class CameraHandler : MonoBehaviour {
 	//Is called when the cameraTool is switched off
 	public void DeactivateCameraTool()
 	{
-		NormalCameraModeActive = false;
-		//VideoCameraModeActive = false;
-	}
-	//-------------------------------------------------------------------------------------------------------------------------------------
-	//Switches between normal camera and video camera
-	//public void SwitchCameras(){
-	//	//If normal camera is active disable it and enable videoCamera
-	//	if (NormalCameraModeActive == true)
-	//	{
-	//		NormalCameraModeActive = false;
-	//		VideoCameraModeActive = true;
-	//	} 
+        if (toolManager.myHandNumber == screenshotCamera.myHandNumber)
+        {
+            NormalCameraModeActive = false;
+        }
 
-	//	//Otherwise enable normal camera and disable video camera
-	//	else 
-	//	{
-	//		NormalCameraModeActive = true;
-	//		VideoCameraModeActive = false;
-	//	}
-	//}
-    //-------------------------------------------------------------------------------------------------------------------------------------
+        VideoCameraModeActive = false;
+        teleport.disableTeleport = false;
+    }
 }

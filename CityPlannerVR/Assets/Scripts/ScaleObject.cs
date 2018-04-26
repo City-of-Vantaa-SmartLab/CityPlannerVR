@@ -37,13 +37,20 @@ public class ScaleObject : MonoBehaviour {
         {
             FindLocalPlayer();
         }
-
-        PlayerAvatar pa = localPlayer.GetComponent<PlayerAvatar>();
+                                                 
+        PhotonPlayerAvatar pa = localPlayer.GetComponent<PhotonPlayerAvatar>();
         if(pa != null)
         {
             //Debug.Log("ScaleObject::ScaleNetworkedPlayerAvatar: Scaling player! (" + pa.gameObject.name + ")");
-            pa.CmdUpdateScale(newScale);
-        } else
+            //pa.UpdateScale(newScale);
+
+            PhotonView photonView;
+            photonView = pa.GetComponent<PhotonView>();
+
+            photonView.RPC("UpdateScale", PhotonTargets.All, newScale);
+        }
+
+        else
         {
             Debug.LogError("ScaleObject::ScaleNetworkedPlayerAvatar: Player avatar was null");
         }
@@ -56,7 +63,7 @@ public class ScaleObject : MonoBehaviour {
 
         foreach (GameObject player in players)
         {
-            if (player.GetComponent<NetworkIdentity>().isLocalPlayer)
+            if (player.GetComponent<PhotonView>().isMine)
             {
                 localPlayer = player;
                 //Debug.Log("ScaleObject::FindLocalPlayer: Local player found! netID: " + player.GetComponent<NetworkIdentity>().netId);
