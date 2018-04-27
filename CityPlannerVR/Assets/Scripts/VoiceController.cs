@@ -12,6 +12,7 @@ public class VoiceController : MonoBehaviour {
 	DissonanceComms comms;
     VoicePlayerState player;
     VoiceBroadcastTrigger voiceTrigger;
+    InputMaster inputMaster;
 
     string whisperTarget;
 
@@ -24,9 +25,13 @@ public class VoiceController : MonoBehaviour {
         indicator = GameObject.Find("VoiceIndicator");
         indicator.SetActive(false);
 
+        inputMaster = GameObject.Find("Player").GetComponent<InputMaster>();
+
         voiceTrigger = GetComponent<VoiceBroadcastTrigger>();
 
         player = comms.FindPlayer(comms.LocalPlayerName);
+
+        inputMaster.Gripped += ToggleMutePlayer;
 
         player.OnStartedSpeaking += ToggleIndicator;
         player.OnStoppedSpeaking += ToggleIndicator;
@@ -39,9 +44,9 @@ public class VoiceController : MonoBehaviour {
         player.OnStoppedSpeaking -= ToggleIndicator;
     }
 
-    //TODO: Subscribe to a button which will be used to toggle mute
     //TODO: If a player is recording a comment, mute player
-    void ToggleMutePlayer(){
+    void ToggleMutePlayer(object sender, ClickedEventArgs e)
+    {
 		if (comms.IsMuted == false) {
 			comms.IsMuted = true;
             //indikoi pelaajille mute
