@@ -8,6 +8,9 @@ using UnityEngine;
 
 public class CameraHandler : MonoBehaviour {
 
+	private enum CameraMode {ScreenshotCamera, VideoCamera,}
+	private CameraMode cameraMode = CameraMode.ScreenshotCamera;
+
     public GameObject normalCamera;
     public GameObject videoCameraObject;
 

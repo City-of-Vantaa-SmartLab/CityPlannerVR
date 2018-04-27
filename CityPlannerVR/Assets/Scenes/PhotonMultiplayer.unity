@@ -21571,6 +21571,7 @@ GameObject:
   - component: {fileID: 1855374562}
   - component: {fileID: 1855374561}
   - component: {fileID: 1855374560}
+  - component: {fileID: 1855374568}
   m_Layer: 8
   m_Name: PathCamera
   m_TagString: Untagged
@@ -21586,7 +21587,7 @@ Transform:
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 1855374558}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 5.477, y: 2.17, z: -1.8772609}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 0.10000001, y: 0.1, z: 0.23000012}
   m_Children:
   - {fileID: 716086349}
@@ -21754,6 +21755,24 @@ MeshFilter:
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 1855374558}
   m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!114 &1855374568
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1855374558}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1b2b84c23d462d8469b4a6fc3a9772a9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  cameraProSetUpCtrl: {fileID: 1855374561}
+  controllerState: 2
+  myHandNumber: 0
+  videoCameraScreen: {fileID: 983827213}
+  screenTexture: {fileID: 8400000, guid: 1d095f111076eb14a84375555ccc299a, type: 2}
+  captureCamera: {fileID: 1855374564}
+  points: []
 --- !u!1001 &1866713662
 Prefab:
   m_ObjectHideFlags: 0

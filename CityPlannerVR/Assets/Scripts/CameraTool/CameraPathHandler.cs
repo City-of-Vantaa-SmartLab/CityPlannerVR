@@ -31,7 +31,7 @@ public class CameraPathHandler : MonoBehaviour {
 	bool holdTrigger = false;
 
 
-	float cameraSpeed = 1;
+	float cameraSpeed = 0.5f;
 
 #endregion
 
@@ -161,32 +161,36 @@ public class CameraPathHandler : MonoBehaviour {
 	//--------------------------------------------------------------------------------------------------------------------------------
 
 	private void jokuKamera(object sender, ClickedEventArgs e){
+        if (cameraStart)
+        {
+            videoCamera.SetActive(true);
+            videoCamera.transform.position = pathPoints[0].transform.position;
+            videoCamera.transform.rotation = pathPoints[0].transform.rotation;
 
-		if (cameraStart) {
-			
-			videoCamera.SetActive (true);
-			videoCamera.transform.position = pathPoints [0].transform.position;
-			videoCamera.transform.rotation = pathPoints [0].transform.rotation;
-
-			//StartCoroutine (MoveCamera ());
-		}
+            StartCoroutine (MoveCamera ());
+        }
 	}
 
 	private IEnumerator MoveCamera(){
 		//Camera starts at 0 and its first target is 1
 		int targetIndex = 1;
 
-		Vector3 targetPoint = pathPoints[targetIndex].transform.position;
-		//while the position of the videoCamera is not the same as the last points position we want to move the camera
-		while (videoCamera.transform.position != pathPoints[pathPoints.Count - 1].transform.position){
+        //while the position of the videoCamera is not the same as the last points position we want to move the camera
+        while (videoCamera.transform.position != pathPoints[pathPoints.Count - 1].transform.position)
+        {
+            Transform targetPoint = pathPoints[targetIndex].transform;
 
-			videoCamera.transform.position = targetPoint * Time.deltaTime * cameraSpeed;
-			if (Vector3.Distance(videoCamera.transform.position, targetPoint) >= 0.1f) {
-				targetIndex++;
-			}
+            videoCamera.transform.position = Vector3.MoveTowards(videoCamera.transform.position, targetPoint.position, Time.deltaTime * cameraSpeed);
+			videoCamera.transform.rotation = Quaternion.RotateTowards (videoCamera.transform.rotation, targetPoint.rotation, Time.deltaTime * 100f);
 
-			yield return null;
-		}
+            if (videoCamera.transform.position == targetPoint.position)
+            {
+                targetIndex++;
+            }
+
+            yield return null;
+        }
+
 		yield break;
 	}
 		
