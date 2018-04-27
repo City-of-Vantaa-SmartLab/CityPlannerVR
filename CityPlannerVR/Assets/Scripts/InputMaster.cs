@@ -8,7 +8,8 @@ using System;
 using Photon;
 
 /// <summary>
-/// Replaces inputlistener. Controller index in EVENTARGS e IS USED FOR HAND INDEX (1 or 2!)
+/// Replaces inputlistener. Controller index in eventargs e is used for hand index (1 or 2!).
+/// Subscribe for the clickedevents in the scripts that require input.
 /// </summary>
 /// 
 
