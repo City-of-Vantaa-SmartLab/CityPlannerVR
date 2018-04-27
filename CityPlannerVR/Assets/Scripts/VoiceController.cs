@@ -62,8 +62,17 @@ public class VoiceController : MonoBehaviour {
     {
         if (player.IsSpeaking)
         {
-            //Put indicator on
-            indicator.SetActive(true);
+            if(comms.IsMuted == false)
+            {
+                //Put indicator on
+                indicator.SetActive(true);
+            }
+
+            else
+            {
+                //Put indicator off
+                indicator.SetActive(false);
+            }
         }
         else
         {
