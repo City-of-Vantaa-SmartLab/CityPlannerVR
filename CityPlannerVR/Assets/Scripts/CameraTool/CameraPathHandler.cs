@@ -16,7 +16,7 @@ public class CameraPathHandler : MonoBehaviour {
 	enum Tool {Add, Move, Remove};
 	Tool tool;
 
-	InputListener inputListener;
+	InputMaster inputMaster;
 	XRLineRenderer line;
 
 	//The instantiated gameobject
@@ -36,8 +36,8 @@ public class CameraPathHandler : MonoBehaviour {
 #endregion
 
 	void Start(){
-		
-		inputListener = GameObject.Find("Player").GetComponent<InputListener> ();
+
+        inputMaster = GameObject.Find("Player").GetComponent<InputMaster> ();
 		line = GameObject.Find ("CameraPathLineDrawer").GetComponent<XRLineRenderer>();
 
 		pathPoints = new List<GameObject>();
@@ -50,15 +50,15 @@ public class CameraPathHandler : MonoBehaviour {
 	}
 
 	void Subscribe(){
-	
-		inputListener.TriggerClicked += TriggerPressed;
-		inputListener.TriggerLifted += TriggerReleased;
 
-		inputListener.TriggerClicked += InstantiatePathPoint;
-		inputListener.TriggerClicked += ActivatePointMoving;
-		inputListener.TriggerClicked += RemovePoint;
+        inputMaster.TriggerClicked += TriggerPressed;
+        inputMaster.TriggerUnclicked += TriggerReleased;
 
-		inputListener.TriggerClicked += jokuKamera;
+        inputMaster.TriggerClicked += InstantiatePathPoint;
+        inputMaster.TriggerClicked += ActivatePointMoving;
+        inputMaster.TriggerClicked += RemovePoint;
+
+        inputMaster.TriggerClicked += jokuKamera;
 	}
 
 	//--------------------------------------------------------------------------------------------------------------------------------
