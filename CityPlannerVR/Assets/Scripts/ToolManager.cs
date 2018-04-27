@@ -123,7 +123,7 @@ public class ToolManager : MonoBehaviour {
         }
         else
         {
-            Debug.Log("No right for tooltype: " + toolType);
+            //Debug.Log("No right for tooltype: " + toolType);
             return false;
         }
 
@@ -203,24 +203,25 @@ public class ToolManager : MonoBehaviour {
         return magic;
     }
 
-
     private void SetInputPropertiesByToolType()
     {
         bool teleport;
         bool grab;
         int toolMask = GetBitMaskForTool(Tool);
-        int teleportMask = Convert.ToInt32("11111110", 2);
-        int grabMask = Convert.ToInt32("11111110", 2); 
+        //int teleportMask = Convert.ToInt32("00000001", 2); //enabled on empty
+        //int grabMask = Convert.ToInt32("00000001", 2); 
+        int teleportMask = 1;  
+        int grabMask = 1; //faster than converting, change if necessary
 
         if ((toolMask & teleportMask) != 0)
-            teleport = false;
-        else
             teleport = true;
+        else
+            teleport = false;
 
         if ((toolMask & grabMask) != 0)
-            grab = false;
-        else
             grab = true;
+        else
+            grab = false;
 
         ActivateTeleporting(teleport);
         ActivateGrabbing(grab);
