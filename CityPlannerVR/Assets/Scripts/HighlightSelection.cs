@@ -30,6 +30,8 @@ public class HighlightSelection : PunBehaviour
     private GameObject owner;
     [SerializeField]
     private SelectionList lista;
+    [SerializeField]
+    private SteamVR_GazeTracker gazeTracker;
 
     void Start()
     {
@@ -41,8 +43,48 @@ public class HighlightSelection : PunBehaviour
         //selected = Shader.Find("FX/Flare");
         rend = this.GetComponent<MeshRenderer>();
         lineRend = this.GetComponent<XRLineRenderer>();
+        gazeTracker = GetComponent<SteamVR_GazeTracker>();
+        SubscriptionOn();
     }
 
+
+    private void OnDestroy()
+    {
+        SubscriptionOff();
+    }
+
+    private void SubscriptionOn()
+    {
+        if (gazeTracker)
+        {
+            gazeTracker.GazeOn += HandleGazeOn;
+            gazeTracker.GazeOff += HandleGazeOff;
+        }
+    }
+
+    private void SubscriptionOff()
+    {
+        if (gazeTracker)
+        {
+            gazeTracker.GazeOn -= HandleGazeOn;
+            gazeTracker.GazeOff -= HandleGazeOff;
+        }
+    }
+
+    private void HandleClearSelection(int deviceIndex)
+    {
+        ToggleSelection(owner);
+    }
+
+    private void HandleGazeOn(object sender, GazeEventArgs e)
+    {
+        throw new NotImplementedException();
+    }
+
+    private void HandleGazeOff(object sender, GazeEventArgs e)
+    {
+        throw new NotImplementedException();
+    }
 
     public void ToggleHighlight()
     {
@@ -120,14 +162,11 @@ public class HighlightSelection : PunBehaviour
         }
     }
 
-    private void HandleClearSelection(int deviceIndex)
-    {
-        ToggleSelection(owner);
-    }
+
 
     public void ChangeShaderRPC(String shaderToBe)
     {
-        photonView.RPC("ChangeShader", PhotonTargets.All, shaderToBe);
+        photonView.RPC("ChangeShader", PhotonTargets.AllBuffered, shaderToBe);
     }
 
     [PunRPC]
