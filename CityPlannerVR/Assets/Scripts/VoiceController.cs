@@ -13,9 +13,10 @@ public class VoiceController : MonoBehaviour {
     VoicePlayerState player;
     VoiceBroadcastTrigger voiceTrigger;
     InputMaster inputMaster;
+	public LaserPointer laser;
 
     string whisperTarget;
-
+	string playerTag = "VRLocalPlayer";
 
     GameObject indicator;
 
@@ -35,6 +36,10 @@ public class VoiceController : MonoBehaviour {
 
         player.OnStartedSpeaking += ToggleIndicator;
         player.OnStoppedSpeaking += ToggleIndicator;
+
+		//These could also be two different functions,but they aren't
+		laser.PointerIn += Whisper;
+		laser.PointerOut += Whisper;
     }
 
     private void OnDestroy()
@@ -73,14 +78,18 @@ public class VoiceController : MonoBehaviour {
 	}
 
     //TODO: how is it determined who's the target
-    void Whisper()
+	//TODO: test this
+	void Whisper(object sender, LaserEventArgs e)
     {
-        //if(joku ehto täyttyy, että voidaan kuiskata)
-        voiceTrigger.ChannelType = CommTriggerTarget.Player;
-        voiceTrigger.PlayerId = comms.FindPlayer(whisperTarget).Name;
+		if (e.target.tag == playerTag) {
+			whisperTarget = e.target.name;
 
-        //else
+			voiceTrigger.ChannelType = CommTriggerTarget.Player;
+			voiceTrigger.PlayerId = comms.FindPlayer (whisperTarget).Name;
+		}
+		else{
         //Let's change it back when we are done whispering
-        voiceTrigger.ChannelType = CommTriggerTarget.Self;
+			voiceTrigger.ChannelType = CommTriggerTarget.Self;
+		}
     }
 }
