@@ -9,6 +9,8 @@ public class CameraPathHandler : MonoBehaviour {
 
 	public GameObject videoCamera;
 
+	public ToolManager toolManager;
+
 #region private variables
 
 	InputMaster inputMaster;
@@ -19,6 +21,7 @@ public class CameraPathHandler : MonoBehaviour {
 
 	PathVideoCamera pathVideoCamera;
 
+	int myHandNumber;
 	int pathPointIndex = 0;
 
 	GameObject selectedPoint;
@@ -40,6 +43,9 @@ public class CameraPathHandler : MonoBehaviour {
 		videoCamera.SetActive (false);
 
 		Subscribe ();
+
+		myHandNumber = toolManager.myHandNumber;
+		Debug.Log ("myHandNumber = " + myHandNumber);
 	}
 
 	void Subscribe(){
@@ -69,11 +75,13 @@ public class CameraPathHandler : MonoBehaviour {
 
 	private void InstantiatePathPoint(object sender, ClickedEventArgs e)
     {
-		if (pathVideoCamera.tool == PathVideoCamera.Tool.Add) {
-			point = Instantiate (pathPoint, transform.position, transform.rotation) as GameObject;
-			pathVideoCamera.pathPoints.Add (point);
+		if (e.controllerIndex == myHandNumber) {
+			if (pathVideoCamera.tool == PathVideoCamera.Tool.Add) {
+				point = Instantiate (pathPoint, transform.position, transform.rotation) as GameObject;
+				pathVideoCamera.pathPoints.Add (point);
 
-			DrawLineBetweenPoints ();
+				DrawLineBetweenPoints ();
+			}
 		}
     }
 
@@ -94,8 +102,10 @@ public class CameraPathHandler : MonoBehaviour {
 	//													MOVE POINT
 	//--------------------------------------------------------------------------------------------------------------------------------
 	private void ActivatePointMoving(object sender, ClickedEventArgs e){
-		if (pathVideoCamera.tool == PathVideoCamera.Tool.Move) {
-			StartCoroutine (MovePoint ());
+		if (e.controllerIndex == myHandNumber) {
+			if (pathVideoCamera.tool == PathVideoCamera.Tool.Move) {
+				StartCoroutine (MovePoint ());
+			}
 		}
 	}
 
@@ -132,17 +142,19 @@ public class CameraPathHandler : MonoBehaviour {
 	//--------------------------------------------------------------------------------------------------------------------------------
 
 	private void RemovePoint(object sender, ClickedEventArgs e){
-		if (pathVideoCamera.tool == PathVideoCamera.Tool.Remove) {
-			if (selectedPoint != null) {
+		if (e.controllerIndex == myHandNumber) {
+			if (pathVideoCamera.tool == PathVideoCamera.Tool.Remove) {
+				if (selectedPoint != null) {
 
-				pathVideoCamera.pathPoints.Remove (selectedPoint);
+					pathVideoCamera.pathPoints.Remove (selectedPoint);
 
-				GameObject.Destroy (selectedPoint);
+					GameObject.Destroy (selectedPoint);
 
-				ReDrawPath ();
+					ReDrawPath ();
 
-				selectedPoint = null;
-				//pathVideoCamera.tool = PathVideoCamera.Tool.Add;
+					selectedPoint = null;
+					//pathVideoCamera.tool = PathVideoCamera.Tool.Add;
+				}
 			}
 		}
 	}
@@ -177,10 +189,12 @@ public class CameraPathHandler : MonoBehaviour {
 	}
 
 	void ActivatePathCamera(object sender, ClickedEventArgs e){
-		if (pathVideoCamera.tool == PathVideoCamera.Tool.Capture) {
-			videoCamera.SetActive (true);
+		if (e.controllerIndex == myHandNumber) {
+			if (pathVideoCamera.tool == PathVideoCamera.Tool.Capture) {
+				videoCamera.SetActive (true);
 
-			pathVideoCamera.InitializeCamera ();
+				pathVideoCamera.InitializeCamera ();
+			}
 		}
 	}
 }
