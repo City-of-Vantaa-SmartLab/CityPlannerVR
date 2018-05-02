@@ -8,14 +8,16 @@ using UnityEngine;
 
 public class CameraHandler : MonoBehaviour {
 
-	private enum CameraMode {ScreenshotCamera, VideoCamera,}
+	private enum CameraMode {ScreenshotCamera, VideoCamera, PathCamera}
 	private CameraMode cameraMode = CameraMode.ScreenshotCamera;
 
     public GameObject normalCamera;
     public GameObject videoCameraObject;
+	public GameObject pathCameraPoint;
 
     ScreenshotCamera screenshotCamera;
     VideoCamera videoCamera;
+	CameraPathHandler pathCameraHandler;
 
     //Needed to disable the teleport temporarily so it won't interfere with the camera controls
     Valve.VR.InteractionSystem.Teleport teleport;
@@ -49,10 +51,25 @@ public class CameraHandler : MonoBehaviour {
         }
     }
     //-------------------------------------------------------------------------------------------------------------------------------------
+	private bool pathPointModeActive = false;
+	public bool PathPointModeActive
+	{
+		get
+		{ 
+			return pathPointModeActive;
+		}
+		private set
+		{ 
+			pathPointModeActive = value;
+			pathCameraPoint.SetActive (pathPointModeActive);
+		}
+	}
+
     void Awake()
     {
 		NormalCameraModeActive = false;
 		VideoCameraModeActive = false;
+		PathPointModeActive = false;
 
         toolManager = GetComponent<ToolManager>();
         toolManager.AnnounceToolChanged += ActivateCameraTool;
@@ -60,6 +77,7 @@ public class CameraHandler : MonoBehaviour {
 
         screenshotCamera = normalCamera.GetComponent<ScreenshotCamera>();
         videoCamera = videoCameraObject.GetComponent<VideoCamera>();
+        pathCameraHandler = pathCameraPoint.GetComponent<CameraPathHandler>();
 
         teleport = GameObject.Find("Teleporting").GetComponent<Valve.VR.InteractionSystem.Teleport>();
 
@@ -69,25 +87,32 @@ public class CameraHandler : MonoBehaviour {
 	public void ActivateCameraTool(uint deviceIndex, ToolManager.ToolType tool)
 	{
         //If screenshot camera is selected
-        if(tool == ToolManager.ToolType.Camera)
-        {
-            //When camera is activated we give it the number of the hand that activated it
-            screenshotCamera.myHandNumber = handNumber;
-            NormalCameraModeActive = true;
-            VideoCameraModeActive = false;
+		if (tool == ToolManager.ToolType.Camera) {
+			//When camera is activated we give it the number of the hand that activated it
+			screenshotCamera.myHandNumber = handNumber;
+			NormalCameraModeActive = true;
+			VideoCameraModeActive = false;
+			PathPointModeActive = false;
 
-            teleport.disableTeleport = true;
-        }
+			teleport.disableTeleport = true;
+		}
 
         //if video camera is selected
-        else if (tool == ToolManager.ToolType.VideoCamera)
-        {
-            videoCamera.myHandNumber = handNumber;
-            VideoCameraModeActive = true;
-            NormalCameraModeActive = false;
+        else if (tool == ToolManager.ToolType.VideoCamera) {
+			videoCamera.myHandNumber = handNumber;
+			VideoCameraModeActive = true;
+			NormalCameraModeActive = false;
+			PathPointModeActive = false;
 
-            teleport.disableTeleport = true;
-        }
+			teleport.disableTeleport = true;
+		} 
+		//if path camera is selected
+		else if (tool == ToolManager.ToolType.PathCamera) {
+			pathCameraHandler.myHandNumber = handNumber;
+			PathPointModeActive = true;
+			NormalCameraModeActive = false;
+			VideoCameraModeActive = false;
+		}
         //if neither camera is selected
         else
         {
@@ -105,5 +130,6 @@ public class CameraHandler : MonoBehaviour {
 
         VideoCameraModeActive = false;
         teleport.disableTeleport = false;
+		PathPointModeActive = false;
     }
 }

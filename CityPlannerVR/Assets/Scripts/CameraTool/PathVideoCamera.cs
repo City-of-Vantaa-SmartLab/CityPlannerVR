@@ -59,38 +59,13 @@ public class PathVideoCamera : MonoBehaviour {
 
 
 		cameraProSetUpCtrl.EnableCamera();
-		//Subscribe();
 	}
 
 	private void OnDisable()
 	{
-		//Unsubscribe();
 		//cameraProSetUpCtrl.DisableCamera();
 	}
-
-	private void Subscribe()
-	{
-		if (inputMaster)
-		{
-			
-		}
-		else
-		{
-			Debug.LogError("Did not find inputlistener!");
-		}
-	}
-
-	private void Unsubscribe()
-	{
-		if (inputMaster)
-		{
-			
-		}
-		else
-		{
-			Debug.LogError("Did not find inputlistener!");
-		}
-	}
+		
 
 	private void StartAndStopVideo()
 	{
@@ -117,7 +92,6 @@ public class PathVideoCamera : MonoBehaviour {
 	public void InitializeCamera(){
 
 		if (tool == Tool.Capture) {
-			gameObject.SetActive (true);
 			transform.position = pathPoints [0].transform.position;
 			transform.rotation = pathPoints [0].transform.rotation;
 

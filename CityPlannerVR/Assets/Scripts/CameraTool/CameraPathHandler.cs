@@ -8,8 +8,12 @@ public class CameraPathHandler : MonoBehaviour {
     public GameObject pathPoint;
 
 	public GameObject videoCamera;
+	public GameObject cameraScreen;
 
-	public ToolManager toolManager;
+	[HideInInspector]
+	public int myHandNumber;
+
+	//public ToolManager toolManager;
 
 #region private variables
 
@@ -21,7 +25,6 @@ public class CameraPathHandler : MonoBehaviour {
 
 	PathVideoCamera pathVideoCamera;
 
-	int myHandNumber;
 	int pathPointIndex = 0;
 
 	GameObject selectedPoint;
@@ -44,7 +47,7 @@ public class CameraPathHandler : MonoBehaviour {
 
 		Subscribe ();
 
-		myHandNumber = toolManager.myHandNumber;
+		//myHandNumber = toolManager.myHandNumber;
 		Debug.Log ("myHandNumber = " + myHandNumber);
 	}
 
@@ -130,11 +133,15 @@ public class CameraPathHandler : MonoBehaviour {
 	}
 
 	private void TriggerPressed(object sender, ClickedEventArgs e){
-		holdTrigger = true;
+		if (e.controllerIndex == myHandNumber) {
+			holdTrigger = true;
+		}
 	}
 
 	private void TriggerReleased(object sender, ClickedEventArgs e){
-		holdTrigger = false;
+		if (e.controllerIndex == myHandNumber) {
+			holdTrigger = false;
+		}
 	}
 
 	//--------------------------------------------------------------------------------------------------------------------------------
@@ -192,6 +199,12 @@ public class CameraPathHandler : MonoBehaviour {
 		if (e.controllerIndex == myHandNumber) {
 			if (pathVideoCamera.tool == PathVideoCamera.Tool.Capture) {
 				videoCamera.SetActive (true);
+
+				cameraScreen.SetActive (true);
+				cameraScreen.transform.parent = gameObject.transform;
+				cameraScreen.transform.localPosition = Vector3.zero;
+				cameraScreen.transform.localRotation = Quaternion.identity;
+
 
 				pathVideoCamera.InitializeCamera ();
 			}

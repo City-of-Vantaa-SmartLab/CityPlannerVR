@@ -11,7 +11,7 @@ using UnityEngine;
 public class ToolManager : MonoBehaviour {
 
     public int myHandNumber; //This should be set at inspector to either 1 or 2
-    public enum ToolType { Empty, Camera, CommentLaser, EditingLaser, Eraser, Painter, VideoCamera };  //includes modes for tools
+    public enum ToolType { Empty, Camera, CommentLaser, EditingLaser, Eraser, Painter, PathCamera, VideoCamera };  //includes modes for tools
     public int toolRights;
 
     public ToolType Tool
@@ -54,7 +54,7 @@ public class ToolManager : MonoBehaviour {
 
     // Use this for initialization
     void Start () {
-        FindHandNumber();
+		FindHandNumber();
         inputMaster = GameObject.Find("Player").GetComponent<InputMaster>();
         SubscriptionOn();
         Tool = ToolType.Empty;
