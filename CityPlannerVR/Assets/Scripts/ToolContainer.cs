@@ -13,14 +13,12 @@ public class ToolContainer : MonoBehaviour {
 	void Start () {
         sphereCol = GetComponent<SphereCollider>();
         
-        
-
 	}
 
     private void OnTriggerEnter(Collider other)
     {
         //Debug.Log(this.name + "'s space has been invaded by: " + other.name);
-        //did not detect hands!
+        //did not detect hands! Other objects ok
     }
 
     private void OnTriggerExit(Collider other)
