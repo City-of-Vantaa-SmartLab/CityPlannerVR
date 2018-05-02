@@ -166,7 +166,7 @@ public class HighlightSelection : PunBehaviour
 
     public void ChangeShaderRPC(String shaderToBe)
     {
-        photonView.RPC("ChangeShader", PhotonTargets.AllBuffered, shaderToBe);
+        photonView.RPC("ChangeShader", PhotonTargets.AllBufferedViaServer, shaderToBe);
     }
 
     [PunRPC]
