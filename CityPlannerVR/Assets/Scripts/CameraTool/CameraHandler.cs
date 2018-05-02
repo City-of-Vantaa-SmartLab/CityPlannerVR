@@ -86,37 +86,43 @@ public class CameraHandler : MonoBehaviour {
 	//Is called when the cameraTool is switched on
 	public void ActivateCameraTool(uint deviceIndex, ToolManager.ToolType tool)
 	{
-        //If screenshot camera is selected
-		if (tool == ToolManager.ToolType.Camera) {
-			//When camera is activated we give it the number of the hand that activated it
-			screenshotCamera.myHandNumber = handNumber;
-			NormalCameraModeActive = true;
-			VideoCameraModeActive = false;
-			PathPointModeActive = false;
-
-			teleport.disableTeleport = true;
-		}
-
-        //if video camera is selected
-        else if (tool == ToolManager.ToolType.VideoCamera) {
-			videoCamera.myHandNumber = handNumber;
-			VideoCameraModeActive = true;
-			NormalCameraModeActive = false;
-			PathPointModeActive = false;
-
-			teleport.disableTeleport = true;
-		} 
-		//if path camera is selected
-		else if (tool == ToolManager.ToolType.PathCamera) {
-			pathCameraHandler.myHandNumber = handNumber;
-			PathPointModeActive = true;
-			NormalCameraModeActive = false;
-			VideoCameraModeActive = false;
-		}
-        //if neither camera is selected
-        else
+        if (deviceIndex == handNumber)
         {
-            DeactivateCameraTool();
+            //If screenshot camera is selected
+            if (tool == ToolManager.ToolType.Camera)
+            {
+                //When camera is activated we give it the number of the hand that activated it
+                screenshotCamera.myHandNumber = handNumber;
+                NormalCameraModeActive = true;
+                VideoCameraModeActive = false;
+                PathPointModeActive = false;
+
+                teleport.disableTeleport = true;
+            }
+
+            //if video camera is selected
+            else if (tool == ToolManager.ToolType.VideoCamera)
+            {
+                videoCamera.myHandNumber = handNumber;
+                VideoCameraModeActive = true;
+                NormalCameraModeActive = false;
+                PathPointModeActive = false;
+
+                teleport.disableTeleport = true;
+            }
+            //if path camera is selected
+            else if (tool == ToolManager.ToolType.PathCamera)
+            {
+                pathCameraHandler.myHandNumber = handNumber;
+                PathPointModeActive = true;
+                NormalCameraModeActive = false;
+                VideoCameraModeActive = false;
+            }
+            //if neither camera is selected
+            else
+            {
+                DeactivateCameraTool();
+            }
         }
 	}
 	//-------------------------------------------------------------------------------------------------------------------------------------

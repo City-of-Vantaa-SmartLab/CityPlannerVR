@@ -198,15 +198,18 @@ public class CameraPathHandler : MonoBehaviour {
 	void ActivatePathCamera(object sender, ClickedEventArgs e){
 		if (e.controllerIndex == myHandNumber) {
 			if (pathVideoCamera.tool == PathVideoCamera.Tool.Capture) {
-				videoCamera.SetActive (true);
+                if (pathVideoCamera.pathPoints.Count < 0)
+                {
+                    videoCamera.SetActive(true);
 
-				cameraScreen.SetActive (true);
-				cameraScreen.transform.parent = gameObject.transform;
-				cameraScreen.transform.localPosition = Vector3.zero;
-				cameraScreen.transform.localRotation = Quaternion.identity;
+                    cameraScreen.SetActive(true);
+                    cameraScreen.transform.parent = gameObject.transform;
+                    cameraScreen.transform.localPosition = Vector3.zero;
+                    cameraScreen.transform.localRotation = Quaternion.identity;
 
 
-				pathVideoCamera.InitializeCamera ();
+                    pathVideoCamera.InitializeCamera();
+                }
 			}
 		}
 	}
