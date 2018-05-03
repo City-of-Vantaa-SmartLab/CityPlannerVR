@@ -8,13 +8,16 @@ public class CameraPathHandler : MonoBehaviour {
     public GameObject pathPoint;
 
 	public GameObject videoCamera;
+	public GameObject cameraScreen;
 
-	public bool cameraStart = false;
+    public GameObject pathDrawer;
+
+	[HideInInspector]
+	public int myHandNumber;
+
+	//public ToolManager toolManager;
 
 #region private variables
-
-	enum Tool {Add, Move, Remove};
-	Tool tool;
 
 	InputMaster inputMaster;
 	XRLineRenderer line;
@@ -22,16 +25,12 @@ public class CameraPathHandler : MonoBehaviour {
 	//The instantiated gameobject
 	GameObject point;
 
-	//Put all the points on the path here
-	List<GameObject> pathPoints;
+	PathVideoCamera pathVideoCamera;
 
 	int pathPointIndex = 0;
 
 	GameObject selectedPoint;
 	bool holdTrigger = false;
-
-
-	float cameraSpeed = 1;
 
 #endregion
 
@@ -40,16 +39,47 @@ public class CameraPathHandler : MonoBehaviour {
         inputMaster = GameObject.Find("Player").GetComponent<InputMaster> ();
 		line = GameObject.Find ("CameraPathLineDrawer").GetComponent<XRLineRenderer>();
 
-		pathPoints = new List<GameObject>();
+		pathVideoCamera = videoCamera.GetComponent<PathVideoCamera> ();
+
+		pathVideoCamera.pathPoints = new List<GameObject>();
 		InitializePathLine ();
-		tool = Tool.Add;
+		//pathVideoCamera.tool = PathVideoCamera.Tool.Add;
 
 		videoCamera.SetActive (false);
 
-		//Subscribe ();
+		Subscribe ();
+
+		//myHandNumber = toolManager.myHandNumber;
+		Debug.Log ("myHandNumber = " + myHandNumber);
 	}
 
-	void Subscribe(){
+    private void OnEnable()
+    {
+        Subscribe();
+        if(pathVideoCamera.pathPoints.Count > 0)
+        {
+            for (int i = 0; i < pathVideoCamera.pathPoints.Count; i++)
+            {
+                pathVideoCamera.pathPoints[i].SetActive(true);
+            }
+            pathDrawer.SetActive(true);
+        }
+    }
+
+    private void OnDisable()
+    {
+        Unsubscribe();
+        if (pathVideoCamera.pathPoints.Count > 0)
+        {
+            for (int i = 0; i < pathVideoCamera.pathPoints.Count; i++)
+            {
+                pathVideoCamera.pathPoints[i].SetActive(false);
+            }
+            pathDrawer.SetActive(false);
+        }
+    }
+
+    void Subscribe(){
 
         inputMaster.TriggerClicked += TriggerPressed;
         inputMaster.TriggerUnclicked += TriggerReleased;
@@ -57,8 +87,17 @@ public class CameraPathHandler : MonoBehaviour {
         inputMaster.TriggerClicked += InstantiatePathPoint;
         inputMaster.TriggerClicked += ActivatePointMoving;
         inputMaster.TriggerClicked += RemovePoint;
+		inputMaster.TriggerClicked += ActivatePathCamera;
+	}
 
-        inputMaster.TriggerClicked += jokuKamera;
+	void Unsubscribe(){
+		inputMaster.TriggerClicked -= TriggerPressed;
+		inputMaster.TriggerUnclicked -= TriggerReleased;
+
+		inputMaster.TriggerClicked -= InstantiatePathPoint;
+		inputMaster.TriggerClicked -= ActivatePointMoving;
+		inputMaster.TriggerClicked -= RemovePoint;
+		inputMaster.TriggerClicked -= ActivatePathCamera;
 	}
 
 	//--------------------------------------------------------------------------------------------------------------------------------
@@ -67,18 +106,20 @@ public class CameraPathHandler : MonoBehaviour {
 
 	private void InstantiatePathPoint(object sender, ClickedEventArgs e)
     {
-		if (tool == Tool.Add) {
-			point = Instantiate (pathPoint, transform.position, transform.rotation) as GameObject;
-			pathPoints.Add (point);
+		if (e.controllerIndex == myHandNumber) {
+			if (pathVideoCamera.tool == PathVideoCamera.Tool.Add) {
+				point = Instantiate (pathPoint, transform.position, transform.rotation) as GameObject;
+				pathVideoCamera.pathPoints.Add (point);
 
-			DrawLineBetweenPoints ();
+				DrawLineBetweenPoints ();
+			}
 		}
     }
 
 	private void DrawLineBetweenPoints(){
 
 		line.SetVertexCount (pathPointIndex + 1);
-		line.SetPosition (pathPointIndex, pathPoints[pathPointIndex].transform.position);
+		line.SetPosition (pathPointIndex, pathVideoCamera.pathPoints[pathPointIndex].transform.position);
 		pathPointIndex++;
 		
 	}
@@ -92,8 +133,10 @@ public class CameraPathHandler : MonoBehaviour {
 	//													MOVE POINT
 	//--------------------------------------------------------------------------------------------------------------------------------
 	private void ActivatePointMoving(object sender, ClickedEventArgs e){
-		if (tool == Tool.Move) {
-			StartCoroutine (MovePoint ());
+		if (e.controllerIndex == myHandNumber) {
+			if (pathVideoCamera.tool == PathVideoCamera.Tool.Move) {
+				StartCoroutine (MovePoint ());
+			}
 		}
 	}
 
@@ -105,7 +148,7 @@ public class CameraPathHandler : MonoBehaviour {
 				selectedPoint.transform.position = transform.position;
 				selectedPoint.transform.rotation = transform.rotation;
 
-				int index = pathPoints.IndexOf (selectedPoint);
+				int index = pathVideoCamera.pathPoints.IndexOf (selectedPoint);
 				line.SetPosition (index, selectedPoint.transform.position);
 
 				yield return null;
@@ -118,11 +161,15 @@ public class CameraPathHandler : MonoBehaviour {
 	}
 
 	private void TriggerPressed(object sender, ClickedEventArgs e){
-		holdTrigger = true;
+		if (e.controllerIndex == myHandNumber) {
+			holdTrigger = true;
+		}
 	}
 
 	private void TriggerReleased(object sender, ClickedEventArgs e){
-		holdTrigger = false;
+		if (e.controllerIndex == myHandNumber) {
+			holdTrigger = false;
+		}
 	}
 
 	//--------------------------------------------------------------------------------------------------------------------------------
@@ -130,17 +177,19 @@ public class CameraPathHandler : MonoBehaviour {
 	//--------------------------------------------------------------------------------------------------------------------------------
 
 	private void RemovePoint(object sender, ClickedEventArgs e){
-		if (tool == Tool.Remove) {
-			if (selectedPoint != null) {
+		if (e.controllerIndex == myHandNumber) {
+			if (pathVideoCamera.tool == PathVideoCamera.Tool.Remove) {
+				if (selectedPoint != null) {
 
-				pathPoints.Remove (selectedPoint);
+					pathVideoCamera.pathPoints.Remove (selectedPoint);
 
-				GameObject.Destroy (selectedPoint);
+					GameObject.Destroy (selectedPoint);
 
-				ReDrawPath ();
+					ReDrawPath ();
 
-				selectedPoint = null;
-				tool = Tool.Add;
+					selectedPoint = null;
+					//pathVideoCamera.tool = PathVideoCamera.Tool.Add;
+				}
 			}
 		}
 	}
@@ -148,46 +197,12 @@ public class CameraPathHandler : MonoBehaviour {
 	private void ReDrawPath(){
 
 		InitializePathLine ();
-		line.SetVertexCount (pathPoints.Count);
-		pathPointIndex = pathPoints.Count;
+		line.SetVertexCount (pathVideoCamera.pathPoints.Count);
+		pathPointIndex = pathVideoCamera.pathPoints.Count;
 
-		for (int i = 0; i < pathPoints.Count; i++) {
-			line.SetPosition(i, pathPoints[i].transform.position);
+		for (int i = 0; i < pathVideoCamera.pathPoints.Count; i++) {
+			line.SetPosition(i, pathVideoCamera.pathPoints[i].transform.position);
 		}
-	}
-
-	//--------------------------------------------------------------------------------------------------------------------------------
-	//													CAMERA
-	//--------------------------------------------------------------------------------------------------------------------------------
-
-	private void jokuKamera(object sender, ClickedEventArgs e){
-
-		if (cameraStart) {
-			
-			videoCamera.SetActive (true);
-			videoCamera.transform.position = pathPoints [0].transform.position;
-			videoCamera.transform.rotation = pathPoints [0].transform.rotation;
-
-			//StartCoroutine (MoveCamera ());
-		}
-	}
-
-	private IEnumerator MoveCamera(){
-		//Camera starts at 0 and its first target is 1
-		int targetIndex = 1;
-
-		Vector3 targetPoint = pathPoints[targetIndex].transform.position;
-		//while the position of the videoCamera is not the same as the last points position we want to move the camera
-		while (videoCamera.transform.position != pathPoints[pathPoints.Count - 1].transform.position){
-
-			videoCamera.transform.position = targetPoint * Time.deltaTime * cameraSpeed;
-			if (Vector3.Distance(videoCamera.transform.position, targetPoint) >= 0.1f) {
-				targetIndex++;
-			}
-
-			yield return null;
-		}
-		yield break;
 	}
 		
 	//--------------------------------------------------------------------------------------------------------------------------------
@@ -196,7 +211,7 @@ public class CameraPathHandler : MonoBehaviour {
 		if (other.gameObject.tag == "CameraPathPoint") {
 			selectedPoint = other.gameObject;
 
-			tool = Tool.Move;
+			//pathVideoCamera.tool = PathVideoCamera.Tool.Move;
 		}
 	}
 
@@ -204,7 +219,26 @@ public class CameraPathHandler : MonoBehaviour {
 		if (other.gameObject.tag == "CameraPathPoint") {
 			selectedPoint = null;
 
-			tool = Tool.Add;
+			//pathVideoCamera.tool = PathVideoCamera.Tool.Add;
+		}
+	}
+
+	void ActivatePathCamera(object sender, ClickedEventArgs e){
+		if (e.controllerIndex == myHandNumber) {
+			if (pathVideoCamera.tool == PathVideoCamera.Tool.Capture) {
+                if (pathVideoCamera.pathPoints.Count < 0)
+                {
+                    videoCamera.SetActive(true);
+
+                    cameraScreen.SetActive(true);
+                    cameraScreen.transform.parent = gameObject.transform;
+                    cameraScreen.transform.localPosition = Vector3.zero;
+                    cameraScreen.transform.localRotation = Quaternion.identity;
+
+
+                    pathVideoCamera.InitializeCamera();
+                }
+			}
 		}
 	}
 }
