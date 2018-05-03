@@ -30,6 +30,10 @@ public class LaserPointer : MonoBehaviour
 
     Transform previousContact = null;
 
+    //For the whispering to work, we give this laser to photonAvatar (set in photonPlayerAvatar)
+    [HideInInspector]
+    public VoiceController voiceController;
+
     void Start()
     {
         holder = new GameObject();
@@ -54,17 +58,18 @@ public class LaserPointer : MonoBehaviour
         }
 
         triggered = false;
+
     }
 
     public virtual void OnPointerIn(LaserEventArgs e)
     {
-        if (PointerIn != null)
+        if (PointerIn != null && active)
             PointerIn(this, e);
     }
 
     public virtual void OnPointerOut(LaserEventArgs e)
     {
-        if (PointerOut != null)
+        if (PointerOut != null && active)
             PointerOut(this, e);
     }
 
