@@ -12,7 +12,7 @@ using Valve.VR.InteractionSystem;
 public class ToolManager : MonoBehaviour {
 
     public int myHandNumber; //This should be set at inspector to either 1 or 2
-    public enum ToolType { Empty, Camera, CommentLaser, EditingLaser, Eraser, Painter, VideoCamera };  //includes modes for tools
+    public enum ToolType { Empty, Camera, CommentLaser, EditingLaser, Eraser, Painter, PathCamera, VideoCamera };  //includes modes for tools
     public int toolRights;
 
     public ToolType Tool
@@ -59,6 +59,10 @@ public class ToolManager : MonoBehaviour {
     private void Awake()
     {
         FindHandNumber();
+    }
+
+    // Use this for initialization
+    void Start () { 
         inputMaster = GameObject.Find("Player").GetComponent<InputMaster>();
         SubscriptionOn();
     }
@@ -183,8 +187,8 @@ public class ToolManager : MonoBehaviour {
 
     // 0001 0000 = Eraser
     // 0010 0000 = Painter
-    // 0100 0000 = VideoCamera
-    // 1000 0000 = Admin specific tool (resetting?)
+    // 0100 0000 = PathCamera
+    // 1000 0000 = VideoCamera
 
     // tools by role v0.6
     // 0000 0101 : Spectator
@@ -201,7 +205,7 @@ public class ToolManager : MonoBehaviour {
         switch (newRole)
         {
             case InputMaster.RoleType.TEST:
-                magic = Convert.ToInt32("01000011", 2);
+                magic = Convert.ToInt32("11000111", 2);
                 break;
 
             case InputMaster.RoleType.Bystander:

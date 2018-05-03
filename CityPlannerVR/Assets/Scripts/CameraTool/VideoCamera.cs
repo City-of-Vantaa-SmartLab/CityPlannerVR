@@ -60,6 +60,7 @@ public class VideoCamera : MonoBehaviour {
 
 	private void OnDisable()
 	{
+        videoCameraScreen.SetActive(false);
         Unsubscribe();
         //cameraProSetUpCtrl.DisableCamera();
 	}
