@@ -28,13 +28,17 @@ public class PhotonLaserManager : PunBehaviour {
     [SerializeField]
     private LaserPointer myPointer;
 
-    private void Start()
+    private void Awake()
     {
         if (!InitOwn())
             Debug.Log("Failed to initialize PhotonLaserManager on hand" + myHandNumber);
+    }
 
+    private void Start()
+    {
         SubscriptionOn();
-        Invoke("InitOther", 0.5f);
+        InitOther();
+        //Invoke("InitOther", 0.5f);
         if (myTool != ToolManager.ToolType.EditingLaser)
             //photonView.RPC("ActivateObject", PhotonTargets.All, false);
             Invoke("DeactivateObject", 0.5f);
@@ -137,17 +141,13 @@ public class PhotonLaserManager : PunBehaviour {
 
     private void HandlePointerOut(object sender, LaserEventArgs e)
     {
-        if (myPointer.active && e.handNumber == myHandNumber)
+        if (myPointer.active)
         {
             myTargetedObject = null;
             var highlightScript = e.target.GetComponent<HighlightSelection>();
             if (highlightScript != null)
             {
-                if (highlightScript.isHighlighted)
-                {
-                    if (!otherLaserManager || otherLaserManager.myTargetedObject != myTargetedObject)
-                        highlightScript.ToggleHighlight();
-                }
+                    highlightScript.ToggleHighlight(sender, false);
             }
 
             var button = e.target.GetComponent<Button>();
@@ -163,16 +163,13 @@ public class PhotonLaserManager : PunBehaviour {
 
     private void HandlePointerIn(object sender, LaserEventArgs e)
     {
-        if (myPointer.active && e.handNumber == myHandNumber)
+        if (myPointer.active)
         {
             myTargetedObject = e.target.gameObject;
-
             var highlightScript = e.target.GetComponent<HighlightSelection>();
-
             if (highlightScript != null)
             {
-                if (!highlightScript.isHighlighted)
-                    highlightScript.ToggleHighlight();
+                highlightScript.ToggleHighlight(sender, true);
             }
 
             var button = e.target.GetComponent<Button>();

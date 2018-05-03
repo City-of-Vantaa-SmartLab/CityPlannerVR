@@ -113,14 +113,19 @@ public class ToolManager : MonoBehaviour {
 
     private void HandleTriggerClicked(object sender, ClickedEventArgs e)
     {
-        if (e.controllerIndex == myHandNumber)
+        if (e.controllerIndex == myHandNumber && activeItemContainer != null)
         {
-            if (activeItemContainer != null)
+            if (activeItemContainer.isToolContainer)
             {
                 if (activeItemContainer.tool == Tool)
                     ChangeTool(ToolType.Empty);
                 else
                     ChangeTool(activeItemContainer.tool);
+            }
+            else
+            {
+                //put getting items over here
+
             }
         }
     }

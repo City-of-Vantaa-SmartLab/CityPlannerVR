@@ -6,14 +6,17 @@ public class ItemContainer : MonoBehaviour {
 
     public ToolManager.ToolType tool;
     public GameObject toolGOShown;
-    private SphereCollider sphereCol;
+    public bool isToolContainer;
+
+    //private SphereCollider sphereCol;
 
 
-	// Use this for initialization
-	void Start () {
-        sphereCol = GetComponent<SphereCollider>();
-        
-	}
+    void Start()
+    {
+        //sphereCol = GetComponent<SphereCollider>();
+        if (tool != ToolManager.ToolType.Empty)
+            isToolContainer = true;
+    }
 
     //private void OnTriggerEnter(Collider other)
     //{

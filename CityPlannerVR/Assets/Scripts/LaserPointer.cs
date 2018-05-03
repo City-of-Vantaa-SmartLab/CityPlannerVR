@@ -5,7 +5,7 @@ using UnityEngine;
 
 public struct LaserEventArgs
 {
-    public uint handNumber;
+    //public uint handNumber;
     public float distance;
     public Transform target;
 }
@@ -17,11 +17,13 @@ public class LaserPointer : MonoBehaviour
 {
     public bool active = true;
     public bool triggered;
-    public Color color;
+    public Color editorColor;
+    public Color commentColor;
     public float thickness = 0.002f;
     public GameObject holder;
     public GameObject pointer;
     bool isActive = false;
+    public bool isForEditing;
     public event LaserEventHandler PointerIn;
     public event LaserEventHandler PointerOut;
 
@@ -30,7 +32,7 @@ public class LaserPointer : MonoBehaviour
 
     Transform previousContact = null;
 
-    void Start()
+    private void Awake()
     {
         holder = new GameObject();
         holder.transform.parent = this.transform;
@@ -44,7 +46,11 @@ public class LaserPointer : MonoBehaviour
         pointer.transform.localRotation = Quaternion.identity;
 
         Material newMaterial = new Material(Shader.Find("Unlit/Color"));
-        newMaterial.SetColor("_Color", color);
+        if (isForEditing)
+            newMaterial.SetColor("_Color", editorColor);
+        else
+            newMaterial.SetColor("_Color", commentColor);
+
         pointer.GetComponent<MeshRenderer>().material = newMaterial;
 
         BoxCollider collider = pointer.GetComponent<BoxCollider>();
