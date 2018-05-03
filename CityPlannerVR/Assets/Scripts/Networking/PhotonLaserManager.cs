@@ -13,6 +13,7 @@ using Photon;
 public class PhotonLaserManager : PunBehaviour {
 
     public int myHandNumber;
+    public LaserPointer myFakeLaser;
     [SerializeField]
     private GameObject myHandGO;
     [SerializeField]
@@ -115,6 +116,17 @@ public class PhotonLaserManager : PunBehaviour {
     {
         if (myPointer)
         {
+            if (myTool == ToolManager.ToolType.EditingLaser)
+            {
+                myPointer.GetComponent<MeshRenderer>().material.color = myPointer.editorColor;
+                myPointer.isInEditingMode = true;
+            }
+            if (myTool == ToolManager.ToolType.CommentLaser)
+            {
+                myPointer.GetComponent<MeshRenderer>().material.color = myPointer.commentColor;
+                myPointer.isInEditingMode = false;
+            }
+
             if (myPointer.active == status)
                 return;
             //photonView.RPC("ActivateObject", PhotonTargets.All, status);
@@ -132,10 +144,12 @@ public class PhotonLaserManager : PunBehaviour {
     {
         myHandNumber = (int)handNumber;
         myTool = tool;
-        if (tool == ToolManager.ToolType.EditingLaser)
+        if (tool == ToolManager.ToolType.EditingLaser || tool == ToolManager.ToolType.CommentLaser)
             ToggleLaser(handNumber, true);
         else
             ToggleLaser(handNumber, false);
+
+
     }
 
 
@@ -183,12 +197,14 @@ public class PhotonLaserManager : PunBehaviour {
     }
 
 
-
-    [PunRPC]
-    public void ActivateObject(Boolean active)
+    public void ActivateObject(bool active)
     {
         myPointer.active = active;
         myPointer.ActivateCube(active);
+        if (myFakeLaser)
+            photonView.RPC("ActivateFakeLaser", PhotonTargets.OthersBuffered, active);
+        else
+            Debug.Log("No fake laser found for " + this.name);
     }
 
     public void DeactivateObject()

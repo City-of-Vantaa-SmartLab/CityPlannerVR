@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Photon;
 
 public struct LaserEventArgs
 {
@@ -13,7 +14,7 @@ public struct LaserEventArgs
 public delegate void LaserEventHandler(object sender, LaserEventArgs e);
 
 
-public class LaserPointer : MonoBehaviour
+public class LaserPointer : PunBehaviour
 {
     public bool active = true;
     public bool triggered;
@@ -23,7 +24,8 @@ public class LaserPointer : MonoBehaviour
     public GameObject holder;
     public GameObject pointer;
     bool isActive = false;
-    public bool isForEditing;
+    public bool isForNetworking; //means it is "fake" and does not show for the local player
+    public bool isInEditingMode;  //comment or edit mode
     public event LaserEventHandler PointerIn;
     public event LaserEventHandler PointerOut;
 
@@ -46,7 +48,7 @@ public class LaserPointer : MonoBehaviour
         pointer.transform.localRotation = Quaternion.identity;
 
         Material newMaterial = new Material(Shader.Find("Unlit/Color"));
-        if (isForEditing)
+        if (isInEditingMode)
             newMaterial.SetColor("_Color", editorColor);
         else
             newMaterial.SetColor("_Color", commentColor);
@@ -60,17 +62,39 @@ public class LaserPointer : MonoBehaviour
         }
 
         triggered = false;
+
+        if (isForNetworking)
+        {
+            PhotonLaserManager photonLaserManager;
+            if (transform.parent.name == "PhotonHandLeft")
+            {
+                photonLaserManager = GameObject.Find("Player/SteamVRObjects/Hand1").GetComponent<PhotonLaserManager>();
+            }
+            else if (transform.parent.name == "PhotonHandRight")
+            {
+                photonLaserManager = GameObject.Find("Player/SteamVRObjects/Hand2").GetComponent<PhotonLaserManager>();
+
+            }
+            else
+            {
+                Debug.Log("Could not determine photonlasermanager for laserpointer in " + transform.parent.name);
+                return;
+            }
+            photonLaserManager.myFakeLaser = this;
+            ActivateCube(false);
+            photonView.RPC("ActivateFakeLaser", PhotonTargets.OthersBuffered, active);
+        }
     }
 
     public virtual void OnPointerIn(LaserEventArgs e)
     {
-        if (PointerIn != null)
+        if (!isForNetworking && PointerIn != null)
             PointerIn(this, e);
     }
 
     public virtual void OnPointerOut(LaserEventArgs e)
     {
-        if (PointerOut != null)
+        if (!isForNetworking && PointerOut != null)
             PointerOut(this, e);
     }
 
@@ -133,5 +157,14 @@ public class LaserPointer : MonoBehaviour
             pointer.SetActive(status);     
     }
 
+    //Will only be sent to other clients
+    [PunRPC]
+    public void ActivateFakeLaser(bool status)
+    {
+        if (isForNetworking && photonView.isMine)
+        {
+            ActivateCube(status);
+        }
+    }
 
 }
