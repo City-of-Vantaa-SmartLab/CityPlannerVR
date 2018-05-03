@@ -183,7 +183,7 @@ public class ToolManager : MonoBehaviour {
         switch (newRole)
         {
             case InputMaster.RoleType.TEST:
-                magic = Convert.ToInt32("11000011", 2);
+                magic = Convert.ToInt32("11000111", 2);
                 break;
 
             case InputMaster.RoleType.Bystander:

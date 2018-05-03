@@ -84,12 +84,16 @@ public class VoiceController : MonoBehaviour {
 		if (e.target.tag == playerTag) {
 			whisperTarget = e.target.name;
 
+            Debug.Log("Started whispering to " + e.target.name);
+
 			voiceTrigger.ChannelType = CommTriggerTarget.Player;
 			voiceTrigger.PlayerId = comms.FindPlayer (whisperTarget).Name;
 		}
 		else{
-        //Let's change it back when we are done whispering
-			voiceTrigger.ChannelType = CommTriggerTarget.Self;
+
+            Debug.Log("Stoped whispering to " + e.target.name);
+            //Let's change it back when we are done whispering
+            voiceTrigger.ChannelType = CommTriggerTarget.Self;
 		}
     }
 }

@@ -10,6 +10,8 @@ public class CameraPathHandler : MonoBehaviour {
 	public GameObject videoCamera;
 	public GameObject cameraScreen;
 
+    public GameObject pathDrawer;
+
 	[HideInInspector]
 	public int myHandNumber;
 
@@ -51,7 +53,33 @@ public class CameraPathHandler : MonoBehaviour {
 		Debug.Log ("myHandNumber = " + myHandNumber);
 	}
 
-	void Subscribe(){
+    private void OnEnable()
+    {
+        Subscribe();
+        if(pathVideoCamera.pathPoints.Count > 0)
+        {
+            for (int i = 0; i < pathVideoCamera.pathPoints.Count; i++)
+            {
+                pathVideoCamera.pathPoints[i].SetActive(true);
+            }
+            pathDrawer.SetActive(true);
+        }
+    }
+
+    private void OnDisable()
+    {
+        Unsubscribe();
+        if (pathVideoCamera.pathPoints.Count > 0)
+        {
+            for (int i = 0; i < pathVideoCamera.pathPoints.Count; i++)
+            {
+                pathVideoCamera.pathPoints[i].SetActive(false);
+            }
+            pathDrawer.SetActive(false);
+        }
+    }
+
+    void Subscribe(){
 
         inputMaster.TriggerClicked += TriggerPressed;
         inputMaster.TriggerUnclicked += TriggerReleased;
