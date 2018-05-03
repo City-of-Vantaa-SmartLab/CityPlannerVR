@@ -59,10 +59,6 @@ public class ToolManager : MonoBehaviour {
     private void Awake()
     {
         FindHandNumber();
-    }
-
-    // Use this for initialization
-    void Start () { 
         inputMaster = GameObject.Find("Player").GetComponent<InputMaster>();
         SubscriptionOn();
     }
@@ -267,7 +263,7 @@ public class ToolManager : MonoBehaviour {
             teleportHover.teleportAllowed = status;
         }
 
-        Debug.Log("Teleporting active: " + status);
+        //Debug.Log("Teleporting active: " + status);
     }
 
     private void ActivateGrabbing(bool status)
@@ -289,7 +285,7 @@ public class ToolManager : MonoBehaviour {
         //else
         //    Debug.Log("Could not find teleportHover script!");
 
-        Debug.Log("Grabbing active: " + status);
+        //Debug.Log("Grabbing active: " + status);
 
     }
 
