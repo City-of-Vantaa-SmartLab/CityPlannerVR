@@ -113,12 +113,15 @@ public class ToolManager : MonoBehaviour {
 
     private void HandleTriggerClicked(object sender, ClickedEventArgs e)
     {
-        if (activeItemContainer != null)
+        if (e.controllerIndex == myHandNumber)
         {
-            if (activeItemContainer.tool == Tool)
-                ChangeTool(ToolType.Empty);
-            else
-                ChangeTool(activeItemContainer.tool);
+            if (activeItemContainer != null)
+            {
+                if (activeItemContainer.tool == Tool)
+                    ChangeTool(ToolType.Empty);
+                else
+                    ChangeTool(activeItemContainer.tool);
+            }
         }
     }
 
@@ -253,15 +256,12 @@ public class ToolManager : MonoBehaviour {
     {
         //teleport.disableTeleport = !status;
         if (!teleportHover)
-        {
             teleportHover = gameObject.GetComponentInChildren<AllowTeleportWhileAttachedToHand>();
-            if (!teleportHover)
-                Debug.Log("Could not find teleportHover script!");
-        }
-        else
-        {
+
+        if (teleportHover)
             teleportHover.teleportAllowed = status;
-        }
+        else
+            Debug.Log("Could not find teleportHover script!");
 
         //Debug.Log("Teleporting active: " + status);
     }
