@@ -36,10 +36,10 @@ public class InputMaster : PunBehaviour {
     private Hand hand2;
     [SerializeField]
     private CheckPlayerSize playerSize;
-    [SerializeField]
-    private UnityEngine.XR.XRNode leftHandNode;
-    [SerializeField]
-    private UnityEngine.XR.XRNode rightHandNode;
+    //[SerializeField]
+    //private UnityEngine.XR.XRNode leftHandNode;
+    //[SerializeField]
+    //private UnityEngine.XR.XRNode rightHandNode;
     [SerializeField]
     private RoleType currentRole;
 
@@ -81,15 +81,10 @@ public class InputMaster : PunBehaviour {
     //public event EventWithIndex Hand1DeviceFound;
     //public event EventWithIndex Hand2DeviceFound;
 
-    void Start () {
-
+    private void Awake()
+    {
         GameObject hand1GO;
         GameObject hand2GO;
-        Role = RoleType.TEST;
-        //Role = RoleType.Admin;
-        Invoke("AnnounceRoleChanged", 0.5f);  //for late subscribers
-
-        // Get gameobject handling player VR stuff
         hand1GO = GameObject.Find("Player/SteamVRObjects/Hand1");
         hand2GO = GameObject.Find("Player/SteamVRObjects/Hand2");
         hand1 = hand1GO.GetComponent<Hand>();
@@ -98,9 +93,17 @@ public class InputMaster : PunBehaviour {
             hand1Found = true;
         if (hand2)
             hand2Found = true;
+    }
 
-        leftHandNode = UnityEngine.XR.XRNode.LeftHand;
-        rightHandNode = UnityEngine.XR.XRNode.RightHand;
+    void Start () {
+        //Role = RoleType.TEST;
+        Role = RoleType.Admin;
+        //Invoke("AnnounceRoleChanged", 0.5f);  //for late subscribers
+
+        // Get gameobject handling player VR stuff
+
+        //leftHandNode = UnityEngine.XR.XRNode.LeftHand;
+        //rightHandNode = UnityEngine.XR.XRNode.RightHand;
 
         //playerSize = playerVR.GetComponent<CheckPlayerSize>();
 

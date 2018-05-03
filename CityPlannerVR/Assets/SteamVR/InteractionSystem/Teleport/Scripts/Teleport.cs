@@ -13,14 +13,6 @@ namespace Valve.VR.InteractionSystem
 	//-------------------------------------------------------------------------
 	public class Teleport : MonoBehaviour
 	{
-        //---------------
-        //Tarun koodia
-        //Used to disable the teleporter if the touchpad is used for something else"
-        [HideInInspector]
-        public bool disableTeleport = false;
-
-        //---------------
-
 
 		public LayerMask traceLayerMask;
 		public LayerMask floorFixupTraceLayerMask;
@@ -1048,14 +1040,6 @@ namespace Valve.VR.InteractionSystem
 			{
 				return false;
 			}
-
-            //----------------------
-            //Tarun koodia
-            if (disableTeleport)
-            {
-                return false;
-            }
-            //----------------------
 
 			if ( hand.noSteamVRFallbackCamera == null )
 			{

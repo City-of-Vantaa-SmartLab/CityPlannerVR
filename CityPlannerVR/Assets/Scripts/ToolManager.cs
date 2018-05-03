@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using UnityEngine;
+using Valve.VR.InteractionSystem;
 
 /// <summary>
 /// This script keeps track of what tool is in use in this hand.
@@ -20,7 +21,7 @@ public class ToolManager : MonoBehaviour {
         {
             return currentTool;
         }
-        set
+        private set
         {
             currentTool = value;
             if (myHandNumber != 0 && AnnounceToolChanged != null)
@@ -35,7 +36,8 @@ public class ToolManager : MonoBehaviour {
     int buildingLayer = 9;
     int measurePointLayer = 11;
     int finalMask;
-    Valve.VR.InteractionSystem.Hand hand;
+    Hand hand;
+    AllowTeleportWhileAttachedToHand teleportHover;
 
 
     private int numberOfTools = System.Enum.GetValues(typeof(ToolType)).Length;
@@ -44,10 +46,12 @@ public class ToolManager : MonoBehaviour {
     [SerializeField]
     private ToolType currentTool;  //used only through property Tool
     [SerializeField]
+    private ItemContainer activeItemContainer;
+    [SerializeField]
     private bool grabEnabled;
     [SerializeField]
     private bool teleportEnabled;
-    private Valve.VR.InteractionSystem.Teleport teleport;
+    private Teleport teleport;
 
     public delegate void EventWithIndexTool(uint handNumber, ToolManager.ToolType tool);
     public event EventWithIndexTool AnnounceToolChanged;
@@ -55,21 +59,20 @@ public class ToolManager : MonoBehaviour {
     private void Awake()
     {
         FindHandNumber();
-    }
-
-    // Use this for initialization
-    void Start () { 
         inputMaster = GameObject.Find("Player").GetComponent<InputMaster>();
         SubscriptionOn();
-        Tool = ToolType.Empty;
-        teleport = GameObject.Find("Teleporting").GetComponent<Valve.VR.InteractionSystem.Teleport>();
-        currentTool = ToolType.Empty;
+    }
 
+    void Start () {
         int buildingLayerMask = 1 << buildingLayer;
         int measureLayerMask = 1 << measurePointLayer;
         finalMask = ~(buildingLayerMask | measureLayerMask);
 
-        hand = gameObject.GetComponent<Valve.VR.InteractionSystem.Hand>();
+        hand = gameObject.GetComponent<Hand>();
+        teleportHover = gameObject.GetComponentInChildren<AllowTeleportWhileAttachedToHand>();
+
+        Tool = ToolType.Empty;
+        teleport = GameObject.Find("Teleporting").GetComponent<Teleport>();
     }
 
     private void OnDestroy()
@@ -80,12 +83,16 @@ public class ToolManager : MonoBehaviour {
     private void SubscriptionOn()
     {
         inputMaster.MenuButtonClicked += HandleMenuClicked;
+        inputMaster.TriggerClicked += HandleTriggerClicked;
         inputMaster.RoleChanged += HandleNewRole;
     }
+
+
 
     private void SubscriptionOff()
     {
         inputMaster.MenuButtonClicked -= HandleMenuClicked;
+        inputMaster.TriggerClicked -= HandleTriggerClicked;
         inputMaster.RoleChanged -= HandleNewRole;
     }
 
@@ -102,6 +109,20 @@ public class ToolManager : MonoBehaviour {
     private void HandleMenuClicked(object sender, ClickedEventArgs e)
     {
         RotateTool(sender, e);
+    }
+
+    private void HandleTriggerClicked(object sender, ClickedEventArgs e)
+    {
+        if (e.controllerIndex == myHandNumber)
+        {
+            if (activeItemContainer != null)
+            {
+                if (activeItemContainer.tool == Tool)
+                    ChangeTool(ToolType.Empty);
+                else
+                    ChangeTool(activeItemContainer.tool);
+            }
+        }
     }
 
     private void HandleNewRole(int index)
@@ -127,7 +148,7 @@ public class ToolManager : MonoBehaviour {
         }
         else
         {
-            //Debug.Log("No right for tooltype: " + toolType);
+            Debug.Log("No right for tooltype: " + toolType);
             return false;
         }
 
@@ -233,7 +254,15 @@ public class ToolManager : MonoBehaviour {
 
     private void ActivateTeleporting(bool status)
     {
-        teleport.disableTeleport = !status;
+        //teleport.disableTeleport = !status;
+        if (!teleportHover)
+            teleportHover = gameObject.GetComponentInChildren<AllowTeleportWhileAttachedToHand>();
+
+        if (teleportHover)
+            teleportHover.teleportAllowed = status;
+        else
+            Debug.Log("Could not find teleportHover script!");
+
         //Debug.Log("Teleporting active: " + status);
     }
 
@@ -241,6 +270,7 @@ public class ToolManager : MonoBehaviour {
     {
         //If there is no tool in players hand, they can interact with objects
         //if (Tool == ToolType.Empty)
+
         if (status)
         {
             hand.hoverLayerMask = -1;
@@ -249,8 +279,31 @@ public class ToolManager : MonoBehaviour {
         {
             hand.hoverLayerMask = finalMask;
         }
+
+        //if (teleportHover)
+        //    teleportHover.overrideHoverLock = status;  //only overrides the lock, does not lock it!
+        //else
+        //    Debug.Log("Could not find teleportHover script!");
+
         //Debug.Log("Grabbing active: " + status);
+
     }
 
+    private void OnTriggerEnter(Collider other)
+    {
+        if (other.CompareTag("ItemSlot"))
+        {
+            //Debug.Log(this.name + " has been entered by " + other.name);
+            activeItemContainer = other.gameObject.GetComponent<ItemContainer>();
+        }
+    }
 
+    private void OnTriggerExit(Collider other)
+    {
+        if (other.CompareTag("ItemSlot"))
+        {
+            //Debug.Log(this.name + " has left " + other.name);
+            activeItemContainer = null;
+        }
+    }
 }

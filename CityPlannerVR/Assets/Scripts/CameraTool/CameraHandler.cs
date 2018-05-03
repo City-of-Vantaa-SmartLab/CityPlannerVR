@@ -97,7 +97,6 @@ public class CameraHandler : MonoBehaviour {
                 VideoCameraModeActive = false;
                 PathPointModeActive = false;
 
-                teleport.disableTeleport = true;
             }
 
             //if video camera is selected
@@ -108,7 +107,6 @@ public class CameraHandler : MonoBehaviour {
                 NormalCameraModeActive = false;
                 PathPointModeActive = false;
 
-                teleport.disableTeleport = true;
             }
             //if path camera is selected
             else if (tool == ToolManager.ToolType.PathCamera)
@@ -135,7 +133,6 @@ public class CameraHandler : MonoBehaviour {
         }
 
         VideoCameraModeActive = false;
-        teleport.disableTeleport = false;
 		PathPointModeActive = false;
     }
 }
