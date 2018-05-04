@@ -35,6 +35,7 @@ public class VideoCamera : MonoBehaviour {
 	private void OnEnable()
 	{
         //                            myHandNumber is 1 or 2, but the place for them in the array are 0 and 1
+        Debug.Log("My Hand Number is " + myHandNumber);
         gameObject.transform.parent = points[myHandNumber - 1].transform;
         gameObject.transform.localPosition = Vector3.zero;
         gameObject.transform.localRotation = Quaternion.identity;

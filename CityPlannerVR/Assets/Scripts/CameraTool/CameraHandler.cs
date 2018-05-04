@@ -67,10 +67,6 @@ public class CameraHandler : MonoBehaviour {
 
     void Awake()
     {
-		NormalCameraModeActive = false;
-		VideoCameraModeActive = false;
-		PathPointModeActive = false;
-
         toolManager = GetComponent<ToolManager>();
         toolManager.AnnounceToolChanged += ActivateCameraTool;
         handNumber = toolManager.myHandNumber;
@@ -80,11 +76,17 @@ public class CameraHandler : MonoBehaviour {
         pathCameraHandler = pathCameraPoint.GetComponent<CameraPathHandler>();
 
         teleport = GameObject.Find("Teleporting").GetComponent<Valve.VR.InteractionSystem.Teleport>();
-
     }
-	//-------------------------------------------------------------------------------------------------------------------------------------
-	//Is called when the cameraTool is switched on
-	public void ActivateCameraTool(uint deviceIndex, ToolManager.ToolType tool)
+
+    private void Start()
+    {
+        NormalCameraModeActive = false;
+        VideoCameraModeActive = false;
+        PathPointModeActive = false;
+    }
+    //-------------------------------------------------------------------------------------------------------------------------------------
+    //Is called when the cameraTool is switched on
+    public void ActivateCameraTool(uint deviceIndex, ToolManager.ToolType tool)
 	{
         if (deviceIndex == handNumber)
         {

@@ -32,20 +32,24 @@ public class CameraPathHandler : MonoBehaviour {
 	GameObject selectedPoint;
 	bool holdTrigger = false;
 
-#endregion
+    #endregion
 
-	void Start(){
+    private void Awake()
+    {
+        inputMaster = GameObject.Find("Player").GetComponent<InputMaster>();
+        line = GameObject.Find("CameraPathLineDrawer").GetComponent<XRLineRenderer>();
 
-        inputMaster = GameObject.Find("Player").GetComponent<InputMaster> ();
-        line = GameObject.Find ("CameraPathLineDrawer").GetComponent<XRLineRenderer>();
+        pathVideoCamera = videoCamera.GetComponent<PathVideoCamera>();
 
-		pathVideoCamera = videoCamera.GetComponent<PathVideoCamera> ();
+        pathVideoCamera.pathPoints = new List<GameObject>();
+        InitializePathLine();
+        //pathVideoCamera.tool = PathVideoCamera.Tool.Add;
 
-		pathVideoCamera.pathPoints = new List<GameObject>();
-		InitializePathLine ();
-		//pathVideoCamera.tool = PathVideoCamera.Tool.Add;
+        videoCamera.SetActive(false);
+        cameraScreen.SetActive(false);
+    }
 
-		videoCamera.SetActive (false);
+    void Start(){
 
 		Subscribe ();
 
