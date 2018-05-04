@@ -156,7 +156,7 @@ public class ScreenshotCamera : MonoBehaviour {
 
     void ChangePoint(object sender, ClickedEventArgs e) {
 
-        if ((sender.ToString().Equals("Hand1 (SteamVR_TrackedController)") && myHandNumber == 1) || (sender.ToString().Equals("Hand2 (SteamVR_TrackedController)") && myHandNumber == 2))
+        if (e.controllerIndex == myHandNumber)
         {
             if (e.padX > 0.7f)
             {
@@ -181,8 +181,6 @@ public class ScreenshotCamera : MonoBehaviour {
             index++;
         }
 
-        Debug.Log("index is " + index);
-
         gameObject.transform.parent = points[index].transform;
         gameObject.transform.localPosition = Vector3.zero;
         gameObject.transform.localRotation = Quaternion.identity;
@@ -199,8 +197,6 @@ public class ScreenshotCamera : MonoBehaviour {
         {
             index--;
         }
-
-        Debug.Log("index is " + index);
 
         gameObject.transform.parent = points[index].transform;
         gameObject.transform.localPosition = Vector3.zero;
