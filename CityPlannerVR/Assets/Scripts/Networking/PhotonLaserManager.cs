@@ -14,6 +14,8 @@ public class PhotonLaserManager : PunBehaviour {
 
     public int myHandNumber;
     public LaserPointer myFakeLaser;
+    public GameObject myTargetedObject;
+
     [SerializeField]
     private GameObject myHandGO;
     [SerializeField]
@@ -22,17 +24,18 @@ public class PhotonLaserManager : PunBehaviour {
     private ToolManager toolManager;
     [SerializeField]
     private ToolManager.ToolType myTool;
-
-    public GameObject myTargetedObject;
     [SerializeField]
     private PhotonLaserManager otherLaserManager;
     [SerializeField]
     private LaserPointer myPointer;
+    [SerializeField]
+    private bool[] fakeStatus; //0: active, 1: isInEditingMode
 
     private void Awake()
     {
         if (!InitOwn())
-            Debug.Log("Failed to initialize PhotonLaserManager on hand" + myHandNumber);
+            Debug.LogError("Failed to initialize PhotonLaserManager on hand" + myHandNumber);
+        fakeStatus = new bool[2] { false, false};
     }
 
     private void Start()
@@ -116,25 +119,28 @@ public class PhotonLaserManager : PunBehaviour {
     {
         if (myPointer)
         {
+            //if (myPointer.active == status)
+            //    return;
+            ActivateObject(status);
             if (myTool == ToolManager.ToolType.EditingLaser)
             {
-                myPointer.GetComponent<MeshRenderer>().material.color = myPointer.editorColor;
+                myPointer.GetComponentInChildren<MeshRenderer>().material.color = myPointer.editorColor;
                 myPointer.isInEditingMode = true;
+                fakeStatus[1] = true; //0: active, 1: isInEditingMode
             }
             if (myTool == ToolManager.ToolType.CommentLaser)
             {
-                myPointer.GetComponent<MeshRenderer>().material.color = myPointer.commentColor;
+                myPointer.GetComponentInChildren<MeshRenderer>().material.color = myPointer.commentColor;
                 myPointer.isInEditingMode = false;
+                fakeStatus[1] = false;
             }
 
-            if (myPointer.active == status)
-                return;
-            //photonView.RPC("ActivateObject", PhotonTargets.All, status);
-            ActivateObject(status);
             if (myPointer.active == false)
             {
                 inputMaster.LaserIsOff();
             }
+
+            SendLaserStatusToOthers();
         }
         else
             Debug.Log("myPointer not set for lasermanager on" + gameObject.name);
@@ -201,15 +207,21 @@ public class PhotonLaserManager : PunBehaviour {
     {
         myPointer.active = active;
         myPointer.ActivateCube(active);
+        fakeStatus[0] = active; //0: active, 1: isInEditingMode
+    }
+
+    private void SendLaserStatusToOthers()
+    {
         if (myFakeLaser)
-            photonView.RPC("ActivateFakeLaser", PhotonTargets.OthersBuffered, active);
+            myFakeLaser.ActivateFakeLaserRPC(fakeStatus);
         else
-            Debug.Log("No fake laser found for " + this.name);
+            Debug.Log("No fake laser found for " + transform.parent.name);
     }
 
     public void DeactivateObject()
     {
         ActivateObject(false);
+        SendLaserStatusToOthers();
     }
 
     private void HandleTriggerClicked(object sender, ClickedEventArgs e)

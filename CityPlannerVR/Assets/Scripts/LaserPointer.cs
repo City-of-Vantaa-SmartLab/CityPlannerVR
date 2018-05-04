@@ -67,40 +67,43 @@ public class LaserPointer : PunBehaviour
 
         triggered = false;
 
+        //Invoke("StartNetworking", 1f);
+    }
+
+    private void Start()
+    {
         if (isForNetworking)
         {
-            PhotonLaserManager photonLaserManager;
-            if (transform.parent.name == "PhotonHandLeft")
-            {
-                photonLaserManager = GameObject.Find("Player/SteamVRObjects/Hand1").GetComponent<PhotonLaserManager>();
-            }
-            else if (transform.parent.name == "PhotonHandRight")
-            {
-                photonLaserManager = GameObject.Find("Player/SteamVRObjects/Hand2").GetComponent<PhotonLaserManager>();
+            bool[] status = new bool[2] { false, false }; //0: active, 1: isInEditingMode
 
+            PhotonLaserManager photonLaserManager;
+            if (gameObject.name == "PhotonHandLeft")
+            {
+                photonLaserManager = GameObject.Find("Player/SteamVRObjects/Hand1/Laserpointer").GetComponent<PhotonLaserManager>();
+            }
+            else if (gameObject.name == "PhotonHandRight")
+            {
+                photonLaserManager = GameObject.Find("Player/SteamVRObjects/Hand2/Laserpointer").GetComponent<PhotonLaserManager>();
             }
             else
             {
-                Debug.Log("Could not determine photonlasermanager for laserpointer in " + transform.parent.name);
+                Debug.LogError("Could not determine photonlasermanager for laserpointer in " + gameObject.name);
                 return;
             }
             photonLaserManager.myFakeLaser = this;
-            ActivateCube(false);
-            photonView.RPC("ActivateFakeLaser", PhotonTargets.OthersBuffered, active);
+            photonView.RPC("ActivateFakeLaser", PhotonTargets.AllBuffered, status);
         }
     }
 
     public virtual void OnPointerIn(LaserEventArgs e)
     {
-        if (PointerIn != null && active)
-        if (!isForNetworking && PointerIn != null)
+        if (!isForNetworking && PointerIn != null && active)
             PointerIn(this, e);
     }
 
     public virtual void OnPointerOut(LaserEventArgs e)
     {
-        if (PointerOut != null && active)
-        if (!isForNetworking && PointerOut != null)
+        if (!isForNetworking && PointerOut != null && active)
             PointerOut(this, e);
     }
 
@@ -158,19 +161,24 @@ public class LaserPointer : PunBehaviour
         pointer.transform.localPosition = new Vector3(0f, 0f, dist / 2f);
     }
 
-    public void ActivateCube(bool status)
+    public void ActivateCube(bool active)
     {
-            pointer.SetActive(status);     
+            pointer.SetActive(active);
+    }
+
+    public void ActivateFakeLaserRPC(bool[] status)
+    {
+        photonView.RPC("ActivateFakeLaser", PhotonTargets.OthersBuffered, status);
     }
 
     //Will only be sent to other clients
+    //0: active, 1: isInEditingMode
     [PunRPC]
-    public void ActivateFakeLaser(bool status)
+    private void ActivateFakeLaser(bool[] status)
     {
-        if (isForNetworking && photonView.isMine)
-        {
-            ActivateCube(status);
-        }
+        ActivateCube(status[0]);
+        if (status[0])
+            isInEditingMode = status[1];
     }
 
 }
