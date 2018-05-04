@@ -34,6 +34,10 @@ public class LaserPointer : PunBehaviour
 
     Transform previousContact = null;
 
+    //For the whispering to work, we give this laser to photonAvatar (set in photonPlayerAvatar)
+    [HideInInspector]
+    public VoiceController voiceController;
+
     private void Awake()
     {
         holder = new GameObject();
@@ -88,12 +92,14 @@ public class LaserPointer : PunBehaviour
 
     public virtual void OnPointerIn(LaserEventArgs e)
     {
+        if (PointerIn != null && active)
         if (!isForNetworking && PointerIn != null)
             PointerIn(this, e);
     }
 
     public virtual void OnPointerOut(LaserEventArgs e)
     {
+        if (PointerOut != null && active)
         if (!isForNetworking && PointerOut != null)
             PointerOut(this, e);
     }

@@ -93,22 +93,25 @@ public class VideoCamera : MonoBehaviour {
 
 	private void StartAndStopVideo(object sender, ClickedEventArgs e)
 	{
-		if (cameraState == CameraState.Normal)
-		{
-			if (VideoCaptureProCtrl.instance.status == VideoCaptureProCtrl.StatusType.NOT_START ||
-				VideoCaptureProCtrl.instance.status == VideoCaptureProCtrl.StatusType.FINISH)
-			{
-				VideoCaptureProCtrl.instance.StartCapture();
-			}
-			else if (VideoCaptureProCtrl.instance.status == VideoCaptureProCtrl.StatusType.STARTED)
-			{
-				VideoCaptureProCtrl.instance.StopCapture();
-			}
-			else if (VideoCaptureProCtrl.instance.status == VideoCaptureProCtrl.StatusType.STOPPED)
-			{
-				return;
-			}
-		}
+        if (e.controllerIndex == myHandNumber)
+        {
+            if (cameraState == CameraState.Normal)
+            {
+                if (VideoCaptureProCtrl.instance.status == VideoCaptureProCtrl.StatusType.NOT_START ||
+                    VideoCaptureProCtrl.instance.status == VideoCaptureProCtrl.StatusType.FINISH)
+                {
+                    VideoCaptureProCtrl.instance.StartCapture();
+                }
+                else if (VideoCaptureProCtrl.instance.status == VideoCaptureProCtrl.StatusType.STARTED)
+                {
+                    VideoCaptureProCtrl.instance.StopCapture();
+                }
+                else if (VideoCaptureProCtrl.instance.status == VideoCaptureProCtrl.StatusType.STOPPED)
+                {
+                    return;
+                }
+            }
+        }
 	}
 
     //----------------------------------------------------------------------------------------------------------------------------------------//
@@ -116,7 +119,7 @@ public class VideoCamera : MonoBehaviour {
     void ChangePoint(object sender, ClickedEventArgs e)
     {
 
-        if ((sender.ToString().Equals("Hand1 (SteamVR_TrackedController)") && myHandNumber == 1) || (sender.ToString().Equals("Hand2 (SteamVR_TrackedController)") && myHandNumber == 2))
+        if (e.controllerIndex == myHandNumber)
         {
             if (e.padX > 0.7f)
             {

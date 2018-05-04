@@ -24,8 +24,7 @@ GameObject:
   - component: {fileID: 23827829799829336}
   - component: {fileID: 114104142079617956}
   - component: {fileID: 114207202415685206}
-  - component: {fileID: 114352860885612854}
-  m_Layer: 0
+  m_Layer: 15
   m_Name: PhotonHandLeft
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -40,7 +39,7 @@ GameObject:
   serializedVersion: 5
   m_Component:
   - component: {fileID: 4602449129025034}
-  m_Layer: 0
+  m_Layer: 15
   m_Name: VoiceIndicator
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -59,7 +58,7 @@ GameObject:
   - component: {fileID: 65234713026404240}
   - component: {fileID: 114862605442799670}
   - component: {fileID: 23885602789950284}
-  m_Layer: 0
+  m_Layer: 15
   m_Name: Body
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -76,7 +75,7 @@ GameObject:
   - component: {fileID: 4409067875940984}
   - component: {fileID: 198645888209845510}
   - component: {fileID: 199746364799139036}
-  m_Layer: 0
+  m_Layer: 15
   m_Name: Particle System
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -95,7 +94,7 @@ GameObject:
   - component: {fileID: 23090890114891272}
   - component: {fileID: 114166596621132380}
   - component: {fileID: 114699690335845280}
-  m_Layer: 0
+  m_Layer: 15
   m_Name: Head
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -117,7 +116,8 @@ GameObject:
   - component: {fileID: 114797607355297360}
   - component: {fileID: 114888762932045548}
   - component: {fileID: 114699798696508320}
-  m_Layer: 0
+  - component: {fileID: 65637636966018586}
+  m_Layer: 15
   m_Name: PhotonAvatar
   m_TagString: VRLocalPlayer
   m_Icon: {fileID: 0}
@@ -137,8 +137,7 @@ GameObject:
   - component: {fileID: 23777192725285336}
   - component: {fileID: 114331072792069052}
   - component: {fileID: 114835014417950256}
-  - component: {fileID: 114793051100261222}
-  m_Layer: 0
+  m_Layer: 15
   m_Name: PhotonHandRight
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -217,7 +216,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1942861374699594}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 1.1418571, y: 1.816, z: -2.2035432}
+  m_LocalPosition: {x: 5.3723464, y: 3.132, z: -8.411551}
   m_LocalScale: {x: 2, y: 2, z: 2}
   m_Children:
   - {fileID: 4142736722830646}
@@ -430,6 +429,18 @@ BoxCollider:
   serializedVersion: 2
   m_Size: {x: 1, y: 1, z: 1}
   m_Center: {x: 0, y: 0, z: 0}
+--- !u!65 &65637636966018586
+BoxCollider:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1942861374699594}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 0.54, y: 1.3, z: 0.41}
+  m_Center: {x: 0, y: -0.43, z: 0.02}
 --- !u!65 &65785473328331016
 BoxCollider:
   m_ObjectHideFlags: 1
@@ -707,6 +718,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   laser: {fileID: 0}
+  playerName: 
 --- !u!114 &114744886122510752
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -722,27 +734,6 @@ MonoBehaviour:
   localPlayerBodyMaterial: {fileID: 2100000, guid: 538d7730a6286a14291ea313fa79969c,
     type: 2}
   toolbelt: {fileID: 0}
---- !u!114 &114793051100261222
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1969211252820924}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: a4819f2fdf7af9c49b6d6a423a06101d, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  active: 1
-  triggered: 0
-  editorColor: {r: 1, g: 0, b: 0, a: 0}
-  commentColor: {r: 0.034482718, g: 1, b: 0, a: 0}
-  thickness: 0.002
-  holder: {fileID: 0}
-  pointer: {fileID: 0}
-  isForNetworking: 1
-  isInEditingMode: 0
-  inputMaster: {fileID: 0}
 --- !u!114 &114797607355297360
 MonoBehaviour:
   m_ObjectHideFlags: 1
