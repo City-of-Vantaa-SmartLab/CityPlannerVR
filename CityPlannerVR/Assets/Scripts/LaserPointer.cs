@@ -2,10 +2,11 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Photon;
 
 public struct LaserEventArgs
 {
-    public uint handNumber;
+    //public uint handNumber;
     public float distance;
     public Transform target;
 }
@@ -13,15 +14,18 @@ public struct LaserEventArgs
 public delegate void LaserEventHandler(object sender, LaserEventArgs e);
 
 
-public class LaserPointer : MonoBehaviour
+public class LaserPointer : PunBehaviour
 {
     public bool active = true;
     public bool triggered;
-    public Color color;
+    public Color editorColor;
+    public Color commentColor;
     public float thickness = 0.002f;
     public GameObject holder;
     public GameObject pointer;
     bool isActive = false;
+    public bool isForNetworking; //means it is "fake" and does not show for the local player
+    public bool isInEditingMode;  //comment or edit mode
     public event LaserEventHandler PointerIn;
     public event LaserEventHandler PointerOut;
 
@@ -34,7 +38,7 @@ public class LaserPointer : MonoBehaviour
     [HideInInspector]
     public VoiceController voiceController;
 
-    void Start()
+    private void Awake()
     {
         holder = new GameObject();
         holder.transform.parent = this.transform;
@@ -48,7 +52,11 @@ public class LaserPointer : MonoBehaviour
         pointer.transform.localRotation = Quaternion.identity;
 
         Material newMaterial = new Material(Shader.Find("Unlit/Color"));
-        newMaterial.SetColor("_Color", color);
+        if (isInEditingMode)
+            newMaterial.SetColor("_Color", editorColor);
+        else
+            newMaterial.SetColor("_Color", commentColor);
+
         pointer.GetComponent<MeshRenderer>().material = newMaterial;
 
         BoxCollider collider = pointer.GetComponent<BoxCollider>();
@@ -59,17 +67,43 @@ public class LaserPointer : MonoBehaviour
 
         triggered = false;
 
+        //Invoke("StartNetworking", 1f);
+    }
+
+    private void Start()
+    {
+        if (isForNetworking)
+        {
+            bool[] status = new bool[2] { false, false }; //0: active, 1: isInEditingMode
+
+            PhotonLaserManager photonLaserManager;
+            if (gameObject.name == "PhotonHandLeft")
+            {
+                photonLaserManager = GameObject.Find("Player/SteamVRObjects/Hand1/Laserpointer").GetComponent<PhotonLaserManager>();
+            }
+            else if (gameObject.name == "PhotonHandRight")
+            {
+                photonLaserManager = GameObject.Find("Player/SteamVRObjects/Hand2/Laserpointer").GetComponent<PhotonLaserManager>();
+            }
+            else
+            {
+                Debug.LogError("Could not determine photonlasermanager for laserpointer in " + gameObject.name);
+                return;
+            }
+            photonLaserManager.myFakeLaser = this;
+            photonView.RPC("ActivateFakeLaser", PhotonTargets.AllBuffered, status);
+        }
     }
 
     public virtual void OnPointerIn(LaserEventArgs e)
     {
-        if (PointerIn != null && active)
+        if (!isForNetworking && PointerIn != null && active)
             PointerIn(this, e);
     }
 
     public virtual void OnPointerOut(LaserEventArgs e)
     {
-        if (PointerOut != null && active)
+        if (!isForNetworking && PointerOut != null && active)
             PointerOut(this, e);
     }
 
@@ -127,10 +161,24 @@ public class LaserPointer : MonoBehaviour
         pointer.transform.localPosition = new Vector3(0f, 0f, dist / 2f);
     }
 
-    public void ActivateCube(bool status)
+    public void ActivateCube(bool active)
     {
-            pointer.SetActive(status);     
+            pointer.SetActive(active);
     }
 
+    public void ActivateFakeLaserRPC(bool[] status)
+    {
+        photonView.RPC("ActivateFakeLaser", PhotonTargets.OthersBuffered, status);
+    }
+
+    //Will only be sent to other clients
+    //0: active, 1: isInEditingMode
+    [PunRPC]
+    private void ActivateFakeLaser(bool[] status)
+    {
+        ActivateCube(status[0]);
+        if (status[0])
+            isInEditingMode = status[1];
+    }
 
 }

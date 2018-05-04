@@ -26,6 +26,8 @@ public class HighlightSelection : PunBehaviour
 
     public bool isHighlighted;
     public bool isSelected;
+    public List<GameObject> lasersPointing; //will be implemented when laserpointers are added to photonplayeravatar
+
 
     private GameObject owner;
     [SerializeField]
@@ -86,8 +88,9 @@ public class HighlightSelection : PunBehaviour
         throw new NotImplementedException();
     }
 
-    public void ToggleHighlight()
+    public void ToggleHighlight(object sender, bool status)
     {
+
         if (isHighlighted)
         {
             isHighlighted = false;
@@ -102,7 +105,7 @@ public class HighlightSelection : PunBehaviour
             if (!isSelected)
                 ChangeShaderRPC("Valve/VR/Highlight");
         }
-
+        isHighlighted = status;
     }
 
 

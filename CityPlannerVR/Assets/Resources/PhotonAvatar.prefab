@@ -24,6 +24,7 @@ GameObject:
   - component: {fileID: 23827829799829336}
   - component: {fileID: 114104142079617956}
   - component: {fileID: 114207202415685206}
+  - component: {fileID: 114831009390868706}
   m_Layer: 15
   m_Name: PhotonHandLeft
   m_TagString: Untagged
@@ -137,6 +138,7 @@ GameObject:
   - component: {fileID: 23777192725285336}
   - component: {fileID: 114331072792069052}
   - component: {fileID: 114835014417950256}
+  - component: {fileID: 114213817601453204}
   m_Layer: 15
   m_Name: PhotonHandRight
   m_TagString: Untagged
@@ -474,6 +476,7 @@ MonoBehaviour:
   ownershipTransfer: 0
   ObservedComponents:
   - {fileID: 114207202415685206}
+  - {fileID: 114831009390868706}
   ObservedComponentsFoldoutOpen: 1
   viewIdField: 0
   instantiationId: -1
@@ -516,6 +519,28 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7e3a90fd5dac60b43826cd4366b0c74e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &114213817601453204
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1969211252820924}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a4819f2fdf7af9c49b6d6a423a06101d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  active: 1
+  triggered: 0
+  editorColor: {r: 1, g: 0, b: 0, a: 0}
+  commentColor: {r: 0.034482718, g: 1, b: 0, a: 0}
+  thickness: 0.002
+  holder: {fileID: 0}
+  pointer: {fileID: 0}
+  isForNetworking: 1
+  isInEditingMode: 0
+  inputMaster: {fileID: 0}
+  voiceController: {fileID: 0}
 --- !u!114 &114331072792069052
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -537,6 +562,7 @@ MonoBehaviour:
   ownershipTransfer: 0
   ObservedComponents:
   - {fileID: 114835014417950256}
+  - {fileID: 114213817601453204}
   ObservedComponentsFoldoutOpen: 1
   viewIdField: 0
   instantiationId: -1
@@ -766,6 +792,28 @@ MonoBehaviour:
   instantiationId: -1
   currentMasterID: -1
   isRuntimeInstantiated: 0
+--- !u!114 &114831009390868706
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1258720767441952}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a4819f2fdf7af9c49b6d6a423a06101d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  active: 1
+  triggered: 0
+  editorColor: {r: 1, g: 0, b: 0, a: 0}
+  commentColor: {r: 0.034482718, g: 1, b: 0, a: 0}
+  thickness: 0.002
+  holder: {fileID: 0}
+  pointer: {fileID: 0}
+  isForNetworking: 1
+  isInEditingMode: 0
+  inputMaster: {fileID: 0}
+  voiceController: {fileID: 0}
 --- !u!114 &114835014417950256
 MonoBehaviour:
   m_ObjectHideFlags: 1
