@@ -154,7 +154,6 @@ public class ScreenshotCamera : MonoBehaviour {
     }
     //---------------------------------------------------------------------------------------------------------------------------------------------------------
 
-
     void ChangePoint(object sender, ClickedEventArgs e) {
 
         if ((sender.ToString().Equals("Hand1 (SteamVR_TrackedController)") && myHandNumber == 1) || (sender.ToString().Equals("Hand2 (SteamVR_TrackedController)") && myHandNumber == 2))
@@ -169,7 +168,6 @@ public class ScreenshotCamera : MonoBehaviour {
             }
         }
     }
-
 
     void ChangePointRight()
     {

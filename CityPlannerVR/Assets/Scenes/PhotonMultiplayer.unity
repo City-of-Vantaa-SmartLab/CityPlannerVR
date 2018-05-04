@@ -1276,6 +1276,11 @@ Prefab:
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 12d089de0b0162c45aadfd081b62ee63, type: 2}
   m_IsPrefabParent: 0
+--- !u!1 &206751980 stripped
+GameObject:
+  m_PrefabParentObject: {fileID: 1738231651425770, guid: d27dc116a7f825842be94b3f51770b2f,
+    type: 2}
+  m_PrefabInternal: {fileID: 1917379625}
 --- !u!4 &225176813 stripped
 Transform:
   m_PrefabParentObject: {fileID: 4014041245817428, guid: 12d089de0b0162c45aadfd081b62ee63,
@@ -2703,7 +2708,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   normalCamera: {fileID: 197222573}
   videoCameraObject: {fileID: 1516600416}
-  pathCameraPoint: {fileID: 0}
+  pathCameraPoint: {fileID: 206751980}
 --- !u!114 &480622355
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -7976,6 +7981,11 @@ Prefab:
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: d27dc116a7f825842be94b3f51770b2f, type: 2}
   m_IsPrefabParent: 0
+--- !u!1 &672437993 stripped
+GameObject:
+  m_PrefabParentObject: {fileID: 1738231651425770, guid: d27dc116a7f825842be94b3f51770b2f,
+    type: 2}
+  m_PrefabInternal: {fileID: 672437992}
 --- !u!1 &684165333
 GameObject:
   m_ObjectHideFlags: 0
@@ -9467,7 +9477,7 @@ Transform:
   m_LocalScale: {x: 0.01, y: 0.19, z: 0.54}
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 15
+  m_RootOrder: 16
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 15}
 --- !u!1 &944171845
 GameObject:
@@ -11844,7 +11854,7 @@ Transform:
   - {fileID: 801907180}
   - {fileID: 1892185194}
   m_Father: {fileID: 0}
-  m_RootOrder: 16
+  m_RootOrder: 18
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &1323874203
 MonoBehaviour:
@@ -12693,6 +12703,7 @@ MonoBehaviour:
   holder: {fileID: 0}
   pointer: {fileID: 0}
   inputMaster: {fileID: 0}
+  voiceController: {fileID: 0}
 --- !u!114 &1497816914
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -14105,7 +14116,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   normalCamera: {fileID: 197222573}
   videoCameraObject: {fileID: 1516600416}
-  pathCameraPoint: {fileID: 0}
+  pathCameraPoint: {fileID: 672437993}
 --- !u!1 &1627133686
 GameObject:
   m_ObjectHideFlags: 0
@@ -14865,6 +14876,7 @@ MonoBehaviour:
   holder: {fileID: 0}
   pointer: {fileID: 0}
   inputMaster: {fileID: 0}
+  voiceController: {fileID: 0}
 --- !u!4 &1723104216 stripped
 Transform:
   m_PrefabParentObject: {fileID: 4121527793652652, guid: d27dc116a7f825842be94b3f51770b2f,
