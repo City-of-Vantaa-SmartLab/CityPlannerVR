@@ -24,6 +24,7 @@ GameObject:
   - component: {fileID: 23827829799829336}
   - component: {fileID: 114104142079617956}
   - component: {fileID: 114207202415685206}
+  - component: {fileID: 114352860885612854}
   m_Layer: 0
   m_Name: PhotonHandLeft
   m_TagString: Untagged
@@ -136,6 +137,7 @@ GameObject:
   - component: {fileID: 23777192725285336}
   - component: {fileID: 114331072792069052}
   - component: {fileID: 114835014417950256}
+  - component: {fileID: 114793051100261222}
   m_Layer: 0
   m_Name: PhotonHandRight
   m_TagString: Untagged
@@ -461,6 +463,7 @@ MonoBehaviour:
   ownershipTransfer: 0
   ObservedComponents:
   - {fileID: 114207202415685206}
+  - {fileID: 114352860885612854}
   ObservedComponentsFoldoutOpen: 1
   viewIdField: 0
   instantiationId: -1
@@ -524,11 +527,33 @@ MonoBehaviour:
   ownershipTransfer: 0
   ObservedComponents:
   - {fileID: 114835014417950256}
+  - {fileID: 114793051100261222}
   ObservedComponentsFoldoutOpen: 1
   viewIdField: 0
   instantiationId: -1
   currentMasterID: -1
   isRuntimeInstantiated: 0
+--- !u!114 &114352860885612854
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1258720767441952}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a4819f2fdf7af9c49b6d6a423a06101d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  active: 1
+  triggered: 0
+  editorColor: {r: 1, g: 0, b: 0, a: 0}
+  commentColor: {r: 0.034482718, g: 1, b: 0, a: 0}
+  thickness: 0.002
+  holder: {fileID: 0}
+  pointer: {fileID: 0}
+  isForNetworking: 1
+  isInEditingMode: 0
+  inputMaster: {fileID: 0}
 --- !u!114 &114402711076313984
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -681,6 +706,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 65c2cc3ce974d0d43bea121ccf49d86f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  laser: {fileID: 0}
 --- !u!114 &114744886122510752
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -695,6 +721,28 @@ MonoBehaviour:
   node: 3
   localPlayerBodyMaterial: {fileID: 2100000, guid: 538d7730a6286a14291ea313fa79969c,
     type: 2}
+  toolbelt: {fileID: 0}
+--- !u!114 &114793051100261222
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1969211252820924}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a4819f2fdf7af9c49b6d6a423a06101d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  active: 1
+  triggered: 0
+  editorColor: {r: 1, g: 0, b: 0, a: 0}
+  commentColor: {r: 0.034482718, g: 1, b: 0, a: 0}
+  thickness: 0.002
+  holder: {fileID: 0}
+  pointer: {fileID: 0}
+  isForNetworking: 1
+  isInEditingMode: 0
+  inputMaster: {fileID: 0}
 --- !u!114 &114797607355297360
 MonoBehaviour:
   m_ObjectHideFlags: 1
