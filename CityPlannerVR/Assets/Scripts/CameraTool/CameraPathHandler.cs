@@ -37,7 +37,7 @@ public class CameraPathHandler : MonoBehaviour {
 	void Start(){
 
         inputMaster = GameObject.Find("Player").GetComponent<InputMaster> ();
-		line = GameObject.Find ("CameraPathLineDrawer").GetComponent<XRLineRenderer>();
+        line = GameObject.Find ("CameraPathLineDrawer").GetComponent<XRLineRenderer>();
 
 		pathVideoCamera = videoCamera.GetComponent<PathVideoCamera> ();
 
@@ -55,27 +55,33 @@ public class CameraPathHandler : MonoBehaviour {
 
     private void OnEnable()
     {
-        Subscribe();
-        if(pathVideoCamera.pathPoints.Count > 0)
+        if (inputMaster != null)
         {
-            for (int i = 0; i < pathVideoCamera.pathPoints.Count; i++)
+            Subscribe();
+            if (pathVideoCamera.pathPoints.Count > 0)
             {
-                pathVideoCamera.pathPoints[i].SetActive(true);
+                for (int i = 0; i < pathVideoCamera.pathPoints.Count; i++)
+                {
+                    pathVideoCamera.pathPoints[i].SetActive(true);
+                }
+                pathDrawer.SetActive(true);
             }
-            pathDrawer.SetActive(true);
         }
     }
 
     private void OnDisable()
     {
-        Unsubscribe();
-        if (pathVideoCamera.pathPoints.Count > 0)
+        if (inputMaster != null)
         {
-            for (int i = 0; i < pathVideoCamera.pathPoints.Count; i++)
+            Unsubscribe();
+            if (pathVideoCamera.pathPoints.Count > 0)
             {
-                pathVideoCamera.pathPoints[i].SetActive(false);
+                for (int i = 0; i < pathVideoCamera.pathPoints.Count; i++)
+                {
+                    pathVideoCamera.pathPoints[i].SetActive(false);
+                }
+                pathDrawer.SetActive(false);
             }
-            pathDrawer.SetActive(false);
         }
     }
 

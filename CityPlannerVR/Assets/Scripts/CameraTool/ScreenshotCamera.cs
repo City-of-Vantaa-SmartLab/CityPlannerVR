@@ -120,7 +120,6 @@ public class ScreenshotCamera : MonoBehaviour {
             inputMaster.TriggerClicked -= TakeScreenshot;
 
             inputMaster.PadClicked -= ChangePoint;
-
         }
         else
         {
@@ -130,7 +129,7 @@ public class ScreenshotCamera : MonoBehaviour {
 
     void TakeScreenshot(object sender, ClickedEventArgs e)
     {
-        if((sender.ToString().Equals("Hand1 (SteamVR_TrackedController)") && myHandNumber == 1) || (sender.ToString().Equals("Hand2 (SteamVR_TrackedController)") && myHandNumber == 2))
+        if(e.controllerIndex == myHandNumber)
         {
             Texture2D screenShot = new Texture2D(resWidth, resHeight, TextureFormat.RGB24, false);
             ssCamera.Render();

@@ -20,10 +20,15 @@ public class VoiceController : MonoBehaviour {
 
     GameObject indicator;
 
+    [HideInInspector]
+    public string playerName;
+
     private void Start()
     {
         comms = GameObject.Find("DissonanceSetup").GetComponent<DissonanceComms>();
         indicator = GameObject.Find("VoiceIndicator");
+        laser = GameObject.Find("Laserpointer1").GetComponent<LaserPointer>();
+        
         indicator.SetActive(false);
 
         inputMaster = GameObject.Find("Player").GetComponent<InputMaster>();
@@ -31,6 +36,8 @@ public class VoiceController : MonoBehaviour {
         voiceTrigger = GetComponent<VoiceBroadcastTrigger>();
 
         player = comms.FindPlayer(comms.LocalPlayerName);
+
+        playerName = comms.LocalPlayerName;
 
         inputMaster.Gripped += ToggleMutePlayer;
 
@@ -91,16 +98,12 @@ public class VoiceController : MonoBehaviour {
 	void Whisper(object sender, LaserEventArgs e)
     {
 		if (e.target.tag == playerTag) {
-			whisperTarget = e.target.name;
-
-            Debug.Log("Started whispering to " + e.target.name);
+			whisperTarget = e.target.GetComponent<VoiceController>().playerName;
 
 			voiceTrigger.ChannelType = CommTriggerTarget.Player;
-			voiceTrigger.PlayerId = comms.FindPlayer (whisperTarget).Name;
+            voiceTrigger.PlayerId = whisperTarget;
 		}
 		else{
-
-            Debug.Log("Stoped whispering to " + e.target.name);
             //Let's change it back when we are done whispering
             voiceTrigger.ChannelType = CommTriggerTarget.Self;
 		}
