@@ -2853,7 +2853,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 1695863806}
-  m_RootOrder: 4
+  m_RootOrder: 6
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &495224141
 GameObject:
@@ -8025,6 +8025,11 @@ Prefab:
       propertyPath: pathDrawer
       value: 
       objectReference: {fileID: 316711206}
+    - target: {fileID: 114794724421307742, guid: d27dc116a7f825842be94b3f51770b2f,
+        type: 2}
+      propertyPath: toolManager
+      value: 
+      objectReference: {fileID: 1613533006}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: d27dc116a7f825842be94b3f51770b2f, type: 2}
   m_IsPrefabParent: 0
@@ -12730,7 +12735,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 1613533002}
-  m_RootOrder: 3
+  m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &1497816913
 MonoBehaviour:
@@ -12745,10 +12750,13 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   active: 1
   triggered: 0
-  color: {r: 1, g: 0, b: 0, a: 0}
+  editorColor: {r: 0, g: 0, b: 0, a: 0}
+  commentColor: {r: 0, g: 0, b: 0, a: 0}
   thickness: 0.002
   holder: {fileID: 0}
   pointer: {fileID: 0}
+  isForNetworking: 0
+  isInEditingMode: 0
   inputMaster: {fileID: 0}
   voiceController: {fileID: 0}
 --- !u!114 &1497816914
@@ -12763,13 +12771,15 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   myHandNumber: 0
+  myFakeLaser: {fileID: 0}
+  myTargetedObject: {fileID: 0}
   myHandGO: {fileID: 0}
   inputMaster: {fileID: 0}
   toolManager: {fileID: 0}
   myTool: 0
-  myTargetedObject: {fileID: 0}
   otherLaserManager: {fileID: 0}
   myPointer: {fileID: 0}
+  fakeStatus: 
 --- !u!114 &1497816915
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -13083,7 +13093,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   cameraProSetUpCtrl: {fileID: 1516600419}
   controllerState: 2
-  myHandNumber: 0
+  myHandNumber: 1
   videoCameraScreen: {fileID: 1453208326}
   screenTexture: {fileID: 8400000, guid: 1d095f111076eb14a84375555ccc299a, type: 2}
   captureCamera: {fileID: 1516600422}
@@ -13970,7 +13980,7 @@ Transform:
   m_LocalScale: {x: 0.1, y: 0.2, z: 0.1}
   m_Children: []
   m_Father: {fileID: 1613533002}
-  m_RootOrder: 5
+  m_RootOrder: 7
   m_LocalEulerAnglesHint: {x: 90, y: 0, z: 0}
 --- !u!114 &1608404841
 MonoBehaviour:
@@ -14072,9 +14082,10 @@ Transform:
   - {fileID: 1672541867}
   - {fileID: 951566510}
   - {fileID: 559487520}
+  - {fileID: 1497816912}
   - {fileID: 1790873806}
-  - {fileID: 1608404840}
   - {fileID: 1723104216}
+  - {fileID: 1608404840}
   m_Father: {fileID: 495224142}
   m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -14711,10 +14722,11 @@ Transform:
   - {fileID: 202035164}
   - {fileID: 1192004779}
   - {fileID: 1803112528}
-  - {fileID: 490468763}
+  - {fileID: 1711051662}
   - {fileID: 774858338}
-  - {fileID: 2049270860}
+  - {fileID: 490468763}
   - {fileID: 1917379626}
+  - {fileID: 2049270860}
   m_Father: {fileID: 495224142}
   m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -14865,7 +14877,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 1695863806}
-  m_RootOrder: 3
+  m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &1711051663
 MonoBehaviour:
@@ -14898,13 +14910,15 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   myHandNumber: 0
+  myFakeLaser: {fileID: 0}
+  myTargetedObject: {fileID: 0}
   myHandGO: {fileID: 0}
   inputMaster: {fileID: 0}
   toolManager: {fileID: 0}
   myTool: 0
-  myTargetedObject: {fileID: 0}
   otherLaserManager: {fileID: 0}
   myPointer: {fileID: 0}
+  fakeStatus: 
 --- !u!114 &1711051667
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -14918,10 +14932,13 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   active: 1
   triggered: 0
-  color: {r: 1, g: 0, b: 0, a: 0}
+  editorColor: {r: 0, g: 0, b: 0, a: 0}
+  commentColor: {r: 0, g: 0, b: 0, a: 0}
   thickness: 0.002
   holder: {fileID: 0}
   pointer: {fileID: 0}
+  isForNetworking: 0
+  isInEditingMode: 0
   inputMaster: {fileID: 0}
   voiceController: {fileID: 0}
 --- !u!4 &1723104216 stripped
@@ -15895,7 +15912,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 1613533002}
-  m_RootOrder: 4
+  m_RootOrder: 5
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &1803112527
 Prefab:
@@ -16898,11 +16915,6 @@ Prefab:
 --- !u!4 &1917379626 stripped
 Transform:
   m_PrefabParentObject: {fileID: 4121527793652652, guid: d27dc116a7f825842be94b3f51770b2f,
-    type: 2}
-  m_PrefabInternal: {fileID: 1917379625}
---- !u!1 &1917379627 stripped
-GameObject:
-  m_PrefabParentObject: {fileID: 1738231651425770, guid: d27dc116a7f825842be94b3f51770b2f,
     type: 2}
   m_PrefabInternal: {fileID: 1917379625}
 --- !u!1 &1923639071
@@ -18262,7 +18274,7 @@ Transform:
   m_LocalScale: {x: 0.1, y: 0.2, z: 0.1}
   m_Children: []
   m_Father: {fileID: 1695863806}
-  m_RootOrder: 6
+  m_RootOrder: 8
   m_LocalEulerAnglesHint: {x: 90, y: 0, z: 0}
 --- !u!23 &2049270861
 MeshRenderer:
