@@ -171,16 +171,18 @@ public class LaserPointer : PunBehaviour
         photonView.RPC("ActivateFakeLaser", PhotonTargets.OthersBuffered, status);
     }
 
-    //Will only be sent to other clients
+    //Will only be sent to other clients (except when laserpointer is initialized)
     //0: active, 1: isInEditingMode
     [PunRPC]
-    private void ActivateFakeLaser(bool[] status)
+    private void ActivateFakeLaser(bool[] status, PhotonMessageInfo info)
     {
-        if (photonView.isMine)
-            status[0] = false;
-        ActivateCube(status[0]);
-        if (status[0])
-            isInEditingMode = status[1];
+        if (info.sender == photonView.owner)
+        {
+            ActivateCube(status[0]);
+            if (status[0])
+                isInEditingMode = status[1];
+        }
+
     }
 
 }
