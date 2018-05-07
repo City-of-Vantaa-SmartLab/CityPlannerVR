@@ -105,8 +105,8 @@ public class CameraHandler : MonoBehaviour {
             else if (tool == ToolManager.ToolType.VideoCamera)
             {
                 videoCamera.myHandNumber = handNumber;
-                VideoCameraModeActive = true;
                 NormalCameraModeActive = false;
+                VideoCameraModeActive = true;
                 PathPointModeActive = false;
 
             }
@@ -114,9 +114,9 @@ public class CameraHandler : MonoBehaviour {
             else if (tool == ToolManager.ToolType.PathCamera)
             {
                 pathCameraHandler.myHandNumber = handNumber;
-                PathPointModeActive = true;
                 NormalCameraModeActive = false;
                 VideoCameraModeActive = false;
+                PathPointModeActive = true;
             }
             //if neither camera is selected
             else

@@ -15,31 +15,43 @@ public class CameraPathHandler : MonoBehaviour {
 	[HideInInspector]
 	public int myHandNumber;
 
-	//public ToolManager toolManager;
 
-#region private variables
+    public Valve.VR.InteractionSystem.Hand hand;
 
-	InputMaster inputMaster;
+
+    //public ToolManager toolManager;
+
+    #region private variables
+
+    GameObject player;
+
+    InputMaster inputMaster;
 	XRLineRenderer line;
+    CheckPlayerSize playerSize;
 
 	//The instantiated gameobject
 	GameObject point;
 
 	PathVideoCamera pathVideoCamera;
 
-	int pathPointIndex = 0;
+	static int pathPointIndex = 0;
 
 	GameObject selectedPoint;
 	bool holdTrigger = false;
+
+    ToolManager toolManager;
 
     #endregion
 
     private void Awake()
     {
-        inputMaster = GameObject.Find("Player").GetComponent<InputMaster>();
+        player = GameObject.Find("Player");
+        inputMaster = player.GetComponent<InputMaster>();
         line = GameObject.Find("CameraPathLineDrawer").GetComponent<XRLineRenderer>();
+        playerSize = player.GetComponent<CheckPlayerSize>();
 
         pathVideoCamera = videoCamera.GetComponent<PathVideoCamera>();
+        toolManager = hand.GetComponent<ToolManager>();
 
         pathVideoCamera.pathPoints = new List<GameObject>();
         InitializePathLine();
@@ -77,14 +89,17 @@ public class CameraPathHandler : MonoBehaviour {
     {
         if (inputMaster != null)
         {
-            Unsubscribe();
-            if (pathVideoCamera.pathPoints.Count > 0)
+            if (hand.otherHand.GetComponent<ToolManager>().Tool != ToolManager.ToolType.PathCamera)
             {
-                for (int i = 0; i < pathVideoCamera.pathPoints.Count; i++)
+                Unsubscribe();
+                if (pathVideoCamera.pathPoints.Count > 0)
                 {
-                    pathVideoCamera.pathPoints[i].SetActive(false);
+                    for (int i = 0; i < pathVideoCamera.pathPoints.Count; i++)
+                    {
+                        pathVideoCamera.pathPoints[i].SetActive(false);
+                    }
+                    pathDrawer.SetActive(false);
                 }
-                pathDrawer.SetActive(false);
             }
         }
     }
@@ -117,12 +132,19 @@ public class CameraPathHandler : MonoBehaviour {
 	private void InstantiatePathPoint(object sender, ClickedEventArgs e)
     {
 		if (e.controllerIndex == myHandNumber) {
-			if (pathVideoCamera.tool == PathVideoCamera.Tool.Add) {
-				point = Instantiate (pathPoint, transform.position, transform.rotation) as GameObject;
-				pathVideoCamera.pathPoints.Add (point);
+            if (toolManager.Tool == ToolManager.ToolType.PathCamera)
+            {
+                if (!playerSize.isSmall)
+                {
+                    if (pathVideoCamera.tool == PathVideoCamera.Tool.Add)
+                    {
+                        point = Instantiate(pathPoint, transform.position, transform.rotation) as GameObject;
+                        pathVideoCamera.pathPoints.Add(point);
 
-				DrawLineBetweenPoints ();
-			}
+                        DrawLineBetweenPoints();
+                    }
+                }
+            }
 		}
     }
 
@@ -144,9 +166,16 @@ public class CameraPathHandler : MonoBehaviour {
 	//--------------------------------------------------------------------------------------------------------------------------------
 	private void ActivatePointMoving(object sender, ClickedEventArgs e){
 		if (e.controllerIndex == myHandNumber) {
-			if (pathVideoCamera.tool == PathVideoCamera.Tool.Move) {
-				StartCoroutine (MovePoint ());
-			}
+            if (toolManager.Tool == ToolManager.ToolType.PathCamera)
+            {
+                if (!playerSize.isSmall)
+                {
+                    if (pathVideoCamera.tool == PathVideoCamera.Tool.Move)
+                    {
+                        StartCoroutine(MovePoint());
+                    }
+                }
+            }
 		}
 	}
 
@@ -188,19 +217,27 @@ public class CameraPathHandler : MonoBehaviour {
 
 	private void RemovePoint(object sender, ClickedEventArgs e){
 		if (e.controllerIndex == myHandNumber) {
-			if (pathVideoCamera.tool == PathVideoCamera.Tool.Remove) {
-				if (selectedPoint != null) {
+            if (toolManager.Tool == ToolManager.ToolType.PathCamera)
+            {
+                if (pathVideoCamera.tool == PathVideoCamera.Tool.Remove)
+                {
+                    if (!playerSize.isSmall)
+                    {
+                        if (selectedPoint != null)
+                        {
 
-					pathVideoCamera.pathPoints.Remove (selectedPoint);
+                            pathVideoCamera.pathPoints.Remove(selectedPoint);
 
-					GameObject.Destroy (selectedPoint);
+                            Destroy(selectedPoint);
 
-					ReDrawPath ();
+                            ReDrawPath();
 
-					selectedPoint = null;
-					//pathVideoCamera.tool = PathVideoCamera.Tool.Add;
-				}
-			}
+                            selectedPoint = null;
+                            //pathVideoCamera.tool = PathVideoCamera.Tool.Add;
+                        }
+                    }
+                }
+            }
 		}
 	}
 
@@ -235,20 +272,24 @@ public class CameraPathHandler : MonoBehaviour {
 
 	void ActivatePathCamera(object sender, ClickedEventArgs e){
 		if (e.controllerIndex == myHandNumber) {
-			if (pathVideoCamera.tool == PathVideoCamera.Tool.Capture) {
-                if (pathVideoCamera.pathPoints.Count < 0)
+            if (toolManager.Tool == ToolManager.ToolType.PathCamera)
+            {
+                if (pathVideoCamera.tool == PathVideoCamera.Tool.Capture)
                 {
-                    videoCamera.SetActive(true);
+                    if (pathVideoCamera.pathPoints.Count > 0)
+                    {
+                        videoCamera.SetActive(true);
 
-                    cameraScreen.SetActive(true);
-                    cameraScreen.transform.parent = gameObject.transform;
-                    cameraScreen.transform.localPosition = Vector3.zero;
-                    cameraScreen.transform.localRotation = Quaternion.identity;
+                        cameraScreen.SetActive(true);
+                        cameraScreen.transform.parent = gameObject.transform;
+                        cameraScreen.transform.localPosition = Vector3.zero;
+                        cameraScreen.transform.localRotation = Quaternion.identity;
 
 
-                    pathVideoCamera.InitializeCamera();
+                        pathVideoCamera.InitializeCamera();
+                    }
                 }
-			}
+            }
 		}
 	}
 }
