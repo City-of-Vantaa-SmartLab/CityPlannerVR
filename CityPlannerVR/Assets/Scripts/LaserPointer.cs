@@ -176,6 +176,8 @@ public class LaserPointer : PunBehaviour
     [PunRPC]
     private void ActivateFakeLaser(bool[] status)
     {
+        if (photonView.isMine)
+            status[0] = false;
         ActivateCube(status[0]);
         if (status[0])
             isInEditingMode = status[1];
