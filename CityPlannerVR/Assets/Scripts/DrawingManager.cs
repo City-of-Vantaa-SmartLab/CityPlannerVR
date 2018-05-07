@@ -303,6 +303,7 @@ public class DrawingManager : PunBehaviour {
         photonV.ObservedComponents = new List<Component>();
         //photonV.ObservedComponents.Add(photonTV);
         photonV.ObservedComponents.Add(netObject);
+        photonV.ObservedComponents.Add(currentLineRenderer);
         photonV.synchronization = ViewSynchronization.UnreliableOnChange;
     }
 
