@@ -41,6 +41,7 @@ public class PhotonGameManager : MonoBehaviour {
 
 	//Prefab for the player avatar and related functionalities
 	public GameObject playerPrefab;
+	public Vector3 playerSpawnPoint;
 
 	#endregion
 
@@ -98,6 +99,7 @@ public class PhotonGameManager : MonoBehaviour {
 			isMultiplayerSceneLoaded = true;
 
 			if(PhotonPlayerAvatar.LocalPlayerInstance == null) {
+				Debug.Log ("Instantiating player");
 				InstantiatePlayer ();
 			}
 		}
@@ -179,7 +181,9 @@ public class PhotonGameManager : MonoBehaviour {
 			Debug.Log("We are Instantiating LocalPlayer from "+Application.loadedLevelName);
 			// Player is in a room. Spawn a character for the local player. 
 			// It gets synced by using PhotonNetwork.Instantiate
-			GameObject player = PhotonNetwork.Instantiate(this.playerPrefab.name, new Vector3(0f,3f,0f), Quaternion.identity, 0);
+			GameObject player = PhotonNetwork.Instantiate(this.playerPrefab.name, playerSpawnPoint, Quaternion.identity, 0);
+			Debug.Log ("Player instantiated at: " + playerSpawnPoint.x.ToString () + "," + playerSpawnPoint.y.ToString () + "," + playerSpawnPoint.z.ToString ());
+			Debug.Log ("Actual location: " + player.transform.position.x.ToString () + "," + player.transform.position.y.ToString () + "," + player.transform.position.z.ToString ());
 		}
 	}
 
