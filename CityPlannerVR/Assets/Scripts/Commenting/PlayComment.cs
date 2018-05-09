@@ -2,7 +2,9 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-[RequireComponent(AudioSource)]
+//Use www class for the server?
+
+//[RequireComponent(AudioSource)]
 public class PlayComment : MonoBehaviour {
 
 	AudioClip[] comments;
@@ -15,4 +17,9 @@ public class PlayComment : MonoBehaviour {
 	void LoadComment(){
 		
 	}
+
+    void PlayCommentInPosition()
+    {
+        
+    }
 }

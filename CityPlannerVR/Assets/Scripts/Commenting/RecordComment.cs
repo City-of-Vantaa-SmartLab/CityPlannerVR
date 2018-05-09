@@ -1,6 +1,10 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using System.IO;
+
+using System.Xml;
+using System.Xml.Serialization;
 
 /// <summary>
 /// Records and saves an audio 
@@ -20,6 +24,9 @@ public class RecordComment : MonoBehaviour
     private AudioClip audioClip;
 
     private Dissonance.VoiceBroadcastTrigger voiceTrigger;
+
+    //The object we are commenting
+    GameObject target;
 
     private void Start()
     {
@@ -42,25 +49,20 @@ public class RecordComment : MonoBehaviour
         }
 
         voiceTrigger = gameObject.GetComponent<Dissonance.VoiceBroadcastTrigger>();
+        target = FindObjectOfType<GameObject>();
     }
 
     int temp = 0;
 
     private void Update()
     {
-
-        if(temp == 4)
+        if (temp == 10)
         {
-            voiceTrigger.Mode = Dissonance.CommActivationMode.None;
-        }
-        if(temp == 10)
-        {
-            
             RecordAudio();
             temp++;
         }
 
-        else if(temp == 20)
+        else if (temp == 30)
         {
             RecordAudio();
             temp++;
@@ -75,6 +77,8 @@ public class RecordComment : MonoBehaviour
     {
         if (micConnected)
         {
+            DisableVoiceChat();
+
             if (!Microphone.IsRecording(null))
             {
                 audioClip = Microphone.Start(null, true, 20, maxFreq);
@@ -94,13 +98,66 @@ public class RecordComment : MonoBehaviour
         }
     }
 
+    void DisableVoiceChat()
+    {
+        if(voiceTrigger.Mode != Dissonance.CommActivationMode.None)
+        {
+            voiceTrigger.Mode = Dissonance.CommActivationMode.None;
+            Microphone.End(null);
+        }
+    }
+//-----------------------------------------------------------------------------------------------------------------------------------------------------
     string directoryName = "VoiceComments";
-    char slash = System.IO.Path.DirectorySeparatorChar;
+    char slash = Path.DirectorySeparatorChar;
+
+    DirectoryInfo files;
+    FileInfo[] fileInfo;
+
+    [HideInInspector]
+    public PositionData position;
+
+    public PositionDatabase positionDB;
 
     void SaveRecordedAudio()
     {
         string filename = "VoiceComment_" + System.DateTime.Now.ToString("yyyy-MM-dd_HH-mm-ss");
 
         SavWav.Save(filename, audioClip, directoryName, slash);
+
+        string path = Application.persistentDataPath + slash + directoryName + slash + "Positions.txt";
+
+        XmlSerializer serializer = new XmlSerializer(typeof(PositionDatabase));
+        FileStream file = File.Create(path);
+
+        for (int i = 0; i < ObjectContainer.objects.Count; i++)
+        {
+            positionDB.list.Add(new PositionData());
+
+            positionDB.list[i].recordName = filename;
+            positionDB.list[i].targetName = target.name;
+
+            positionDB.list[i].position[0] = target.transform.position.x;
+            positionDB.list[i].position[1] = target.transform.position.y;
+            positionDB.list[i].position[2] = target.transform.position.z;
+        }
+
+
+        serializer.Serialize(file, positionDB);
+        file.Close();
+
     }
+}
+
+[System.Serializable]
+public class PositionData
+{
+    public string recordName;
+    public string targetName;
+    public float[] position = new float[3];
+}
+
+[System.Serializable]
+public class PositionDatabase
+{
+    public List<PositionData> list = new List<PositionData>();
 }
