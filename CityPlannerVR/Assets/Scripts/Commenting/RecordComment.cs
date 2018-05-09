@@ -28,6 +28,8 @@ public class RecordComment : MonoBehaviour
     //The object we are commenting
     GameObject target;
 
+    LaserPointer laser;
+
     private void Start()
     {
         if (Microphone.devices.Length <= 0)
@@ -50,30 +52,10 @@ public class RecordComment : MonoBehaviour
 
         voiceTrigger = gameObject.GetComponent<Dissonance.VoiceBroadcastTrigger>();
         target = FindObjectOfType<GameObject>();
+        
     }
 
-    int temp = 0;
-
-    private void Update()
-    {
-        if (temp == 10)
-        {
-            RecordAudio();
-            temp++;
-        }
-
-        else if (temp == 30)
-        {
-            RecordAudio();
-            temp++;
-        }
-        else
-        {
-            temp++;
-        }
-    }
-
-    void RecordAudio()
+    void RecordAudio(LaserEventArgs e)
     {
         if (micConnected)
         {
