@@ -98,19 +98,6 @@ public class InputMaster : PunBehaviour {
     void Start () {
         //Role = RoleType.TEST;
         Role = RoleType.Admin;
-        //Invoke("AnnounceRoleChanged", 0.5f);  //for late subscribers
-
-        // Get gameobject handling player VR stuff
-
-        //leftHandNode = UnityEngine.XR.XRNode.LeftHand;
-        //rightHandNode = UnityEngine.XR.XRNode.RightHand;
-
-        //playerSize = playerVR.GetComponent<CheckPlayerSize>();
-
-        //StartCoroutine(TrackHeadCoroutine());
-        //StartCoroutine(TrackHandNodeCoroutine(UnityEngine.XR.XRNode.LeftHand, hand1GO));  //Left hand
-        //StartCoroutine(TrackHandNodeCoroutine(UnityEngine.XR.XRNode.RightHand, hand2GO));  //Right hand
-
     }
 
 	// Update is called once per frame
@@ -257,6 +244,8 @@ public class InputMaster : PunBehaviour {
         }
     }
 
+    #region OnEvents
+
     private void OnTriggerClicked(ClickedEventArgs e)
     {
         if (TriggerClicked != null)
@@ -323,6 +312,8 @@ public class InputMaster : PunBehaviour {
         if (RoleChanged != null)
             RoleChanged(0);
     }
+
+    #endregion
 
     public void LaserIsOff()
     {
