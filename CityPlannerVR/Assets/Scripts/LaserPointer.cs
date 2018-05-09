@@ -9,6 +9,7 @@ public struct LaserEventArgs
     //public uint handNumber;
     public float distance;
     public Transform target;
+    public Vector3 hitPoint;
 }
 
 public delegate void LaserEventHandler(object sender, LaserEventArgs e);
@@ -129,6 +130,7 @@ public class LaserPointer : PunBehaviour
             LaserEventArgs args = new LaserEventArgs();
             args.distance = 0f;
             args.target = previousContact;
+            args.hitPoint = Vector3.zero;
             OnPointerOut(args);
             previousContact = null;
         }
@@ -137,6 +139,7 @@ public class LaserPointer : PunBehaviour
             LaserEventArgs argsIn = new LaserEventArgs();
             argsIn.distance = hit.distance;
             argsIn.target = hit.transform;
+            argsIn.hitPoint = hit.point;
             OnPointerIn(argsIn);
             previousContact = hit.transform;
         }
