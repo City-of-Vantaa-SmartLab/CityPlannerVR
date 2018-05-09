@@ -34,8 +34,8 @@ public class InputMaster : PunBehaviour {
     private Hand hand1;
     [SerializeField]
     private Hand hand2;
-    [SerializeField]
-    private CheckPlayerSize playerSize;
+    //[SerializeField]
+    //private CheckPlayerSize playerSize;
     //[SerializeField]
     //private UnityEngine.XR.XRNode leftHandNode;
     //[SerializeField]
