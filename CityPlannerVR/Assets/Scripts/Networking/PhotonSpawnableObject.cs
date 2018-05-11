@@ -65,10 +65,20 @@ public class PhotonSpawnableObject : MonoBehaviour {
 	private void InstantiateItemInSpawner()
 	{
 		GameObject clone = PhotonNetwork.Instantiate(itemPrefabName, spawnPoint.position, spawnPoint.rotation, 0);
-		Rigidbody r_clone = clone.GetComponent<Rigidbody>();
 
+		Rigidbody r_clone = clone.GetComponent<Rigidbody>();
 		clone.transform.SetParent(this.transform);
 		r_clone.constraints = RigidbodyConstraints.FreezeAll;
+
+		BoxCollider colliderB = clone.GetComponent<BoxCollider> ();
+		if (colliderB != null) {
+			colliderB.enabled = false;
+		}
+		CapsuleCollider colliderC = clone.GetComponent<CapsuleCollider> ();
+		if (colliderC != null) {
+			colliderC.enabled = false;
+		}
+
 		itemInSpawner = clone;
 	}
 
