@@ -3,6 +3,16 @@ using System.Collections.Generic;
 using UnityEngine;
 using System.IO;
 
+/// <summary>
+/// Handles the writing and reading of files, as well as stores the commentcontainer.
+/// Could be scaled for other types of data as well (later).
+/// </summary>
+
+public class CommentContainer
+{
+    public List<CommentData> commentDatas = new List<CommentData>();
+}
+
 public class SaveData {
 
     public static CommentContainer commentContainer = new CommentContainer();
@@ -13,25 +23,37 @@ public class SaveData {
 
     public static void Load(string filepath)
     {
-        commentContainer = LoadComments(filepath); 
+        commentContainer = LoadComments(filepath);
+
+        foreach (CommentData data in commentContainer.commentDatas)
+        {
+            SaveAndLoadComments.CreateComment(data);
+        }
+
+        if (OnLoaded != null)
+            OnLoaded();
+        ClearCommentList();
     }
 
-    public static void Save(string filepath, CommentContainer comments)
+    public static void Save(string filepath, CommentContainer commentDatas)
     {
-        OnBeforeSave();
-        SaveComments(filepath, comments);
+        if (OnBeforeSave != null)
+            OnBeforeSave();
+        SaveComments(filepath, commentDatas);
         ClearCommentList();
     }
 
 
     public static void AddCommentData(CommentData data)
     {
-        commentContainer.comments.Add(data);
+        commentContainer.commentDatas.Add(data);
+        Debug.Log("Comment added to list");
     }
 
     public static void ClearCommentList()
     {
-        commentContainer.comments.Clear();
+        commentContainer.commentDatas.Clear();
+        Debug.Log("Temp comments cleared");
     }
 
     private static CommentContainer LoadComments(string filepath)
@@ -49,10 +71,4 @@ public class SaveData {
         File.WriteAllText(filepath, jason);
     }
 
-}
-
-
-public class CommentContainer
-{
-    public List<CommentData> comments = new List<CommentData>();
 }
