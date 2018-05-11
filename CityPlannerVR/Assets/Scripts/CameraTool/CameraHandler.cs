@@ -19,9 +19,6 @@ public class CameraHandler : MonoBehaviour {
     VideoCamera videoCamera;
 	CameraPathHandler pathCameraHandler;
 
-    //Needed to disable the teleport temporarily so it won't interfere with the camera controls
-    Valve.VR.InteractionSystem.Teleport teleport;
-
     ToolManager toolManager;
     int handNumber;
 
@@ -74,8 +71,6 @@ public class CameraHandler : MonoBehaviour {
         screenshotCamera = normalCamera.GetComponent<ScreenshotCamera>();
         videoCamera = videoCameraObject.GetComponent<VideoCamera>();
         pathCameraHandler = pathCameraPoint.GetComponent<CameraPathHandler>();
-
-        teleport = GameObject.Find("Teleporting").GetComponent<Valve.VR.InteractionSystem.Teleport>();
     }
 
     private void Start()

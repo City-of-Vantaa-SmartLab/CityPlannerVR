@@ -11,7 +11,7 @@ public class PathVideoCamera : MonoBehaviour {
 	[HideInInspector]
 	public List<GameObject> pathPoints;
 
-	InputMaster inputMaster;
+	//InputMaster inputMaster;
 	public CameraProSetUpCtrl cameraProSetUpCtrl;
 
 	public ControllerState controllerState = ControllerState.Normal;
@@ -37,7 +37,7 @@ public class PathVideoCamera : MonoBehaviour {
 
 	void Awake(){
 
-		inputMaster = GameObject.Find("Player").GetComponent<InputMaster>();
+		//inputMaster = GameObject.Find("Player").GetComponent<InputMaster>();
 		captureCamera.targetTexture = screenTexture;
 	}
 

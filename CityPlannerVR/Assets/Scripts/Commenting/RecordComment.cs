@@ -14,24 +14,30 @@ using System.Xml.Serialization;
 
 public class RecordComment : MonoBehaviour
 {
-
     //Tells if there are no microphones connected
     private bool micConnected = false;
 
     private int minFreq;
     private int maxFreq;
 
-    private AudioClip audioClip;
+    private AudioClip tempAudioClip;
+    private AudioClip finalAudioClip;
 
     private Dissonance.VoiceBroadcastTrigger voiceTrigger;
 
+    GameObject commentWheel;
     //The object we are commenting
     GameObject target;
+    //The person who commented
+    string commenter;
 
     LaserPointer laser;
 
     private void Start()
     {
+
+        laser = GameObject.Find("Player").GetComponentInChildren<LaserPointer>();
+
         if (Microphone.devices.Length <= 0)
         {
             Debug.LogWarning("Microphone not connected");
@@ -51,32 +57,85 @@ public class RecordComment : MonoBehaviour
         }
 
         voiceTrigger = gameObject.GetComponent<Dissonance.VoiceBroadcastTrigger>();
-        target = FindObjectOfType<GameObject>();
-        
+
+        laser.PointerIn += StartRecord;
+        laser.PointerOut += StopRecord;
+
+        laser.PointerIn += FindTarget;
     }
 
-    void RecordAudio(LaserEventArgs e)
-    {
-        if (micConnected)
-        {
-            DisableVoiceChat();
 
-            if (!Microphone.IsRecording(null))
+    //TODO: 
+    //-avaa commentWheel
+    //-pistä commentWheel oikeaan kohtaan (isona ja pienenä)
+    //-piilota commentWheel
+    //-estä kommentoimasta vääriä asioita
+    //-indikaatio tallenuksen aloituksesta ja lopetuksesta (ja epäonnistumisesta?)
+    void FindTarget(object sender, LaserEventArgs e)
+    {
+        if(e.target.gameObject.layer != LayerMask.NameToLayer("CommentWheel"))
+        {
+            target = e.target.gameObject;
+        }
+    }
+
+    void StartRecord(object sender, LaserEventArgs e)
+    {
+        target = e.target.gameObject;
+        if(e.target.gameObject.layer == LayerMask.NameToLayer("CommentWheel") && e.target.name == "VoiceComment")
+        {
+            if (micConnected)
             {
-                audioClip = Microphone.Start(null, true, 20, maxFreq);
-                Debug.Log("Recording started");
-            }
-            else
-            {
-                Microphone.End(null);
-                Debug.Log("Recording stopped");
-                SaveRecordedAudio();
-                voiceTrigger.Mode = Dissonance.CommActivationMode.VoiceActivation;
+                DisableVoiceChat();
+
+                if (!Microphone.IsRecording(null))
+                {
+                    tempAudioClip = Microphone.Start(null, true, 30, maxFreq);
+                    Debug.Log("Recording started");
+                }
             }
         }
         else
         {
             Debug.LogError("Microphone not connected");
+        }
+    }
+
+    void StopRecord(object sender, LaserEventArgs e)
+    {
+        if (e.target.gameObject.layer == LayerMask.NameToLayer("CommentWheel") && e.target.name == "VoiceComment")
+        {
+            if (micConnected)
+            {
+                DisableVoiceChat();
+
+                if (Microphone.IsRecording(null))
+                {
+                    int lastPos = Microphone.GetPosition(null);
+                    if (lastPos != 0)
+                    {
+                        float[] samples = new float[tempAudioClip.samples];
+                        tempAudioClip.GetData(samples, 0);
+
+                        float[] finalSamples = new float[lastPos];
+
+                        for (int i = 0; i < finalSamples.Length; i++)
+                        {
+                            finalSamples[i] = samples[i];
+                        }
+
+                        finalAudioClip = AudioClip.Create("FinalAudioClip", finalSamples.Length, 1, maxFreq, false);
+
+                        finalAudioClip.SetData(finalSamples, 0);
+
+                        Microphone.End(null);
+                        Debug.Log("Recording stopped");
+                        SaveRecordedAudio();
+                        //Enable voice chat again
+                        voiceTrigger.Mode = Dissonance.CommActivationMode.VoiceActivation;
+                    }
+                }
+            }
         }
     }
 
@@ -102,9 +161,9 @@ public class RecordComment : MonoBehaviour
 
     void SaveRecordedAudio()
     {
-        string filename = "VoiceComment_" + System.DateTime.Now.ToString("yyyy-MM-dd_HH-mm-ss");
+        string filename = commenter + "_VoiceComment_" + System.DateTime.Now.ToString("yyyy-MM-dd_HH-mm-ss") ;
 
-        SavWav.Save(filename, audioClip, directoryName, slash);
+        SavWav.Save(filename, finalAudioClip, directoryName, slash);
 
         string path = Application.persistentDataPath + slash + directoryName + slash + "Positions.txt";
 
@@ -123,7 +182,6 @@ public class RecordComment : MonoBehaviour
             positionDB.list[i].position[2] = target.transform.position.z;
         }
 
-
         serializer.Serialize(file, positionDB);
         file.Close();
 
@@ -133,6 +191,8 @@ public class RecordComment : MonoBehaviour
 [System.Serializable]
 public class PositionData
 {
+    //TODO: täytä toi
+    public string commenterName;
     public string recordName;
     public string targetName;
     public float[] position = new float[3];
