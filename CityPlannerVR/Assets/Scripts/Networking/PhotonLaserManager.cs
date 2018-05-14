@@ -26,13 +26,12 @@ public class PhotonLaserManager : PunBehaviour {
     [SerializeField]
     private LaserPointer myPointer;
     [SerializeField]
-    private bool fakeStatus;
+    private bool fakeStatus = false;
 
     private void Awake()
     {
         if (!InitOwn())
             Debug.LogError("Failed to initialize PhotonLaserManager on hand" + myHandNumber);
-        fakeStatus = false;
     }
 
     private void Start()
@@ -129,10 +128,10 @@ public class PhotonLaserManager : PunBehaviour {
                 inputMaster.LaserIsOff();
             }
 
-            SendLaserStatusToOthers();
         }
         else
             Debug.Log("myPointer not set for lasermanager on" + gameObject.name);
+        SendLaserStatusToOthers(status);
     }
 
     private void HandleToolChange(uint handNumber, ToolManager.ToolType tool)
@@ -143,8 +142,6 @@ public class PhotonLaserManager : PunBehaviour {
             ToggleLaser(handNumber, true);
         else
             ToggleLaser(handNumber, false);
-
-
     }
 
 
@@ -188,7 +185,6 @@ public class PhotonLaserManager : PunBehaviour {
                 Debug.Log("HandlePointerIn", e.target.gameObject);
             }
         }
-        
     }
 
 
@@ -199,10 +195,10 @@ public class PhotonLaserManager : PunBehaviour {
         fakeStatus = active;
     }
 
-    private void SendLaserStatusToOthers()
+    private void SendLaserStatusToOthers(bool active)
     {
         if (myFakeLaser)
-            myFakeLaser.ActivateFakeLaserRPC(fakeStatus);
+            myFakeLaser.ActivateFakeLaserRPC(active);
         else
             Debug.Log("No fake laser found for " + transform.parent.name);
     }
@@ -210,7 +206,7 @@ public class PhotonLaserManager : PunBehaviour {
     public void DeactivateObject()
     {
         ActivateObject(false);
-        SendLaserStatusToOthers();
+        SendLaserStatusToOthers(false);
     }
 
     private void HandleTriggerClicked(object sender, ClickedEventArgs e)

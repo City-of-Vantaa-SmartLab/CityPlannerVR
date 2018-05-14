@@ -73,7 +73,7 @@ public class LaserPointer : PunBehaviour
     {
         if (isForNetworking)
         {
-            bool status = false; //0: active, 1: isInEditingMode
+            bool status = false;
 
             PhotonLaserManager photonLaserManager;
             if (gameObject.name == "PhotonHandLeft")
@@ -173,7 +173,6 @@ public class LaserPointer : PunBehaviour
     }
 
     //Will only be sent to other clients (except when laserpointer is initialized)
-    //0: active, 1: isInEditingMode
     [PunRPC]
     private void ActivateFakeLaser(bool status, PhotonMessageInfo info)
     {
