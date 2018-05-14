@@ -41,6 +41,7 @@ public class PhotonSpawnableObject : MonoBehaviour {
 
 	private void OnTriggerEnter(Collider other)
 	{
+		Debug.Log ("Spawner entered");
 		if (other.CompareTag("GameController"))
 		{
 			Debug.Log(this.name + " triggered by " + other.name);
@@ -50,6 +51,7 @@ public class PhotonSpawnableObject : MonoBehaviour {
 
 	private void OnTriggerExit(Collider other)
 	{
+		Debug.Log ("Spawner exited");
 		if (other.CompareTag("GameController"))
 		{
 			Debug.Log(this.name + " exited by " + other.name);
@@ -59,6 +61,7 @@ public class PhotonSpawnableObject : MonoBehaviour {
 
 	private void HandleTriggerClicked(object sender, ClickedEventArgs e)
 	{
+		Debug.Log ("Trigger clicked");
 		InstantiateRealItem (e.controllerIndex);
 	}
 
@@ -80,6 +83,7 @@ public class PhotonSpawnableObject : MonoBehaviour {
 		}
 
 		itemInSpawner = clone;
+		Debug.Log ("Spawner item instantiated");
 	}
 
 	private void InstantiateRealItem(uint controllerIndex)
@@ -100,5 +104,7 @@ public class PhotonSpawnableObject : MonoBehaviour {
 		if (hand != null) {
 			hand.AttachObject (clone);
 		}
+
+		Debug.Log ("Real item instantiated");
 	}
 }
