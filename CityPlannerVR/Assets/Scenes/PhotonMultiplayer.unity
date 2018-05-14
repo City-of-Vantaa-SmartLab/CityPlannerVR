@@ -13712,6 +13712,7 @@ GameObject:
   - component: {fileID: 1751858558}
   - component: {fileID: 1751858557}
   - component: {fileID: 1751858556}
+  - component: {fileID: 1751858560}
   - component: {fileID: 1751858555}
   m_Layer: 0
   m_Name: VRCamera
@@ -13736,8 +13737,7 @@ Transform:
 --- !u!114 &1751858555
 MonoBehaviour:
   m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 114000012530188460, guid: dc06161b6d97feb419f45f03b62e14b9,
-    type: 2}
+  m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 1751858553}
   m_Enabled: 1
@@ -13813,6 +13813,19 @@ Camera:
   m_OcclusionCulling: 1
   m_StereoConvergence: 10
   m_StereoSeparation: 0.022
+--- !u!114 &1751858560
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1751858553}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d37c2cf88f7c59f4c8cf5d3812568143, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  index: 0
+  origin: {fileID: 0}
 --- !u!1 &1754002999
 GameObject:
   m_ObjectHideFlags: 0
@@ -15286,6 +15299,22 @@ Transform:
   m_PrefabParentObject: {fileID: 4690568397460130, guid: 744c3d82e40a9ed45aabfbbb699b525d,
     type: 2}
   m_PrefabInternal: {fileID: 1892185193}
+--- !u!1 &1892185195 stripped
+GameObject:
+  m_PrefabParentObject: {fileID: 1436274083125228, guid: 744c3d82e40a9ed45aabfbbb699b525d,
+    type: 2}
+  m_PrefabInternal: {fileID: 1892185193}
+--- !u!114 &1892185196
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1892185195}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b93b6a877adcbf94c89a9d6e0c0e844d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1001 &1897197382
 Prefab:
   m_ObjectHideFlags: 0
