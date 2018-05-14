@@ -84,11 +84,15 @@ public class InputMaster : PunBehaviour {
             hand1Found = true;
         if (hand2)
             hand2Found = true;
+    }
+
+    private void Start()
+    {
         Role = RoleType.TEST;
     }
 
-	// Update is called once per frame
-	void Update () {
+    // Update is called once per frame
+    void Update () {
         if (hand1Found)
             GetInput(hand1, 1);
         if (hand2Found)
