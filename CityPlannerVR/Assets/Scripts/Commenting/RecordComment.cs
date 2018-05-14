@@ -33,6 +33,27 @@ public class RecordComment : MonoBehaviour
 
     LaserPointer laser;
 
+    string directoryName = "VoiceComments";
+    char slash = Path.DirectorySeparatorChar;
+
+    DirectoryInfo files;
+    FileInfo[] fileInfo;
+
+    [HideInInspector]
+    public PositionData position;
+
+    public PositionDatabase positionDB;
+
+    private string savePath;
+
+    public string SavePath
+    {
+        get
+        {
+            return savePath;
+        }
+    }
+
     private void Start()
     {
 
@@ -62,6 +83,8 @@ public class RecordComment : MonoBehaviour
         laser.PointerOut += StopRecord;
 
         laser.PointerIn += FindTarget;
+
+        savePath = Application.persistentDataPath + slash + directoryName + slash + "Positions.txt";
     }
 
 
@@ -148,27 +171,15 @@ public class RecordComment : MonoBehaviour
         }
     }
 //-----------------------------------------------------------------------------------------------------------------------------------------------------
-    string directoryName = "VoiceComments";
-    char slash = Path.DirectorySeparatorChar;
 
-    DirectoryInfo files;
-    FileInfo[] fileInfo;
-
-    [HideInInspector]
-    public PositionData position;
-
-    public PositionDatabase positionDB;
-
-    void SaveRecordedAudio()
+void SaveRecordedAudio()
     {
         string filename = commenter + "_VoiceComment_" + System.DateTime.Now.ToString("yyyy-MM-dd_HH-mm-ss") ;
 
         SavWav.Save(filename, finalAudioClip, directoryName, slash);
 
-        string path = Application.persistentDataPath + slash + directoryName + slash + "Positions.txt";
-
         XmlSerializer serializer = new XmlSerializer(typeof(PositionDatabase));
-        FileStream file = File.Create(path);
+        FileStream file = File.Create(savePath);
 
         for (int i = 0; i < ObjectContainer.objects.Count; i++)
         {
