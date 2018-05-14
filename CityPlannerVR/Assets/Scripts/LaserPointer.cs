@@ -19,17 +19,15 @@ public class LaserPointer : PunBehaviour
     public bool active = true;
     public bool triggered;
     public Color editorColor;
-    public Color commentColor;
+    public Color fakeColor;
     public float thickness = 0.002f;
     public GameObject holder;
     public GameObject pointer;
     bool isActive = false;
     public bool isForNetworking; //means it is "fake" and does not show for the local player
-    public bool isInEditingMode;  //comment or edit mode
     public event LaserEventHandler PointerIn;
     public event LaserEventHandler PointerOut;
 
-    [SerializeField]
     private InputMaster inputMaster;
 
     Transform previousContact = null;
@@ -52,10 +50,10 @@ public class LaserPointer : PunBehaviour
         pointer.transform.localRotation = Quaternion.identity;
 
         Material newMaterial = new Material(Shader.Find("Unlit/Color"));
-        if (isInEditingMode)
+        if (!isForNetworking)
             newMaterial.SetColor("_Color", editorColor);
         else
-            newMaterial.SetColor("_Color", commentColor);
+            newMaterial.SetColor("_Color", fakeColor);
 
         pointer.GetComponent<MeshRenderer>().material = newMaterial;
 
@@ -74,7 +72,7 @@ public class LaserPointer : PunBehaviour
     {
         if (isForNetworking)
         {
-            bool[] status = new bool[2] { false, false }; //0: active, 1: isInEditingMode
+            bool status = false; //0: active, 1: isInEditingMode
 
             PhotonLaserManager photonLaserManager;
             if (gameObject.name == "PhotonHandLeft")
@@ -166,7 +164,7 @@ public class LaserPointer : PunBehaviour
             pointer.SetActive(active);
     }
 
-    public void ActivateFakeLaserRPC(bool[] status)
+    public void ActivateFakeLaserRPC(bool status)
     {
         photonView.RPC("ActivateFakeLaser", PhotonTargets.OthersBuffered, status);
     }
@@ -174,11 +172,21 @@ public class LaserPointer : PunBehaviour
     //Will only be sent to other clients
     //0: active, 1: isInEditingMode
     [PunRPC]
+<<<<<<< HEAD
     private void ActivateFakeLaser(bool[] status)
     {
         ActivateCube(status[0]);
         if (status[0])
             isInEditingMode = status[1];
+=======
+    private void ActivateFakeLaser(bool status, PhotonMessageInfo info)
+    {
+        if (info.sender == photonView.owner)
+        {
+            ActivateCube(status);
+        }
+
+>>>>>>> master
     }
 
 }
