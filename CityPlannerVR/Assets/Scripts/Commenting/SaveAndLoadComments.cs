@@ -21,6 +21,7 @@ public class SaveAndLoadComments : MonoBehaviour {
     public GameObject depository;
 
 
+
     private void Awake()
     {
         folder = "SaveData";
@@ -29,7 +30,30 @@ public class SaveAndLoadComments : MonoBehaviour {
         folderPathName = Application.persistentDataPath + slash + folder;
         pathName = folderPathName + slash + fileName + fileExtender;
         if (!depository)
+            depository = GetDepository();
+    }
+
+    private GameObject GetDepository()
+    {
+        if (gameObject.name == "Comments")
+        {
             depository = gameObject;
+        }
+        else
+        {
+            Transform tempSearch = transform.Find("Comments");
+            if (tempSearch)
+            {
+                depository = tempSearch.gameObject;
+            }
+            else
+            {
+                depository = new GameObject();
+                depository.transform.parent = this.transform;
+                depository.name = "Comments";
+            }
+        }
+        return depository;
     }
 
     public static Comment CreateComment()
