@@ -27,7 +27,7 @@ GameObject:
   - component: {fileID: 114831009390868706}
   m_Layer: 15
   m_Name: PhotonHandLeft
-  m_TagString: Untagged
+  m_TagString: GameController
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -95,6 +95,7 @@ GameObject:
   - component: {fileID: 23090890114891272}
   - component: {fileID: 114166596621132380}
   - component: {fileID: 114699690335845280}
+  - component: {fileID: 65554369665131886}
   m_Layer: 15
   m_Name: Head
   m_TagString: Untagged
@@ -141,7 +142,7 @@ GameObject:
   - component: {fileID: 114213817601453204}
   m_Layer: 15
   m_Name: PhotonHandRight
-  m_TagString: Untagged
+  m_TagString: GameController
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -426,11 +427,23 @@ BoxCollider:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1258720767441952}
   m_Material: {fileID: 0}
-  m_IsTrigger: 0
+  m_IsTrigger: 1
   m_Enabled: 0
   serializedVersion: 2
   m_Size: {x: 1, y: 1, z: 1}
   m_Center: {x: 0, y: 0, z: 0}
+--- !u!65 &65554369665131886
+BoxCollider:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1841103937825666}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 0.6, y: 0.6000003, z: 0.6}
+  m_Center: {x: 0, y: -0.00000014901161, z: 0}
 --- !u!65 &65637636966018586
 BoxCollider:
   m_ObjectHideFlags: 1
@@ -533,13 +546,11 @@ MonoBehaviour:
   active: 1
   triggered: 0
   editorColor: {r: 1, g: 0, b: 0, a: 0}
-  commentColor: {r: 0.034482718, g: 1, b: 0, a: 0}
+  fakeColor: {r: 0, g: 0, b: 0, a: 0}
   thickness: 0.002
   holder: {fileID: 0}
   pointer: {fileID: 0}
   isForNetworking: 1
-  isInEditingMode: 0
-  inputMaster: {fileID: 0}
   voiceController: {fileID: 0}
 --- !u!114 &114331072792069052
 MonoBehaviour:
@@ -720,7 +731,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 65c2cc3ce974d0d43bea121ccf49d86f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  laser: {fileID: 0}
   playerName: 
 --- !u!114 &114744886122510752
 MonoBehaviour:
@@ -806,13 +816,11 @@ MonoBehaviour:
   active: 1
   triggered: 0
   editorColor: {r: 1, g: 0, b: 0, a: 0}
-  commentColor: {r: 0.034482718, g: 1, b: 0, a: 0}
+  fakeColor: {r: 0, g: 0, b: 0, a: 0}
   thickness: 0.002
   holder: {fileID: 0}
   pointer: {fileID: 0}
   isForNetworking: 1
-  isInEditingMode: 0
-  inputMaster: {fileID: 0}
   voiceController: {fileID: 0}
 --- !u!114 &114835014417950256
 MonoBehaviour:

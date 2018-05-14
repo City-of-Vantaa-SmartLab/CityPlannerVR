@@ -16,11 +16,8 @@ public class PhotonLaserManager : PunBehaviour {
     public LaserPointer myFakeLaser;
     public GameObject myTargetedObject;
 
-    [SerializeField]
     private GameObject myHandGO;
-    [SerializeField]
     private InputMaster inputMaster;
-    [SerializeField]
     private ToolManager toolManager;
     [SerializeField]
     private ToolManager.ToolType myTool;
@@ -29,13 +26,13 @@ public class PhotonLaserManager : PunBehaviour {
     [SerializeField]
     private LaserPointer myPointer;
     [SerializeField]
-    private bool[] fakeStatus; //0: active, 1: isInEditingMode
+    private bool fakeStatus;
 
     private void Awake()
     {
         if (!InitOwn())
             Debug.LogError("Failed to initialize PhotonLaserManager on hand" + myHandNumber);
-        fakeStatus = new bool[2] { false, false};
+        fakeStatus = false;
     }
 
     private void Start()
@@ -125,14 +122,6 @@ public class PhotonLaserManager : PunBehaviour {
             if (myTool == ToolManager.ToolType.EditingLaser)
             {
                 myPointer.GetComponentInChildren<MeshRenderer>().material.color = myPointer.editorColor;
-                myPointer.isInEditingMode = true;
-                fakeStatus[1] = true; //0: active, 1: isInEditingMode
-            }
-            if (myTool == ToolManager.ToolType.CommentLaser)
-            {
-                myPointer.GetComponentInChildren<MeshRenderer>().material.color = myPointer.commentColor;
-                myPointer.isInEditingMode = false;
-                fakeStatus[1] = false;
             }
 
             if (myPointer.active == false)
@@ -150,7 +139,7 @@ public class PhotonLaserManager : PunBehaviour {
     {
         myHandNumber = (int)handNumber;
         myTool = tool;
-        if (tool == ToolManager.ToolType.EditingLaser || tool == ToolManager.ToolType.CommentLaser)
+        if (tool == ToolManager.ToolType.EditingLaser)
             ToggleLaser(handNumber, true);
         else
             ToggleLaser(handNumber, false);
@@ -207,7 +196,7 @@ public class PhotonLaserManager : PunBehaviour {
     {
         myPointer.active = active;
         myPointer.ActivateCube(active);
-        fakeStatus[0] = active; //0: active, 1: isInEditingMode
+        fakeStatus = active;
     }
 
     private void SendLaserStatusToOthers()

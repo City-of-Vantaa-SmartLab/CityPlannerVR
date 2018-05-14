@@ -30,12 +30,10 @@ public class InputMaster : PunBehaviour {
         }
     }
 
-    [SerializeField]
     private Hand hand1;
-    [SerializeField]
     private Hand hand2;
-    [SerializeField]
-    private CheckPlayerSize playerSize;
+    //[SerializeField]
+    //private CheckPlayerSize playerSize;
     //[SerializeField]
     //private UnityEngine.XR.XRNode leftHandNode;
     //[SerializeField]
@@ -47,19 +45,12 @@ public class InputMaster : PunBehaviour {
     public bool hand2Found;
 
     //Ints below are for debugging in inspector: 0 means none, 1 and 2 means the active hand
-    [SerializeField]
     private int trigger;
-    [SerializeField]
     private int grip;
-    [SerializeField]
     private int padclicked;
-    [SerializeField]
     private int padtouched;
-    [SerializeField]
     private int menubutton;
-    [SerializeField]
     private float padX;
-    [SerializeField]
     private float padY;
     private bool trackCoordinates;
 
@@ -95,13 +86,13 @@ public class InputMaster : PunBehaviour {
             hand2Found = true;
     }
 
-    void Start () {
-        //Role = RoleType.TEST;
-        Role = RoleType.Admin;
+    private void Start()
+    {
+        Role = RoleType.TEST;
     }
 
-	// Update is called once per frame
-	void Update () {
+    // Update is called once per frame
+    void Update () {
         if (hand1Found)
             GetInput(hand1, 1);
         if (hand2Found)
