@@ -12,7 +12,7 @@ using Valve.VR.InteractionSystem;
 public class ToolManager : MonoBehaviour {
 
     public int myHandNumber; //This should be set at inspector to either 1 or 2
-    public enum ToolType { Empty, Camera, CommentTester, EditingLaser, Eraser, Painter, PathCamera, VideoCamera };  //includes modes for tools
+    public enum ToolType { Empty, Camera, CommentLaser, EditingLaser, Eraser, Painter, PathCamera, VideoCamera };  //includes modes for tools
     public int toolRights;
 
     public ToolType Tool
@@ -183,10 +183,10 @@ public class ToolManager : MonoBehaviour {
         return magic;
     }
 
-    // toolRights table v0.7
+    // toolRights table v0.6
     // 0000 0001 = Empty
     // 0000 0010 = Camera
-    // 0000 0100 = CommentTester
+    // 0000 0100 = CommentLaser
     // 0000 1000 = EditingLaser
 
     // 0001 0000 = Eraser
@@ -200,8 +200,8 @@ public class ToolManager : MonoBehaviour {
     // 1111 1111 : Admin
 
     // tool input properties v0.6 // every tool except "empty"
-    // 1111 1110 : Teleport disabled
-    // 1111 1110 : Grab disabled
+    // 1111 1110 : Teleport
+    // 1111 1110 : Grab
 
     private int GetIntForRole(InputMaster.RoleType newRole)
     {
@@ -209,7 +209,7 @@ public class ToolManager : MonoBehaviour {
         switch (newRole)
         {
             case InputMaster.RoleType.TEST:
-                magic = Convert.ToInt32("11001111", 2);
+                magic = Convert.ToInt32("11000111", 2);
                 break;
 
             case InputMaster.RoleType.Bystander:
