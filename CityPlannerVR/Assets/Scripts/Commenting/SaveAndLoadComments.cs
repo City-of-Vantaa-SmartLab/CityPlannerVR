@@ -4,7 +4,7 @@ using UnityEngine;
 using System.IO;
 
 /// <summary>
-/// The middleman between Comment and SaveData scripts.
+/// The middleman between Comment and SaveData scripts. Manages local lists of comments in the depository.
 /// </summary>
 
 public class SaveAndLoadComments : MonoBehaviour {
@@ -18,9 +18,9 @@ public class SaveAndLoadComments : MonoBehaviour {
     //public const string commentPrefabPath = "Prefabs/Marker";
     public bool save;
     public bool load;
-    public GameObject depository;
-
-
+    public GameObject depositoryGO;
+    public CommentDepository depository;
+    private CommentContainer buffer;
 
     private void Awake()
     {
@@ -29,31 +29,32 @@ public class SaveAndLoadComments : MonoBehaviour {
         fileExtender = ".dat";
         folderPathName = Application.persistentDataPath + slash + folder;
         pathName = folderPathName + slash + fileName + fileExtender;
-        if (!depository)
-            depository = GetDepository();
+        if (!depositoryGO)
+            depositoryGO = GetDepositoryGO();
+        depository = depositoryGO.GetComponent<CommentDepository>() ?? depositoryGO.AddComponent<CommentDepository>();
     }
 
-    private GameObject GetDepository()
+    private GameObject GetDepositoryGO()
     {
         if (gameObject.name == "Comments")
         {
-            depository = gameObject;
+            depositoryGO = gameObject;
         }
         else
         {
             Transform tempSearch = transform.Find("Comments");
             if (tempSearch)
             {
-                depository = tempSearch.gameObject;
+                depositoryGO = tempSearch.gameObject;
             }
             else
             {
-                depository = new GameObject();
-                depository.transform.parent = this.transform;
-                depository.name = "Comments";
+                depositoryGO = new GameObject();
+                depositoryGO.transform.parent = this.transform;
+                depositoryGO.name = "Comments";
             }
         }
-        return depository;
+        return depositoryGO;
     }
 
     public static Comment CreateComment()
@@ -65,7 +66,8 @@ public class SaveAndLoadComments : MonoBehaviour {
         //GameObject prefab = Resources.Load<GameObject>(prefabPath);
 
         //GameObject go = Instantiate(prefab, position, rotation) as GameObject;
-        //Comment comment = go.GetComponent<Comment>() ?? go.AddComponent<Comment>(); //will add component if getcomponent returns null, will be changed later
+        //Comment comment = go.GetComponent<Comment>() ?? go.AddComponent<Comment>(); //will add component if getcomponent returns null
+        
         return comment;
     }
 
@@ -73,9 +75,33 @@ public class SaveAndLoadComments : MonoBehaviour {
     {
         Comment comment = CreateComment();
         comment._data = data;
+        comment.SortAndAddToList();
         //comment.LoadData(); //done automatically with event SaveAnd....OnLoaded -> Comment.LoadData
         return comment;
     }
+
+    //private void AddToDepo(Comment comment)
+    //{
+    //    switch (comment._data.type)
+    //    {
+    //        case Comment.CommentType.Text:
+    //            depository.texts.Add(comment);
+    //            break;
+
+    //        case Comment.CommentType.Voice:
+    //            depository.voices.Add(comment);
+    //            break;
+
+    //        case Comment.CommentType.Thumb:
+    //            depository.thumbs.Add(comment);
+    //            break;
+
+    //        default:
+    //            Debug.Log("Type not set for comment " + comment.name + " by user " + comment._userName);
+    //            break;
+    //    }
+    //    depository.texts.Add(comment);
+    //}
 
     public void Save()
     {

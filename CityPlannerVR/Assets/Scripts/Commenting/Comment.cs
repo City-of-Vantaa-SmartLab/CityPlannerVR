@@ -14,12 +14,12 @@ public class CommentData
     public GameObject commentedObject;
     public string SHPath;
     public System.DateTime submittedTime;
-    public Vector3 pos;
+    public Vector3 commentatorPosition;
 }
 
 public class Comment : MonoBehaviour {
 
-    public enum CommentType { None, Text, Peukutus, Voice };
+    public enum CommentType { None, Text, Thumb, Voice };
 
     public CommentType CommentT
     {
@@ -87,10 +87,10 @@ public class Comment : MonoBehaviour {
         _data.commentedObject = _commentedObject;
         _data.SHPath = _SHPath;
         _data.submittedTime = _submittedTime;
-        _data.pos = _pos;
+        _data.commentatorPosition = _pos;
     }
 
-    //Loads variables from CommentData, should be used after initalization if not created
+    //Loads variables from CommentData, should be used after initalization (if not created by user)
     public void LoadData()
     {
         _dataString = _data.dataString;
@@ -100,7 +100,7 @@ public class Comment : MonoBehaviour {
         _commentedObject = _data.commentedObject;
         _SHPath = _data.SHPath;
         _submittedTime = _data.submittedTime;
-        _pos = _data.pos;
+        _pos = _data.commentatorPosition;
     }
 
     //called by OnBeforeSave event
@@ -108,4 +108,27 @@ public class Comment : MonoBehaviour {
     {
         SaveData.AddCommentData(_data);
     }
+
+    public void SortAndAddToList()
+    {
+        switch (_data.type)
+        {
+            case Comment.CommentType.Text:
+                SaveData.commentLists.textComments.Add(this);
+                break;
+
+            case Comment.CommentType.Voice:
+                SaveData.commentLists.voiceComments.Add(this);
+                break;
+
+            case Comment.CommentType.Thumb:
+                SaveData.commentLists.thumbComments.Add(this);
+                break;
+
+            default:
+                Debug.Log("Type not set for comment " + this.name + " by user " + this._userName + " while being sorted!");
+                break;
+        }
+    }
+
 }
