@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using System;
+using System.Text;
 
 [Serializable] //attributes for json
 public class CommentData
@@ -11,7 +12,7 @@ public class CommentData
     public Comment.CommentType type;
 
     public string userName; //player
-    public GameObject commentedObject;
+    public string commentedObjectName;
     public string SHPath;
     public System.DateTime submittedTime;
     public Vector3 commentatorPosition;
@@ -38,7 +39,7 @@ public class Comment : MonoBehaviour {
     public CommentData _data; //used for storing and loading data
 
     public string _userName; //player
-    public GameObject _commentedObject;
+    public string _commentedObjectName;
     public string _SHPath; //path to the screenshot that was taken with the commit
     public System.DateTime _submittedTime;
     public Vector3 _pos;
@@ -57,7 +58,7 @@ public class Comment : MonoBehaviour {
 
         _SHPath = screenshotPath;
         _userName = user.name; //mieluummin haetaan photonin kautta, vähemmän parametrejä 
-        _commentedObject = target;
+        _commentedObjectName = target.name;
         _submittedTime = System.DateTime.Now;
         _pos = user.transform.position;
     }
@@ -84,7 +85,7 @@ public class Comment : MonoBehaviour {
         _data.type = CommentT;
 
         _data.userName = _userName;
-        _data.commentedObject = _commentedObject;
+        _data.commentedObjectName = _commentedObjectName;
         _data.SHPath = _SHPath;
         _data.submittedTime = _submittedTime;
         _data.commentatorPosition = _pos;
@@ -97,7 +98,7 @@ public class Comment : MonoBehaviour {
         CommentT = _data.type;
 
         _userName = _data.userName;
-        _commentedObject = _data.commentedObject;
+        _commentedObjectName = _data.commentedObjectName;
         _SHPath = _data.SHPath;
         _submittedTime = _data.submittedTime;
         _pos = _data.commentatorPosition;
@@ -114,21 +115,66 @@ public class Comment : MonoBehaviour {
         switch (_data.type)
         {
             case Comment.CommentType.Text:
-                SaveData.commentLists.textComments.Add(this);
+                if (!IsCommentInList(SaveData.commentLists.textComments))
+                    SaveData.commentLists.textComments.Add(this);
                 break;
 
             case Comment.CommentType.Voice:
-                SaveData.commentLists.voiceComments.Add(this);
+                if (!IsCommentInList(SaveData.commentLists.textComments))
+                    SaveData.commentLists.voiceComments.Add(this);
                 break;
 
             case Comment.CommentType.Thumb:
-                SaveData.commentLists.thumbComments.Add(this);
+                if (!IsCommentInList(SaveData.commentLists.textComments))
+                    SaveData.commentLists.thumbComments.Add(this);
                 break;
 
             default:
                 Debug.Log("Type not set for comment " + this.name + " by user " + this._userName + " while being sorted!");
                 break;
         }
+    }
+
+    public bool IsCommentInList(List<Comment> testList)
+    {
+        Comment temp;
+        for (int i = 0; i < SaveData.commentLists.textComments.Count; i++)
+        {
+            temp = SaveData.commentLists.textComments[i];
+            if (IsTheSameComment(temp))
+            {
+                    return true;
+            }
+        }
+        return false;
+    }
+
+    public bool IsTheSameComment(Comment testComment)
+    {
+        if (_userName == testComment._userName &&
+            _submittedTime == testComment._submittedTime &&
+            _commentedObjectName == testComment._commentedObjectName &&
+            _dataString == testComment._dataString
+            )
+            return true;
+        else
+            return false;
+    }
+
+    public int ConvertFirstCharsToInt(string str)
+    {
+        int maxLength = 5; //reduce this if too taxing
+        int length = str.Length;
+        if (length > maxLength)
+            length = maxLength;
+        string newStr = str.Substring(0, length);
+
+        byte[] bytes = Encoding.Default.GetBytes(newStr);
+        if (BitConverter.IsLittleEndian)
+            Array.Reverse(bytes);
+        int magic = BitConverter.ToInt32(bytes, 0);
+
+        return magic;
     }
 
 }
