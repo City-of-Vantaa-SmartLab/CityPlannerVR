@@ -12,18 +12,13 @@ public static class SavWav {
 
 	const int HEADER_SIZE = 44;
 
-    public static bool Save(string filename, AudioClip clip, string directoryName, char slash) {
+    public static bool Save(string filename, AudioClip clip, string path) {
 
         if (!filename.ToLower().EndsWith(".wav")) {
 			filename += ".wav";
 		}
 
-        if (!System.IO.Directory.Exists(Application.persistentDataPath + slash + directoryName))
-        {
-            System.IO.Directory.CreateDirectory(directoryName);
-        }
-
-        var filepath = Application.persistentDataPath + slash + directoryName + slash + filename;
+        var filepath = path + filename;
 
 		Debug.Log(filepath);
 

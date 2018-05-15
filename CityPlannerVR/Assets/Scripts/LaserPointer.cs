@@ -92,6 +92,9 @@ public class LaserPointer : PunBehaviour
             photonLaserManager.myFakeLaser = this;
             photonView.RPC("ActivateFakeLaser", PhotonTargets.AllBuffered, status);
         }
+
+        PointerIn += OnHoverButtonEnter;
+        PointerOut += OnHoverButtonExit;
     }
 
     public virtual void OnPointerIn(LaserEventArgs e)
@@ -184,4 +187,21 @@ public class LaserPointer : PunBehaviour
 
     }
 
+
+    private void OnHoverButtonEnter(object sender, LaserEventArgs e)
+    {
+        if (e.target.tag == "Button")
+        {
+            e.target.gameObject.GetComponent<UnityEngine.UI.Image>().color = Color.blue;
+            
+        }
+    }
+
+    private void OnHoverButtonExit(object sender, LaserEventArgs e)
+    {
+        if (e.target.tag == "Button")
+        {
+            e.target.gameObject.GetComponent<UnityEngine.UI.Image>().color = Color.green;
+        }
+    }
 }

@@ -7,7 +7,13 @@ using System.IO;
 using System.Xml;
 using System.Xml.Serialization;
 
+using UnityEngine.UI;
+
 //Use www class for the server?
+
+//TODO: Kun osotetaan taloa, lista sen talon kommenteista
+//TODO: kun painetaan triggeriä tms. niin valitaan soitettava kommentti
+//TODO: Käy läpi kommentit ja jäjestä/seulo tietyllä tavalla
 
 public struct VoiceComment
 {
@@ -21,7 +27,7 @@ public struct VoiceComment
     }
 }
 
-//[RequireComponent(typeof(AudioSource))]
+[RequireComponent(typeof(AudioSource))]
 public class PlayComment : MonoBehaviour {
 
 	AudioClip[] comments;
@@ -33,18 +39,17 @@ public class PlayComment : MonoBehaviour {
 
     string commentToFind;
 
-    //mihin tungetaan tämä skripti?? -> Miten saadaan record comments tänne? -> miten saadaan ladattua positiot????
+    GameObject buttonImage;
+    Text buttonText;
+    GameObject panel;
 
     void Start(){
 		audioSource = GetComponent<AudioSource> ();
-	}
+
+        panel = GameObject.Find("CommentList/Canvas/Panel");
+    }
 
 	void LoadComments(){
-        //Hae klippi serveriltä
-        //Hae positiotiedot serveriltä
-        //Pistä kommentin nimi ja positio NamePos dictionaryyn
-        //Pistä kommentin nimi ja kommentoijan nimi toiseen dictionaryyn
-
 
         if (File.Exists(record.SavePath))
         {
@@ -58,6 +63,13 @@ public class PlayComment : MonoBehaviour {
                 for (int i = 0; i < record.positionDB.list.Count; ++i)
                 {
                     dictionary.Add(record.position.recordName, new VoiceComment(record.position.recordName, new Vector3(record.position.position[0], record.position.position[1], record.position.position[2])));
+                    comments[i] = Resources.Load("VoiceChat/" + record.position.recordName) as AudioClip;
+                    buttonImage = (GameObject)Instantiate(Resources.Load("ButtonBackgroundImage"));
+                    buttonText = buttonImage.GetComponent<Text>();
+                    buttonImage.transform.parent = panel.transform;
+                    buttonImage.transform.localScale = Vector3.one;
+                    buttonText = buttonImage.GetComponentInChildren<Text>();
+                    buttonText.text = record.position.recordName;
                 }
             }
         }

@@ -119,6 +119,7 @@ GameObject:
   - component: {fileID: 114888762932045548}
   - component: {fileID: 114699798696508320}
   - component: {fileID: 65637636966018586}
+  - component: {fileID: 114641271749017690}
   m_Layer: 15
   m_Name: PhotonAvatar
   m_TagString: VRLocalPlayer
@@ -644,6 +645,27 @@ MonoBehaviour:
     InterpolateOption: 0
     InterpolateMoveTowardsSpeed: 1
     InterpolateLerpSpeed: 0
+--- !u!114 &114641271749017690
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1942861374699594}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 905dd8842dd65824bb9b613f38f39776, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  position:
+    commenterName: 
+    recordName: 
+    targetName: 
+    position:
+    - 0
+    - 0
+    - 0
+  positionDB:
+    list: []
 --- !u!114 &114652331593546864
 MonoBehaviour:
   m_ObjectHideFlags: 1

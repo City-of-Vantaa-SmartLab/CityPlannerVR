@@ -25,13 +25,14 @@ public class RecordComment : MonoBehaviour
 
     private Dissonance.VoiceBroadcastTrigger voiceTrigger;
 
-    GameObject commentWheel;
     //The object we are commenting
     GameObject target;
     //The person who commented
     string commenter;
 
     LaserPointer laser;
+
+    string commentLayer = "CommentTool";
 
     string directoryName = "VoiceComments";
     char slash = Path.DirectorySeparatorChar;
@@ -77,26 +78,30 @@ public class RecordComment : MonoBehaviour
             }
         }
 
+        commenter = gameObject.GetComponent<PhotonView>().owner.NickName;
+
         voiceTrigger = gameObject.GetComponent<Dissonance.VoiceBroadcastTrigger>();
 
         laser.PointerIn += StartRecord;
         laser.PointerOut += StopRecord;
 
         laser.PointerIn += FindTarget;
-
-        savePath = Application.persistentDataPath + slash + directoryName + slash + "Positions.txt";
+#if UNITY_EDITOR
+        savePath = "C:"+ slash + "Users" + slash + "SmartLabVantaa" + slash + "Desktop" + slash + "Projects" + slash + "CityPlannerVR" + slash + "CityPlannerVR" + slash + "Assets" + slash + "Resources" + slash + "Comments";
+#endif
+        //TODO: Buildissa on eri polku ehkä
     }
 
 
     //TODO: 
-    //-avaa commentWheel
+    //-avaa commentWheel (kun osotetaan taloa)
     //-pistä commentWheel oikeaan kohtaan (isona ja pienenä)
     //-piilota commentWheel
     //-estä kommentoimasta vääriä asioita
     //-indikaatio tallenuksen aloituksesta ja lopetuksesta (ja epäonnistumisesta?)
     void FindTarget(object sender, LaserEventArgs e)
     {
-        if(e.target.gameObject.layer != LayerMask.NameToLayer("CommentWheel"))
+        if(e.target.gameObject.layer != LayerMask.NameToLayer(commentLayer))
         {
             target = e.target.gameObject;
         }
@@ -105,7 +110,7 @@ public class RecordComment : MonoBehaviour
     void StartRecord(object sender, LaserEventArgs e)
     {
         target = e.target.gameObject;
-        if(e.target.gameObject.layer == LayerMask.NameToLayer("CommentWheel") && e.target.name == "VoiceComment")
+        if(e.target.gameObject.layer == LayerMask.NameToLayer(commentLayer) && e.target.name == "VoiceComment")
         {
             if (micConnected)
             {
@@ -117,16 +122,16 @@ public class RecordComment : MonoBehaviour
                     Debug.Log("Recording started");
                 }
             }
-        }
-        else
-        {
-            Debug.LogError("Microphone not connected");
+            else
+            {
+                Debug.LogError("Microphone not connected");
+            }
         }
     }
 
     void StopRecord(object sender, LaserEventArgs e)
     {
-        if (e.target.gameObject.layer == LayerMask.NameToLayer("CommentWheel") && e.target.name == "VoiceComment")
+        if (e.target.gameObject.layer == LayerMask.NameToLayer(commentLayer) && e.target.name == "VoiceComment")
         {
             if (micConnected)
             {
@@ -176,18 +181,19 @@ void SaveRecordedAudio()
     {
         string filename = commenter + "_VoiceComment_" + System.DateTime.Now.ToString("yyyy-MM-dd_HH-mm-ss") ;
 
-        SavWav.Save(filename, finalAudioClip, directoryName, slash);
+        SavWav.Save(filename, finalAudioClip, savePath + slash + directoryName + slash);
 
         XmlSerializer serializer = new XmlSerializer(typeof(PositionDatabase));
-        FileStream file = File.Create(savePath);
+        FileStream file = File.Create(savePath + slash + directoryName + slash + "positions.txt");
 
         for (int i = 0; i < ObjectContainer.objects.Count; i++)
         {
             positionDB.list.Add(new PositionData());
 
+            positionDB.list[i].commenterName = commenter;
             positionDB.list[i].recordName = filename;
             positionDB.list[i].targetName = target.name;
-
+           
             positionDB.list[i].position[0] = target.transform.position.x;
             positionDB.list[i].position[1] = target.transform.position.y;
             positionDB.list[i].position[2] = target.transform.position.z;
@@ -202,7 +208,6 @@ void SaveRecordedAudio()
 [System.Serializable]
 public class PositionData
 {
-    //TODO: täytä toi
     public string commenterName;
     public string recordName;
     public string targetName;
