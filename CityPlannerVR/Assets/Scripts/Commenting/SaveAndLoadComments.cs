@@ -18,9 +18,6 @@ public class SaveAndLoadComments : MonoBehaviour {
     //public const string commentPrefabPath = "Prefabs/Marker";
     public bool save;
     public bool load;
-    public GameObject depositoryGO;
-    public CommentDepository depository;
-    private CommentContainer buffer;
 
     private void Awake()
     {
@@ -29,33 +26,33 @@ public class SaveAndLoadComments : MonoBehaviour {
         fileExtender = ".dat";
         folderPathName = Application.persistentDataPath + slash + folder;
         pathName = folderPathName + slash + fileName + fileExtender;
-        if (!depositoryGO)
-            depositoryGO = GetDepositoryGO();
-        depository = depositoryGO.GetComponent<CommentDepository>() ?? depositoryGO.AddComponent<CommentDepository>();
+        //if (!depositoryGO)
+        //    depositoryGO = GetDepositoryGO();
+        //depository = depositoryGO.GetComponent<CommentDepository>() ?? depositoryGO.AddComponent<CommentDepository>();
     }
 
-    private GameObject GetDepositoryGO()
-    {
-        if (gameObject.name == "Comments")
-        {
-            depositoryGO = gameObject;
-        }
-        else
-        {
-            Transform tempSearch = transform.Find("Comments");
-            if (tempSearch)
-            {
-                depositoryGO = tempSearch.gameObject;
-            }
-            else
-            {
-                depositoryGO = new GameObject();
-                depositoryGO.transform.parent = this.transform;
-                depositoryGO.name = "Comments";
-            }
-        }
-        return depositoryGO;
-    }
+    //private GameObject GetDepositoryGO()
+    //{
+    //    if (gameObject.name == "Comments")
+    //    {
+    //        depositoryGO = gameObject;
+    //    }
+    //    else
+    //    {
+    //        Transform tempSearch = transform.Find("Comments");
+    //        if (tempSearch)
+    //        {
+    //            depositoryGO = tempSearch.gameObject;
+    //        }
+    //        else
+    //        {
+    //            depositoryGO = new GameObject();
+    //            depositoryGO.transform.parent = this.transform;
+    //            depositoryGO.name = "Comments";
+    //        }
+    //    }
+    //    return depositoryGO;
+    //}
 
     public static Comment CreateComment()
     {

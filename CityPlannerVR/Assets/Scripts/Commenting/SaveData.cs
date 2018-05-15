@@ -38,13 +38,12 @@ public class SaveData {
 
         foreach (CommentData data in commentContainer.commentDatas)
         {
-            Comment huzzah = SaveAndLoadComments.CreateComment(data);
-            huzzah.SortAndAddToList();
+            SaveAndLoadComments.CreateComment(data);
         }
 
         if (OnLoaded != null)
             OnLoaded();
-        ClearCommentList();
+        ClearContainerList();
     }
 
     public static void Save(string filepath, CommentContainer commentDatas)
@@ -52,20 +51,28 @@ public class SaveData {
         if (OnBeforeSave != null)
             OnBeforeSave();
         SaveComments(filepath, commentDatas);
-        ClearCommentList();
+        ClearContainerList();
     }
 
 
     public static void AddCommentData(CommentData data)
     {
         commentContainer.commentDatas.Add(data);
-        Debug.Log("Comment added to list");
+        Debug.Log("Comment added to containerlist");
     }
 
-    public static void ClearCommentList()
+    public static void ClearContainerList()
     {
         commentContainer.commentDatas.Clear();
-        Debug.Log("Temp comments cleared");
+        Debug.Log("CommentContainer cleared");
+    }
+
+    public static void ClearCommentLists()
+    {
+        commentLists.textComments.Clear();
+        commentLists.voiceComments.Clear();
+        commentLists.thumbComments.Clear();
+        Debug.Log("CommentLists cleared");
     }
 
     private static CommentContainer LoadComments(string filepath)

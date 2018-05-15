@@ -12358,6 +12358,7 @@ GameObject:
   - component: {fileID: 1256291288}
   - component: {fileID: 1256291287}
   - component: {fileID: 1256291290}
+  - component: {fileID: 1256291291}
   m_Layer: 0
   m_Name: GameController
   m_TagString: Untagged
@@ -12405,8 +12406,7 @@ Transform:
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0.8359494, y: 0.71968585, z: -0.021028534}
   m_LocalScale: {x: 1, y: 1, z: 1}
-  m_Children:
-  - {fileID: 2104050300}
+  m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 11
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -12423,7 +12423,20 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   save: 0
   load: 0
-  depository: {fileID: 2104050299}
+--- !u!114 &1256291291
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1256291286}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2d299774191f6f944bddbeae177e354c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  texts: []
+  voices: []
+  thumbs: []
 --- !u!1001 &1274274255
 Prefab:
   m_ObjectHideFlags: 0
@@ -13888,7 +13901,7 @@ MonoBehaviour:
   _mode: 1
   _playerId: 
   _useTrigger: 0
-  _roomName: 
+  _roomName: Global
   _priority: -2
 --- !u!1 &1497889930
 GameObject:
@@ -20692,49 +20705,6 @@ MeshFilter:
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 2089045142}
   m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
---- !u!1 &2104050299
-GameObject:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  serializedVersion: 5
-  m_Component:
-  - component: {fileID: 2104050300}
-  - component: {fileID: 2104050301}
-  m_Layer: 0
-  m_Name: Comments
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &2104050300
-Transform:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 2104050299}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_Children: []
-  m_Father: {fileID: 1256291289}
-  m_RootOrder: 0
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &2104050301
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 2104050299}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 2d299774191f6f944bddbeae177e354c, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  texts: []
-  voices: []
-  thumbs: []
 --- !u!1 &2122258641
 GameObject:
   m_ObjectHideFlags: 0

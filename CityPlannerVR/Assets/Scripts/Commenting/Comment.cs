@@ -67,14 +67,14 @@ public class Comment : MonoBehaviour {
     {
         SaveData.OnLoaded += LoadData;
         SaveData.OnBeforeSave += StoreData;
-        SaveData.OnBeforeSave += ApplyData;
+        SaveData.OnBeforeSave += ApplyDataToContainer;
     }
 
     private void OnDisable()
     {
         SaveData.OnLoaded -= LoadData;
         SaveData.OnBeforeSave -= StoreData;
-        SaveData.OnBeforeSave -= ApplyData;
+        SaveData.OnBeforeSave -= ApplyDataToContainer;
     }
 
     //Needed only if the content is changed during runtime
@@ -104,7 +104,7 @@ public class Comment : MonoBehaviour {
     }
 
     //called by OnBeforeSave event
-    public void ApplyData()
+    public void ApplyDataToContainer()
     {
         SaveData.AddCommentData(_data);
     }
