@@ -5,17 +5,28 @@ using System.IO;
 
 /// <summary>
 /// Handles the writing and reading of files, as well as stores the commentcontainer.
-/// Could be scaled for other types of data as well (later).
+/// Uses static methods, so that the script does not need to be attached to anything to work.
+/// Could be scaled for other types of data as well (later). 
 /// </summary>
 
+//for networking
 public class CommentContainer
 {
-    public List<CommentData> commentDatas = new List<CommentData>();
+    public List<CommentData> commentDatas = new List<CommentData>(); 
+}
+
+//for easy accessing and storing locally
+public class CommentLists
+{
+    public List<Comment> textComments = new List<Comment>(); 
+    public List<Comment> voiceComments = new List<Comment>();
+    public List<Comment> thumbComments = new List<Comment>();
 }
 
 public class SaveData {
 
     public static CommentContainer commentContainer = new CommentContainer();
+    public static CommentLists commentLists = new CommentLists();
 
     public delegate void SerializeAction();
     public static event SerializeAction OnLoaded;
@@ -32,7 +43,7 @@ public class SaveData {
 
         if (OnLoaded != null)
             OnLoaded();
-        ClearCommentList();
+        ClearContainerList();
     }
 
     public static void Save(string filepath, CommentContainer commentDatas)
@@ -40,20 +51,28 @@ public class SaveData {
         if (OnBeforeSave != null)
             OnBeforeSave();
         SaveComments(filepath, commentDatas);
-        ClearCommentList();
+        ClearContainerList();
     }
 
 
     public static void AddCommentData(CommentData data)
     {
         commentContainer.commentDatas.Add(data);
-        Debug.Log("Comment added to list");
+        Debug.Log("Comment added to containerlist");
     }
 
-    public static void ClearCommentList()
+    public static void ClearContainerList()
     {
         commentContainer.commentDatas.Clear();
-        Debug.Log("Temp comments cleared");
+        Debug.Log("CommentContainer cleared");
+    }
+
+    public static void ClearCommentLists()
+    {
+        commentLists.textComments.Clear();
+        commentLists.voiceComments.Clear();
+        commentLists.thumbComments.Clear();
+        Debug.Log("CommentLists cleared");
     }
 
     private static CommentContainer LoadComments(string filepath)
