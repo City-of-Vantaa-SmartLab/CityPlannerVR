@@ -36,22 +36,22 @@ public class HighlightSelection : PunBehaviour
     private SteamVR_GazeTracker gazeTracker;
 
     GameObject commentWheel;
-    GameObject commentSpeaker;
     GameObject player;
     CheckPlayerSize playerSize;
 
     private void Awake()
     {
         commentWheel = GameObject.Find("CommentWheel");
-        commentSpeaker = GameObject.Find("CommentSpeaker");
         player = GameObject.Find("Player");
         playerSize = player.GetComponent<CheckPlayerSize>();
     }
 
     void Start()
     {
-        commentWheel.SetActive(false);
-        commentSpeaker.SetActive(false);
+        if (commentWheel != null)
+        {
+            commentWheel.SetActive(false);
+        }
 
         isHighlighted = false;
         isSelected = false;
@@ -122,13 +122,9 @@ public class HighlightSelection : PunBehaviour
             {
                 ChangeShaderRPC("Valve/VR/Highlight");
 
+                               
                 commentWheel.SetActive(true);
-                commentWheel.transform.position = gameObject.transform.position;
-                commentWheel.transform.LookAt(player.transform);
-
-                commentSpeaker.SetActive(true);
-                commentSpeaker.transform.position = gameObject.transform.position;
-                commentSpeaker.transform.LookAt(player.transform);
+                
             }
         }
         isHighlighted = status;
