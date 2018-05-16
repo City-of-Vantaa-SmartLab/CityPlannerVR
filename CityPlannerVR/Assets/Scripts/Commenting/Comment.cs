@@ -16,6 +16,7 @@ public class CommentData
     public string SHPath;
     public System.DateTime submittedTime;
     public Vector3 commentatorPosition;
+    public int quickCheck;
 }
 
 public class Comment : MonoBehaviour {
@@ -43,6 +44,8 @@ public class Comment : MonoBehaviour {
     public string _SHPath; //path to the screenshot that was taken with the commit
     public System.DateTime _submittedTime;
     public Vector3 _pos;
+    public int _quickCheck;
+
 
     //default constructor
     public Comment()
@@ -51,16 +54,17 @@ public class Comment : MonoBehaviour {
     }
 
     //constructor
-    public Comment(GameObject user, GameObject target, string screenshotPath, CommentType type, string dataString)
+    public Comment(GameObject user, GameObject target, string screenshotPath, CommentType type, string dataString, DateTime submittedTime)
     {
         _dataString = dataString;
         CommentT = type;
 
         _SHPath = screenshotPath;
-        _userName = user.name; //mieluummin haetaan photonin kautta, vähemmän parametrejä 
+        _userName = user.name;
         _commentedObjectName = target.name;
-        _submittedTime = System.DateTime.Now;
+        _submittedTime = submittedTime;
         _pos = user.transform.position;
+        _quickCheck = ConvertToQuickCheck(2);
     }
 
 
@@ -89,6 +93,7 @@ public class Comment : MonoBehaviour {
         _data.SHPath = _SHPath;
         _data.submittedTime = _submittedTime;
         _data.commentatorPosition = _pos;
+        _data.quickCheck = _quickCheck;
     }
 
     //Loads variables from CommentData, should be used after initalization (if not created by user)
@@ -102,6 +107,7 @@ public class Comment : MonoBehaviour {
         _SHPath = _data.SHPath;
         _submittedTime = _data.submittedTime;
         _pos = _data.commentatorPosition;
+        _quickCheck = _data.quickCheck;
     }
 
     //called by OnBeforeSave event
@@ -151,8 +157,8 @@ public class Comment : MonoBehaviour {
 
     public bool IsTheSameComment(Comment testComment)
     {
-        if (_userName == testComment._userName &&
-            _submittedTime == testComment._submittedTime &&
+        if (_quickCheck == testComment._quickCheck &&  //comparing ints is quicker than strings
+            _userName == testComment._userName &&
             _commentedObjectName == testComment._commentedObjectName &&
             _dataString == testComment._dataString
             )
@@ -161,20 +167,35 @@ public class Comment : MonoBehaviour {
             return false;
     }
 
-    public int ConvertFirstCharsToInt(string str)
+    private int ConvertFirstCharsToInt(string str, int maxLength)
     {
-        int maxLength = 5; //reduce this if too taxing
-        int length = str.Length;
-        if (length > maxLength)
-            length = maxLength;
-        string newStr = str.Substring(0, length);
-
+        string newStr = TruncateString(str, maxLength);
         byte[] bytes = Encoding.Default.GetBytes(newStr);
         if (BitConverter.IsLittleEndian)
             Array.Reverse(bytes);
         int magic = BitConverter.ToInt32(bytes, 0);
-
         return magic;
+    }
+
+    private int ConvertToQuickCheck(int maxLength)
+    {
+        string userName = TruncateString(_userName, maxLength);
+        string objectName = TruncateString(_commentedObjectName, maxLength);
+        string date = TruncateString(_submittedTime.ToShortDateString() , maxLength);
+        string uberString = userName + objectName + date;
+        Debug.Log("Joining strings: " + userName + " " + objectName + " " + date);
+        int magic = ConvertFirstCharsToInt(uberString, maxLength * 4);
+        Debug.Log("QuickCheck: " + magic);
+        return magic;
+    }
+
+    private string TruncateString(string str, int maxLength)
+    {
+        int length = str.Length;
+        if (length > maxLength)
+            length = maxLength;
+        string newStr = str.Substring(0, length);
+        return newStr;
     }
 
 }

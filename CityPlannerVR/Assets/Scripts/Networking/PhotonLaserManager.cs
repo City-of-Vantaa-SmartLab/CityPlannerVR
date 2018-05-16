@@ -151,7 +151,7 @@ public class PhotonLaserManager : PunBehaviour {
         {
             myTargetedObject = null;
             var highlightScript = e.target.GetComponent<HighlightSelection>();
-            if (highlightScript != null)
+            if (highlightScript != null && e.target.CompareTag("Grid"))
             {
                     highlightScript.ToggleHighlight(sender, false);
             }
@@ -173,7 +173,7 @@ public class PhotonLaserManager : PunBehaviour {
         {
             myTargetedObject = e.target.gameObject;
             var highlightScript = e.target.GetComponent<HighlightSelection>();
-            if (highlightScript != null)
+            if (highlightScript != null && e.target.CompareTag("Grid"));
             {
                 highlightScript.ToggleHighlight(sender, true);
             }
