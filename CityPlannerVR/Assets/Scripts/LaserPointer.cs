@@ -4,6 +4,11 @@ using System.Collections.Generic;
 using UnityEngine;
 using Photon;
 
+/// <summary>
+/// 
+/// This script will use the first child gameobject as the pointer cube or create a new one.
+/// </summary>
+
 public struct LaserEventArgs
 {
     //public uint handNumber;
@@ -22,14 +27,11 @@ public class LaserPointer : PunBehaviour
     public Color editorColor;
     public Color fakeColor;
     public float thickness = 0.002f;
-    public GameObject holder;
+    //public GameObject holder;
     public GameObject pointer;
-    bool isActive = false;
     public bool isForNetworking; //means it is "fake" and does not show for the local player
     public event LaserEventHandler PointerIn;
     public event LaserEventHandler PointerOut;
-
-    private InputMaster inputMaster;
 
     Transform previousContact = null;
 
@@ -52,24 +54,18 @@ public class LaserPointer : PunBehaviour
         commentOutput = GameObject.Find("CommentList");
         playComment = commentOutput.GetComponent<PlayComment>();
 
-        holder = new GameObject();
-        holder.transform.parent = this.transform;
-        holder.transform.localPosition = Vector3.zero;
-        holder.transform.localRotation = Quaternion.identity;
+        //holder = new GameObject();
+        //holder.transform.parent = this.transform;
+        //holder.transform.localPosition = Vector3.zero;
+        //holder.transform.localRotation = Quaternion.identity;
 
-        pointer = GameObject.CreatePrimitive(PrimitiveType.Cube);
-        pointer.transform.parent = holder.transform;
-        pointer.transform.localScale = new Vector3(thickness, thickness, 100f);
-        pointer.transform.localPosition = new Vector3(0f, 0f, 50f);
-        pointer.transform.localRotation = Quaternion.identity;
+        //pointer = GameObject.CreatePrimitive(PrimitiveType.Cube);
+        //pointer.transform.parent = holder.transform;
+        //pointer.transform.localScale = new Vector3(thickness, thickness, 100f);
+        //pointer.transform.localPosition = new Vector3(0f, 0f, 50f);
+        //pointer.transform.localRotation = Quaternion.identity;
 
-        Material newMaterial = new Material(Shader.Find("Unlit/Color"));
-        if (!isForNetworking)
-            newMaterial.SetColor("_Color", editorColor);
-        else
-            newMaterial.SetColor("_Color", fakeColor);
-
-        pointer.GetComponent<MeshRenderer>().material = newMaterial;
+        InitPointer(transform);
 
         BoxCollider collider = pointer.GetComponent<BoxCollider>();
         if (collider)
@@ -118,6 +114,27 @@ public class LaserPointer : PunBehaviour
         PointerOut += CheckIfHiding;
     }
 
+    public void InitPointer(Transform targetTransform)
+    {
+        if (targetTransform.childCount > 0)
+            pointer = targetTransform.GetChild(0).gameObject;
+        if (pointer == null)
+        {
+            pointer = GameObject.CreatePrimitive(PrimitiveType.Cube);
+            pointer.transform.parent = targetTransform;
+            pointer.transform.localScale = new Vector3(thickness, thickness, 100f);
+            pointer.transform.localPosition = new Vector3(0f, 0f, 50f);
+            pointer.transform.localRotation = Quaternion.identity;
+        }
+        Material newMaterial = new Material(Shader.Find("Unlit/Color"));
+        if (!isForNetworking)
+            newMaterial.SetColor("_Color", editorColor);
+        else
+            newMaterial.SetColor("_Color", fakeColor);
+
+        pointer.GetComponent<MeshRenderer>().material = newMaterial;
+    }
+
     public virtual void OnPointerIn(LaserEventArgs e)
     {
         if (!isForNetworking && PointerIn != null && active)
@@ -139,6 +156,13 @@ public class LaserPointer : PunBehaviour
         //    isActive = true;
         //    this.transform.GetChild(0).gameObject.SetActive(true);
         //}
+        if (!active)
+            return;
+
+        if (pointer == null)
+        {
+        InitPointer(transform);
+        }
 
         float dist = 100f;
 
