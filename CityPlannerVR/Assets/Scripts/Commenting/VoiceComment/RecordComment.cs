@@ -126,7 +126,6 @@ public class RecordComment : MonoBehaviour
 
     void StartRecord(object sender, LaserEventArgs e)
     {
-        Debug.Log("Recording started");
         target = e.target.gameObject;
         if(e.target.gameObject.layer == LayerMask.NameToLayer(commentLayer) && e.target.name == "VoiceComment")
         {
@@ -149,7 +148,6 @@ public class RecordComment : MonoBehaviour
 
     void StopRecord(object sender, LaserEventArgs e)
     {
-        Debug.Log("Recording stopped");
         if (e.target.gameObject.layer == LayerMask.NameToLayer(commentLayer) && e.target.name == "VoiceComment")
         {
             if (micConnected)
