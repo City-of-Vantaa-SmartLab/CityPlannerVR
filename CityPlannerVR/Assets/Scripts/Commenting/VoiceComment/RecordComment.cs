@@ -30,12 +30,24 @@ public class RecordComment : MonoBehaviour
     //The person who commented
     string commenter;
 
-    LaserPointer laser;
+    //Lasers for both hands, so it doesn't matter which hand is used
+    LaserPointer laserRight;
+    LaserPointer laserLeft;
 
     string commentLayer = "CommentTool";
 
     string directoryName = "VoiceComments";
     char slash = Path.DirectorySeparatorChar;
+
+    private string fullPath;
+
+    public string FullPath
+    {
+        get
+        {
+            return fullPath;
+        }
+    }
 
     DirectoryInfo files;
     FileInfo[] fileInfo;
@@ -57,8 +69,9 @@ public class RecordComment : MonoBehaviour
 
     private void Start()
     {
-
-        laser = GameObject.Find("Player").GetComponentInChildren<LaserPointer>();
+        fullPath = "C:" + slash + "Users" + slash + "SmartLabVantaa" + slash + "Desktop" + slash + "Projects" + slash + "CityPlannerVR" + slash + "CityPlannerVR" + slash + "Assets" + slash + "Resources" + slash + "Comments" + slash + "VoiceComments";
+        laserLeft = GameObject.Find("Player/SteamVRObjects/Hand1/Laserpointer").GetComponentInChildren<LaserPointer>();
+        laserRight = GameObject.Find("Player/SteamVRObjects/Hand2/Laserpointer").GetComponentInChildren<LaserPointer>();
 
         if (Microphone.devices.Length <= 0)
         {
@@ -82,13 +95,17 @@ public class RecordComment : MonoBehaviour
 
         voiceTrigger = gameObject.GetComponent<Dissonance.VoiceBroadcastTrigger>();
 
-        laser.PointerIn += StartRecord;
-        laser.PointerOut += StopRecord;
-
-        laser.PointerIn += FindTarget;
-#if UNITY_EDITOR
         savePath = "C:"+ slash + "Users" + slash + "SmartLabVantaa" + slash + "Desktop" + slash + "Projects" + slash + "CityPlannerVR" + slash + "CityPlannerVR" + slash + "Assets" + slash + "Resources" + slash + "Comments";
-#endif
+
+        laserLeft.PointerIn += StartRecord;
+        laserLeft.PointerOut += StopRecord;
+
+        laserRight.PointerIn += StartRecord;
+        laserRight.PointerOut += StopRecord;
+
+        laserLeft.PointerIn += FindTarget;
+        laserRight.PointerIn += FindTarget;
+
         //TODO: Buildissa on eri polku ehkä
     }
 
@@ -109,6 +126,7 @@ public class RecordComment : MonoBehaviour
 
     void StartRecord(object sender, LaserEventArgs e)
     {
+        Debug.Log("Recording started");
         target = e.target.gameObject;
         if(e.target.gameObject.layer == LayerMask.NameToLayer(commentLayer) && e.target.name == "VoiceComment")
         {
@@ -131,6 +149,7 @@ public class RecordComment : MonoBehaviour
 
     void StopRecord(object sender, LaserEventArgs e)
     {
+        Debug.Log("Recording stopped");
         if (e.target.gameObject.layer == LayerMask.NameToLayer(commentLayer) && e.target.name == "VoiceComment")
         {
             if (micConnected)

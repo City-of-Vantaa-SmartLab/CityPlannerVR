@@ -55,13 +55,12 @@ MonoBehaviour:
   active: 1
   triggered: 0
   editorColor: {r: 1, g: 0, b: 0, a: 0}
-  commentColor: {r: 0.034482718, g: 1, b: 0, a: 0}
+  fakeColor: {r: 0, g: 0, b: 0, a: 0}
   thickness: 0.002
   holder: {fileID: 0}
   pointer: {fileID: 0}
   isForNetworking: 0
-  isInEditingMode: 0
-  inputMaster: {fileID: 0}
+  voiceController: {fileID: 0}
 --- !u!114 &114463771585052128
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -75,10 +74,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   myHandNumber: 0
   myFakeLaser: {fileID: 0}
-  myHandGO: {fileID: 0}
-  inputMaster: {fileID: 0}
-  toolManager: {fileID: 0}
-  myTool: 0
   myTargetedObject: {fileID: 0}
+  myTool: 0
   otherLaserManager: {fileID: 0}
   myPointer: {fileID: 0}
+  fakeStatus: 0

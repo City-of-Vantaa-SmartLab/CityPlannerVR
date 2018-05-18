@@ -37,19 +37,20 @@ public class LaserPointer : PunBehaviour
     [HideInInspector]
     public VoiceController voiceController;
 
-    GameObject commentWheel;
+    GameObject commentTool;
     GameObject commentOutput;
-    GameObject player;
+    PlayComment playComment;
 
+    string commentToolTag = "CommentToolTag";
     string commentObjectTag = "Building";
 
     Ray raycast;
 
     private void Awake()
     {
-        player = GameObject.Find("Player");
-        commentWheel = GameObject.Find("CommentWheel");
-        commentOutput = commentWheel.GetComponentInChildren<GameObject>();
+        commentTool = GameObject.Find("CommentTool");
+        commentOutput = GameObject.Find("CommentList");
+        playComment = commentOutput.GetComponent<PlayComment>();
 
         holder = new GameObject();
         holder.transform.parent = this.transform;
@@ -105,9 +106,16 @@ public class LaserPointer : PunBehaviour
             photonView.RPC("ActivateFakeLaser", PhotonTargets.AllBuffered, status);
         }
 
+        commentOutput.SetActive(false);
+        commentTool.SetActive(false);
+
         PointerIn += OnHoverButtonEnter;
+        PointerIn += OpenCommentOutputPanel;
+        PointerIn += ActivateCommentTool;
+        PointerIn += HideCommentTool;
+
         PointerOut += OnHoverButtonExit;
-        PointerOut += HideStuff;
+        PointerOut += CheckIfHiding;
     }
 
     public virtual void OnPointerIn(LaserEventArgs e)
@@ -133,7 +141,6 @@ public class LaserPointer : PunBehaviour
         //}
 
         float dist = 100f;
-
 
         raycast = new Ray(transform.position, transform.forward);
         RaycastHit hit;
@@ -223,9 +230,10 @@ public class LaserPointer : PunBehaviour
 
     private void OpenCommentOutputPanel(object sender, LaserEventArgs e)
     {
-        if(e.target.tag == "CommentTool" && e.target.name == "Empty")
+        if(e.target.tag == commentToolTag && e.target.name == "Empty")
         {
             commentOutput.SetActive(true);
+            playComment.LoadComments();
         }
     }
 
@@ -233,26 +241,40 @@ public class LaserPointer : PunBehaviour
     {
         if(e.target.tag == commentObjectTag)
         {
-            commentWheel.SetActive(true);
-            commentWheel.transform.position = e.hitPoint + raycast.direction/2;
+            commentTool.SetActive(true);
+            commentTool.transform.position = e.hitPoint - raycast.direction;
+            commentTool.transform.LookAt(gameObject.transform);
         }
     }
 
+    bool closeCommentOutput = false;
+    bool closeCommentTool = false;
+
     //Hides objects when the laser doesn't hit them anymore
-    void HideStuff(object sender, LaserEventArgs e)
+    void CheckIfHiding(object sender, LaserEventArgs e)
     {
-        if(e.target.name == commentOutput.name)
+        if (e.target.name == commentOutput.name || e.target.name == "Empty")
+        {
+            closeCommentOutput = true;
+        }
+        else if (e.target.tag == commentToolTag)
+        {
+            closeCommentTool = true;
+        }
+    }
+
+    void HideCommentTool(object sender, LaserEventArgs e)
+    {
+        if (closeCommentOutput && e.target.tag == commentToolTag && e.target.name != commentOutput.name)
         {
             commentOutput.SetActive(false);
+            closeCommentOutput = false;
         }
-
-        else if(e.target.name == commentWheel.name)
+        else if (closeCommentTool && e.target.tag != commentToolTag)
         {
-            if(e.target.name != commentOutput.name)
-            {
-                commentOutput.SetActive(false);
-                commentWheel.SetActive(false);
-            }
+            commentOutput.SetActive(false);
+            commentTool.SetActive(false);
+            closeCommentTool = false;
         }
     }
 }

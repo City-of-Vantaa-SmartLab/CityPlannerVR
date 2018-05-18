@@ -31,9 +31,9 @@ GameObject:
   - component: {fileID: 114684528711005456}
   - component: {fileID: 114139067793407504}
   - component: {fileID: 114436202339545488}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: prisma_photon
-  m_TagString: Untagged
+  m_TagString: Building
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -45,8 +45,8 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1460908467934398}
   m_LocalRotation: {x: 0, y: 0.01745245, z: 0, w: 0.99984777}
-  m_LocalPosition: {x: 0.753, y: 0.549, z: 0.246}
-  m_LocalScale: {x: 2.45, y: 2.45, z: 2.45}
+  m_LocalPosition: {x: -4.66, y: 0.3819, z: 1.94}
+  m_LocalScale: {x: 4.9, y: 4.9, z: 4.9}
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 0
@@ -165,7 +165,6 @@ MonoBehaviour:
   ownershipTransfer: 1
   ObservedComponents:
   - {fileID: 114684528711005456}
-  - {fileID: 114436202339545488}
   ObservedComponentsFoldoutOpen: 1
   viewIdField: 0
   instantiationId: -1
@@ -244,7 +243,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   isHighlighted: 0
   isSelected: 0
+  lasersPointing: []
   lista: {fileID: 0}
+  gazeTracker: {fileID: 0}
 --- !u!114 &114684528711005456
 MonoBehaviour:
   m_ObjectHideFlags: 1

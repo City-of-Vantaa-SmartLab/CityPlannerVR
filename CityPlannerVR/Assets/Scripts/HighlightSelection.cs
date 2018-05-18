@@ -35,24 +35,8 @@ public class HighlightSelection : PunBehaviour
     [SerializeField]
     private SteamVR_GazeTracker gazeTracker;
 
-    GameObject commentWheel;
-    GameObject player;
-    CheckPlayerSize playerSize;
-
-    private void Awake()
-    {
-        commentWheel = GameObject.Find("CommentWheel");
-        player = GameObject.Find("Player");
-        playerSize = player.GetComponent<CheckPlayerSize>();
-    }
-
     void Start()
     {
-        if (commentWheel != null)
-        {
-            commentWheel.SetActive(false);
-        }
-
         isHighlighted = false;
         isSelected = false;
 
@@ -123,7 +107,7 @@ public class HighlightSelection : PunBehaviour
                 ChangeShaderRPC("Valve/VR/Highlight");
 
                                
-                commentWheel.SetActive(true);
+                //commentWheel.SetActive(true);
                 
             }
         }
@@ -186,9 +170,7 @@ public class HighlightSelection : PunBehaviour
 
         }
     }
-
-
-
+    
     public void ChangeShaderRPC(String shaderToBe)
     {
         photonView.RPC("ChangeShader", PhotonTargets.AllBufferedViaServer, shaderToBe);
