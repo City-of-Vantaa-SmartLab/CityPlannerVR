@@ -4,7 +4,7 @@ using UnityEngine;
 using System.IO;
 
 /// <summary>
-/// The middleman between Comment and SaveData scripts.
+/// The middleman between Comment and SaveData scripts. Manages local lists of comments in the depository.
 /// </summary>
 
 public class SaveAndLoadComments : MonoBehaviour {
@@ -15,11 +15,13 @@ public class SaveAndLoadComments : MonoBehaviour {
     private string fileExtender;
     private string pathName;
     private char slash = Path.DirectorySeparatorChar;
-    //public const string commentPrefabPath = "Prefabs/Marker";
     public bool save;
     public bool load;
+<<<<<<< HEAD
     public GameObject depository;
 
+=======
+>>>>>>> master
 
     private void Awake()
     {
@@ -28,20 +30,16 @@ public class SaveAndLoadComments : MonoBehaviour {
         fileExtender = ".dat";
         folderPathName = Application.persistentDataPath + slash + folder;
         pathName = folderPathName + slash + fileName + fileExtender;
+<<<<<<< HEAD
         if (!depository)
             depository = gameObject;
+=======
+>>>>>>> master
     }
 
     public static Comment CreateComment()
     {
         Comment comment = new Comment();
-
-        //GameObject depository;
-        //depository = GameObject.Find("GameController");
-        //GameObject prefab = Resources.Load<GameObject>(prefabPath);
-
-        //GameObject go = Instantiate(prefab, position, rotation) as GameObject;
-        //Comment comment = go.GetComponent<Comment>() ?? go.AddComponent<Comment>(); //will add component if getcomponent returns null, will be changed later
         return comment;
     }
 
@@ -49,7 +47,7 @@ public class SaveAndLoadComments : MonoBehaviour {
     {
         Comment comment = CreateComment();
         comment._data = data;
-        //comment.LoadData(); //done automatically with event SaveAnd....OnLoaded -> Comment.LoadData
+        comment.SortAndAddToList();
         return comment;
     }
 
