@@ -37,8 +37,20 @@ public class LaserPointer : PunBehaviour
     [HideInInspector]
     public VoiceController voiceController;
 
+    GameObject commentWheel;
+    GameObject commentOutput;
+    GameObject player;
+
+    string commentObjectTag = "Building";
+
+    Ray raycast;
+
     private void Awake()
     {
+        player = GameObject.Find("Player");
+        commentWheel = GameObject.Find("CommentWheel");
+        commentOutput = commentWheel.GetComponentInChildren<GameObject>();
+
         holder = new GameObject();
         holder.transform.parent = this.transform;
         holder.transform.localPosition = Vector3.zero;
@@ -95,6 +107,7 @@ public class LaserPointer : PunBehaviour
 
         PointerIn += OnHoverButtonEnter;
         PointerOut += OnHoverButtonExit;
+        PointerOut += HideStuff;
     }
 
     public virtual void OnPointerIn(LaserEventArgs e)
@@ -122,7 +135,7 @@ public class LaserPointer : PunBehaviour
         float dist = 100f;
 
 
-        Ray raycast = new Ray(transform.position, transform.forward);
+        raycast = new Ray(transform.position, transform.forward);
         RaycastHit hit;
         bool bHit = Physics.Raycast(raycast, out hit);
 
@@ -205,6 +218,41 @@ public class LaserPointer : PunBehaviour
         if (e.target.tag == "Button")
         {
             e.target.gameObject.GetComponent<UnityEngine.UI.Image>().color = Color.green;
+        }
+    }
+
+    private void OpenCommentOutputPanel(object sender, LaserEventArgs e)
+    {
+        if(e.target.tag == "CommentTool" && e.target.name == "Empty")
+        {
+            commentOutput.SetActive(true);
+        }
+    }
+
+    void ActivateCommentTool(object sender, LaserEventArgs e)
+    {
+        if(e.target.tag == commentObjectTag)
+        {
+            commentWheel.SetActive(true);
+            commentWheel.transform.position = e.hitPoint + raycast.direction/2;
+        }
+    }
+
+    //Hides objects when the laser doesn't hit them anymore
+    void HideStuff(object sender, LaserEventArgs e)
+    {
+        if(e.target.name == commentOutput.name)
+        {
+            commentOutput.SetActive(false);
+        }
+
+        else if(e.target.name == commentWheel.name)
+        {
+            if(e.target.name != commentOutput.name)
+            {
+                commentOutput.SetActive(false);
+                commentWheel.SetActive(false);
+            }
         }
     }
 }
