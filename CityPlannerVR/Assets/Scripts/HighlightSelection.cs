@@ -103,7 +103,13 @@ public class HighlightSelection : PunBehaviour
         {
             isHighlighted = true;
             if (!isSelected)
+            {
                 ChangeShaderRPC("Valve/VR/Highlight");
+
+                               
+                //commentWheel.SetActive(true);
+                
+            }
         }
         isHighlighted = status;
     }
@@ -164,9 +170,7 @@ public class HighlightSelection : PunBehaviour
 
         }
     }
-
-
-
+    
     public void ChangeShaderRPC(String shaderToBe)
     {
         photonView.RPC("ChangeShader", PhotonTargets.AllBufferedViaServer, shaderToBe);

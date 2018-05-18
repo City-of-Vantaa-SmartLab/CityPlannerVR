@@ -37,8 +37,21 @@ public class LaserPointer : PunBehaviour
     [HideInInspector]
     public VoiceController voiceController;
 
+    GameObject commentTool;
+    GameObject commentOutput;
+    PlayComment playComment;
+
+    string commentToolTag = "CommentToolTag";
+    string commentObjectTag = "Building";
+
+    Ray raycast;
+
     private void Awake()
     {
+        commentTool = GameObject.Find("CommentTool");
+        commentOutput = GameObject.Find("CommentList");
+        playComment = commentOutput.GetComponent<PlayComment>();
+
         holder = new GameObject();
         holder.transform.parent = this.transform;
         holder.transform.localPosition = Vector3.zero;
@@ -73,7 +86,7 @@ public class LaserPointer : PunBehaviour
     {
         if (isForNetworking)
         {
-            bool status = false;
+            bool status = false; //0: active, 1: isInEditingMode
 
             PhotonLaserManager photonLaserManager;
             if (gameObject.name == "PhotonHandLeft")
@@ -92,6 +105,17 @@ public class LaserPointer : PunBehaviour
             photonLaserManager.myFakeLaser = this;
             photonView.RPC("ActivateFakeLaser", PhotonTargets.AllBuffered, status);
         }
+
+        commentOutput.SetActive(false);
+        commentTool.SetActive(false);
+
+        PointerIn += OnHoverButtonEnter;
+        PointerIn += OpenCommentOutputPanel;
+        PointerIn += ActivateCommentTool;
+        PointerIn += HideCommentTool;
+
+        PointerOut += OnHoverButtonExit;
+        PointerOut += CheckIfHiding;
     }
 
     public virtual void OnPointerIn(LaserEventArgs e)
@@ -118,8 +142,7 @@ public class LaserPointer : PunBehaviour
 
         float dist = 100f;
 
-
-        Ray raycast = new Ray(transform.position, transform.forward);
+        raycast = new Ray(transform.position, transform.forward);
         RaycastHit hit;
         bool bHit = Physics.Raycast(raycast, out hit);
 
@@ -173,6 +196,7 @@ public class LaserPointer : PunBehaviour
     }
 
     //Will only be sent to other clients (except when laserpointer is initialized)
+    //0: active, 1: isInEditingMode
     [PunRPC]
     private void ActivateFakeLaser(bool status, PhotonMessageInfo info)
     {
@@ -189,4 +213,74 @@ public class LaserPointer : PunBehaviour
 
     }
 
+    //------------------------------------------------------------------------------------------------------------------------------
+    //Comment stuff
+    //------------------------------------------------------------------------------------------------------------------------------
+
+    private void OnHoverButtonEnter(object sender, LaserEventArgs e)
+    {
+        if (e.target.tag == "Button")
+        {
+            e.target.gameObject.GetComponent<UnityEngine.UI.Image>().color = Color.blue;
+            
+        }
+    }
+
+    private void OnHoverButtonExit(object sender, LaserEventArgs e)
+    {
+        if (e.target.tag == "Button")
+        {
+            e.target.gameObject.GetComponent<UnityEngine.UI.Image>().color = Color.green;
+        }
+    }
+
+    private void OpenCommentOutputPanel(object sender, LaserEventArgs e)
+    {
+        if(e.target.tag == commentToolTag && e.target.name == "Empty")
+        {
+            commentOutput.SetActive(true);
+            playComment.LoadComments();
+        }
+    }
+
+    void ActivateCommentTool(object sender, LaserEventArgs e)
+    {
+        if(e.target.tag == commentObjectTag)
+        {
+            commentTool.SetActive(true);
+            commentTool.transform.position = e.hitPoint - raycast.direction;
+            commentTool.transform.LookAt(gameObject.transform);
+        }
+    }
+
+    bool closeCommentOutput = false;
+    bool closeCommentTool = false;
+
+    //Hides objects when the laser doesn't hit them anymore
+    void CheckIfHiding(object sender, LaserEventArgs e)
+    {
+        if (e.target.name == commentOutput.name || e.target.name == "Empty")
+        {
+            closeCommentOutput = true;
+        }
+        else if (e.target.tag == commentToolTag)
+        {
+            closeCommentTool = true;
+        }
+    }
+
+    void HideCommentTool(object sender, LaserEventArgs e)
+    {
+        if (closeCommentOutput && e.target.tag == commentToolTag && e.target.name != commentOutput.name)
+        {
+            commentOutput.SetActive(false);
+            closeCommentOutput = false;
+        }
+        else if (closeCommentTool && e.target.tag != commentToolTag)
+        {
+            commentOutput.SetActive(false);
+            commentTool.SetActive(false);
+            closeCommentTool = false;
+        }
+    }
 }
