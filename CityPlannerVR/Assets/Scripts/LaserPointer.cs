@@ -192,7 +192,7 @@ public class LaserPointer : PunBehaviour
 
     public void ActivateFakeLaserRPC(bool status)
     {
-        photonView.RPC("ActivateFakeLaser", PhotonTargets.OthersBuffered, status);
+        photonView.RPC("ActivateFakeLaser", PhotonTargets.AllBuffered, status);
     }
 
     //Will only be sent to other clients (except when laserpointer is initialized)
@@ -200,9 +200,15 @@ public class LaserPointer : PunBehaviour
     [PunRPC]
     private void ActivateFakeLaser(bool status, PhotonMessageInfo info)
     {
+        Debug.Log("info sender and photonview owner: " + info.sender + " " + photonView.owner);
         if (info.sender == photonView.owner)
         {
-            ActivateCube(status);
+            if (status == true && !photonView.isMine)
+            {
+                ActivateCube(true);
+            }
+            else
+                ActivateCube(false);
         }
 
     }
