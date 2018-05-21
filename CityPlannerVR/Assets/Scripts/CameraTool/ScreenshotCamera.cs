@@ -68,9 +68,9 @@ public class ScreenshotCamera : MonoBehaviour {
     private void OnEnable()
     {
         //                            myHandNumber is 1 or 2, but the place for them in the array are 0 and 1
-        gameObject.transform.parent = points[myHandNumber - 1].transform;
-        gameObject.transform.localPosition = Vector3.zero;
-        gameObject.transform.localRotation = Quaternion.identity;
+        gameObject.transform.parent.parent = points[myHandNumber - 1].transform;  //changes cameraholder's parent
+        gameObject.transform.parent.localPosition = Vector3.zero;
+        gameObject.transform.parent.localRotation = Quaternion.identity;
 
         cameraScreen.transform.parent = points[myHandNumber - 1].transform;
         cameraScreen.transform.localRotation = Quaternion.identity;
