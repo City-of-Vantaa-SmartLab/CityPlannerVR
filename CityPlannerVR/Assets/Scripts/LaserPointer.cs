@@ -44,6 +44,7 @@ public class LaserPointer : PunBehaviour
     RecordComment recordComment;
 
     string commentToolTag = "CommentToolTag";
+    string buttonTag = "Button";
     string commentObjectTag = "Building";
 
     Ray raycast;
@@ -221,7 +222,7 @@ public class LaserPointer : PunBehaviour
 
     private void OnHoverButtonEnter(object sender, LaserEventArgs e)
     {
-        if (e.target.tag == "Button")
+        if (e.target.tag == buttonTag)
         {
             e.target.gameObject.GetComponent<UnityEngine.UI.Image>().color = Color.blue;
             
@@ -230,7 +231,7 @@ public class LaserPointer : PunBehaviour
 
     private void OnHoverButtonExit(object sender, LaserEventArgs e)
     {
-        if (e.target.tag == "Button")
+        if (e.target.tag == buttonTag)
         {
             e.target.gameObject.GetComponent<UnityEngine.UI.Image>().color = Color.green;
         }
@@ -269,23 +270,27 @@ public class LaserPointer : PunBehaviour
     {
         if (e.target.name == commentOutput.name || e.target.name == "Empty")
         {
+            //if we are closing just the list of comments
             closeCommentOutput = true;
         }
         else if (e.target.tag == commentToolTag)
         {
+            //if we are closing the whole comment wheel
             closeCommentTool = true;
         }
     }
 
     void HideCommentTool(object sender, LaserEventArgs e)
     {
-        if (closeCommentOutput && e.target.tag == commentToolTag && e.target.name != commentOutput.name)
+        if (closeCommentOutput && e.target.tag == commentToolTag && e.target.tag == buttonTag && e.target.name != commentOutput.name)
         {
+            //if we are closing just the list of comments
             commentOutput.SetActive(false);
             closeCommentOutput = false;
         }
-        else if (closeCommentTool && e.target.tag != commentToolTag)
+        else if (closeCommentTool && e.target.tag != commentToolTag && e.target.tag != buttonTag)
         {
+            //if we are closing the whole comment wheel
             commentOutput.SetActive(false);
             commentTool.SetActive(false);
             closeCommentTool = false;
