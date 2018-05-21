@@ -41,6 +41,8 @@ public class LaserPointer : PunBehaviour
     GameObject commentOutput;
     PlayComment playComment;
 
+    RecordComment recordComment;
+
     string commentToolTag = "CommentToolTag";
     string commentObjectTag = "Building";
 
@@ -241,6 +243,12 @@ public class LaserPointer : PunBehaviour
     {
         if(e.target.tag == commentObjectTag)
         {
+            if (recordComment == null)
+            {
+                recordComment = GameObject.Find("PhotonAvatar(Clone)").GetComponent<RecordComment>();
+            }
+
+            recordComment.target = e.target.gameObject;
             commentTool.SetActive(true);
             commentTool.transform.position = e.hitPoint - raycast.direction;
             commentTool.transform.LookAt(gameObject.transform);
