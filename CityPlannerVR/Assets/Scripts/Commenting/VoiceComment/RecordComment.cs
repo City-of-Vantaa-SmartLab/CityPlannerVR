@@ -26,9 +26,11 @@ public class RecordComment : MonoBehaviour
     private Dissonance.VoiceBroadcastTrigger voiceTrigger;
 
     //The object we are commenting
-    GameObject target;
+    [HideInInspector]
+    public GameObject target;
     //The person who commented
     string commenter;
+
 
     //Lasers for both hands, so it doesn't matter which hand is used
     LaserPointer laserRight;
@@ -37,27 +39,18 @@ public class RecordComment : MonoBehaviour
     string commentLayer = "CommentTool";
 
     string directoryName = "VoiceComments";
-    char slash = Path.DirectorySeparatorChar;
-
-    private string fullPath;
-
-    public string FullPath
-    {
-        get
-        {
-            return fullPath;
-        }
-    }
-
-    DirectoryInfo files;
-    FileInfo[] fileInfo;
+    [HideInInspector]
+    public char slash = Path.DirectorySeparatorChar;
+    [HideInInspector]
+    public string positionFileName = "positions.txt";
 
     [HideInInspector]
     public PositionData position;
-
+    [HideInInspector]
     public PositionDatabase positionDB;
 
     private string savePath;
+    private string audioSavePathExt;
 
     public string SavePath
     {
@@ -67,9 +60,18 @@ public class RecordComment : MonoBehaviour
         }
     }
 
+    public string AudioExt
+    {
+        get
+        {
+            return audioSavePathExt;
+        }
+    }
+
     private void Start()
     {
-        fullPath = "C:" + slash + "Users" + slash + "SmartLabVantaa" + slash + "Desktop" + slash + "Projects" + slash + "CityPlannerVR" + slash + "CityPlannerVR" + slash + "Assets" + slash + "Resources" + slash + "Comments" + slash + "VoiceComments";
+        savePath = "C:" + slash + "Users" + slash + "SmartLabVantaa" + slash + "Desktop" + slash + "Projects" + slash + "CityPlannerVR" + slash + "CityPlannerVR" + slash + "Assets" + slash + "Resources" + slash + "Comments" + slash + directoryName + slash;
+        audioSavePathExt = "AudioFiles" + slash;
         laserLeft = GameObject.Find("Player/SteamVRObjects/Hand1/Laserpointer").GetComponentInChildren<LaserPointer>();
         laserRight = GameObject.Find("Player/SteamVRObjects/Hand2/Laserpointer").GetComponentInChildren<LaserPointer>();
 
@@ -95,7 +97,8 @@ public class RecordComment : MonoBehaviour
 
         voiceTrigger = gameObject.GetComponent<Dissonance.VoiceBroadcastTrigger>();
 
-        savePath = "C:"+ slash + "Users" + slash + "SmartLabVantaa" + slash + "Desktop" + slash + "Projects" + slash + "CityPlannerVR" + slash + "CityPlannerVR" + slash + "Assets" + slash + "Resources" + slash + "Comments";
+        //Load the old data from the file, so it won't get replaced
+        LoadOldSavedData();
 
         laserLeft.PointerIn += StartRecord;
         laserLeft.PointerOut += StopRecord;
@@ -126,7 +129,6 @@ public class RecordComment : MonoBehaviour
 
     void StartRecord(object sender, LaserEventArgs e)
     {
-        Debug.Log("Recording started");
         target = e.target.gameObject;
         if(e.target.gameObject.layer == LayerMask.NameToLayer(commentLayer) && e.target.name == "VoiceComment")
         {
@@ -149,7 +151,6 @@ public class RecordComment : MonoBehaviour
 
     void StopRecord(object sender, LaserEventArgs e)
     {
-        Debug.Log("Recording stopped");
         if (e.target.gameObject.layer == LayerMask.NameToLayer(commentLayer) && e.target.name == "VoiceComment")
         {
             if (micConnected)
@@ -196,28 +197,38 @@ public class RecordComment : MonoBehaviour
     }
 //-----------------------------------------------------------------------------------------------------------------------------------------------------
 
+    void LoadOldSavedData()
+    {
+        XmlSerializer serializer = new XmlSerializer(typeof(PositionDatabase));
+        FileStream file = File.Open(SavePath + slash + positionFileName, FileMode.Open);
+        Debug.Log("File lenght = " + file.Length);
+        if (file.Length > 0)
+        {
+            positionDB = (PositionDatabase)serializer.Deserialize(file);
+            file.Close();
+        }       
+    }
+
+
 void SaveRecordedAudio()
     {
         string filename = commenter + "_VoiceComment_" + System.DateTime.Now.ToString("yyyy-MM-dd_HH-mm-ss") ;
 
-        SavWav.Save(filename, finalAudioClip, savePath + slash + directoryName + slash);
+        SavWav.Save(filename, finalAudioClip, savePath + audioSavePathExt);
 
         XmlSerializer serializer = new XmlSerializer(typeof(PositionDatabase));
-        FileStream file = File.Create(savePath + slash + directoryName + slash + "positions.txt");
+        FileStream file = File.Create(savePath + positionFileName);
 
-        for (int i = 0; i < ObjectContainer.objects.Count; i++)
-        {
-            positionDB.list.Add(new PositionData());
+        positionDB.list.Add(new PositionData());
 
-            positionDB.list[i].commenterName = commenter;
-            positionDB.list[i].recordName = filename;
-            positionDB.list[i].targetName = target.name;
+        positionDB.list[positionDB.list.Count - 1].commenterName = commenter;
+        positionDB.list[positionDB.list.Count - 1].recordName = filename;
+        positionDB.list[positionDB.list.Count - 1].targetName = target.name;
            
-            positionDB.list[i].position[0] = target.transform.position.x;
-            positionDB.list[i].position[1] = target.transform.position.y;
-            positionDB.list[i].position[2] = target.transform.position.z;
-        }
-
+        positionDB.list[positionDB.list.Count - 1].position[0] = target.transform.position.x;
+        positionDB.list[positionDB.list.Count - 1].position[1] = target.transform.position.y;
+        positionDB.list[positionDB.list.Count - 1].position[2] = target.transform.position.z;
+        
         serializer.Serialize(file, positionDB);
         file.Close();
 

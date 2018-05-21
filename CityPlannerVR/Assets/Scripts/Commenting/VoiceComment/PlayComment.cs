@@ -13,7 +13,7 @@ using UnityEngine.UI;
 
 //TODO: Kun osotetaan taloa, lista sen talon kommenteista
 //TODO: kun painetaan triggeriä tms. niin valitaan soitettava kommentti
-//TODO: Käy läpi kommentit ja jäjestä/seulo tietyllä tavalla
+//TODO: Käy läpi kommentit ja järjestä/seulo tietyllä tavalla
 
 public struct VoiceComment
 {
@@ -34,48 +34,71 @@ public class PlayComment : MonoBehaviour {
     List<string> commentsToPlayHere;
 	AudioSource audioSource;
     //The name of the comment and a struct that contains the name of the commenter and the position of the comment
-    Dictionary<string, VoiceComment> dictionary;
+    Dictionary<string, VoiceComment> commentDictionary;
 
     RecordComment record;
+
+
+    [HideInInspector]
+    public PositionData positionData;
+    [HideInInspector]
+    public PositionDatabase positionDB;
 
     string commentToFind;
 
     GameObject buttonImage;
     Text buttonText;
     GameObject panel;
+    List<GameObject> buttons;
 
-    void Start(){
+    DirectoryInfo info;
+    FileInfo[] fileInfo;
+
+    void Awake(){
 		audioSource = GetComponent<AudioSource> ();
 
         commentsToPlayHere = new List<string>();
-        dictionary = new Dictionary<string, VoiceComment>();
+        commentDictionary = new Dictionary<string, VoiceComment>();
+        buttons = new List<GameObject>();
 
         panel = GameObject.Find("CommentTool/CommentList/Canvas/Panel");
-        record = GameObject.Find("PhotonAvatar(Clone)").GetComponent<RecordComment>();
         
     }
 
-	public void LoadComments(){
+    public void LoadComments(){
+
+        if(record == null)
+        {
+            record = GameObject.Find("PhotonAvatar(Clone)").GetComponent<RecordComment>();
+        }
 
         InitializeCollections();
-        Debug.Log(record.FullPath);
+        Debug.Log(record.SavePath + record.AudioExt);
 
-        if (File.Exists(record.FullPath))
+        if (Directory.Exists(record.SavePath + record.AudioExt))
         {
-            XmlSerializer serializer = new XmlSerializer(typeof(PositionDatabase));
-            FileStream file = File.Open(record.FullPath, FileMode.Open);
-            if (file.Length > 0)
+            info = new DirectoryInfo(record.SavePath + record.AudioExt);
+            fileInfo = info.GetFiles();
+            if(fileInfo.Length > 0)
             {
-                Debug.Log("File Length is more tha 0");
-                record.positionDB = (PositionDatabase)serializer.Deserialize(file);
-                file.Close();
+                //fileInfo also contains the meta files but we don't want them in this list
+                comments = new AudioClip[fileInfo.Length/2];
+                comments = Resources.LoadAll<AudioClip>("Comments/VoiceComments/AudioFiles");
 
-                comments = new AudioClip[record.positionDB.list.Count];
-
-                for (int i = 0; i < record.positionDB.list.Count; ++i)
+                XmlSerializer serializer = new XmlSerializer(typeof(PositionDatabase));
+                FileStream file = File.Open(record.SavePath + record.slash + record.positionFileName, FileMode.Open);
+                if (file.Length > 0)
                 {
-                    dictionary.Add(record.position.recordName, new VoiceComment(record.position.recordName, new Vector3(record.position.position[0], record.position.position[1], record.position.position[2])));
-                    comments[i] = Resources.Load("VoiceChat/" + record.position.recordName) as AudioClip;
+                    positionDB = (PositionDatabase)serializer.Deserialize(file);
+                    file.Close();
+                }
+
+                //Destroy old buttons and create new according to new situation
+                DestroyButtons();
+
+                for (int i = 0; i < comments.Length; ++i)
+                {
+                    commentDictionary.Add(positionData.recordName, new VoiceComment(positionData.commenterName, new Vector3(positionData.position[0], positionData.position[1], positionData.position[2])));
                     CreateButtons();
                 }
             }
@@ -84,10 +107,25 @@ public class PlayComment : MonoBehaviour {
 
     void InitializeCollections()
     {
-        dictionary.Clear();
+        commentDictionary.Clear();
         commentsToPlayHere.Clear();
         comments = new AudioClip[0];
 
+    }
+
+    void DestroyButtons()
+    {
+
+        if (buttons.Count > 0)
+        {
+            for (int i = 0; i < buttons.Count; i++)
+            {
+                Destroy(buttons[i]);
+            }
+
+            buttons.Clear();
+        }
+        
     }
 
     void CreateButtons()
@@ -95,9 +133,13 @@ public class PlayComment : MonoBehaviour {
         buttonImage = (GameObject)Instantiate(Resources.Load("ButtonBackgroundImage"));
         buttonText = buttonImage.GetComponent<Text>();
         buttonImage.transform.parent = panel.transform;
+        buttonImage.transform.localPosition = Vector3.zero;
+        buttonImage.transform.localRotation = Quaternion.identity;
         buttonImage.transform.localScale = Vector3.one;
         buttonText = buttonImage.GetComponentInChildren<Text>();
-        buttonText.text = record.position.recordName;
+        buttonText.text = positionData.recordName;
+
+        buttons.Add(buttonImage);
     }
 
     void PlayCommentInPosition(string commentName)
