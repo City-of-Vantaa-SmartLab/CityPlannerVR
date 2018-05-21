@@ -20,6 +20,7 @@ public class ScreenshotCamera : MonoBehaviour {
     InputMaster inputMaster;
 
     public GameObject cameraScreen;
+    public GameObject cameraBackcscreen;
     public Material cameraScreenMaterial;
 
     //This value is got from the cameraHandler that activates this object
@@ -61,6 +62,7 @@ public class ScreenshotCamera : MonoBehaviour {
         cameraScreen.GetComponent<MeshRenderer>().material = cameraScreenMaterial;
 
         cameraScreen.SetActive(false);
+        cameraBackcscreen.SetActive(false);
 
         inputMaster = GameObject.Find("Player").GetComponent<InputMaster>();
     }
@@ -68,25 +70,26 @@ public class ScreenshotCamera : MonoBehaviour {
     private void OnEnable()
     {
         //                            myHandNumber is 1 or 2, but the place for them in the array are 0 and 1
-        gameObject.transform.parent = points[myHandNumber - 1].transform;
-        gameObject.transform.localPosition = Vector3.zero;
-        gameObject.transform.localRotation = Quaternion.identity;
+        gameObject.transform.parent.parent.parent = points[myHandNumber - 1].transform;  //changes grandcameraholder's parent
+        gameObject.transform.parent.parent.localPosition = Vector3.zero;
+        gameObject.transform.parent.parent.localRotation = Quaternion.identity;
 
-        cameraScreen.transform.parent = points[myHandNumber - 1].transform;
-        cameraScreen.transform.localRotation = Quaternion.identity;
+        cameraScreen.transform.parent.parent = points[myHandNumber - 1].transform;
+        cameraScreen.transform.parent.localRotation = Quaternion.identity;
 
-        //Left hand
-        if(myHandNumber == 1)
-        {
-            cameraScreen.transform.localPosition = new Vector3(0.15f, 0, 0);
-        }
-        //Right hand
-        else
-        {
-            cameraScreen.transform.localPosition = new Vector3(-0.15f, 0, 0);
-        }
-        
+        ////Left hand
+        //if(myHandNumber == 1)
+        //{
+        //    cameraScreen.transform.localPosition = new Vector3(0.15f, 0, 0);
+        //}
+        ////Right hand
+        //else
+        //{
+        //    cameraScreen.transform.localPosition = new Vector3(-0.15f, 0, 0);
+        //}
+
         cameraScreen.SetActive(true);
+        cameraBackcscreen.SetActive(true);
 
         Subscribe();
     }
@@ -96,6 +99,7 @@ public class ScreenshotCamera : MonoBehaviour {
         Unsubscribe();
 
         cameraScreen.SetActive(false);
+        cameraBackcscreen.SetActive(false);
     }
 
     private void Subscribe()
@@ -181,9 +185,9 @@ public class ScreenshotCamera : MonoBehaviour {
             index++;
         }
 
-        gameObject.transform.parent = points[index].transform;
-        gameObject.transform.localPosition = Vector3.zero;
-        gameObject.transform.localRotation = Quaternion.identity;
+        gameObject.transform.parent.parent = points[index].transform;
+        gameObject.transform.parent.localPosition = Vector3.zero;
+        gameObject.transform.parent.localRotation = Quaternion.identity;
     }
 
     void ChangePointLeft()
@@ -198,9 +202,9 @@ public class ScreenshotCamera : MonoBehaviour {
             index--;
         }
 
-        gameObject.transform.parent = points[index].transform;
-        gameObject.transform.localPosition = Vector3.zero;
-        gameObject.transform.localRotation = Quaternion.identity;
+        gameObject.transform.parent.parent = points[index].transform;
+        gameObject.transform.parent.localPosition = Vector3.zero;
+        gameObject.transform.parent.localRotation = Quaternion.identity;
     }
 
 }
