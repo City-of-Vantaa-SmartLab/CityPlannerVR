@@ -61,7 +61,7 @@ public class PlayComment : MonoBehaviour {
         commentDictionary = new Dictionary<string, VoiceComment>();
         buttons = new List<GameObject>();
 
-        panel = GameObject.Find("CommentTool/CommentList/Canvas/Panel");
+        panel = GameObject.Find("CommentTool/CommentList/Canvas/Panel/ScrollableList");
         
     }
 
@@ -131,7 +131,7 @@ public class PlayComment : MonoBehaviour {
     void CreateButtons(int index)
     {
         buttonImage = (GameObject)Instantiate(Resources.Load("ButtonBackgroundImage"));
-        buttonText = buttonImage.GetComponent<Text>();
+        //buttonText = buttonImage.GetComponent<Text>();
         buttonImage.transform.parent = panel.transform;
         buttonImage.transform.localPosition = Vector3.zero;
         buttonImage.transform.localRotation = Quaternion.identity;
