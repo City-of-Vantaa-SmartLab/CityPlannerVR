@@ -98,8 +98,8 @@ public class PlayComment : MonoBehaviour {
 
                 for (int i = 0; i < comments.Length; ++i)
                 {
-                    commentDictionary.Add(positionData.recordName, new VoiceComment(positionData.commenterName, new Vector3(positionData.position[0], positionData.position[1], positionData.position[2])));
-                    CreateButtons();
+                    commentDictionary.Add(positionDB.list[i].recordName, new VoiceComment(positionDB.list[i].commenterName, new Vector3(positionDB.list[i].position[0], positionDB.list[i].position[1], positionDB.list[i].position[2])));
+                    CreateButtons(i);
                 }
             }
         }
@@ -128,7 +128,7 @@ public class PlayComment : MonoBehaviour {
         
     }
 
-    void CreateButtons()
+    void CreateButtons(int index)
     {
         buttonImage = (GameObject)Instantiate(Resources.Load("ButtonBackgroundImage"));
         buttonText = buttonImage.GetComponent<Text>();
@@ -137,7 +137,7 @@ public class PlayComment : MonoBehaviour {
         buttonImage.transform.localRotation = Quaternion.identity;
         buttonImage.transform.localScale = Vector3.one;
         buttonText = buttonImage.GetComponentInChildren<Text>();
-        buttonText.text = positionData.recordName;
+        buttonText.text = positionDB.list[index].recordName;
 
         buttons.Add(buttonImage);
     }
