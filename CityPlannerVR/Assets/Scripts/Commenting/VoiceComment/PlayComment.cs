@@ -19,11 +19,13 @@ public struct VoiceComment
 {
     public string commenterName;
     public Vector3 commentPosition;
+    public int commentIndex;
 
-    public VoiceComment(string name, Vector3 position)
+    public VoiceComment(string name, Vector3 position, int index)
     {
         commenterName = name;
         commentPosition = position;
+        commentIndex = index;
     }
 }
 
@@ -98,7 +100,7 @@ public class PlayComment : MonoBehaviour {
 
                 for (int i = 0; i < comments.Length; ++i)
                 {
-                    commentDictionary.Add(positionDB.list[i].recordName, new VoiceComment(positionDB.list[i].commenterName, new Vector3(positionDB.list[i].position[0], positionDB.list[i].position[1], positionDB.list[i].position[2])));
+                    commentDictionary.Add(positionDB.list[i].recordName, new VoiceComment(positionDB.list[i].commenterName, new Vector3(positionDB.list[i].position[0], positionDB.list[i].position[1], positionDB.list[i].position[2]), i));
                     CreateButtons(i);
                 }
             }
@@ -131,8 +133,7 @@ public class PlayComment : MonoBehaviour {
     void CreateButtons(int index)
     {
         buttonImage = (GameObject)Instantiate(Resources.Load("ButtonBackgroundImage"));
-        //buttonText = buttonImage.GetComponent<Text>();
-        buttonImage.transform.parent = panel.transform;
+        buttonImage.transform.SetParent(panel.transform);
         buttonImage.transform.localPosition = Vector3.zero;
         buttonImage.transform.localRotation = Quaternion.identity;
         buttonImage.transform.localScale = Vector3.one;
@@ -142,9 +143,10 @@ public class PlayComment : MonoBehaviour {
         buttons.Add(buttonImage);
     }
 
-    void PlayCommentInPosition(string commentName)
+    public void PlayCommentInPosition(string commentName)
     {
-        audioSource.clip = comments[Array.IndexOf(comments, commentName)];
+        int index = commentDictionary[commentName].commentIndex;
+        audioSource.clip = comments[index];
 
         audioSource.Play();
     }

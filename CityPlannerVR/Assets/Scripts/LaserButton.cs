@@ -14,6 +14,9 @@ public class LaserButton : MonoBehaviour {
 
     public UnityEvent triggeredEvents;
 
+    PlayComment playComment;
+    string commentName;
+
     public void OnClicked()
     {
         //Debug.Log("LASERBUTTON " + gameObject.name + ":ssa TESTAA");
@@ -25,6 +28,16 @@ public class LaserButton : MonoBehaviour {
         //Debug.Log("Testing event!");
     }
 
+    public void PlayCommentStart()
+    {
+        if(playComment == null)
+        {
+            playComment = GameObject.Find("CommentList").GetComponent<PlayComment>();
+            commentName = GetComponentInChildren<UnityEngine.UI.Text>().text;
+        }
+
+        playComment.PlayCommentInPosition(commentName);
+    }
 
 #if UNITY_EDITOR
     [CustomEditor(typeof(LaserButton))]
