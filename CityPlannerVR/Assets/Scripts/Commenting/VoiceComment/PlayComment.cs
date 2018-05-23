@@ -75,7 +75,7 @@ public class PlayComment : MonoBehaviour {
         }
 
         InitializeCollections();
-        Debug.Log(record.SavePath + record.AudioExt);
+        //Debug.Log(record.SavePath + record.AudioExt);
 
         if (Directory.Exists(record.SavePath + record.AudioExt))
         {

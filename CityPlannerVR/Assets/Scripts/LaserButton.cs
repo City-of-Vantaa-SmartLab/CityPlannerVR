@@ -50,6 +50,7 @@ public class LaserButton : MonoBehaviour {
         {
             playComment = GameObject.Find("CommentList").GetComponent<PlayComment>();
             commentName = GetComponentInChildren<UnityEngine.UI.Text>().text;
+            Debug.Log("CommentName = " + commentName);
         }
 
         playComment.GoBackward();
