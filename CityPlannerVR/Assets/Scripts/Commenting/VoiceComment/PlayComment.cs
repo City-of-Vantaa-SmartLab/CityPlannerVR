@@ -40,6 +40,8 @@ public class PlayComment : MonoBehaviour {
 
     RecordComment record;
 
+    GameObject displayedButton;
+    int commentIndex = 0;
 
     [HideInInspector]
     public PositionData positionData;
@@ -51,7 +53,6 @@ public class PlayComment : MonoBehaviour {
     GameObject buttonImage;
     Text buttonText;
     GameObject panel;
-    List<GameObject> buttons;
 
     DirectoryInfo info;
     FileInfo[] fileInfo;
@@ -61,7 +62,6 @@ public class PlayComment : MonoBehaviour {
 
         commentsToPlayHere = new List<string>();
         commentDictionary = new Dictionary<string, VoiceComment>();
-        buttons = new List<GameObject>();
 
         panel = GameObject.Find("CommentTool/CommentList/Canvas/Panel/ScrollableList");
         
@@ -95,14 +95,12 @@ public class PlayComment : MonoBehaviour {
                     file.Close();
                 }
 
-                //Destroy old buttons and create new according to new situation
-                DestroyButtons();
-
                 for (int i = 0; i < comments.Length; ++i)
                 {
                     commentDictionary.Add(positionDB.list[i].recordName, new VoiceComment(positionDB.list[i].commenterName, new Vector3(positionDB.list[i].position[0], positionDB.list[i].position[1], positionDB.list[i].position[2]), i));
-                    CreateButtons(i);
                 }
+
+                CreateButton(commentIndex);
             }
         }
     }
@@ -115,22 +113,7 @@ public class PlayComment : MonoBehaviour {
 
     }
 
-    void DestroyButtons()
-    {
-
-        if (buttons.Count > 0)
-        {
-            for (int i = 0; i < buttons.Count; i++)
-            {
-                Destroy(buttons[i]);
-            }
-
-            buttons.Clear();
-        }
-        
-    }
-
-    void CreateButtons(int index)
+    void CreateButton(int index)
     {
         buttonImage = (GameObject)Instantiate(Resources.Load("ButtonBackgroundImage"));
         buttonImage.transform.SetParent(panel.transform);
@@ -140,7 +123,7 @@ public class PlayComment : MonoBehaviour {
         buttonText = buttonImage.GetComponentInChildren<Text>();
         buttonText.text = positionDB.list[index].recordName;
 
-        buttons.Add(buttonImage);
+        displayedButton = buttonImage;
     }
 
     public void PlayCommentInPosition(string commentName)
@@ -149,5 +132,41 @@ public class PlayComment : MonoBehaviour {
         audioSource.clip = comments[index];
 
         audioSource.Play();
+    }
+
+    public void GoForward()
+    {
+        if(displayedButton != null)
+        {
+            Destroy(displayedButton);
+        }
+
+        if(commentIndex == comments.Length)
+        {
+            commentIndex = 0;
+        }
+        else
+        {
+            ++commentIndex;
+            CreateButton(commentIndex);
+        }
+    }
+
+    public void GoBackward()
+    {
+        if (displayedButton != null)
+        {
+            Destroy(displayedButton);
+        }
+
+        if (commentIndex == 0)
+        {
+            commentIndex = comments.Length;
+        }
+        else
+        {
+            --commentIndex;
+            CreateButton(commentIndex);
+        }
     }
 }
