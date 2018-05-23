@@ -5,47 +5,26 @@ using UnityEngine;
 public class TutorialProgression : MonoBehaviour
 {
 
-   // public List<string> tutorialtexts = new List<string>();
-  //  public int textlistsize;
-    public int textlistsize1;
+    public List<string> tutorialtexts = new List<string>();
+    public int textlistsize;
     int text_int = 0;
-  //  public GameObject textfield;
-    public List<GameObject> tutexts = new List<GameObject>();
-  //  public TextMesh textfieldtext;
+    public GameObject textfield;
+    public TextMesh textfieldtext;
     public SteamVR_GazeTracker gaze;
-  //  public float timer = 0f;
+    public float timer = 0f;
     //public float gazeTime = 2f;
     public Light textLight;
     private bool lightOn = false;
     private bool coroutineExecute = false;
 
-    public List<Material> AvatarMaterials = new List<Material>();
-    public int matListSize;
-    public int check;
-
-
-  /*  private void Awake()
-    {
-
-        foreach (Material mat in Resources.LoadAll("Avatar", typeof(Material)))
-        {
-
-            AvatarMaterials.Add(mat);
-            matListSize = .Count;
-            
-        }
-
-    }*/
-
     // Use this for initialization
     void Start()
     {
-       // Texts();
-        //textlistsize = tutorialtexts.Count;
-        textlistsize1 = tutexts.Count;
-      //  textfield = GameObject.Find("Aloitus");
+        Texts();
+        textlistsize = tutorialtexts.Count;
+        textfield = GameObject.Find("Aloitus");
         gaze = gameObject.GetComponent<SteamVR_GazeTracker>();
-       // textfieldtext = textfield.GetComponent<TextMesh>();
+        textfieldtext = textfield.GetComponent<TextMesh>();
     }
 
     void Update()
@@ -53,75 +32,68 @@ public class TutorialProgression : MonoBehaviour
         if (gaze.isInGaze && text_int == 0)
         {
             NextText();
+
         }
     }
 
 
     public void NextText()
     {
-        GameObject part_time;
-        if (text_int == 0)
+        if (text_int < 6)
         {
-            part_time = tutexts[text_int];
-            part_time.SetActive(true);
-            lightOn = true;
-            textLight.enabled = lightOn;
-            text_int++;
-        }
-        else if (text_int >= 1 && text_int <= textlistsize1)
-        {
-       
-            if (!lightOn)
+            if (lightOn == false)
             {
-                part_time = tutexts[text_int-1];
-                part_time.SetActive(false);
                 lightOn = true;
                 textLight.enabled = lightOn;
-                part_time = tutexts[text_int];
-                part_time.SetActive(true);
+                textfieldtext.text = tutorialtexts[text_int];
                 text_int++;
                 return;
             }
-            else if (lightOn)
+            if (lightOn == true)
             {
-                part_time = tutexts[text_int - 1];
-                part_time.SetActive(false);
                 lightOn = false;
                 textLight.enabled = lightOn;
-                LightTimer();
-                part_time = tutexts[text_int];
-                part_time.SetActive(true);
+
+                Invoke("textLight.enabled", 1f);//lightOn = true;
+                                                // textLight.enabled = lightOn;
+                textfieldtext.text = tutorialtexts[text_int];
                 text_int++;
-              
-
-                lightOn = true;
-                textLight.enabled = lightOn;
-
-             
-               // textfieldtext.text = tutorialtexts[text_int];
-               // text_int++;
-            return;
+                return;
             }
 
         }
     }
-  
-   /* public void Texts()
+
+
+    public void GazeText()
+    {
+
+        if (gaze.isInGaze && text_int == 0)
+        {
+            NextText();
+
+        }
+
+
+    }
+
+
+
+    public void Texts()
     {
         tutorialtexts.Add("Hei!Tervetuloa!");
         tutorialtexts.Add("Tule lähemmäs");
-        tutorialtexts.Add("Valitse itsellesi hahmo\npainamalla nappulaa");
+        tutorialtexts.Add("Valitse itsellesi hahmo painamalla nappulaa");
         tutorialtexts.Add("Oletko tyytyväinen hattuun");
         tutorialtexts.Add("Hienoa! Suuntaa ovesta ulos ja pidä hauskaa!");
         int length = tutorialtexts.Count;
         Debug.Log(length);
     }
-    */
-    IEnumerator LightTimer()
-    {
-        yield return new WaitForSeconds(1.5f);
-
-    }
 }
 
-  
+   /* IEnumerator LightTimer(float time)
+    {
+        if (coroutineExecute)
+            
+    }
+}*/
