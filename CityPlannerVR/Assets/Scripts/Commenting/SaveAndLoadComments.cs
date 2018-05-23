@@ -33,11 +33,23 @@ public class SaveAndLoadComments : MonoBehaviour {
         return comment;
     }
 
-    public static Comment CreateComment(CommentData data)
+    public static Comment CreateOldComment(CommentData data)
     {
         Comment comment = CreateComment();
         comment._data = data;
-        comment.SortAndAddToList();
+        comment.LoadData();
+        comment.SortAndAddToLocalList();
+        return comment;
+    }
+
+    //Use this when the user creates an entirely new comment
+    public Comment CreateNewComment(CommentData data)
+    {
+        Comment comment = CreateComment();
+        comment._data = data;
+        comment.LoadData();
+        comment.SortAndAddToLocalList();
+        comment.ApplyDataToContainer();  //this will add the comment to savedata's commentcontainer
         return comment;
     }
 
