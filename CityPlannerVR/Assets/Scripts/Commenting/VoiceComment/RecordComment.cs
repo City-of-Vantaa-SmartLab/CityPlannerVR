@@ -72,8 +72,11 @@ public class RecordComment : MonoBehaviour
 
     private void Start()
     {
+#if UNITY_EDITOR
+        //TODO: Buildissa on eri polku ehkä
         savePath = "C:" + slash + "Users" + slash + "SmartLabVantaa" + slash + "Desktop" + slash + "Projects" + slash + "CityPlannerVR" + slash + "CityPlannerVR" + slash + "Assets" + slash + "Resources" + slash + "Comments" + slash + directoryName + slash;
         audioSavePathExt = "AudioFiles" + slash;
+#endif
         laserLeft = GameObject.Find("Player/SteamVRObjects/Hand1/Laserpointer").GetComponentInChildren<LaserPointer>();
         laserRight = GameObject.Find("Player/SteamVRObjects/Hand2/Laserpointer").GetComponentInChildren<LaserPointer>();
 
@@ -99,19 +102,15 @@ public class RecordComment : MonoBehaviour
         LoadOldSavedData();
 
         laserLeft.PointerOut += StopRecord;
-
         laserRight.PointerOut += StopRecord;
 
         laserLeft.PointerIn += FindTarget;
         laserRight.PointerIn += FindTarget;
-
-        //TODO: Buildissa on eri polku ehkä
     }
 
 
     //TODO: 
     //-pistä commentWheel oikeaan kohtaan (pienenä)
-    //-estä kommentoimasta vääriä asioita
     //-indikaatio tallenuksen aloituksesta ja lopetuksesta (ja epäonnistumisesta?)
     void FindTarget(object sender, LaserEventArgs e)
     {
