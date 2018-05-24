@@ -207,6 +207,7 @@ GameObject:
   - component: {fileID: 65270046603929648}
   - component: {fileID: 23660586431578912}
   - component: {fileID: 114027810988022024}
+  - component: {fileID: 114082781991102502}
   m_Layer: 16
   m_Name: VoiceComment
   m_TagString: CommentToolTag
@@ -934,9 +935,46 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   triggeredEvents:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 114082781991102502}
+        m_MethodName: StartRecord
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
     m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
       Culture=neutral, PublicKeyToken=null
+--- !u!114 &114082781991102502
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1850352533580352}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 905dd8842dd65824bb9b613f38f39776, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  voiceTrigger: {fileID: 0}
+  target: {fileID: 0}
+  commenter: 
+  slash: 92
+  positionFileName: positions.txt
+  position:
+    commenterName: 
+    recordName: 
+    targetName: 
+    position:
+    - 0
+    - 0
+    - 0
+  positionDB:
+    list: []
 --- !u!114 &114084409305509056
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -1144,6 +1182,7 @@ MonoBehaviour:
     - 0
   positionDB:
     list: []
+  pointedTarget: {fileID: 0}
 --- !u!114 &114899075875881762
 MonoBehaviour:
   m_ObjectHideFlags: 1

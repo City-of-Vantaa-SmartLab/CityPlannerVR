@@ -17,25 +17,25 @@ public class TutorialProgression : MonoBehaviour
     //public float gazeTime = 2f;
     public Light textLight;
     private bool lightOn = false;
-    private bool coroutineExecute = false;
+    public GameObject player;
 
     public List<Material> AvatarMaterials = new List<Material>();
     public int matListSize;
     public int check;
 
 
-  /*  private void Awake()
+    private void Awake()
     {
 
-        foreach (Material mat in Resources.LoadAll("Avatar", typeof(Material)))
+        foreach (Material mat in Resources.LoadAll("AvatarM", typeof(Material)))
         {
 
             AvatarMaterials.Add(mat);
-            matListSize = .Count;
+            matListSize = AvatarMaterials.Count;
             
         }
 
-    }*/
+    }
 
     // Use this for initialization
     void Start()
@@ -53,6 +53,55 @@ public class TutorialProgression : MonoBehaviour
         if (gaze.isInGaze && text_int == 0)
         {
             NextText();
+        }
+    }
+
+    public void NextAvatar()
+    {
+        GameObject part_time;
+        if (text_int == 0)
+        {
+            part_time = tutexts[text_int];
+            part_time.SetActive(true);
+            lightOn = true;
+            textLight.enabled = lightOn;
+            text_int++;
+        }
+        else if (text_int >= 1 && text_int <= textlistsize1)
+        {
+
+            if (!lightOn)
+            {
+                part_time = tutexts[text_int - 1];
+                part_time.SetActive(false);
+                lightOn = true;
+                textLight.enabled = lightOn;
+                part_time = tutexts[text_int];
+                part_time.SetActive(true);
+                text_int++;
+                return;
+            }
+            else if (lightOn)
+            {
+                part_time = tutexts[text_int - 1];
+                part_time.SetActive(false);
+                lightOn = false;
+                textLight.enabled = lightOn;
+                LightTimer();
+                part_time = tutexts[text_int];
+                part_time.SetActive(true);
+                text_int++;
+
+
+                lightOn = true;
+                textLight.enabled = lightOn;
+
+
+                // textfieldtext.text = tutorialtexts[text_int];
+                // text_int++;
+                return;
+            }
+
         }
     }
 

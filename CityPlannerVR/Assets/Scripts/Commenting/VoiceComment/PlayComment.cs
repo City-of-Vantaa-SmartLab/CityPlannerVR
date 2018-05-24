@@ -17,12 +17,14 @@ using UnityEngine.UI;
 public struct VoiceComment
 {
     public string commenterName;
+    public string targetName;
     public Vector3 commentPosition;
     public int commentIndex;
 
-    public VoiceComment(string name, Vector3 position, int index)
+    public VoiceComment(string name, string target, Vector3 position, int index)
     {
         commenterName = name;
+        targetName = target;
         commentPosition = position;
         commentIndex = index;
     }
@@ -47,14 +49,15 @@ public class PlayComment : MonoBehaviour {
     [HideInInspector]
     public PositionDatabase positionDB;
 
-    string commentToFind;
-
     GameObject buttonImage;
     Text buttonText;
     GameObject panel;
 
     DirectoryInfo info;
     FileInfo[] fileInfo;
+
+    //Is set in laserPointer script
+    public GameObject pointedTarget;
 
     void Awake(){
 		audioSource = GetComponent<AudioSource> ();
@@ -93,10 +96,23 @@ public class PlayComment : MonoBehaviour {
 
                 for (int i = 0; i < comments.Length; ++i)
                 {
-                    commentDictionary.Add(positionDB.list[i].recordName, new VoiceComment(positionDB.list[i].commenterName, new Vector3(positionDB.list[i].position[0], positionDB.list[i].position[1], positionDB.list[i].position[2]), i));
+                    commentDictionary.Add(positionDB.list[i].recordName, new VoiceComment(positionDB.list[i].commenterName, positionDB.list[i].targetName , new Vector3(positionDB.list[i].position[0], positionDB.list[i].position[1], positionDB.list[i].position[2]), i));
                 }
 
                 CreateButton(commentIndex);
+            }
+        }
+    }
+
+    void GetAllCommentForObjects()
+    {
+        commentsToPlayHere.Clear();
+
+        foreach (KeyValuePair<string, VoiceComment> comment in commentDictionary)
+        {
+            if(comment.Value.targetName == pointedTarget.name)
+            {
+                commentsToPlayHere.Add(comment.Key);
             }
         }
     }
@@ -124,7 +140,7 @@ public class PlayComment : MonoBehaviour {
 
     public void PlayCommentInPosition(string commentName)
     {
-        int index = commentDictionary[commentName].commentIndex;
+        int index = commentsToPlayHere.IndexOf(commentName);
         audioSource.clip = comments[index];
 
         audioSource.Play();
