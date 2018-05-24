@@ -281,6 +281,7 @@ public class LaserPointer : PunBehaviour
     {
         if(e.target.tag == commentObjectTag)
         {
+            playComment.pointedTarget = e.target.gameObject;
             recordComment.target = e.target.gameObject;
             commentTool.SetActive(true);
             commentTool.transform.position = e.hitPoint - raycast.direction;

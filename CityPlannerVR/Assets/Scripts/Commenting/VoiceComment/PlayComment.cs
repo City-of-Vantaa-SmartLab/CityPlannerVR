@@ -56,6 +56,9 @@ public class PlayComment : MonoBehaviour {
     DirectoryInfo info;
     FileInfo[] fileInfo;
 
+    //Is set in laserPointer script
+    public GameObject pointedTarget;
+
     void Awake(){
 		audioSource = GetComponent<AudioSource> ();
 
@@ -101,6 +104,19 @@ public class PlayComment : MonoBehaviour {
         }
     }
 
+    void GetAllCommentForObjects()
+    {
+        commentsToPlayHere.Clear();
+
+        foreach (KeyValuePair<string, VoiceComment> comment in commentDictionary)
+        {
+            if(comment.Value.targetName == pointedTarget.name)
+            {
+                commentsToPlayHere.Add(comment.Key);
+            }
+        }
+    }
+
     void InitializeCollections()
     {
         commentDictionary.Clear();
@@ -124,7 +140,7 @@ public class PlayComment : MonoBehaviour {
 
     public void PlayCommentInPosition(string commentName)
     {
-        int index = commentDictionary[commentName].commentIndex;
+        int index = commentsToPlayHere.IndexOf(commentName);
         audioSource.clip = comments[index];
 
         audioSource.Play();
