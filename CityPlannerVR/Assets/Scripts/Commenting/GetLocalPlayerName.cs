@@ -26,5 +26,6 @@ public class GetLocalPlayerName : MonoBehaviour {
     {
         commenter = gameObject.GetComponent<PhotonView>().owner.NickName;
         recordComment.commenter = commenter;
+        GameObject.Find("GameController").GetComponent<SaveAndLoadComments>().localPlayerName = commenter;
     }
 }

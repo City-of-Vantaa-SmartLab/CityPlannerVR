@@ -82,6 +82,7 @@ public class LaserPointer : PunBehaviour
 
     private void Start()
     {
+
         if (isForNetworking)
         {
             bool status = false; //0: active, 1: isInEditingMode
@@ -288,6 +289,13 @@ public class LaserPointer : PunBehaviour
             commentTool.SetActive(true);
             commentTool.transform.position = e.hitPoint - raycast.direction;
             commentTool.transform.LookAt(gameObject.transform);
+
+            CommentToolManager commentToolManager;
+            commentToolManager = commentTool.GetComponent<CommentToolManager>();
+            commentToolManager.targetName = e.target.name;
+
+            //commentToolManager.sender = sender;
+            //commentToolManager.LEArgs = e;
         }
     }
 

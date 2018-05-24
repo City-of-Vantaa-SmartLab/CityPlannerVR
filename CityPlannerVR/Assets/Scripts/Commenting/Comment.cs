@@ -14,12 +14,17 @@ public class CommentData
     public string userName; //player
     public string commentedObjectName;
     public string SHPath;
-    public System.DateTime submittedTime;
+    
+    public string submittedShortTime;
     public Vector3 commentatorPosition;
     public int quickCheck;
 }
 
-public class Comment : MonoBehaviour {
+//From https://gamedev.stackexchange.com/questions/137523/unity-json-utility-does-not-serialize-datetime
+
+
+[Serializable]
+public class Comment {
 
     public enum CommentType { None, Text, Thumb, Voice };
 
@@ -42,16 +47,28 @@ public class Comment : MonoBehaviour {
     public string _userName; //player
     public string _commentedObjectName;
     public string _SHPath; //path to the screenshot that was taken with the commit
-    public System.DateTime _submittedTime;
+    public string _submittedShortTime;
     public Vector3 _pos;
     public int _quickCheck;
 
 
     //default constructor
-    //public Comment()
-    //{
-    //    _submittedTime = System.DateTime.Now;
-    //}
+    public Comment()
+    {
+        _dataString = null; //comment's text or a filepath for voice files
+        _data = null; //used for storing and loading data
+
+        _userName = null; //player
+        _commentedObjectName = null;
+        _SHPath = null; //path to the screenshot that was taken with the commit
+        _submittedShortTime = null;
+        //_pos = null;
+        _quickCheck = 0;
+
+        OnEnable();
+        Debug.Log("Comment created");
+
+    }
 
     ////constructor
     //public Comment(GameObject user, GameObject target, string screenshotPath, CommentType type, string dataString, DateTime submittedTime)
@@ -67,7 +84,7 @@ public class Comment : MonoBehaviour {
     //    _quickCheck = ConvertToQuickCheck(2);
     //}
 
-
+    //Not a monobehaviour!
     private void OnEnable()
     {
         SaveData.OnLoaded += LoadData;
@@ -75,6 +92,7 @@ public class Comment : MonoBehaviour {
         SaveData.OnBeforeSave += ApplyDataToContainer;
     }
 
+    //Not a monobehaviour!
     private void OnDisable()
     {
         SaveData.OnLoaded -= LoadData;
@@ -91,7 +109,7 @@ public class Comment : MonoBehaviour {
         _data.userName = _userName;
         _data.commentedObjectName = _commentedObjectName;
         _data.SHPath = _SHPath;
-        _data.submittedTime = _submittedTime;
+        _data.submittedShortTime = _submittedShortTime;
         _data.commentatorPosition = _pos;
         _data.quickCheck = _quickCheck;
     }
@@ -105,7 +123,7 @@ public class Comment : MonoBehaviour {
         _userName = _data.userName;
         _commentedObjectName = _data.commentedObjectName;
         _SHPath = _data.SHPath;
-        _submittedTime = _data.submittedTime;
+        _submittedShortTime = _data.submittedShortTime;
         _pos = _data.commentatorPosition;
         _quickCheck = _data.quickCheck;
     }
@@ -114,6 +132,7 @@ public class Comment : MonoBehaviour {
     public void ApplyDataToContainer()
     {
         SaveData.AddCommentData(_data);
+        OnDisable();
     }
 
     public void SortAndAddToLocalList()
@@ -136,7 +155,7 @@ public class Comment : MonoBehaviour {
                 break;
 
             default:
-                Debug.Log("Type not set for comment " + this.name + " by user " + this._userName + " while being sorted!");
+                Debug.Log("Type not set for comment (quickcheck: " + _quickCheck + ") by user " + this._userName + " while being sorted!");
                 break;
         }
     }
@@ -181,7 +200,7 @@ public class Comment : MonoBehaviour {
     {
         string userName = TruncateString(_userName, maxLength);
         string objectName = TruncateString(_commentedObjectName, maxLength);
-        string date = TruncateString(_submittedTime.ToShortDateString() , maxLength);
+        string date = TruncateString(_submittedShortTime, maxLength);
         string uberString = userName + objectName + date;
         Debug.Log("Joining strings: " + userName + " " + objectName + " " + date);
         int magic = ConvertFirstCharsToInt(uberString, maxLength * 4);
@@ -193,7 +212,7 @@ public class Comment : MonoBehaviour {
     {
         string userName = TruncateString(data.userName, maxLength);
         string objectName = TruncateString(data.commentedObjectName, maxLength);
-        string date = TruncateString(data.submittedTime.ToShortDateString(), maxLength);
+        string date = TruncateString(data.submittedShortTime, maxLength);
         string uberString = userName + objectName + date;
         Debug.Log("Joining strings: " + userName + " " + objectName + " " + date);
         int magic = ConvertFirstCharsToInt(uberString, maxLength * 4);
