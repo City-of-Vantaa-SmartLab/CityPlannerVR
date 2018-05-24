@@ -126,6 +126,10 @@ public class Comment {
         _submittedShortTime = _data.submittedShortTime;
         _pos = _data.commentatorPosition;
         _quickCheck = _data.quickCheck;
+        if (_quickCheck == 0)
+        {
+            _quickCheck = ConvertToQuickCheck(2);
+        }
     }
 
     //called by OnBeforeSave event
@@ -196,14 +200,14 @@ public class Comment {
         return magic;
     }
 
-    public int ConvertToQuickCheck(int maxLength)
+    public int ConvertToQuickCheck(int subStringMaxLength)
     {
-        string userName = TruncateString(_userName, maxLength);
-        string objectName = TruncateString(_commentedObjectName, maxLength);
-        string date = TruncateString(_submittedShortTime, maxLength);
+        string userName = TruncateString(_userName, subStringMaxLength);
+        string objectName = TruncateString(_commentedObjectName, subStringMaxLength);
+        string date = TruncateString(_submittedShortTime, subStringMaxLength);
         string uberString = userName + objectName + date;
         Debug.Log("Joining strings: " + userName + " " + objectName + " " + date);
-        int magic = ConvertFirstCharsToInt(uberString, maxLength * 4);
+        int magic = ConvertFirstCharsToInt(uberString, subStringMaxLength * 4);
         Debug.Log("QuickCheck: " + magic);
         return magic;
     }
