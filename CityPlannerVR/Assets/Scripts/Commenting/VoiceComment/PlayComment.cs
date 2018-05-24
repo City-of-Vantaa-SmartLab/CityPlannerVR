@@ -17,12 +17,14 @@ using UnityEngine.UI;
 public struct VoiceComment
 {
     public string commenterName;
+    public string targetName;
     public Vector3 commentPosition;
     public int commentIndex;
 
-    public VoiceComment(string name, Vector3 position, int index)
+    public VoiceComment(string name, string target, Vector3 position, int index)
     {
         commenterName = name;
+        targetName = target;
         commentPosition = position;
         commentIndex = index;
     }
@@ -46,8 +48,6 @@ public class PlayComment : MonoBehaviour {
     public PositionData positionData;
     [HideInInspector]
     public PositionDatabase positionDB;
-
-    string commentToFind;
 
     GameObject buttonImage;
     Text buttonText;
@@ -93,7 +93,7 @@ public class PlayComment : MonoBehaviour {
 
                 for (int i = 0; i < comments.Length; ++i)
                 {
-                    commentDictionary.Add(positionDB.list[i].recordName, new VoiceComment(positionDB.list[i].commenterName, new Vector3(positionDB.list[i].position[0], positionDB.list[i].position[1], positionDB.list[i].position[2]), i));
+                    commentDictionary.Add(positionDB.list[i].recordName, new VoiceComment(positionDB.list[i].commenterName, positionDB.list[i].targetName , new Vector3(positionDB.list[i].position[0], positionDB.list[i].position[1], positionDB.list[i].position[2]), i));
                 }
 
                 CreateButton(commentIndex);
