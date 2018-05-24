@@ -19,7 +19,7 @@ public class PhotonGameManager : MonoBehaviour {
 
 	#region Public Variables
 
-	public const string MULTIPLAYER_SCENE_NAME = "PhotonMultiplayer";
+	public const string MULTIPLAYER_SCENE_NAME = "PhotonCombined";
 	public const string LAUNCHER_SCENE_NAME = "photonLauncher";
 
 	//The maximum number of players per room. When room is full, a new one is created.

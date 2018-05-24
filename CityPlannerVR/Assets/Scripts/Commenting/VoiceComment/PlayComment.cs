@@ -12,18 +12,19 @@ using UnityEngine.UI;
 //Use www class for the server?
 
 //TODO: Kun osotetaan taloa, lista sen talon kommenteista
-//TODO: kun painetaan triggeriä tms. niin valitaan soitettava kommentti
 //TODO: Käy läpi kommentit ja järjestä/seulo tietyllä tavalla
 
 public struct VoiceComment
 {
     public string commenterName;
     public Vector3 commentPosition;
+    public int commentIndex;
 
-    public VoiceComment(string name, Vector3 position)
+    public VoiceComment(string name, Vector3 position, int index)
     {
         commenterName = name;
         commentPosition = position;
+        commentIndex = index;
     }
 }
 
@@ -38,6 +39,8 @@ public class PlayComment : MonoBehaviour {
 
     RecordComment record;
 
+    GameObject displayedButton;
+    int commentIndex = 0;
 
     [HideInInspector]
     public PositionData positionData;
@@ -49,7 +52,6 @@ public class PlayComment : MonoBehaviour {
     GameObject buttonImage;
     Text buttonText;
     GameObject panel;
-    List<GameObject> buttons;
 
     DirectoryInfo info;
     FileInfo[] fileInfo;
@@ -59,21 +61,17 @@ public class PlayComment : MonoBehaviour {
 
         commentsToPlayHere = new List<string>();
         commentDictionary = new Dictionary<string, VoiceComment>();
-        buttons = new List<GameObject>();
 
-        panel = GameObject.Find("CommentTool/CommentList/Canvas/Panel");
-        
+        panel = GameObject.Find("CommentTool/CommentList/Canvas/Panel/ScrollableList");
+
+        record = gameObject.transform.parent.GetComponentInChildren<RecordComment>();
+
     }
 
     public void LoadComments(){
 
-        if(record == null)
-        {
-            record = GameObject.Find("PhotonAvatar(Clone)").GetComponent<RecordComment>();
-        }
-
         InitializeCollections();
-        Debug.Log(record.SavePath + record.AudioExt);
+        //Debug.Log(record.SavePath + record.AudioExt);
 
         if (Directory.Exists(record.SavePath + record.AudioExt))
         {
@@ -93,14 +91,12 @@ public class PlayComment : MonoBehaviour {
                     file.Close();
                 }
 
-                //Destroy old buttons and create new according to new situation
-                DestroyButtons();
-
                 for (int i = 0; i < comments.Length; ++i)
                 {
-                    commentDictionary.Add(positionDB.list[i].recordName, new VoiceComment(positionDB.list[i].commenterName, new Vector3(positionDB.list[i].position[0], positionDB.list[i].position[1], positionDB.list[i].position[2])));
-                    CreateButtons(i);
+                    commentDictionary.Add(positionDB.list[i].recordName, new VoiceComment(positionDB.list[i].commenterName, new Vector3(positionDB.list[i].position[0], positionDB.list[i].position[1], positionDB.list[i].position[2]), i));
                 }
+
+                CreateButton(commentIndex);
             }
         }
     }
@@ -113,39 +109,60 @@ public class PlayComment : MonoBehaviour {
 
     }
 
-    void DestroyButtons()
-    {
-
-        if (buttons.Count > 0)
-        {
-            for (int i = 0; i < buttons.Count; i++)
-            {
-                Destroy(buttons[i]);
-            }
-
-            buttons.Clear();
-        }
-        
-    }
-
-    void CreateButtons(int index)
+    void CreateButton(int index)
     {
         buttonImage = (GameObject)Instantiate(Resources.Load("ButtonBackgroundImage"));
-        buttonText = buttonImage.GetComponent<Text>();
-        buttonImage.transform.parent = panel.transform;
+        buttonImage.transform.SetParent(panel.transform);
         buttonImage.transform.localPosition = Vector3.zero;
         buttonImage.transform.localRotation = Quaternion.identity;
         buttonImage.transform.localScale = Vector3.one;
         buttonText = buttonImage.GetComponentInChildren<Text>();
         buttonText.text = positionDB.list[index].recordName;
 
-        buttons.Add(buttonImage);
+        displayedButton = buttonImage;
     }
 
-    void PlayCommentInPosition(string commentName)
+    public void PlayCommentInPosition(string commentName)
     {
-        audioSource.clip = comments[Array.IndexOf(comments, commentName)];
+        int index = commentDictionary[commentName].commentIndex;
+        audioSource.clip = comments[index];
 
         audioSource.Play();
+    }
+
+    public void GoForward()
+    {
+        if(displayedButton != null)
+        {
+            Destroy(displayedButton);
+        }
+
+        if(commentIndex == comments.Length)
+        {
+            commentIndex = 0;
+        }
+        else
+        {
+            ++commentIndex;
+            CreateButton(commentIndex);
+        }
+    }
+
+    public void GoBackward()
+    {
+        if (displayedButton != null)
+        {
+            Destroy(displayedButton);
+        }
+
+        if (commentIndex == 0)
+        {
+            commentIndex = comments.Length;
+        }
+        else
+        {
+            --commentIndex;
+            CreateButton(commentIndex);
+        }
     }
 }

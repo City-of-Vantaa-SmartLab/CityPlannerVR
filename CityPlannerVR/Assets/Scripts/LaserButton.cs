@@ -17,6 +17,9 @@ public class LaserButton : MonoBehaviour {
     public UnityEvent hoverOutEvents;
 
 
+    PlayComment playComment;
+    string commentName;
+
     public void OnClicked()
     {
         //Debug.Log("LASERBUTTON " + gameObject.name + ":ssa TESTAA");
@@ -37,6 +40,38 @@ public class LaserButton : MonoBehaviour {
         //Debug.Log("Testing event!");
     }
 
+    //ButtonBackground
+    public void PlayCommentStart()
+    {
+        if(commentName == null)
+        {
+            commentName = GetComponentInChildren<UnityEngine.UI.Text>().text;
+        }
+
+        playComment.PlayCommentInPosition(commentName);
+    }
+
+    //ForwardButton
+    public void GoForward()
+    {
+        if (playComment == null)
+        {
+            playComment = GameObject.Find("CommentList").GetComponent<PlayComment>();
+        }
+
+        playComment.GoForward();
+    }
+
+    //BackwardButton
+    public void GoBackward()
+    {
+        if (playComment == null)
+        {
+            playComment = GameObject.Find("CommentList").GetComponent<PlayComment>();   
+        }
+
+        playComment.GoBackward();
+    }
 
 #if UNITY_EDITOR
     [CustomEditor(typeof(LaserButton))]

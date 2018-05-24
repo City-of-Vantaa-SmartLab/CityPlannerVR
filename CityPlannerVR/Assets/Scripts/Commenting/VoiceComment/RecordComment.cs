@@ -23,13 +23,15 @@ public class RecordComment : MonoBehaviour
     private AudioClip tempAudioClip;
     private AudioClip finalAudioClip;
 
-    private Dissonance.VoiceBroadcastTrigger voiceTrigger;
+    [HideInInspector]
+    public Dissonance.VoiceBroadcastTrigger voiceTrigger;
 
     //The object we are commenting
     [HideInInspector]
     public GameObject target;
     //The person who commented
-    string commenter;
+    [HideInInspector]
+    public string commenter;
 
 
     //Lasers for both hands, so it doesn't matter which hand is used
@@ -70,8 +72,11 @@ public class RecordComment : MonoBehaviour
 
     private void Start()
     {
+#if UNITY_EDITOR
+        //TODO: Buildissa on eri polku ehkä
         savePath = "C:" + slash + "Users" + slash + "SmartLabVantaa" + slash + "Desktop" + slash + "Projects" + slash + "CityPlannerVR" + slash + "CityPlannerVR" + slash + "Assets" + slash + "Resources" + slash + "Comments" + slash + directoryName + slash;
         audioSavePathExt = "AudioFiles" + slash;
+#endif
         laserLeft = GameObject.Find("Player/SteamVRObjects/Hand1/Laserpointer").GetComponentInChildren<LaserPointer>();
         laserRight = GameObject.Find("Player/SteamVRObjects/Hand2/Laserpointer").GetComponentInChildren<LaserPointer>();
 
@@ -93,31 +98,19 @@ public class RecordComment : MonoBehaviour
             }
         }
 
-        commenter = gameObject.GetComponent<PhotonView>().owner.NickName;
-
-        voiceTrigger = gameObject.GetComponent<Dissonance.VoiceBroadcastTrigger>();
-
         //Load the old data from the file, so it won't get replaced
         LoadOldSavedData();
 
-        laserLeft.PointerIn += StartRecord;
         laserLeft.PointerOut += StopRecord;
-
-        laserRight.PointerIn += StartRecord;
         laserRight.PointerOut += StopRecord;
 
         laserLeft.PointerIn += FindTarget;
         laserRight.PointerIn += FindTarget;
-
-        //TODO: Buildissa on eri polku ehkä
     }
 
 
     //TODO: 
-    //-avaa commentWheel (kun osotetaan taloa)
-    //-pistä commentWheel oikeaan kohtaan (isona ja pienenä)
-    //-piilota commentWheel
-    //-estä kommentoimasta vääriä asioita
+    //-pistä commentWheel oikeaan kohtaan (pienenä)
     //-indikaatio tallenuksen aloituksesta ja lopetuksesta (ja epäonnistumisesta?)
     void FindTarget(object sender, LaserEventArgs e)
     {
@@ -127,11 +120,9 @@ public class RecordComment : MonoBehaviour
         }
     }
 
-    void StartRecord(object sender, LaserEventArgs e)
+    public void StartRecord()
     {
-        target = e.target.gameObject;
-        if(e.target.gameObject.layer == LayerMask.NameToLayer(commentLayer) && e.target.name == "VoiceComment")
-        {
+        
             if (micConnected)
             {
                 DisableVoiceChat();
@@ -146,7 +137,7 @@ public class RecordComment : MonoBehaviour
             {
                 Debug.LogError("Microphone not connected");
             }
-        }
+        
     }
 
     void StopRecord(object sender, LaserEventArgs e)
