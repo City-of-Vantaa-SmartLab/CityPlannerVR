@@ -761,7 +761,7 @@ GameObject:
   - component: {fileID: 248236053}
   - component: {fileID: 248236055}
   - component: {fileID: 248236054}
-  m_Layer: 8
+  m_Layer: 0
   m_Name: RecordingText
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -6491,7 +6491,7 @@ GameObject:
   - component: {fileID: 716086349}
   - component: {fileID: 716086351}
   - component: {fileID: 716086350}
-  m_Layer: 8
+  m_Layer: 0
   m_Name: 2DCameraSphere
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -6764,6 +6764,48 @@ Transform:
   m_Father: {fileID: 1219752975}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1001 &852552322
+Prefab:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: 4983732256713022, guid: 738bb4ba72cd2454c881026524a43958, type: 2}
+      propertyPath: m_LocalPosition.x
+      value: 3.23
+      objectReference: {fileID: 0}
+    - target: {fileID: 4983732256713022, guid: 738bb4ba72cd2454c881026524a43958, type: 2}
+      propertyPath: m_LocalPosition.y
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4983732256713022, guid: 738bb4ba72cd2454c881026524a43958, type: 2}
+      propertyPath: m_LocalPosition.z
+      value: -3.31
+      objectReference: {fileID: 0}
+    - target: {fileID: 4983732256713022, guid: 738bb4ba72cd2454c881026524a43958, type: 2}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4983732256713022, guid: 738bb4ba72cd2454c881026524a43958, type: 2}
+      propertyPath: m_LocalRotation.y
+      value: -0.7071068
+      objectReference: {fileID: 0}
+    - target: {fileID: 4983732256713022, guid: 738bb4ba72cd2454c881026524a43958, type: 2}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4983732256713022, guid: 738bb4ba72cd2454c881026524a43958, type: 2}
+      propertyPath: m_LocalRotation.w
+      value: 0.7071068
+      objectReference: {fileID: 0}
+    - target: {fileID: 4983732256713022, guid: 738bb4ba72cd2454c881026524a43958, type: 2}
+      propertyPath: m_RootOrder
+      value: 1
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+  m_ParentPrefab: {fileID: 100100000, guid: 738bb4ba72cd2454c881026524a43958, type: 2}
+  m_IsPrefabParent: 0
 --- !u!1001 &882700007
 Prefab:
   m_ObjectHideFlags: 0
@@ -6909,7 +6951,7 @@ GameObject:
   - component: {fileID: 905825319}
   - component: {fileID: 905825318}
   - component: {fileID: 905825317}
-  m_Layer: 8
+  m_Layer: 0
   m_Name: 2DCameraSphere
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -7279,7 +7321,7 @@ GameObject:
   m_Component:
   - component: {fileID: 944667651}
   - component: {fileID: 944667652}
-  m_Layer: 8
+  m_Layer: 0
   m_Name: ScreenLight
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -7517,7 +7559,7 @@ GameObject:
   - component: {fileID: 983827217}
   - component: {fileID: 983827216}
   - component: {fileID: 983827215}
-  m_Layer: 8
+  m_Layer: 0
   m_Name: PathCameraScreen
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -7767,18 +7809,6 @@ Prefab:
       propertyPath: m_Name
       value: puu_1 (5)
       objectReference: {fileID: 0}
-    - target: {fileID: 4834804421308544, guid: 615f55cdb1f423f438be756fcf3e4a84, type: 2}
-      propertyPath: m_LocalEulerAnglesHint.y
-      value: -10
-      objectReference: {fileID: 0}
-    - target: {fileID: 4834804421308544, guid: 615f55cdb1f423f438be756fcf3e4a84, type: 2}
-      propertyPath: m_LocalScale.x
-      value: 1.2999997
-      objectReference: {fileID: 0}
-    - target: {fileID: 4834804421308544, guid: 615f55cdb1f423f438be756fcf3e4a84, type: 2}
-      propertyPath: m_LocalScale.z
-      value: 1.2999997
-      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 615f55cdb1f423f438be756fcf3e4a84, type: 2}
   m_IsPrefabParent: 0
@@ -7869,7 +7899,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &1064239599
 Transform:
   m_ObjectHideFlags: 0
@@ -8049,7 +8079,7 @@ GameObject:
   - component: {fileID: 1072689090}
   - component: {fileID: 1072689092}
   - component: {fileID: 1072689091}
-  m_Layer: 8
+  m_Layer: 0
   m_Name: ScreenCanvas
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -9703,7 +9733,7 @@ GameObject:
   - component: {fileID: 1453208329}
   - component: {fileID: 1453208328}
   - component: {fileID: 1453208327}
-  m_Layer: 8
+  m_Layer: 0
   m_Name: VideoCameraScreen
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -10079,7 +10109,7 @@ GameObject:
   - component: {fileID: 1516600419}
   - component: {fileID: 1516600418}
   - component: {fileID: 1516600417}
-  m_Layer: 8
+  m_Layer: 0
   m_Name: CaptureCamera
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -10280,7 +10310,7 @@ Transform:
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 1516600416}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0.002, z: 0}
+  m_LocalPosition: {x: 0, y: 2.207, z: 0}
   m_LocalScale: {x: 0.2, y: 0.2, z: 0.46}
   m_Children:
   - {fileID: 905825319}
@@ -10702,7 +10732,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1559433703}
   - component: {fileID: 1559433704}
-  m_Layer: 8
+  m_Layer: 0
   m_Name: ScreenLight
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -11226,48 +11256,6 @@ MonoBehaviour:
   normalCamera: {fileID: 197222573}
   videoCameraObject: {fileID: 1516600416}
   pathCameraPoint: {fileID: 672437993}
---- !u!1001 &1616070552
-Prefab:
-  m_ObjectHideFlags: 0
-  serializedVersion: 2
-  m_Modification:
-    m_TransformParent: {fileID: 0}
-    m_Modifications:
-    - target: {fileID: 4983732256713022, guid: 738bb4ba72cd2454c881026524a43958, type: 2}
-      propertyPath: m_LocalPosition.x
-      value: 3.23
-      objectReference: {fileID: 0}
-    - target: {fileID: 4983732256713022, guid: 738bb4ba72cd2454c881026524a43958, type: 2}
-      propertyPath: m_LocalPosition.y
-      value: -0
-      objectReference: {fileID: 0}
-    - target: {fileID: 4983732256713022, guid: 738bb4ba72cd2454c881026524a43958, type: 2}
-      propertyPath: m_LocalPosition.z
-      value: -3.31
-      objectReference: {fileID: 0}
-    - target: {fileID: 4983732256713022, guid: 738bb4ba72cd2454c881026524a43958, type: 2}
-      propertyPath: m_LocalRotation.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 4983732256713022, guid: 738bb4ba72cd2454c881026524a43958, type: 2}
-      propertyPath: m_LocalRotation.y
-      value: -0.7071068
-      objectReference: {fileID: 0}
-    - target: {fileID: 4983732256713022, guid: 738bb4ba72cd2454c881026524a43958, type: 2}
-      propertyPath: m_LocalRotation.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 4983732256713022, guid: 738bb4ba72cd2454c881026524a43958, type: 2}
-      propertyPath: m_LocalRotation.w
-      value: 0.7071068
-      objectReference: {fileID: 0}
-    - target: {fileID: 4983732256713022, guid: 738bb4ba72cd2454c881026524a43958, type: 2}
-      propertyPath: m_RootOrder
-      value: 1
-      objectReference: {fileID: 0}
-    m_RemovedComponents: []
-  m_ParentPrefab: {fileID: 100100000, guid: 738bb4ba72cd2454c881026524a43958, type: 2}
-  m_IsPrefabParent: 0
 --- !u!1 &1627133686
 GameObject:
   m_ObjectHideFlags: 0
@@ -11412,7 +11400,7 @@ GameObject:
   - component: {fileID: 1690215579}
   - component: {fileID: 1690215578}
   - component: {fileID: 1690215577}
-  m_Layer: 8
+  m_Layer: 0
   m_Name: RecordingText
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -11993,7 +11981,7 @@ GameObject:
   - component: {fileID: 1770271327}
   - component: {fileID: 1770271326}
   - component: {fileID: 1770271325}
-  m_Layer: 8
+  m_Layer: 0
   m_Name: Len
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -12387,7 +12375,7 @@ GameObject:
   - component: {fileID: 1786767145}
   - component: {fileID: 1786767144}
   - component: {fileID: 1786767143}
-  m_Layer: 8
+  m_Layer: 0
   m_Name: Len
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -12892,7 +12880,7 @@ GameObject:
   - component: {fileID: 1855374561}
   - component: {fileID: 1855374560}
   - component: {fileID: 1855374568}
-  m_Layer: 8
+  m_Layer: 0
   m_Name: PathCamera
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -13861,7 +13849,7 @@ GameObject:
   - component: {fileID: 2034811398}
   - component: {fileID: 2034811400}
   - component: {fileID: 2034811399}
-  m_Layer: 8
+  m_Layer: 0
   m_Name: ScreenCanvas
   m_TagString: Untagged
   m_Icon: {fileID: 0}

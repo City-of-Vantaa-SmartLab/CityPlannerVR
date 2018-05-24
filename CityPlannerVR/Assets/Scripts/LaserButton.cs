@@ -31,7 +31,11 @@ public class LaserButton : MonoBehaviour {
     //ButtonBackground
     public void PlayCommentStart()
     {
-        if(commentName == null)
+        if (playComment == null)
+        {
+            playComment = GameObject.Find("CommentList").GetComponent<PlayComment>();
+        }
+        if (commentName == null)
         {
             commentName = GetComponentInChildren<UnityEngine.UI.Text>().text;
         }

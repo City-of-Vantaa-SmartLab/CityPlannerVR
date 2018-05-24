@@ -37,7 +37,7 @@ public class LaserPointer : PunBehaviour
 
     //For the whispering to work, we give this laser to photonAvatar (set in photonPlayerAvatar)
     [HideInInspector]
-    public VoiceController voiceController;
+    VoiceController voiceController;
 
     GameObject commentTool;
     GameObject commentOutput;
@@ -280,8 +280,7 @@ public class LaserPointer : PunBehaviour
 
     void ActivateCommentTool(object sender, LaserEventArgs e)
     {
-        Debug.Log("LaserPointer hit " + e.target.name + " with a tag " + e.target.tag);
-        if(e.target.tag == commentObjectTag)
+        if (e.target.tag == commentObjectTag)
         {
             playComment.pointedTarget = e.target.gameObject;
             recordComment.target = e.target.gameObject;
