@@ -105,10 +105,11 @@ public class LaserPointer : PunBehaviour
         }
 
         recordComment = commentTool.GetComponentInChildren<RecordComment>();
+        Debug.Log("RecordComment = " + recordComment);
 
         //So the RecordPlayers Start can happen before it is disabled
         Invoke("DisableCommentTool", 0);
-
+        
         PointerIn += OnHoverButtonEnter;
         PointerIn += OpenCommentOutputPanel;
         PointerIn += ActivateCommentTool;
@@ -279,6 +280,7 @@ public class LaserPointer : PunBehaviour
 
     void ActivateCommentTool(object sender, LaserEventArgs e)
     {
+        Debug.Log("LaserPointer hit " + e.target.name + " with a tag " + e.target.tag);
         if(e.target.tag == commentObjectTag)
         {
             playComment.pointedTarget = e.target.gameObject;
