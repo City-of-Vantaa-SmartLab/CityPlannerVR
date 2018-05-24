@@ -48,24 +48,24 @@ public class Comment : MonoBehaviour {
 
 
     //default constructor
-    public Comment()
-    {
-        _submittedTime = System.DateTime.Now;
-    }
+    //public Comment()
+    //{
+    //    _submittedTime = System.DateTime.Now;
+    //}
 
-    //constructor
-    public Comment(GameObject user, GameObject target, string screenshotPath, CommentType type, string dataString, DateTime submittedTime)
-    {
-        _dataString = dataString;
-        CommentT = type;
+    ////constructor
+    //public Comment(GameObject user, GameObject target, string screenshotPath, CommentType type, string dataString, DateTime submittedTime)
+    //{
+    //    _dataString = dataString;
+    //    CommentT = type;
 
-        _SHPath = screenshotPath;
-        _userName = user.name;
-        _commentedObjectName = target.name;
-        _submittedTime = submittedTime;
-        _pos = user.transform.position;
-        _quickCheck = ConvertToQuickCheck(2);
-    }
+    //    _SHPath = screenshotPath;
+    //    _userName = user.name;
+    //    _commentedObjectName = target.name;
+    //    _submittedTime = submittedTime;
+    //    _pos = user.transform.position;
+    //    _quickCheck = ConvertToQuickCheck(2);
+    //}
 
 
     private void OnEnable()
@@ -116,7 +116,7 @@ public class Comment : MonoBehaviour {
         SaveData.AddCommentData(_data);
     }
 
-    public void SortAndAddToList()
+    public void SortAndAddToLocalList()
     {
         switch (_data.type)
         {
@@ -177,7 +177,7 @@ public class Comment : MonoBehaviour {
         return magic;
     }
 
-    private int ConvertToQuickCheck(int maxLength)
+    public int ConvertToQuickCheck(int maxLength)
     {
         string userName = TruncateString(_userName, maxLength);
         string objectName = TruncateString(_commentedObjectName, maxLength);
@@ -187,6 +187,18 @@ public class Comment : MonoBehaviour {
         int magic = ConvertFirstCharsToInt(uberString, maxLength * 4);
         Debug.Log("QuickCheck: " + magic);
         return magic;
+    }
+
+    public void ConvertToQuickCheck(int maxLength, CommentData data)
+    {
+        string userName = TruncateString(data.userName, maxLength);
+        string objectName = TruncateString(data.commentedObjectName, maxLength);
+        string date = TruncateString(data.submittedTime.ToShortDateString(), maxLength);
+        string uberString = userName + objectName + date;
+        Debug.Log("Joining strings: " + userName + " " + objectName + " " + date);
+        int magic = ConvertFirstCharsToInt(uberString, maxLength * 4);
+        Debug.Log("Adding QuickCheck to data: " + magic);
+        data.quickCheck = magic;
     }
 
     private string TruncateString(string str, int maxLength)

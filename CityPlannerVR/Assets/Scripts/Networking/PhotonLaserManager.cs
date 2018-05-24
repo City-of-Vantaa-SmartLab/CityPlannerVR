@@ -156,11 +156,17 @@ public class PhotonLaserManager : PunBehaviour {
                     highlightScript.ToggleHighlight(sender, false);
             }
 
-            var button = e.target.GetComponent<Button>();
-            if (button != null)
+            //var button = e.target.GetComponent<Button>();
+            //if (button != null)
+            //{
+            //    EventSystem.current.SetSelectedGameObject(null);
+            //    Debug.Log("HandlePointerOut: ", e.target.gameObject);
+            //}
+
+            var laserButton = e.target.GetComponent<LaserButton>();
+            if (laserButton != null)
             {
-                EventSystem.current.SetSelectedGameObject(null);
-                Debug.Log("HandlePointerOut: ", e.target.gameObject);
+                laserButton.OnHoverOut();
             }
         }
 
@@ -178,11 +184,17 @@ public class PhotonLaserManager : PunBehaviour {
                 highlightScript.ToggleHighlight(sender, true);
             }
 
-            var button = e.target.GetComponent<Button>();
-            if (button != null)
+            //var button = e.target.GetComponent<Button>();
+            //if (button != null)
+            //{
+            //    button.Select();
+            //    Debug.Log("HandlePointerIn", e.target.gameObject);
+            //}
+
+            var laserButton = e.target.GetComponent<LaserButton>();
+            if (laserButton != null)
             {
-                button.Select();
-                Debug.Log("HandlePointerIn", e.target.gameObject);
+                laserButton.OnHoverIn();
             }
         }
     }
