@@ -28,29 +28,34 @@ public class LaserButton : MonoBehaviour {
         //Debug.Log("Testing event!");
     }
 
+    //ButtonBackground
     public void PlayCommentStart()
     {
+        if(commentName == null)
+        {
+            commentName = GetComponentInChildren<UnityEngine.UI.Text>().text;
+        }
+
         playComment.PlayCommentInPosition(commentName);
     }
 
+    //ForwardButton
     public void GoForward()
     {
         if (playComment == null)
         {
             playComment = GameObject.Find("CommentList").GetComponent<PlayComment>();
-            commentName = GetComponentInChildren<UnityEngine.UI.Text>().text;
         }
 
         playComment.GoForward();
     }
 
+    //BackwardButton
     public void GoBackward()
     {
         if (playComment == null)
         {
-            playComment = GameObject.Find("CommentList").GetComponent<PlayComment>();
-            commentName = GetComponentInChildren<UnityEngine.UI.Text>().text;
-            Debug.Log("CommentName = " + commentName);
+            playComment = GameObject.Find("CommentList").GetComponent<PlayComment>();   
         }
 
         playComment.GoBackward();

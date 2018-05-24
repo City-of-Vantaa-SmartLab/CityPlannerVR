@@ -1374,6 +1374,11 @@ Prefab:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 114027810988022024, guid: 55f4cd4569c5ad6489212d38cb2fc262,
+        type: 2}
+      propertyPath: triggeredEvents.m_PersistentCalls.m_Calls.Array.size
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 4183763600496060, guid: 55f4cd4569c5ad6489212d38cb2fc262, type: 2}
       propertyPath: m_LocalPosition.x
       value: -5.4471383
@@ -1406,29 +1411,65 @@ Prefab:
       propertyPath: m_RootOrder
       value: 19
       objectReference: {fileID: 0}
-    - target: {fileID: 224011357600561418, guid: 55f4cd4569c5ad6489212d38cb2fc262,
+    - target: {fileID: 114027810988022024, guid: 55f4cd4569c5ad6489212d38cb2fc262,
         type: 2}
-      propertyPath: m_AnchorMax.x
-      value: 0.99999994
-      objectReference: {fileID: 0}
-    - target: {fileID: 224011357600561418, guid: 55f4cd4569c5ad6489212d38cb2fc262,
-        type: 2}
-      propertyPath: m_AnchorMax.y
+      propertyPath: triggeredEvents.m_PersistentCalls.m_Calls.Array.data[0].m_Mode
       value: 1
       objectReference: {fileID: 0}
-    - target: {fileID: 224438418385971786, guid: 55f4cd4569c5ad6489212d38cb2fc262,
+    - target: {fileID: 114027810988022024, guid: 55f4cd4569c5ad6489212d38cb2fc262,
         type: 2}
-      propertyPath: m_SizeDelta.x
-      value: 0
+      propertyPath: triggeredEvents.m_PersistentCalls.m_Calls.Array.data[0].m_CallState
+      value: 2
       objectReference: {fileID: 0}
-    - target: {fileID: 224011357600561418, guid: 55f4cd4569c5ad6489212d38cb2fc262,
+    - target: {fileID: 114027810988022024, guid: 55f4cd4569c5ad6489212d38cb2fc262,
         type: 2}
-      propertyPath: m_AnchorMin.x
-      value: 0
+      propertyPath: triggeredEvents.m_PersistentCalls.m_Calls.Array.data[0].m_Target
+      value: 
+      objectReference: {fileID: 356658364}
+    - target: {fileID: 114027810988022024, guid: 55f4cd4569c5ad6489212d38cb2fc262,
+        type: 2}
+      propertyPath: triggeredEvents.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
+      value: StartRecord
+      objectReference: {fileID: 0}
+    - target: {fileID: 114027810988022024, guid: 55f4cd4569c5ad6489212d38cb2fc262,
+        type: 2}
+      propertyPath: triggeredEvents.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_ObjectArgumentAssemblyTypeName
+      value: UnityEngine.Object, UnityEngine
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 55f4cd4569c5ad6489212d38cb2fc262, type: 2}
   m_IsPrefabParent: 0
+--- !u!1 &356658363 stripped
+GameObject:
+  m_PrefabParentObject: {fileID: 1850352533580352, guid: 55f4cd4569c5ad6489212d38cb2fc262,
+    type: 2}
+  m_PrefabInternal: {fileID: 356658362}
+--- !u!114 &356658364
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 356658363}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 905dd8842dd65824bb9b613f38f39776, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  tempAudioClip: {fileID: 0}
+  target: {fileID: 0}
+  commenter: 
+  slash: 92
+  positionFileName: positions.txt
+  position:
+    commenterName: 
+    recordName: 
+    targetName: 
+    position:
+    - 0
+    - 0
+    - 0
+  positionDB:
+    list: []
 --- !u!1 &381157691
 GameObject:
   m_ObjectHideFlags: 0
@@ -2604,7 +2645,7 @@ Prefab:
   m_IsPrefabParent: 0
 --- !u!4 &559487520 stripped
 Transform:
-  m_PrefabParentObject: {fileID: 4868487691801578, guid: 246f502b3d26f7e41acdbfb8740d67b3,
+  m_PrefabParentObject: {fileID: 4691944501800582, guid: 246f502b3d26f7e41acdbfb8740d67b3,
     type: 2}
   m_PrefabInternal: {fileID: 559487519}
 --- !u!1001 &589368140
@@ -14133,7 +14174,7 @@ Prefab:
   m_IsPrefabParent: 0
 --- !u!4 &1803112528 stripped
 Transform:
-  m_PrefabParentObject: {fileID: 4868487691801578, guid: 246f502b3d26f7e41acdbfb8740d67b3,
+  m_PrefabParentObject: {fileID: 4691944501800582, guid: 246f502b3d26f7e41acdbfb8740d67b3,
     type: 2}
   m_PrefabInternal: {fileID: 1803112527}
 --- !u!1 &1813588004

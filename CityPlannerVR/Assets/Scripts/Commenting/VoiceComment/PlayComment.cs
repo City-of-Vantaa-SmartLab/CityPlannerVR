@@ -64,15 +64,12 @@ public class PlayComment : MonoBehaviour {
         commentDictionary = new Dictionary<string, VoiceComment>();
 
         panel = GameObject.Find("CommentTool/CommentList/Canvas/Panel/ScrollableList");
-        
+
+        record = gameObject.transform.parent.GetComponentInChildren<RecordComment>();
+
     }
 
     public void LoadComments(){
-
-        if(record == null)
-        {
-            record = GameObject.Find("PhotonAvatar(Clone)").GetComponent<RecordComment>();
-        }
 
         InitializeCollections();
         //Debug.Log(record.SavePath + record.AudioExt);

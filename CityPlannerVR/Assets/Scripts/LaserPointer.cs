@@ -42,7 +42,6 @@ public class LaserPointer : PunBehaviour
     GameObject commentTool;
     GameObject commentOutput;
     PlayComment playComment;
-
     RecordComment recordComment;
 
     string commentToolTag = "CommentToolTag";
@@ -105,8 +104,10 @@ public class LaserPointer : PunBehaviour
             photonView.RPC("ActivateFakeLaser", PhotonTargets.AllBuffered, status);
         }
 
-        commentOutput.SetActive(false);
-        commentTool.SetActive(false);
+        recordComment = commentTool.GetComponentInChildren<RecordComment>();
+
+        //So the RecordPlayers Start can happen before it is disabled
+        Invoke("DisableCommentTool", 0);
 
         PointerIn += OnHoverButtonEnter;
         PointerIn += OpenCommentOutputPanel;
@@ -115,6 +116,12 @@ public class LaserPointer : PunBehaviour
 
         PointerOut += OnHoverButtonExit;
         PointerOut += CheckIfHiding;
+    }
+
+    private void DisableCommentTool()
+    {
+        commentOutput.SetActive(false);
+        commentTool.SetActive(false);
     }
 
     public void InitPointer(Transform targetTransform)
@@ -274,11 +281,6 @@ public class LaserPointer : PunBehaviour
     {
         if(e.target.tag == commentObjectTag)
         {
-            if (recordComment == null)
-            {
-                recordComment = GameObject.Find("PhotonAvatar(Clone)").GetComponent<RecordComment>();
-            }
-
             recordComment.target = e.target.gameObject;
             commentTool.SetActive(true);
             commentTool.transform.position = e.hitPoint - raycast.direction;
