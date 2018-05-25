@@ -60,6 +60,8 @@ public class PlayComment : MonoBehaviour {
 
     int index;
 
+    GameObject commentButton;
+
     //Is set in laserPointer script
     public GameObject pointedTarget;
 
@@ -74,6 +76,8 @@ public class PlayComment : MonoBehaviour {
         record = gameObject.transform.parent.GetComponentInChildren<RecordComment>();
 
         commentNumber = GetComponentInChildren<Text>();
+
+        commentButton = (GameObject)Resources.Load("ButtonBackgroundImage");
     }
 
     public void LoadComments(){
@@ -105,7 +109,7 @@ public class PlayComment : MonoBehaviour {
                 }
 
                 //GetAllCommentForObjects();
-                CreateButton(commentIndex);
+                //CreateButton(commentIndex);
 
                 UpdateCommentNumber();
             }
@@ -135,14 +139,18 @@ public class PlayComment : MonoBehaviour {
 
     void CreateButton(int index)
     {
-        buttonImage = (GameObject)Instantiate(Resources.Load("ButtonBackgroundImage"));
+        if (displayedButton != null)
+        {
+            Destroy(displayedButton.gameObject);
+            displayedButton = null;
+        }
+
+        buttonImage = Instantiate(commentButton);
         buttonImage.transform.SetParent(panel.transform);
         buttonImage.transform.localPosition = Vector3.zero;
         buttonImage.transform.localRotation = Quaternion.identity;
         buttonImage.transform.localScale = Vector3.one;
         buttonText = buttonImage.GetComponentInChildren<Text>();
-
-        Debug.Log("positionDB.list pituus on " + positionDB.list.Count);
         buttonText.text = positionDB.list[index].recordName;
 
         displayedButton = buttonImage;
@@ -165,7 +173,7 @@ public class PlayComment : MonoBehaviour {
             displayedButton = null;
         }
 
-        if(commentIndex == comments.Length)
+        if(commentIndex == comments.Length - 1)
         {
             commentIndex = 0;
         }
@@ -188,7 +196,7 @@ public class PlayComment : MonoBehaviour {
 
         if (commentIndex == 0)
         {
-            commentIndex = comments.Length;
+            commentIndex = comments.Length - 1;
         }
         else
         {
