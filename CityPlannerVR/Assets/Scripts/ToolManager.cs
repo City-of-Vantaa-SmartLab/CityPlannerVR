@@ -82,7 +82,7 @@ public class ToolManager : MonoBehaviour {
 
     private void SubscriptionOn()
     {
-        inputMaster.MenuButtonClicked += HandleMenuClicked;
+        //inputMaster.MenuButtonClicked += HandleMenuClicked;
         inputMaster.TriggerClicked += HandleTriggerClicked;
         inputMaster.RoleChanged += HandleNewRole;
     }
@@ -91,7 +91,7 @@ public class ToolManager : MonoBehaviour {
 
     private void SubscriptionOff()
     {
-        inputMaster.MenuButtonClicked -= HandleMenuClicked;
+        //inputMaster.MenuButtonClicked -= HandleMenuClicked;
         inputMaster.TriggerClicked -= HandleTriggerClicked;
         inputMaster.RoleChanged -= HandleNewRole;
     }
