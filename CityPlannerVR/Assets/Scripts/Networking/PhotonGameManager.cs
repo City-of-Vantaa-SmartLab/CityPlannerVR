@@ -40,7 +40,9 @@ public class PhotonGameManager : MonoBehaviour {
 	public static PhotonGameManager Instance { get; private set; }
 
 	//Prefab for the player avatar and related functionalities
-	public GameObject playerPrefab;
+	public GameObject playerPrefabMale;
+	public GameObject playerPrefabFemale;
+	private bool isMale = true;
 	public Vector3 playerSpawnPoint;
 
 	#endregion
@@ -107,8 +109,9 @@ public class PhotonGameManager : MonoBehaviour {
 
 	#region Public Methods
 
-	public void Connect()
+	public void Connect(bool isMaleClicked)
 	{
+		isMale = isMaleClicked;	
 		ChangeState (NetworkState.CONNECTING_TO_SERVER);
 		Debug.Log ("PhotonNetwork: Connecting to server");
 		connection.ConnectToPhoton (gameVersion);
@@ -172,7 +175,7 @@ public class PhotonGameManager : MonoBehaviour {
 
 	private void InstantiatePlayer()
 	{
-		if (playerPrefab == null) 
+		if (playerPrefabMale == null || playerPrefabFemale == null) 
 		{
 			Debug.LogError("Missing playerPrefab Reference. Please set it up in GameObject 'Game Manager'");
 		} 
@@ -181,7 +184,12 @@ public class PhotonGameManager : MonoBehaviour {
 			Debug.Log("We are Instantiating LocalPlayer from "+Application.loadedLevelName);
 			// Player is in a room. Spawn a character for the local player. 
 			// It gets synced by using PhotonNetwork.Instantiate
-			GameObject player = PhotonNetwork.Instantiate(this.playerPrefab.name, playerSpawnPoint, Quaternion.identity, 0);
+			GameObject player;
+			if (isMale) {
+				player = PhotonNetwork.Instantiate (this.playerPrefabMale.name, playerSpawnPoint, Quaternion.identity, 0);
+			} else {
+				player = PhotonNetwork.Instantiate (this.playerPrefabFemale.name, playerSpawnPoint, Quaternion.identity, 0);
+			}
 			Debug.Log ("Player instantiated at: " + playerSpawnPoint.x.ToString () + "," + playerSpawnPoint.y.ToString () + "," + playerSpawnPoint.z.ToString ());
 			Debug.Log ("Actual location: " + player.transform.position.x.ToString () + "," + player.transform.position.y.ToString () + "," + player.transform.position.z.ToString ());
 		}
