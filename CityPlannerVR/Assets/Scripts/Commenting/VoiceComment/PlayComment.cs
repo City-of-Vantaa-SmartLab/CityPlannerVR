@@ -37,7 +37,7 @@ public class PlayComment : MonoBehaviour {
     List<string> commentsToPlayHere;
 	AudioSource audioSource;
     //The name of the comment and a struct that contains the name of the commenter and the position of the comment
-    Dictionary<string, VoiceComment> commentDictionary;
+    public Dictionary<string, VoiceComment> commentDictionary;
 
     RecordComment record;
 
@@ -56,6 +56,10 @@ public class PlayComment : MonoBehaviour {
     DirectoryInfo info;
     FileInfo[] fileInfo;
 
+    Text commentNumber;
+
+    int index;
+
     //Is set in laserPointer script
     public GameObject pointedTarget;
 
@@ -69,6 +73,7 @@ public class PlayComment : MonoBehaviour {
 
         record = gameObject.transform.parent.GetComponentInChildren<RecordComment>();
 
+        commentNumber = GetComponentInChildren<Text>();
     }
 
     public void LoadComments(){
@@ -99,7 +104,10 @@ public class PlayComment : MonoBehaviour {
                     commentDictionary.Add(positionDB.list[i].recordName, new VoiceComment(positionDB.list[i].commenterName, positionDB.list[i].targetName , new Vector3(positionDB.list[i].position[0], positionDB.list[i].position[1], positionDB.list[i].position[2]), i));
                 }
 
+                //GetAllCommentForObjects();
                 CreateButton(commentIndex);
+
+                UpdateCommentNumber();
             }
         }
     }
@@ -133,6 +141,8 @@ public class PlayComment : MonoBehaviour {
         buttonImage.transform.localRotation = Quaternion.identity;
         buttonImage.transform.localScale = Vector3.one;
         buttonText = buttonImage.GetComponentInChildren<Text>();
+
+        Debug.Log("positionDB.list pituus on " + positionDB.list.Count);
         buttonText.text = positionDB.list[index].recordName;
 
         displayedButton = buttonImage;
@@ -140,7 +150,8 @@ public class PlayComment : MonoBehaviour {
 
     public void PlayCommentInPosition(string commentName)
     {
-        int index = commentsToPlayHere.IndexOf(commentName);
+        //int index = commentsToPlayHere.IndexOf(commentName);
+        int index = commentDictionary[commentName].commentIndex;
         audioSource.clip = comments[index];
 
         audioSource.Play();
@@ -151,6 +162,7 @@ public class PlayComment : MonoBehaviour {
         if(displayedButton != null)
         {
             Destroy(displayedButton);
+            displayedButton = null;
         }
 
         if(commentIndex == comments.Length)
@@ -160,8 +172,10 @@ public class PlayComment : MonoBehaviour {
         else
         {
             ++commentIndex;
-            CreateButton(commentIndex);
         }
+
+        CreateButton(commentIndex);
+        UpdateCommentNumber();
     }
 
     public void GoBackward()
@@ -169,6 +183,7 @@ public class PlayComment : MonoBehaviour {
         if (displayedButton != null)
         {
             Destroy(displayedButton);
+            displayedButton = null;
         }
 
         if (commentIndex == 0)
@@ -178,7 +193,22 @@ public class PlayComment : MonoBehaviour {
         else
         {
             --commentIndex;
-            CreateButton(commentIndex);
         }
+        CreateButton(commentIndex);
+        UpdateCommentNumber();
+    }
+
+    void UpdateCommentNumber()
+    {
+        if (commentDictionary.Count > 0)
+        {
+            index = commentIndex + 1;
+        }
+        else
+        {
+            index = 0;
+        }
+
+        commentNumber.text = index + "/" + commentDictionary.Count;
     }
 }
