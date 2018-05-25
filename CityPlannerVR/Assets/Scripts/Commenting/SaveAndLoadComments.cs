@@ -9,6 +9,7 @@ using System.IO;
 
 public class SaveAndLoadComments : MonoBehaviour {
 
+    public string localPlayerName;
     private string folderPathName;
     private string folder;
     private string fileName;
@@ -25,6 +26,8 @@ public class SaveAndLoadComments : MonoBehaviour {
         fileExtender = ".dat";
         folderPathName = Application.persistentDataPath + slash + folder;
         pathName = folderPathName + slash + fileName + fileExtender;
+
+        Load();
     }
 
     public static Comment CreateComment()
@@ -46,10 +49,11 @@ public class SaveAndLoadComments : MonoBehaviour {
     public Comment CreateNewComment(CommentData data)
     {
         Comment comment = CreateComment();
+        data.submittedShortTime = System.DateTime.Now.ToShortDateString();
         comment._data = data;
         comment.LoadData();
         comment.SortAndAddToLocalList();
-        comment.ApplyDataToContainer();  //this will add the comment to savedata's commentcontainer
+        //comment.ApplyDataToContainer();  //this will add the comment to savedata's commentcontainer  //should be done via sub in Comment script to savedata
         return comment;
     }
 

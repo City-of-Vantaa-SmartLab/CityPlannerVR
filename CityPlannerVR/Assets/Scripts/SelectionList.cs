@@ -232,7 +232,7 @@ public class SelectionList : PunBehaviour
     void Start()
     {
         selectedList = new List<GameObject>();
-        gridParent = GameObject.FindGameObjectWithTag("GridParent").GetComponent<CreateGrid>();
+        //gridParent = GameObject.FindGameObjectWithTag("GridParent").GetComponent<CreateGrid>();  //uncomment when grid is added back
         onlyGrid = false;
     }
 
