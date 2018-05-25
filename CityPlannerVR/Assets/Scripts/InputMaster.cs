@@ -326,7 +326,7 @@ public class InputMaster : PunBehaviour {
             var laserButton = targetedObject.GetComponent<LaserButton>();
             if (highlightScript != null)
             {
-                highlightScript.ToggleSelection(this.gameObject);
+                //highlightScript.ToggleSelection(this.gameObject);
             }
             if (laserButton != null)
             {

@@ -236,7 +236,7 @@ public class LaserPointer : PunBehaviour
     [PunRPC]
     private void ActivateFakeLaser(bool status, PhotonMessageInfo info)
     {
-        Debug.Log("info sender and photonview owner: " + info.sender + " " + photonView.owner);
+        //Debug.Log("info sender and photonview owner: " + info.sender + " " + photonView.owner);
         if (info.sender == photonView.owner)
         {
             if (status == true && !photonView.isMine)
