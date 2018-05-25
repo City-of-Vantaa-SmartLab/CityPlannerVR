@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
 using Valve.VR.InteractionSystem;
-using UnityEditor;
 
 /// <summary>
 /// The method OnClicked is called by Inputmaster in the method SelectByLaser, hover methods are called by PhotonLaserManager.
@@ -122,8 +121,10 @@ public class LaserButton : MonoBehaviour {
     }
 
 #if UNITY_EDITOR
-    [CustomEditor(typeof(LaserButton))]
-    public class LaserButtonEditor : Editor
+    //using UnityEditor;
+
+    [UnityEditor.CustomEditor(typeof(LaserButton))]
+    public class LaserButtonEditor : UnityEditor.Editor
     {
         public override void OnInspectorGUI()
         {
