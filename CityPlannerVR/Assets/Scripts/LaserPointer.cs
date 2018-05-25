@@ -110,12 +110,12 @@ public class LaserPointer : PunBehaviour
         //So the RecordPlayers Start can happen before it is disabled
         Invoke("DisableCommentTool", 0);
         
-        PointerIn += OnHoverButtonEnter;
+        //PointerIn += OnHoverButtonEnter;
         PointerIn += OpenCommentOutputPanel;
         PointerIn += ActivateCommentTool;
         PointerIn += HideCommentTool;
 
-        PointerOut += OnHoverButtonExit;
+        //PointerOut += OnHoverButtonExit;
         PointerOut += CheckIfHiding;
     }
 
@@ -252,22 +252,22 @@ public class LaserPointer : PunBehaviour
     //Comment stuff
     //------------------------------------------------------------------------------------------------------------------------------
 
-    private void OnHoverButtonEnter(object sender, LaserEventArgs e)
-    {
-        if (e.target.tag == buttonTag)
-        {
-            e.target.gameObject.GetComponent<UnityEngine.UI.Image>().color = Color.blue;
+    //private void OnHoverButtonEnter(object sender, LaserEventArgs e)
+    //{
+    //    if (e.target.tag == buttonTag)
+    //    {
+    //        e.target.gameObject.GetComponent<UnityEngine.UI.Image>().color = Color.blue;
             
-        }
-    }
+    //    }
+    //}
 
-    private void OnHoverButtonExit(object sender, LaserEventArgs e)
-    {
-        if (e.target.tag == buttonTag)
-        {
-            e.target.gameObject.GetComponent<UnityEngine.UI.Image>().color = Color.green;
-        }
-    }
+    //private void OnHoverButtonExit(object sender, LaserEventArgs e)
+    //{
+    //    if (e.target.tag == buttonTag)
+    //    {
+    //        e.target.gameObject.GetComponent<UnityEngine.UI.Image>().color = Color.green;
+    //    }
+    //}
 
     private void OpenCommentOutputPanel(object sender, LaserEventArgs e)
     {
