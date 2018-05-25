@@ -22,6 +22,7 @@ public class HighlightSelection : PunBehaviour
     //private Shader diffuse;
     private Renderer rend;
     private XRLineRenderer lineRend;
+    private Material highlightMaterial;
     private Material[] highlightMaterials;
     private Material[] originalMaterials;
 
@@ -48,12 +49,19 @@ public class HighlightSelection : PunBehaviour
         lineRend = this.GetComponent<XRLineRenderer>();
         gazeTracker = GetComponent<SteamVR_GazeTracker>();
 
-        Material tempMaterial = Resources.Load<Material>("Materials/HighlightMaterial");
-        originalMaterials = rend.materials;
-        for (int i = 0; i < rend.materials.Length; i++)
+        highlightMaterial = Resources.Load<Material>("Materials/HighlightMaterial");
+        if (highlightMaterial == null)
+            Debug.LogError("Did not find highlightmaterial!");
+        if (rend)
         {
-            highlightMaterials[i] = tempMaterial;
+            originalMaterials = rend.materials;
+            highlightMaterials = new Material[rend.materials.Length];
+            for (int i = 0; i < rend.materials.Length; i++)
+            {
+                highlightMaterials[i] = highlightMaterial;
+            }
         }
+
 
         SubscriptionOn();
     }
@@ -99,14 +107,14 @@ public class HighlightSelection : PunBehaviour
 
     public void ToggleHighlight(object sender, bool status)
     {
-
+        //Debug.Log("Toggling highlight");
         if (isHighlighted)
         {
             isHighlighted = false;
             //priorize selection shader over highlight 
             if (!isSelected)
                 //ChangeShaderRPC("Standard");
-                ChangeMaterialRPC(originalMaterials);
+                ChangeMateriaHighlightRPC(false);
 
         }
         else
@@ -115,7 +123,7 @@ public class HighlightSelection : PunBehaviour
             if (!isSelected)
             {
                 //ChangeShaderRPC("Valve/VR/Highlight");
-                ChangeMaterialRPC(highlightMaterials);
+                ChangeMateriaHighlightRPC(true);
                                
                 //commentWheel.SetActive(true);
                 
@@ -123,7 +131,7 @@ public class HighlightSelection : PunBehaviour
         }
         isHighlighted = status;
     }
-
+    
 
     public void ToggleSelection(GameObject selectingPlayer)
     {
@@ -215,31 +223,38 @@ public class HighlightSelection : PunBehaviour
         //Debug.Log ("Could not change shader to: " + shaderToBe.name); 
     }
 
-    public void ChangeMaterialRPC(Material[] materialsToBe)
+    public void ChangeMateriaHighlightRPC(bool highlighted)
     {
-        photonView.RPC("ChangeMaterial", PhotonTargets.AllBufferedViaServer, materialsToBe);
+        photonView.RPC("ChangeMaterial", PhotonTargets.AllBufferedViaServer, highlighted);
     }
 
     [PunRPC]
-    public void ChangeMaterial(Material[] materialsToBe)
+    public void ChangeMaterial(bool highlighted)
     {
-
-            if (rend != null)
-            {
-                int length = rend.materials.Length;
-                for (int i = 0; i < length; i++)
-                {
-                    rend.materials[i] = materialsToBe[i];
-                }
-            }
-            else if (lineRend != null)
-            {
-                int length = lineRend.materials.Length;
-                for (int i = 0; i < length; i++)
-                {
-                    lineRend.materials[i] = materialsToBe[i];
-                }
-            }
+        //Debug.Log("Changing material");
+        if (rend != null)
+        {
+            //int length = rend.materials.Length;
+            //Debug.Log("Changing material, list length: " + length);
+            //for (int i = 0; i < length; i++)
+            //{
+            //    Debug.Log("Old Material: " + rend.materials[i].name);
+            //    rend.materials[i] = materialsToBe[i];
+            //    Debug.Log("New Material: " + materialsToBe[i].name);
+            //}
+            if (highlighted)
+                rend.materials = highlightMaterials;
+            else
+                rend.materials = originalMaterials;
+        }
+        else if (lineRend != null)
+        {
+            //int length = lineRend.materials.Length;
+            //for (int i = 0; i < length; i++)
+            //{
+            //    lineRend.materials[i] = materialsToBe[i];
+            //}
+        }
     }
 
 
