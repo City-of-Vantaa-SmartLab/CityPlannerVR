@@ -38,7 +38,7 @@ public class SaveData {
 
         foreach (CommentData data in commentContainer.commentDatas)
         {
-            SaveAndLoadComments.CreateComment(data);
+            SaveAndLoadComments.CreateOldComment(data);
         }
 
         if (OnLoaded != null)
