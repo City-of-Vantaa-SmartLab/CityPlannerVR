@@ -22,7 +22,8 @@ public class HighlightSelection : PunBehaviour
     //private Shader diffuse;
     private Renderer rend;
     private XRLineRenderer lineRend;
-
+    private Material[] highlightMaterials;
+    private Material[] originalMaterials;
 
     public bool isHighlighted;
     public bool isSelected;
@@ -33,7 +34,7 @@ public class HighlightSelection : PunBehaviour
     [SerializeField]
     private SelectionList lista;
     [SerializeField]
-    private SteamVR_GazeTracker gazeTracker;
+    private SteamVR_GazeTracker gazeTracker;  //redundant? Implented somewhere else
 
     void Start()
     {
@@ -46,6 +47,14 @@ public class HighlightSelection : PunBehaviour
         rend = this.GetComponent<MeshRenderer>();
         lineRend = this.GetComponent<XRLineRenderer>();
         gazeTracker = GetComponent<SteamVR_GazeTracker>();
+
+        Material tempMaterial = Resources.Load<Material>("Materials/HighlightMaterial");
+        originalMaterials = rend.materials;
+        for (int i = 0; i < rend.materials.Length; i++)
+        {
+            highlightMaterials[i] = tempMaterial;
+        }
+
         SubscriptionOn();
     }
 
@@ -96,7 +105,8 @@ public class HighlightSelection : PunBehaviour
             isHighlighted = false;
             //priorize selection shader over highlight 
             if (!isSelected)
-                ChangeShaderRPC("Standard");
+                //ChangeShaderRPC("Standard");
+                ChangeMaterialRPC(originalMaterials);
 
         }
         else
@@ -104,8 +114,8 @@ public class HighlightSelection : PunBehaviour
             isHighlighted = true;
             if (!isSelected)
             {
-                ChangeShaderRPC("Valve/VR/Highlight");
-
+                //ChangeShaderRPC("Valve/VR/Highlight");
+                ChangeMaterialRPC(highlightMaterials);
                                
                 //commentWheel.SetActive(true);
                 
@@ -204,5 +214,33 @@ public class HighlightSelection : PunBehaviour
             Debug.Log("Could not find shader: " + shaderToBe);
         //Debug.Log ("Could not change shader to: " + shaderToBe.name); 
     }
+
+    public void ChangeMaterialRPC(Material[] materialsToBe)
+    {
+        photonView.RPC("ChangeMaterial", PhotonTargets.AllBufferedViaServer, materialsToBe);
+    }
+
+    [PunRPC]
+    public void ChangeMaterial(Material[] materialsToBe)
+    {
+
+            if (rend != null)
+            {
+                int length = rend.materials.Length;
+                for (int i = 0; i < length; i++)
+                {
+                    rend.materials[i] = materialsToBe[i];
+                }
+            }
+            else if (lineRend != null)
+            {
+                int length = lineRend.materials.Length;
+                for (int i = 0; i < length; i++)
+                {
+                    lineRend.materials[i] = materialsToBe[i];
+                }
+            }
+    }
+
 
 }
