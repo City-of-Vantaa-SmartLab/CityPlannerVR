@@ -16,6 +16,9 @@ public class PhotonLaserManager : PunBehaviour {
     public LaserPointer myFakeLaser;
     public GameObject myTargetedObject;
 
+    //Tarun purkkaa
+    LaserEventArgs laserEA;
+
     private GameObject myHandGO;
     private InputMaster inputMaster;
     private ToolManager toolManager;
@@ -177,6 +180,9 @@ public class PhotonLaserManager : PunBehaviour {
     {
         if (myPointer.active)
         {
+            //Tarun purkkaa
+            laserEA = e;
+
             myTargetedObject = e.target.gameObject;
             var highlightScript = e.target.GetComponent<HighlightSelection>();
             if (highlightScript != null && !e.target.CompareTag("Grid"))
@@ -225,7 +231,8 @@ public class PhotonLaserManager : PunBehaviour {
     {
         if (e.controllerIndex == myHandNumber && myPointer.active)
         {
-            inputMaster.SelectByLaser(myPointer, myTargetedObject);
+            //inputMaster.SelectByLaser(myPointer, myTargetedObject);
+            myFakeLaser.ActivateCommentTool(myPointer, laserEA);
             myPointer.triggered = true;
         }
 
