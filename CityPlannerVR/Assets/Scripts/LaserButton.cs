@@ -16,6 +16,11 @@ public class LaserButton : MonoBehaviour {
     public UnityEvent hoverInEvents;
     public UnityEvent hoverOutEvents;
 
+    MeshRenderer meshRenderer;
+    Material material;
+    Color materialColor;
+
+    UnityEngine.UI.Image image;
 
     PlayComment playComment;
     string commentName;
@@ -43,7 +48,11 @@ public class LaserButton : MonoBehaviour {
     //ButtonBackground
     public void PlayCommentStart()
     {
-        if(commentName == null)
+        if (playComment == null)
+        {
+            playComment = GameObject.Find("CommentList").GetComponent<PlayComment>();
+        }
+        if (commentName == null)
         {
             commentName = GetComponentInChildren<UnityEngine.UI.Text>().text;
         }
@@ -71,6 +80,45 @@ public class LaserButton : MonoBehaviour {
         }
 
         playComment.GoBackward();
+    }
+
+    public void SetUI()
+    {
+        if(image == null)
+        {
+            image = GetComponent<UnityEngine.UI.Image>();
+            materialColor = image.color;
+        }
+    }
+
+    public void OnHoverUI()
+    {
+        image.color = Color.blue;
+    }
+
+    public void OnStopHoverUI()
+    {
+        image.color = materialColor;
+    }
+
+    public void SetMaterial()
+    {
+        if(meshRenderer == null)
+        {
+            meshRenderer = GetComponent<MeshRenderer>();
+            material = meshRenderer.material;
+            materialColor = material.color;
+        }
+    }
+
+    public void OnHoverButton()
+    {
+        material.color = Color.yellow;
+    }
+
+    public void OnStopHoverButton()
+    {
+        material.color = materialColor;
     }
 
 #if UNITY_EDITOR
