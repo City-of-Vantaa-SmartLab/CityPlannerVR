@@ -108,17 +108,38 @@ public class PlayComment : MonoBehaviour {
                     commentDictionary.Add(positionDB.list[i].recordName, new VoiceComment(positionDB.list[i].commenterName, positionDB.list[i].targetName , new Vector3(positionDB.list[i].position[0], positionDB.list[i].position[1], positionDB.list[i].position[2]), i));
                 }
 
-                //GetAllCommentForObjects();
-                CreateButton(commentIndex);
+                GetAllCommentForObjects();
+                if (commentsToPlayHere.Count > 0)
+                {
+                    CreateButton(commentIndex);
+                    UpdateCommentNumber();
+                }
+                else
+                {
+                    if (displayedButton != null)
+                    {
+                        Destroy(displayedButton.gameObject);
+                        displayedButton = null;
+                    }
 
-                UpdateCommentNumber();
+                    buttonImage = Instantiate(commentButton);
+                    buttonImage.transform.SetParent(panel.transform);
+                    buttonImage.transform.localPosition = Vector3.zero;
+                    buttonImage.transform.localRotation = Quaternion.identity;
+                    buttonImage.transform.localScale = Vector3.one;
+                    buttonText = buttonImage.GetComponentInChildren<Text>();
+                    buttonText.text = "No comments for this object";
+
+                    displayedButton = buttonImage;
+                    commentNumber.text = "0/0";
+                }
             }
         }
     }
 
     void GetAllCommentForObjects()
     {
-        commentsToPlayHere.Clear();
+        //commentsToPlayHere.Clear();
 
         foreach (KeyValuePair<string, VoiceComment> comment in commentDictionary)
         {
@@ -158,8 +179,8 @@ public class PlayComment : MonoBehaviour {
 
     public void PlayCommentInPosition(string commentName)
     {
-        //int index = commentsToPlayHere.IndexOf(commentName);
-        int index = commentDictionary[commentName].commentIndex;
+        int index = commentsToPlayHere.IndexOf(commentName);
+        //int index = commentDictionary[commentName].commentIndex;
         audioSource.clip = comments[index];
 
         audioSource.Play();
@@ -167,43 +188,39 @@ public class PlayComment : MonoBehaviour {
 
     public void GoForward()
     {
-        if(displayedButton != null)
+        if (commentsToPlayHere.Count > 0)
         {
-            Destroy(displayedButton);
-            displayedButton = null;
-        }
+            if (commentIndex == commentsToPlayHere.Count - 1)
+            //if(commentIndex == comments.Length - 1)
+            {
+                commentIndex = 0;
+            }
+            else
+            {
+                ++commentIndex;
+            }
 
-        if(commentIndex == comments.Length - 1)
-        {
-            commentIndex = 0;
+            CreateButton(commentIndex);
+            UpdateCommentNumber();
         }
-        else
-        {
-            ++commentIndex;
-        }
-
-        CreateButton(commentIndex);
-        UpdateCommentNumber();
     }
 
     public void GoBackward()
     {
-        if (displayedButton != null)
+        if (commentsToPlayHere.Count > 0)
         {
-            Destroy(displayedButton);
-            displayedButton = null;
+            if (commentIndex == 0)
+            {
+                commentIndex = commentsToPlayHere.Count - 1;
+                //commentIndex = comments.Length - 1;
+            }
+            else
+            {
+                --commentIndex;
+            }
+            CreateButton(commentIndex);
+            UpdateCommentNumber();
         }
-
-        if (commentIndex == 0)
-        {
-            commentIndex = comments.Length - 1;
-        }
-        else
-        {
-            --commentIndex;
-        }
-        CreateButton(commentIndex);
-        UpdateCommentNumber();
     }
 
     void UpdateCommentNumber()
@@ -217,6 +234,7 @@ public class PlayComment : MonoBehaviour {
             index = 0;
         }
 
-        commentNumber.text = index + "/" + commentDictionary.Count;
+        //commentNumber.text = index + "/" + commentDictionary.Count;
+        commentNumber.text = index + "/" + commentsToPlayHere.Count;
     }
 }
