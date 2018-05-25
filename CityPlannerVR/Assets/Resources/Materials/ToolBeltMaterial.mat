@@ -31,6 +31,10 @@ Material:
         m_Texture: {fileID: 0}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
+    - _Control:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
     - _DetailAlbedoMap:
         m_Texture: {fileID: 0}
         m_Scale: {x: 1, y: 1}
@@ -59,6 +63,10 @@ Material:
         m_Texture: {fileID: 0}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
+    - _GlossMap:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
     - _LeftTex:
         m_Texture: {fileID: 0}
         m_Scale: {x: 1, y: 1}
@@ -79,6 +87,22 @@ Material:
         m_Texture: {fileID: 0}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
+    - _Normal0:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _Normal1:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _Normal2:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _Normal3:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
     - _OcclusionMap:
         m_Texture: {fileID: 0}
         m_Scale: {x: 1, y: 1}
@@ -91,11 +115,35 @@ Material:
         m_Texture: {fileID: 0}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
+    - _ShadowOffset:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
     - _SpecGlossMap:
         m_Texture: {fileID: 0}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _Specular:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _Splat0:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _Splat1:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _Splat2:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _Splat3:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _TranslucencyMap:
         m_Texture: {fileID: 0}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
@@ -117,7 +165,9 @@ Material:
         m_Offset: {x: 0, y: 0}
     m_Floats:
     - PixelSnap: 0
+    - _AO: 2.4
     - _Alpha: 0.73
+    - _BaseLight: 0.35
     - _Bias: 1.87
     - _BlendOp: 0
     - _Brightness: 5.25
@@ -153,18 +203,21 @@ Material:
     - _LineDepthScale: 1
     - _Metallic: 0
     - _Mode: 2
+    - _Occlusion: 7.5
     - _OcclusionStrength: 1
     - _Parallax: 0.02
     - _RimPower: 10
     - _ScanSpeed: 0
     - _ScanTiling: 0.01
     - _SeeThru: 0.25
+    - _ShadowStrength: 1
     - _Shininess: 0.08
     - _SmoothnessTextureChannel: 0
     - _SoftParticlesEnabled: 0
     - _SoftParticlesFarFadeDistance: 1
     - _SoftParticlesNearFadeDistance: 0
     - _SpecularHighlights: 0
+    - _SquashAmount: 1
     - _SrcBlend: 5
     - _Stencil: 0
     - _StencilComp: 8
@@ -172,9 +225,11 @@ Material:
     - _StencilReadMask: 255
     - _StencilWriteMask: 255
     - _TopAlpha: 0.076
+    - _TranslucencyViewDependency: 0.7
     - _UVSec: 0
     - _UseUIAlphaClip: 0
     - _WindQuality: 0
+    - _WireThickness: 100
     - _WorldData: 0
     - _ZWrite: 0
     - _colovalue: 2
@@ -190,8 +245,12 @@ Material:
     - _RendererColor: {r: 1, g: 1, b: 1, a: 1}
     - _RimColor: {r: 1, g: 1, b: 1, a: 1}
     - _SoftParticleFadeParams: {r: 0, g: 0, b: 0, a: 0}
+    - _SpecColor: {r: 0.5, g: 0.5, b: 0.5, a: 1}
     - _Specular: {r: 0, g: 0, b: 0, a: 0}
-    - _TintColor: {r: 0.19852942, g: 0.01605753, b: 0.01605753, a: 1}
+    - _TintColor: {r: 0.4705882, g: 0.42906573, b: 0.42906573, a: 1}
     - _TopColor: {r: 1, g: 0, b: 0, a: 1}
+    - _TranslucencyColor: {r: 0.73, g: 0.85, b: 0.40999997, a: 1}
+    - _TreeInstanceColor: {r: 1, g: 1, b: 1, a: 1}
+    - _TreeInstanceScale: {r: 1, g: 1, b: 1, a: 1}
     - _lineRadius: {r: 1, g: 0, b: 100, a: 1}
     - _lineSettings: {r: 0.813, g: 0.855, b: 0.668, a: 1}
