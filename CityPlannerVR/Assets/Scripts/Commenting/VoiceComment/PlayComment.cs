@@ -109,7 +109,7 @@ public class PlayComment : MonoBehaviour {
                 }
 
                 //GetAllCommentForObjects();
-                //CreateButton(commentIndex);
+                CreateButton(commentIndex);
 
                 UpdateCommentNumber();
             }
