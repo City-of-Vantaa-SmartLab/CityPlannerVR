@@ -113,7 +113,7 @@ public class LaserPointer : PunBehaviour
         
         //PointerIn += OnHoverButtonEnter;
         PointerIn += OpenCommentOutputPanel;
-        PointerIn += ActivateCommentTool;
+        //PointerIn += ActivateCommentTool;
         PointerIn += HideCommentTool;
 
         //PointerOut += OnHoverButtonExit;
@@ -279,14 +279,14 @@ public class LaserPointer : PunBehaviour
         }
     }
 
-    void ActivateCommentTool(object sender, LaserEventArgs e)
+    public void ActivateCommentTool(object sender, LaserEventArgs e)
     {
         if (e.target.tag == commentObjectTag)
         {
             playComment.pointedTarget = e.target.gameObject;
             recordComment.target = e.target.gameObject;
             commentTool.SetActive(true);
-            commentTool.transform.position = e.hitPoint - raycast.direction;
+            commentTool.transform.position = transform.position + new Vector3(0, 1f, 1f);
             commentTool.transform.LookAt(gameObject.transform);
 
             CommentToolManager commentToolManager;
