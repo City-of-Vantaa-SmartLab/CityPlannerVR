@@ -63,7 +63,7 @@ public class TutorialProgression : MonoBehaviour
     {
 
 		Debug.Log ("RPC Call for material change");
-		player.GetComponent<PhotonView> ().RPC ("ChangeMaterialToAvatar", PhotonTargets.AllBuffered);
+		PhotonPlayerAvatar.LocalPlayerInstance.GetComponent<PhotonView> ().RPC ("ChangeMaterialToAvatar", PhotonTargets.AllBuffered);
     }
 
     public void ToggleYes()
