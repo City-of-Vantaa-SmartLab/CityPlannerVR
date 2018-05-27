@@ -20,7 +20,7 @@ public class TutorialProgression : MonoBehaviour
     public GameObject player;
 
     public List<Material> AvatarMaterials = new List<Material>();
-    public int matListSize;
+    public int matListSize = 4; // TÄMÄ TÄYTYY MUOKATA NYT KÄSIN
     public int check;
     public bool yesButton = false;
     public int matnum = 0;
@@ -31,13 +31,13 @@ public class TutorialProgression : MonoBehaviour
     private void Awake()
     {
 
-        foreach (Material mat in Resources.LoadAll("AvatarM", typeof(Material)))
+        /*foreach (Material mat in Resources.LoadAll("AvatarM", typeof(Material)))
         {
 
             AvatarMaterials.Add(mat);
             matListSize = AvatarMaterials.Count;
             
-        }
+        }*/
 
     }
 
@@ -45,7 +45,7 @@ public class TutorialProgression : MonoBehaviour
     void Start()
     {
         textlistsize1 = tutexts.Count;
-        player = GameObject.Find("AvatarM");
+		player = PhotonPlayerAvatar.LocalPlayerInstance;
       
         gaze = gameObject.GetComponent<SteamVR_GazeTracker>();
      
@@ -58,25 +58,12 @@ public class TutorialProgression : MonoBehaviour
             NextText();
         }
     }
-
+		
     public void NextAvatar()
     {
-        
-        if (matnum <= matListSize-1)
-        {
-            foreach (Transform child in player.transform)
-            {
-                child.GetComponent<MeshRenderer>().material = AvatarMaterials[matnum];
-            }
-            if (matnum == matListSize-1)
-            {
-                matnum = 0;
-            }
-            else
-            {
-                matnum++;
-            }
-        }
+
+		Debug.Log ("RPC Call for material change");
+		player.GetComponent<PhotonView> ().RPC ("ChangeMaterialToAvatar", PhotonTargets.AllBuffered);
     }
 
     public void ToggleYes()
@@ -119,7 +106,7 @@ public class TutorialProgression : MonoBehaviour
                 if (text_int == 1)
                 {
                     text_int = 3;
-                    part_time = tutexts[2];
+                    part_time = tutexts[1];
                     part_time.SetActive(false);
                     part_time = tutexts[text_int];
                     part_time.SetActive(true);
@@ -143,7 +130,7 @@ public class TutorialProgression : MonoBehaviour
                     part_time.SetActive(true);
                     buttontext1.SetActive(false);
                     buttontext2.SetActive(true);
-                    NextAvatar();
+					NextAvatar();
                     modelcycle = true;
                 }
 
