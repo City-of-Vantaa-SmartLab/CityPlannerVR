@@ -106,7 +106,6 @@ public class LaserPointer : PunBehaviour
         }
 
         recordComment = commentTool.GetComponentInChildren<RecordComment>();
-        Debug.Log("RecordComment = " + recordComment);
 
         //So the RecordPlayers Start can happen before it is disabled
         Invoke("DisableCommentTool", 0);
