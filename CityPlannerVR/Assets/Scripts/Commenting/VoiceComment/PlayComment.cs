@@ -143,17 +143,17 @@ public class PlayComment : MonoBehaviour {
 
     IEnumerator LoadCommentsFromStreamingAssets()
     {
-        WWW request = new WWW(record.SavePath + record.AudioExt);
-
         for (int i = 0; i < fileInfo.Length; i++)
         {
+            WWW request = new WWW("file:///" + record.SavePath + record.AudioExt + fileInfo[i].Name);
             if (fileInfo[i].Name.EndsWith(".wav"))
             {
                 commentClips.Add(request.GetAudioClip());
-            }
-        }
 
-        yield return request;
+                yield return request;
+            }
+
+        }
     }
 
     void GetAllCommentForObjects()
