@@ -231,7 +231,7 @@ public class PhotonLaserManager : PunBehaviour {
     {
         if (e.controllerIndex == myHandNumber && myPointer.active)
         {
-            //inputMaster.SelectByLaser(myPointer, myTargetedObject);
+            inputMaster.SelectByLaser(myPointer, myTargetedObject);
             myFakeLaser.ActivateCommentTool(myPointer, laserEA);
             myPointer.triggered = true;
         }

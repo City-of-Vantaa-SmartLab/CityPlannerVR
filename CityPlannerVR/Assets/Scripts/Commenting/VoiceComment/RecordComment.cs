@@ -134,6 +134,7 @@ public class RecordComment : MonoBehaviour
         if (micConnected)
         {
             DisableVoiceChat();
+            source.Play();
 
             if (!Microphone.IsRecording(null))
             {
@@ -153,6 +154,7 @@ public class RecordComment : MonoBehaviour
             if (micConnected)
             {
                 DisableVoiceChat();
+            source.Play();
 
                 if (Microphone.IsRecording(null))
                 {
