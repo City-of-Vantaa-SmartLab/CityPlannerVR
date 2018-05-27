@@ -10,6 +10,7 @@ public class TutorialProgression : MonoBehaviour
     public GameObject buttontext1;
     public GameObject buttontext2;
     public GameObject mirrorLights;
+    public GameObject tutparent;
     public GameObject yesBut;
     public AudioSource blop;
     
@@ -46,6 +47,7 @@ public class TutorialProgression : MonoBehaviour
     void Start()
     {
         textlistsize1 = tutexts.Count;
+        tutparent = this.transform.parent.gameObject;
 		player = PhotonPlayerAvatar.LocalPlayerInstance;
       
         gaze = gameObject.GetComponent<SteamVR_GazeTracker>();
@@ -160,7 +162,7 @@ public class TutorialProgression : MonoBehaviour
             }
         }
 
-        else if (text_int > 2 && text_int <= textlistsize1)
+        else if (text_int > 2 && text_int < textlistsize1)
         {
        
             if (!lightOn)
@@ -193,6 +195,24 @@ public class TutorialProgression : MonoBehaviour
             }
 
         }
+
+        else if (text_int == textlistsize1)
+        {
+            part_time = tutexts[text_int - 1];
+            part_time.SetActive(false);
+            lightOn = false;
+            textLight.enabled = lightOn;
+            LightTimer();
+            part_time = tutexts[text_int];
+            part_time.SetActive(true);
+            text_int++;
+            Timer();
+            UnityEditor.PrefabUtility.ResetToPrefabState(tutparent);
+
+            return;
+            
+
+        }
     }
 
     public void PlayBlop()
@@ -208,7 +228,7 @@ public class TutorialProgression : MonoBehaviour
     }
     IEnumerator Timer()
     {
-        yield return new WaitForSeconds(4f);
+        yield return new WaitForSeconds(5f);
 
     }
 }
