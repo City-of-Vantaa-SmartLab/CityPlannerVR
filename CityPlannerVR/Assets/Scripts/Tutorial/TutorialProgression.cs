@@ -174,7 +174,7 @@ public class TutorialProgression : MonoBehaviour
                 part_time = tutexts[text_int];
                 part_time.SetActive(true);
                 text_int++;
-                return;
+               
             }
             else if (lightOn)
             {
@@ -191,19 +191,20 @@ public class TutorialProgression : MonoBehaviour
                 lightOn = true;
                 textLight.enabled = lightOn;
 
-            return;
+            
             }
 
         }
 
         else if (text_int == textlistsize1)
         {
+			Debug.Log ("Reseting in 5");
             part_time = tutexts[text_int - 1];
             part_time.SetActive(false);
             lightOn = false;
             textLight.enabled = lightOn;
             LightTimer();
-            part_time = tutexts[text_int];
+			part_time = tutexts[tutexts.Count -1];
             part_time.SetActive(true);
             text_int++;
             Timer();

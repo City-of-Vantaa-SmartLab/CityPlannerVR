@@ -130,8 +130,7 @@ public class PhotonConnection : Photon.PunBehaviour {
 
 		if (PhotonNetwork.isMasterClient) {
 			Debug.Log ("OnPhotonPlayerConnected isMasterClient " + PhotonNetwork.isMasterClient);
-			//GetComponentInParent<PhotonGameManager> ().LoadWorld ();
-			//Pitää varmaan poistaa, jottei resetata leveliä aina kun joku liittyy
+
 		}
 	}
 
@@ -142,7 +141,6 @@ public class PhotonConnection : Photon.PunBehaviour {
 
 		if (PhotonNetwork.isMasterClient) {
 			Debug.Log ("OnPhotonPlayerConnected isMasterClient " + PhotonNetwork.isMasterClient);
-			//GetComponentInParent<PhotonGameManager> ().LoadWorld ();
 		}
 	}
 
