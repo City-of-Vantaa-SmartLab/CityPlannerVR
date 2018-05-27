@@ -74,7 +74,7 @@ public class RecordComment : MonoBehaviour
     {
 #if UNITY_EDITOR
         //TODO: Buildissa on eri polku ehkä
-        savePath = Application.dataPath + "Resources" + slash + "Comments" + slash + directoryName + slash;
+        savePath = Application.dataPath+ slash + "Resources" + slash + "Comments" + slash + directoryName + slash;
         audioSavePathExt = "AudioFiles" + slash;
 #endif
         laserLeft = GameObject.Find("Player/SteamVRObjects/Hand1/Laserpointer").GetComponentInChildren<LaserPointer>();
