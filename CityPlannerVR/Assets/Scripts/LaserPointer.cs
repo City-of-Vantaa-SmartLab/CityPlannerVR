@@ -48,6 +48,9 @@ public class LaserPointer : PunBehaviour
     string buttonTag = "Button";
     string commentObjectTag = "Building";
 
+    GameObject player;
+    CheckPlayerSize checkPlayerSize;
+
     Ray raycast;
 
     private void Awake()
@@ -55,6 +58,9 @@ public class LaserPointer : PunBehaviour
         commentTool = GameObject.Find("CommentTool");
         commentOutput = GameObject.Find("CommentList");
         playComment = commentOutput.GetComponent<PlayComment>();
+
+        player = GameObject.Find("Player");
+        checkPlayerSize = player.GetComponent<CheckPlayerSize>();
 
         //holder = new GameObject();
         //holder.transform.parent = this.transform;
@@ -285,8 +291,9 @@ public class LaserPointer : PunBehaviour
             playComment.pointedTarget = e.target.gameObject;
             recordComment.target = e.target.gameObject;
             commentTool.SetActive(true);
-            commentTool.transform.position = transform.position + new Vector3(0, 1f, 1f);
+            commentTool.transform.position = transform.position + new Vector3(0, player.transform.localScale.y, player.transform.localScale.z);
             commentTool.transform.LookAt(gameObject.transform);
+            commentTool.transform.localScale = player.transform.localScale;
 
             CommentToolManager commentToolManager;
             commentToolManager = commentTool.GetComponent<CommentToolManager>();
