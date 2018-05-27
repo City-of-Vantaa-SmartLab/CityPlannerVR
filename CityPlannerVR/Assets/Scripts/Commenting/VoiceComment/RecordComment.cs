@@ -115,7 +115,7 @@ public class RecordComment : MonoBehaviour
     {
         if(e.target.gameObject.layer != LayerMask.NameToLayer(commentLayer))
         {
-            if (e.target.gameObject.layer == LayerMask.NameToLayer("Building"))
+            if (e.target.gameObject.layer == LayerMask.NameToLayer("Building")  || e.target.gameObject.layer == LayerMask.NameToLayer("Props"))
             {
                 target = e.target.gameObject;
                 Debug.Log("Target = " + target.name);

@@ -286,12 +286,28 @@ public class LaserPointer : PunBehaviour
 
     public void ActivateCommentTool(object sender, LaserEventArgs e)
     {
-        if (e.target.tag == commentObjectTag)
+        if (e.target.tag == commentObjectTag || e.target.tag == "Props")
         {
             playComment.pointedTarget = e.target.gameObject;
             recordComment.target = e.target.gameObject;
             commentTool.SetActive(true);
-            commentTool.transform.position = transform.position + new Vector3(0, player.transform.localScale.y, player.transform.localScale.z);
+
+            if(gameObject.transform.eulerAngles.y >= -45 && gameObject.transform.eulerAngles.y < 45)
+            {
+                commentTool.transform.position = gameObject.transform.position + new Vector3(0, player.transform.localScale.y, player.transform.localScale.z);
+            }
+            else if(gameObject.transform.eulerAngles.y >= 45 && gameObject.transform.eulerAngles.y < 135)
+            {
+                commentTool.transform.position = gameObject.transform.position + new Vector3(player.transform.localScale.x, player.transform.localScale.y, 0);
+            }
+            else if (gameObject.transform.eulerAngles.y >= 135 && gameObject.transform.eulerAngles.y < -135)
+            {
+                commentTool.transform.position = gameObject.transform.position + new Vector3(0, player.transform.localScale.y, -player.transform.localScale.z);
+            }
+            else
+            {
+                commentTool.transform.position = gameObject.transform.position + new Vector3(-player.transform.localScale.x, player.transform.localScale.y, 0);
+            }
             commentTool.transform.LookAt(gameObject.transform);
             commentTool.transform.localScale = player.transform.localScale;
 
