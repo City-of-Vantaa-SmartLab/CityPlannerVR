@@ -51,6 +51,8 @@ public class RecordComment : MonoBehaviour
     [HideInInspector]
     public PositionDatabase positionDB;
 
+    AudioSource source;
+
     private string savePath;
     private string audioSavePathExt;
 
@@ -98,6 +100,8 @@ public class RecordComment : MonoBehaviour
             }
         }
 
+        source = GetComponent<AudioSource>();
+
         //Load the old data from the file, so it won't get replaced
         LoadOldSavedData();
 
@@ -108,10 +112,11 @@ public class RecordComment : MonoBehaviour
         laserRight.PointerIn += FindTarget;
     }
 
+    public void  PlaySoundEffect()
+    {
+        source.Play();
+    }
 
-    //TODO: 
-    //-pistä commentWheel oikeaan kohtaan (pienenä)
-    //-indikaatio tallenuksen aloituksesta ja lopetuksesta (ja epäonnistumisesta?)
     void FindTarget(object sender, LaserEventArgs e)
     {
         if(e.target.gameObject.layer != LayerMask.NameToLayer(commentLayer))
