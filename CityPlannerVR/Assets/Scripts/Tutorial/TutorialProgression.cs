@@ -11,6 +11,7 @@ public class TutorialProgression : MonoBehaviour
     public GameObject buttontext2;
     public GameObject mirrorLights;
     public GameObject yesBut;
+    public AudioSource blop;
     
 
     public List<GameObject> tutexts = new List<GameObject>();
@@ -83,7 +84,8 @@ public class TutorialProgression : MonoBehaviour
 
     public void NextText()
     {
-        
+        PlayBlop();
+
         GameObject part_time;
         
         if (text_int == 0)
@@ -191,6 +193,11 @@ public class TutorialProgression : MonoBehaviour
             }
 
         }
+    }
+
+    public void PlayBlop()
+    {
+        blop.Play();
     }
   
  
