@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.23380288, g: 0.26192933, b: 0.31441426, a: 1}
+  m_IndirectSpecularColor: {r: 0, g: 0, b: 0, a: 1}
 --- !u!157 &3
 LightmapSettings:
   m_ObjectHideFlags: 0
@@ -1434,11 +1434,6 @@ Prefab:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
-    - target: {fileID: 114027810988022024, guid: 55f4cd4569c5ad6489212d38cb2fc262,
-        type: 2}
-      propertyPath: triggeredEvents.m_PersistentCalls.m_Calls.Array.size
-      value: 1
-      objectReference: {fileID: 0}
     - target: {fileID: 4183763600496060, guid: 55f4cd4569c5ad6489212d38cb2fc262, type: 2}
       propertyPath: m_LocalPosition.x
       value: -5.4471383
@@ -1471,65 +1466,9 @@ Prefab:
       propertyPath: m_RootOrder
       value: 20
       objectReference: {fileID: 0}
-    - target: {fileID: 114027810988022024, guid: 55f4cd4569c5ad6489212d38cb2fc262,
-        type: 2}
-      propertyPath: triggeredEvents.m_PersistentCalls.m_Calls.Array.data[0].m_Mode
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 114027810988022024, guid: 55f4cd4569c5ad6489212d38cb2fc262,
-        type: 2}
-      propertyPath: triggeredEvents.m_PersistentCalls.m_Calls.Array.data[0].m_CallState
-      value: 2
-      objectReference: {fileID: 0}
-    - target: {fileID: 114027810988022024, guid: 55f4cd4569c5ad6489212d38cb2fc262,
-        type: 2}
-      propertyPath: triggeredEvents.m_PersistentCalls.m_Calls.Array.data[0].m_Target
-      value: 
-      objectReference: {fileID: 356658364}
-    - target: {fileID: 114027810988022024, guid: 55f4cd4569c5ad6489212d38cb2fc262,
-        type: 2}
-      propertyPath: triggeredEvents.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
-      value: StartRecord
-      objectReference: {fileID: 0}
-    - target: {fileID: 114027810988022024, guid: 55f4cd4569c5ad6489212d38cb2fc262,
-        type: 2}
-      propertyPath: triggeredEvents.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_ObjectArgumentAssemblyTypeName
-      value: UnityEngine.Object, UnityEngine
-      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 55f4cd4569c5ad6489212d38cb2fc262, type: 2}
   m_IsPrefabParent: 0
---- !u!1 &356658363 stripped
-GameObject:
-  m_PrefabParentObject: {fileID: 1850352533580352, guid: 55f4cd4569c5ad6489212d38cb2fc262,
-    type: 2}
-  m_PrefabInternal: {fileID: 356658362}
---- !u!114 &356658364
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 356658363}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 905dd8842dd65824bb9b613f38f39776, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  voiceTrigger: {fileID: 0}
-  target: {fileID: 0}
-  commenter: 
-  slash: 92
-  positionFileName: positions.txt
-  position:
-    commenterName: 
-    recordName: 
-    targetName: 
-    position:
-    - 0
-    - 0
-    - 0
-  positionDB:
-    list: []
 --- !u!1 &381157691
 GameObject:
   m_ObjectHideFlags: 0
@@ -11087,6 +11026,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1415dcf8640d16346a3a06afc47c32bc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  localPlayerName: 
   save: 0
   load: 0
 --- !u!1001 &1274274255
