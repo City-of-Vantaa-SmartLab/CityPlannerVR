@@ -73,7 +73,8 @@ public class RecordComment : MonoBehaviour
     private void Start()
     {
         //TODO: Buildissa on eri polku ehkä
-        savePath = Application.dataPath+ slash + "Resources" + slash + "Comments" + slash + directoryName + slash;
+        //savePath = Application.dataPath+ slash + "Resources" + slash + "Comments" + slash + directoryName + slash;
+        savePath = Application.streamingAssetsPath + slash + slash + "Comments" + slash + directoryName + slash;
         audioSavePathExt = "AudioFiles" + slash;
 
         laserLeft = GameObject.Find("Player/SteamVRObjects/Hand1/Laserpointer").GetComponentInChildren<LaserPointer>();
