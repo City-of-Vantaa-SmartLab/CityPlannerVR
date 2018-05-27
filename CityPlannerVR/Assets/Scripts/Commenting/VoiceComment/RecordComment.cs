@@ -72,11 +72,10 @@ public class RecordComment : MonoBehaviour
 
     private void Start()
     {
-#if UNITY_EDITOR
         //TODO: Buildissa on eri polku ehkä
         savePath = Application.dataPath+ slash + "Resources" + slash + "Comments" + slash + directoryName + slash;
         audioSavePathExt = "AudioFiles" + slash;
-#endif
+
         laserLeft = GameObject.Find("Player/SteamVRObjects/Hand1/Laserpointer").GetComponentInChildren<LaserPointer>();
         laserRight = GameObject.Find("Player/SteamVRObjects/Hand2/Laserpointer").GetComponentInChildren<LaserPointer>();
 
@@ -116,7 +115,11 @@ public class RecordComment : MonoBehaviour
     {
         if(e.target.gameObject.layer != LayerMask.NameToLayer(commentLayer))
         {
-            target = e.target.gameObject;
+            if (e.target.gameObject.layer == LayerMask.NameToLayer("Building"))
+            {
+                target = e.target.gameObject;
+                Debug.Log("Target = " + target.name);
+            }
         }
     }
 
