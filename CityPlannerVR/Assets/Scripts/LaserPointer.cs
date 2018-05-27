@@ -44,9 +44,9 @@ public class LaserPointer : PunBehaviour
     PlayComment playComment;
     RecordComment recordComment;
 
-    string commentToolTag = "CommentToolTag";
+	string commentToolTag = "Notusednow";//"CommentToolTag";
     string buttonTag = "Button";
-    string commentObjectTag = "Building";
+	string commentObjectTag = "Notusednow";//"Building";
 
     GameObject player;
     CheckPlayerSize checkPlayerSize;
