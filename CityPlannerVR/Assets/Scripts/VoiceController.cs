@@ -19,6 +19,7 @@ public class VoiceController : MonoBehaviour {
 	string playerTag = "VRLocalPlayer";
 
     GameObject indicator;
+    AudioSource source;
 
     [HideInInspector]
     public string playerName;
@@ -38,6 +39,8 @@ public class VoiceController : MonoBehaviour {
         player = comms.FindPlayer(comms.LocalPlayerName);
 
         playerName = comms.LocalPlayerName;
+
+        source = GetComponent<AudioSource>();
 
         inputMaster.Gripped += ToggleMutePlayer;
 
@@ -62,11 +65,13 @@ public class VoiceController : MonoBehaviour {
 		if (comms.IsMuted == false) {
 			comms.IsMuted = true;
             //indikoi pelaajille mute
+            source.Play();
 		}
 
 		else {
 			comms.IsMuted = false;
             //indikoi pelaajille unmute
+            source.Play();
 		}
 	}
 

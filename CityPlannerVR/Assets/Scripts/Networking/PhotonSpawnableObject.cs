@@ -25,18 +25,18 @@ public class PhotonSpawnableObject : MonoBehaviour {
 	// Use this for initialization
 	void Start () {
 
-		itemInSpawner = new GameObject();
-		inputMaster = GameObject.Find("Player").GetComponent<InputMaster>();
+		if (PhotonNetwork.isMasterClient) {
+			itemInSpawner = new GameObject ();
+			inputMaster = GameObject.Find ("Player").GetComponent<InputMaster> ();
 
-		if (PhotonGameManager.Instance.isMultiplayerSceneLoaded) {
-			InstantiateItemInSpawner ();
-		} else {
-			PhotonGameManager.OnMultiplayerSceneLoaded += () =>
-			{
-				InstantiateItemInSpawner();
-			};
+			if (PhotonGameManager.Instance.isMultiplayerSceneLoaded) {
+				InstantiateItemInSpawner ();
+			} else {
+				PhotonGameManager.OnMultiplayerSceneLoaded += () => {
+					InstantiateItemInSpawner ();
+				};
+			}
 		}
-
 	}
 
 	private void OnTriggerEnter(Collider other)

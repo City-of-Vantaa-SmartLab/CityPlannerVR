@@ -51,6 +51,8 @@ public class RecordComment : MonoBehaviour
     [HideInInspector]
     public PositionDatabase positionDB;
 
+    AudioSource source;
+
     private string savePath;
     private string audioSavePathExt;
 
@@ -72,11 +74,11 @@ public class RecordComment : MonoBehaviour
 
     private void Start()
     {
-#if UNITY_EDITOR
         //TODO: Buildissa on eri polku ehkä
-        savePath = "C:" + slash + "Users" + slash + "SmartLabVantaa" + slash + "Desktop" + slash + "Projects" + slash + "CityPlannerVR" + slash + "CityPlannerVR" + slash + "Assets" + slash + "Resources" + slash + "Comments" + slash + directoryName + slash;
+        //savePath = Application.dataPath+ slash + "Resources" + slash + "Comments" + slash + directoryName + slash;
+        savePath = Application.streamingAssetsPath + slash + slash + "Comments" + slash + directoryName + slash;
         audioSavePathExt = "AudioFiles" + slash;
-#endif
+
         laserLeft = GameObject.Find("Player/SteamVRObjects/Hand1/Laserpointer").GetComponentInChildren<LaserPointer>();
         laserRight = GameObject.Find("Player/SteamVRObjects/Hand2/Laserpointer").GetComponentInChildren<LaserPointer>();
 
@@ -98,55 +100,61 @@ public class RecordComment : MonoBehaviour
             }
         }
 
+        source = GetComponent<AudioSource>();
+
         //Load the old data from the file, so it won't get replaced
         LoadOldSavedData();
 
-        laserLeft.PointerOut += StopRecord;
-        laserRight.PointerOut += StopRecord;
+        //laserLeft.PointerOut += StopRecord;
+        //laserRight.PointerOut += StopRecord;
 
         laserLeft.PointerIn += FindTarget;
         laserRight.PointerIn += FindTarget;
     }
 
+    public void  PlaySoundEffect()
+    {
+        source.Play();
+    }
 
-    //TODO: 
-    //-pistä commentWheel oikeaan kohtaan (pienenä)
-    //-indikaatio tallenuksen aloituksesta ja lopetuksesta (ja epäonnistumisesta?)
     void FindTarget(object sender, LaserEventArgs e)
     {
         if(e.target.gameObject.layer != LayerMask.NameToLayer(commentLayer))
         {
-            target = e.target.gameObject;
+            if (e.target.gameObject.layer == LayerMask.NameToLayer("Building")  || e.target.gameObject.layer == LayerMask.NameToLayer("Props"))
+            {
+                target = e.target.gameObject;
+                Debug.Log("Target = " + target.name);
+            }
         }
     }
 
     public void StartRecord()
     {
-        
-            if (micConnected)
-            {
-                DisableVoiceChat();
+        if (micConnected)
+        {
+            DisableVoiceChat();
+            source.Play();
 
-                if (!Microphone.IsRecording(null))
-                {
-                    tempAudioClip = Microphone.Start(null, true, 30, maxFreq);
-                    Debug.Log("Recording started");
-                }
-            }
-            else
+            if (!Microphone.IsRecording(null))
             {
-                Debug.LogError("Microphone not connected");
+                tempAudioClip = Microphone.Start(null, true, 30, maxFreq);
+                Debug.Log("Recording started");
             }
-        
+        }
+        else
+        {
+            Debug.LogError("Microphone not connected");
+        }
+
     }
 
-    void StopRecord(object sender, LaserEventArgs e)
+    public void StopRecord()
     {
-        if (e.target.gameObject.layer == LayerMask.NameToLayer(commentLayer) && e.target.name == "VoiceComment")
-        {
             if (micConnected)
             {
                 DisableVoiceChat();
+            source.Play();
 
                 if (Microphone.IsRecording(null))
                 {
@@ -175,8 +183,45 @@ public class RecordComment : MonoBehaviour
                     }
                 }
             }
-        }
     }
+
+    //void StopRecord(object sender, LaserEventArgs e)
+    //{
+    //    if (e.target.gameObject.layer == LayerMask.NameToLayer(commentLayer) && e.target.name == "VoiceComment")
+    //    {
+    //        if (micConnected)
+    //        {
+    //            DisableVoiceChat();
+
+    //            if (Microphone.IsRecording(null))
+    //            {
+    //                int lastPos = Microphone.GetPosition(null);
+    //                if (lastPos != 0)
+    //                {
+    //                    float[] samples = new float[tempAudioClip.samples];
+    //                    tempAudioClip.GetData(samples, 0);
+
+    //                    float[] finalSamples = new float[lastPos];
+
+    //                    for (int i = 0; i < finalSamples.Length; i++)
+    //                    {
+    //                        finalSamples[i] = samples[i];
+    //                    }
+
+    //                    finalAudioClip = AudioClip.Create("FinalAudioClip", finalSamples.Length, 1, maxFreq, false);
+
+    //                    finalAudioClip.SetData(finalSamples, 0);
+
+    //                    Microphone.End(null);
+    //                    Debug.Log("Recording stopped");
+    //                    SaveRecordedAudio();
+    //                    //Enable voice chat again
+    //                    voiceTrigger.Mode = Dissonance.CommActivationMode.VoiceActivation;
+    //                }
+    //            }
+    //        }
+    //    }
+    //}
 
     void DisableVoiceChat()
     {

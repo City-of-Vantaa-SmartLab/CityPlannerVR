@@ -10,7 +10,9 @@ public class TutorialProgression : MonoBehaviour
     public GameObject buttontext1;
     public GameObject buttontext2;
     public GameObject mirrorLights;
+    public GameObject tutparent;
     public GameObject yesBut;
+    public AudioSource blop;
     
 
     public List<GameObject> tutexts = new List<GameObject>();
@@ -20,7 +22,7 @@ public class TutorialProgression : MonoBehaviour
     public GameObject player;
 
     public List<Material> AvatarMaterials = new List<Material>();
-    public int matListSize;
+    public int matListSize = 4; // TÄMÄ TÄYTYY MUOKATA NYT KÄSIN
     public int check;
     public bool yesButton = false;
     public int matnum = 0;
@@ -31,13 +33,13 @@ public class TutorialProgression : MonoBehaviour
     private void Awake()
     {
 
-        foreach (Material mat in Resources.LoadAll("AvatarM", typeof(Material)))
+        /*foreach (Material mat in Resources.LoadAll("AvatarM", typeof(Material)))
         {
 
             AvatarMaterials.Add(mat);
             matListSize = AvatarMaterials.Count;
             
-        }
+        }*/
 
     }
 
@@ -45,7 +47,8 @@ public class TutorialProgression : MonoBehaviour
     void Start()
     {
         textlistsize1 = tutexts.Count;
-        player = GameObject.Find("AvatarM");
+        tutparent = this.transform.parent.gameObject;
+		player = PhotonPlayerAvatar.LocalPlayerInstance;
       
         gaze = gameObject.GetComponent<SteamVR_GazeTracker>();
      
@@ -58,25 +61,12 @@ public class TutorialProgression : MonoBehaviour
             NextText();
         }
     }
-
+		
     public void NextAvatar()
     {
-        
-        if (matnum <= matListSize-1)
-        {
-            foreach (Transform child in player.transform)
-            {
-                child.GetComponent<MeshRenderer>().material = AvatarMaterials[matnum];
-            }
-            if (matnum == matListSize-1)
-            {
-                matnum = 0;
-            }
-            else
-            {
-                matnum++;
-            }
-        }
+
+		Debug.Log ("RPC Call for material change");
+		PhotonPlayerAvatar.LocalPlayerInstance.GetComponent<PhotonView> ().RPC ("ChangeMaterialToAvatar", PhotonTargets.AllBuffered);
     }
 
     public void ToggleYes()
@@ -96,7 +86,8 @@ public class TutorialProgression : MonoBehaviour
 
     public void NextText()
     {
-        
+        PlayBlop();
+
         GameObject part_time;
         
         if (text_int == 0)
@@ -119,7 +110,7 @@ public class TutorialProgression : MonoBehaviour
                 if (text_int == 1)
                 {
                     text_int = 3;
-                    part_time = tutexts[2];
+                    part_time = tutexts[1];
                     part_time.SetActive(false);
                     part_time = tutexts[text_int];
                     part_time.SetActive(true);
@@ -143,7 +134,7 @@ public class TutorialProgression : MonoBehaviour
                     part_time.SetActive(true);
                     buttontext1.SetActive(false);
                     buttontext2.SetActive(true);
-                    NextAvatar();
+					NextAvatar();
                     modelcycle = true;
                 }
 
@@ -171,7 +162,7 @@ public class TutorialProgression : MonoBehaviour
             }
         }
 
-        else if (text_int > 2 && text_int <= textlistsize1)
+        else if (text_int > 2 && text_int < textlistsize1)
         {
        
             if (!lightOn)
@@ -183,7 +174,7 @@ public class TutorialProgression : MonoBehaviour
                 part_time = tutexts[text_int];
                 part_time.SetActive(true);
                 text_int++;
-                return;
+               
             }
             else if (lightOn)
             {
@@ -200,10 +191,34 @@ public class TutorialProgression : MonoBehaviour
                 lightOn = true;
                 textLight.enabled = lightOn;
 
-            return;
+            
             }
 
         }
+
+        else if (text_int == textlistsize1)
+        {
+			Debug.Log ("Reseting in 5");
+            part_time = tutexts[text_int - 1];
+            part_time.SetActive(false);
+            lightOn = false;
+            textLight.enabled = lightOn;
+            LightTimer();
+			part_time = tutexts[tutexts.Count -1];
+            part_time.SetActive(true);
+            text_int++;
+            Timer();
+            //UnityEditor.PrefabUtility.ResetToPrefabState(tutparent);
+
+            return;
+            
+
+        }
+    }
+
+    public void PlayBlop()
+    {
+        blop.Play();
     }
   
  
@@ -214,7 +229,7 @@ public class TutorialProgression : MonoBehaviour
     }
     IEnumerator Timer()
     {
-        yield return new WaitForSeconds(4f);
+        yield return new WaitForSeconds(5f);
 
     }
 }

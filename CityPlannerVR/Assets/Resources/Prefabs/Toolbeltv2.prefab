@@ -101,7 +101,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!1 &1817542655208618
 GameObject:
   m_ObjectHideFlags: 0
@@ -141,7 +141,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!1 &1860877437790774
 GameObject:
   m_ObjectHideFlags: 0
@@ -190,7 +190,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1860877437790774}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 1.2, z: 0.9}
+  m_LocalPosition: {x: 0, y: 0.8, z: 0.2}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 4164029841113348}
@@ -220,7 +220,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1156935495043082}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -0.18, y: 0, z: 0.2}
+  m_LocalPosition: {x: -0.22, y: 0, z: 0.2}
   m_LocalScale: {x: 0.3, y: 0.3, z: 0.3}
   m_Children:
   - {fileID: 4657106885740050}
@@ -248,7 +248,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1817542655208618}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0.18, y: 0, z: 0.2}
+  m_LocalPosition: {x: 0.22, y: 0, z: 0.2}
   m_LocalScale: {x: 0.3, y: 0.3, z: 0.3}
   m_Children:
   - {fileID: 4297829165656280}
@@ -627,7 +627,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   tool: 7
-  toolGOShown: {fileID: 0}
+  toolGOShown: {fileID: 100000, guid: b455a530cc179f242a9f5d5740067e3c, type: 3}
   isToolContainer: 0
 --- !u!114 &114261501529289078
 MonoBehaviour:

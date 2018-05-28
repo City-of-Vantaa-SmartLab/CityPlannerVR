@@ -71,7 +71,7 @@ public class CameraHandler : MonoBehaviour {
         toolManager.AnnounceToolChanged += ActivateCameraTool;
         handNumber = toolManager.myHandNumber;
 
-        screenshotCamera = normalCamera.GetComponent<ScreenshotCamera>();
+        screenshotCamera = normalCamera.GetComponentInChildren<ScreenshotCamera>();
         videoCamera = videoCameraObject.GetComponent<VideoCamera>();
         pathCameraHandler = pathCameraPoint.GetComponent<CameraPathHandler>();
 

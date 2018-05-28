@@ -44,9 +44,12 @@ public class LaserPointer : PunBehaviour
     PlayComment playComment;
     RecordComment recordComment;
 
-    string commentToolTag = "CommentToolTag";
+	string commentToolTag = "Notusednow";//"CommentToolTag";
     string buttonTag = "Button";
-    string commentObjectTag = "Building";
+	string commentObjectTag = "Notusednow";//"Building";
+
+    GameObject player;
+    CheckPlayerSize checkPlayerSize;
 
     Ray raycast;
 
@@ -55,6 +58,9 @@ public class LaserPointer : PunBehaviour
         commentTool = GameObject.Find("CommentTool");
         commentOutput = GameObject.Find("CommentList");
         playComment = commentOutput.GetComponent<PlayComment>();
+
+        player = GameObject.Find("Player");
+        checkPlayerSize = player.GetComponent<CheckPlayerSize>();
 
         //holder = new GameObject();
         //holder.transform.parent = this.transform;
@@ -106,7 +112,6 @@ public class LaserPointer : PunBehaviour
         }
 
         recordComment = commentTool.GetComponentInChildren<RecordComment>();
-        Debug.Log("RecordComment = " + recordComment);
 
         //So the RecordPlayers Start can happen before it is disabled
         Invoke("DisableCommentTool", 0);
@@ -281,13 +286,30 @@ public class LaserPointer : PunBehaviour
 
     public void ActivateCommentTool(object sender, LaserEventArgs e)
     {
-        if (e.target.tag == commentObjectTag)
+        if (e.target.tag == commentObjectTag || e.target.tag == "Props")
         {
             playComment.pointedTarget = e.target.gameObject;
             recordComment.target = e.target.gameObject;
             commentTool.SetActive(true);
-            commentTool.transform.position = transform.position + new Vector3(0, 1f, 1f);
+
+            if(gameObject.transform.eulerAngles.y >= -45 && gameObject.transform.eulerAngles.y < 45)
+            {
+                commentTool.transform.position = gameObject.transform.position + new Vector3(0, player.transform.localScale.y, player.transform.localScale.z);
+            }
+            else if(gameObject.transform.eulerAngles.y >= 45 && gameObject.transform.eulerAngles.y < 135)
+            {
+                commentTool.transform.position = gameObject.transform.position + new Vector3(player.transform.localScale.x, player.transform.localScale.y, 0);
+            }
+            else if (gameObject.transform.eulerAngles.y >= 135 && gameObject.transform.eulerAngles.y < -135)
+            {
+                commentTool.transform.position = gameObject.transform.position + new Vector3(0, player.transform.localScale.y, -player.transform.localScale.z);
+            }
+            else
+            {
+                commentTool.transform.position = gameObject.transform.position + new Vector3(-player.transform.localScale.x, player.transform.localScale.y, 0);
+            }
             commentTool.transform.LookAt(gameObject.transform);
+            commentTool.transform.localScale = player.transform.localScale;
 
             CommentToolManager commentToolManager;
             commentToolManager = commentTool.GetComponent<CommentToolManager>();
