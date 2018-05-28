@@ -208,7 +208,7 @@ public class TutorialProgression : MonoBehaviour
             part_time.SetActive(true);
             text_int++;
             Timer();
-            UnityEditor.PrefabUtility.ResetToPrefabState(tutparent);
+            //UnityEditor.PrefabUtility.ResetToPrefabState(tutparent);
 
             return;
             
