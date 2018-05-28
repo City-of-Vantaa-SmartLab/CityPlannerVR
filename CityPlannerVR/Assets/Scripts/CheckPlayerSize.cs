@@ -10,10 +10,20 @@ public class CheckPlayerSize : MonoBehaviour {
 
     public GameObject scalePlayerToSmall;
     public GameObject scalePlayerToLarge;
+    public Camera vrCamera;
+    public float clippingPlaneSmall;
+    public float clippingPlaneBig;
+    public GameObject player;
+    public GameObject vrcameraObject;
 
     Vector3 smallScale;
     Vector3 largeScale;
 
+    private void Start()
+    {
+        vrcameraObject = GameObject.Find("VRCamera (eye)");
+        vrCamera = vrcameraObject.GetComponent<Camera>();
+    }
     //are we small
     bool isInPedesrianMode = false;
     public bool isSmall
@@ -36,10 +46,14 @@ public class CheckPlayerSize : MonoBehaviour {
         if (transform.localScale == smallScale)
         {
             isInPedesrianMode = true;
+            vrCamera.nearClipPlane = clippingPlaneSmall;
+
+
         }
         else if (transform.localScale == largeScale)
         {
             isInPedesrianMode = false;
+            vrCamera.nearClipPlane = clippingPlaneBig;
         }
         //Just in case
         else
