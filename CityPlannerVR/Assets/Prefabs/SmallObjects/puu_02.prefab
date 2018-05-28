@@ -29,6 +29,7 @@ GameObject:
   - component: {fileID: 114662289494819114}
   - component: {fileID: 114878349623697996}
   - component: {fileID: 114642291787716078}
+  - component: {fileID: 114414979630698880}
   m_Layer: 17
   m_Name: puu_02
   m_TagString: Spawnable
@@ -117,6 +118,17 @@ BoxCollider:
   serializedVersion: 2
   m_Size: {x: 0.13, y: 0.35, z: 0.12}
   m_Center: {x: 0, y: 0.1749519, z: 0.0059095845}
+--- !u!114 &114414979630698880
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1219052572910766}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5d87f268c547c7a47acf9c24852d5753, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!114 &114642291787716078
 MonoBehaviour:
   m_ObjectHideFlags: 1
