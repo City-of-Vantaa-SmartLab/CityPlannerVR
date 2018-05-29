@@ -133,8 +133,8 @@ public class LaserPointer : PunBehaviour
 
     public void InitPointer(Transform targetTransform)
     {
-        if (targetTransform.childCount > 0)
-            pointer = targetTransform.GetChild(0).gameObject;
+        //if (targetTransform.childCount > 0)
+        //    pointer = targetTransform.GetChild(0).gameObject;
         if (pointer == null)
         {
             pointer = GameObject.CreatePrimitive(PrimitiveType.Cube);
