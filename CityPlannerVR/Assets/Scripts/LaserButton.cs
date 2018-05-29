@@ -43,7 +43,7 @@ public class LaserButton : MonoBehaviour {
     {
         //Debug.Log("Testing event!");
     }
-
+    //--------------------------------------------------------------------------------------------------------------------------------
     //ButtonBackground
     public void PlayCommentStart()
     {
@@ -59,7 +59,7 @@ public class LaserButton : MonoBehaviour {
         playComment.PlayCommentInPosition(commentName);
     }
 
-    //ForwardButton
+    //ForwardButton 
     public void GoForward()
     {
         if (playComment == null)
@@ -81,23 +81,34 @@ public class LaserButton : MonoBehaviour {
         playComment.GoBackward();
     }
 
+    //--------------------------------------------------------------------------------------------------------------------------------
+    //ButtonBackground prefab
+    public void OnHoverUI()
+    {
+        SetUI();
+        image.color = Color.blue;
+    }
+
     public void SetUI()
     {
-        if(image == null)
+        if (image == null)
         {
             image = GetComponent<UnityEngine.UI.Image>();
             materialColor = image.color;
         }
     }
-
-    public void OnHoverUI()
-    {
-        image.color = Color.blue;
-    }
-
+    //ButtonBackground prefab
     public void OnStopHoverUI()
     {
         image.color = materialColor;
+    }
+    //--------------------------------------------------------------------------------------------------------------------------------
+
+    //Different commentTool buttons
+    public void OnHoverButton()
+    {
+        SetMaterial();
+        material.color = Color.yellow;
     }
 
     public void SetMaterial()
@@ -110,16 +121,12 @@ public class LaserButton : MonoBehaviour {
         }
     }
 
-    public void OnHoverButton()
-    {
-        material.color = Color.yellow;
-    }
-
+    //Different commentTool buttons
     public void OnStopHoverButton()
     {
         material.color = materialColor;
     }
-
+    //--------------------------------------------------------------------------------------------------------------------------------
 #if UNITY_EDITOR
     //using UnityEditor;
 

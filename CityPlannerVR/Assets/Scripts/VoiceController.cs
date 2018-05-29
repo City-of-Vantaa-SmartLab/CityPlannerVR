@@ -59,7 +59,6 @@ public class VoiceController : MonoBehaviour {
         player.OnStoppedSpeaking -= ToggleIndicator;
     }
 
-    //TODO: If a player is recording a comment, mute player
     void ToggleMutePlayer(object sender, ClickedEventArgs e)
     {
 		if (comms.IsMuted == false) {
