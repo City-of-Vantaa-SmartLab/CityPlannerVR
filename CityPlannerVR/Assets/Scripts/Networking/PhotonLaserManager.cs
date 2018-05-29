@@ -123,7 +123,7 @@ public class PhotonLaserManager : PunBehaviour {
             ActivateObject(status);
             if (myTool == ToolManager.ToolType.EditingLaser)
             {
-                myPointer.GetComponentInChildren<MeshRenderer>().material.color = myPointer.editorColor;
+                //myPointer.GetComponentInChildren<MeshRenderer>().material.color = myPointer.editorColor;
             }
 
             if (myPointer.active == false)
