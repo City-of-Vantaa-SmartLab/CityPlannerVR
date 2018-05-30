@@ -151,38 +151,38 @@ public class RecordComment : MonoBehaviour
 
     public void StopRecord()
     {
-            if (micConnected)
-            {
-                DisableVoiceChat();
+         if (micConnected)
+         {
+            DisableVoiceChat();
             source.Play();
 
-                if (Microphone.IsRecording(null))
-                {
-                    int lastPos = Microphone.GetPosition(null);
-                    if (lastPos != 0)
-                    {
-                        float[] samples = new float[tempAudioClip.samples];
-                        tempAudioClip.GetData(samples, 0);
+             if (Microphone.IsRecording(null))
+             {
+                 int lastPos = Microphone.GetPosition(null);
+                 if (lastPos != 0)
+                 {
+                 float[] samples = new float[tempAudioClip.samples];
+                 tempAudioClip.GetData(samples, 0);
 
-                        float[] finalSamples = new float[lastPos];
+                 float[] finalSamples = new float[lastPos];
 
-                        for (int i = 0; i < finalSamples.Length; i++)
-                        {
-                            finalSamples[i] = samples[i];
-                        }
+                     for (int i = 0; i < finalSamples.Length; i++)
+                     {
+                         finalSamples[i] = samples[i];
+                     }
 
-                        finalAudioClip = AudioClip.Create("FinalAudioClip", finalSamples.Length, 1, maxFreq, false);
+                     finalAudioClip = AudioClip.Create("FinalAudioClip", finalSamples.Length, 1, maxFreq, false);
 
-                        finalAudioClip.SetData(finalSamples, 0);
+                     finalAudioClip.SetData(finalSamples, 0);
 
-                        Microphone.End(null);
-                        Debug.Log("Recording stopped");
-                        SaveRecordedAudio();
-                        //Enable voice chat again
-                        voiceTrigger.Mode = Dissonance.CommActivationMode.VoiceActivation;
-                    }
-                }
-            }
+                     Microphone.End(null);
+                     Debug.Log("Recording stopped");
+                     SaveRecordedAudio();
+                     //Enable voice chat again
+                     voiceTrigger.Mode = Dissonance.CommActivationMode.VoiceActivation;
+                 }
+             }
+         }
     }
 
     //void StopRecord(object sender, LaserEventArgs e)
