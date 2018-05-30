@@ -1,11 +1,5 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-using UnityEngine.UI;
-using UnityEngine.EventSystems;
-using Valve.VR;
+﻿using UnityEngine;
 using Valve.VR.InteractionSystem;
-using System;
 using Photon;
 
 
