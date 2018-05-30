@@ -46,6 +46,8 @@ public class LaserPointer : PunBehaviour
     string buttonTag = "Button";
 	string commentObjectTag = "Building";
 
+    OpenCommentTool openCommentTool;
+
     GameObject player;
     CheckPlayerSize checkPlayerSize;
 
@@ -56,6 +58,7 @@ public class LaserPointer : PunBehaviour
         commentTool = GameObject.Find("CommentTool");
         commentOutput = GameObject.Find("CommentList");
         playComment = commentOutput.GetComponent<PlayComment>();
+        openCommentTool = GetComponent<OpenCommentTool>();
 
         player = GameObject.Find("Player");
         checkPlayerSize = player.GetComponent<CheckPlayerSize>();
@@ -106,12 +109,12 @@ public class LaserPointer : PunBehaviour
         Invoke("DisableCommentTool", 0);
         
         //PointerIn += OnHoverButtonEnter;
-        PointerIn += OpenCommentOutputPanel;
+        PointerIn += openCommentTool.OpenCommentOutputPanel;
         //PointerIn += ActivateCommentTool;
-        PointerIn += HideCommentTool;
+        PointerIn += openCommentTool.HideCommentTool;
 
         //PointerOut += OnHoverButtonExit;
-        PointerOut += CheckIfHiding;
+        PointerOut += openCommentTool.CheckIfHiding;
     }
 
     private void DisableCommentTool()

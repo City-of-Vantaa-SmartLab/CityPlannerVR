@@ -65,7 +65,7 @@ public class OpenCommentTool : MonoBehaviour {
     //    }
     //}
 
-    private void OpenCommentOutputPanel(object sender, LaserEventArgs e)
+    public void OpenCommentOutputPanel(object sender, LaserEventArgs e)
     {
         if (e.target.tag == commentToolTag && e.target.name == "Empty")
         {
@@ -98,7 +98,7 @@ public class OpenCommentTool : MonoBehaviour {
     bool closeCommentTool = false;
 
     //Hides objects when the laser doesn't hit them anymore
-    void CheckIfHiding(object sender, LaserEventArgs e)
+    public void CheckIfHiding(object sender, LaserEventArgs e)
     {
         if (e.target.name == commentOutput.name || e.target.name == "Empty")
         {
@@ -112,7 +112,7 @@ public class OpenCommentTool : MonoBehaviour {
         }
     }
 
-    void HideCommentTool(object sender, LaserEventArgs e)
+    public void HideCommentTool(object sender, LaserEventArgs e)
     {
         if (closeCommentOutput && e.target.tag == commentToolTag && e.target.tag == buttonTag && e.target.name != commentOutput.name)
         {
