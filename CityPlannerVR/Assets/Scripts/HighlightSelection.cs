@@ -1,11 +1,7 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.EventSystems;
 using Photon;
-using Hashtable = ExitGames.Client.Photon.Hashtable;
-
 
 /// <summary> 
 /// Attached gameobject can be selected and highlighted using hardcoded shaders. 

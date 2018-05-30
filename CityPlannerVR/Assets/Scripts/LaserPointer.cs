@@ -1,6 +1,4 @@
 ﻿//Based on SteamVR_LaserPointer.cs
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using Photon;
 
@@ -27,7 +25,7 @@ public class LaserPointer : PunBehaviour
     public Color editorColor;
     public Color fakeColor;
     public float thickness = 0.002f;
-    //public GameObject holder;
+    public GameObject holder;
     public GameObject pointer;
     public bool isForNetworking; //means it is "fake" and does not show for the local player
     public event LaserEventHandler PointerIn;
@@ -62,29 +60,20 @@ public class LaserPointer : PunBehaviour
         player = GameObject.Find("Player");
         checkPlayerSize = player.GetComponent<CheckPlayerSize>();
 
-        //holder = new GameObject();
-        //holder.transform.parent = this.transform;
-        //holder.transform.localPosition = Vector3.zero;
-        //holder.transform.localRotation = Quaternion.identity;
-
-        //pointer = GameObject.CreatePrimitive(PrimitiveType.Cube);
-        //pointer.transform.parent = holder.transform;
-        //pointer.transform.localScale = new Vector3(thickness, thickness, 100f);
-        //pointer.transform.localPosition = new Vector3(0f, 0f, 50f);
-        //pointer.transform.localRotation = Quaternion.identity;
-
-        InitPointer(transform);
+        InitHolder(transform);
+        InitPointer(holder.transform);
 
         BoxCollider collider = pointer.GetComponent<BoxCollider>();
         if (collider)
         {
-            Object.Destroy(collider);
+            Destroy(collider);
         }
 
         triggered = false;
 
         //Invoke("StartNetworking", 1f);
     }
+
 
     private void Start()
     {
@@ -131,10 +120,24 @@ public class LaserPointer : PunBehaviour
         commentTool.SetActive(false);
     }
 
+    private void InitHolder(Transform targetTransform)
+    {
+        if (targetTransform.childCount > 0)
+            holder = targetTransform.GetChild(0).gameObject;
+
+        if (holder == null)
+        {
+            holder = new GameObject();
+            holder.transform.parent = this.transform;
+            holder.transform.localPosition = Vector3.zero;
+            holder.transform.localRotation = Quaternion.identity;
+        }
+    }
+
+
     public void InitPointer(Transform targetTransform)
     {
-        //if (targetTransform.childCount > 0)
-        //    pointer = targetTransform.GetChild(0).gameObject;
+
         if (pointer == null)
         {
             pointer = GameObject.CreatePrimitive(PrimitiveType.Cube);
@@ -228,7 +231,8 @@ public class LaserPointer : PunBehaviour
 
     public void ActivateCube(bool active)
     {
-            pointer.SetActive(active);
+        holder.SetActive(active);
+        //pointer.SetActive(active);
     }
 
     public void ActivateFakeLaserRPC(bool status)
