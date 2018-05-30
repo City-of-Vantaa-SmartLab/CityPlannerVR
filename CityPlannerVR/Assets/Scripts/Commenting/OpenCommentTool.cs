@@ -74,7 +74,7 @@ public class OpenCommentTool : MonoBehaviour {
         }
     }
 
-    public void ActivateCommentTool(GameObject target)
+    public void ActivateCommentTool(LaserPointer laser, GameObject target)
     {
         if (target.tag == commentObjectTag || target.tag == "Props")
         {
@@ -83,7 +83,7 @@ public class OpenCommentTool : MonoBehaviour {
             commentTool.SetActive(true);
 
             //CommentTool position
-            commentTool.transform.position = new Vector3(0, 0, 0);
+            commentTool.transform.position = laser.hitPoint - new Vector3(gameObject.transform.position.x, 0, gameObject.transform.position.z);
 
             commentTool.transform.LookAt(gameObject.transform);
             commentTool.transform.localScale = player.transform.localScale;

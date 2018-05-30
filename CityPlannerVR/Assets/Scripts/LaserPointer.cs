@@ -46,19 +46,17 @@ public class LaserPointer : PunBehaviour
     string buttonTag = "Button";
 	string commentObjectTag = "Building";
 
-    OpenCommentTool openCommentTool;
-
     GameObject player;
     CheckPlayerSize checkPlayerSize;
 
     Ray raycast;
+    public Vector3 hitPoint;
 
     private void Awake()
     {
         commentTool = GameObject.Find("CommentTool");
         commentOutput = GameObject.Find("CommentList");
         playComment = commentOutput.GetComponent<PlayComment>();
-        openCommentTool = GetComponent<OpenCommentTool>();
 
         player = GameObject.Find("Player");
         checkPlayerSize = player.GetComponent<CheckPlayerSize>();
@@ -105,16 +103,6 @@ public class LaserPointer : PunBehaviour
 
         recordComment = commentTool.GetComponentInChildren<RecordComment>();
 
-        //So the RecordPlayers Start can happen before it is disabled
-        Invoke("DisableCommentTool", 0);
-        
-        //PointerIn += OnHoverButtonEnter;
-        PointerIn += openCommentTool.OpenCommentOutputPanel;
-        //PointerIn += ActivateCommentTool;
-        PointerIn += openCommentTool.HideCommentTool;
-
-        //PointerOut += OnHoverButtonExit;
-        PointerOut += openCommentTool.CheckIfHiding;
     }
 
     private void DisableCommentTool()
@@ -199,6 +187,8 @@ public class LaserPointer : PunBehaviour
             args.distance = 0f;
             args.target = previousContact;
             args.hitPoint = Vector3.zero;
+            //Tarun muuttuja
+            hitPoint = Vector3.zero;
             OnPointerOut(args);
             previousContact = null;
         }
@@ -208,6 +198,8 @@ public class LaserPointer : PunBehaviour
             argsIn.distance = hit.distance;
             argsIn.target = hit.transform;
             argsIn.hitPoint = hit.point;
+            //Tarun muuttuja
+            hitPoint = hit.point;
             OnPointerIn(argsIn);
             previousContact = hit.transform;
         }
