@@ -45,7 +45,7 @@ public class OpenCommentTool : MonoBehaviour {
         laser.PointerOut += CheckIfHiding;
 
         //So the RecordPlayers Start can happen before it is disabled
-        Invoke("DisableCommentTool", 0);
+        Invoke("DisableCommentTool", 2);
     }
 
     private void DisableCommentTool()

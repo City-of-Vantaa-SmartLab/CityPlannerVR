@@ -111,7 +111,9 @@ public class RecordComment : MonoBehaviour
         laserLeft.PointerIn += FindTarget;
         laserRight.PointerIn += FindTarget;
 
-		commenter = PhotonPlayerAvatar.LocalPlayerInstance.GetComponent<PhotonView>().owner.NickName;
+        voiceTrigger = PhotonPlayerAvatar.LocalPlayerInstance.GetComponent<Dissonance.VoiceBroadcastTrigger>();
+        commenter = PhotonPlayerAvatar.LocalPlayerInstance.GetComponent<PhotonView>().owner.NickName;
+        Debug.Log("gr angrg");
     }
 
     public void  PlaySoundEffect()
@@ -155,11 +157,11 @@ public class RecordComment : MonoBehaviour
     {
          if (micConnected)
          {
+            DisableVoiceChat();
+            source.Play();
+
             if (Microphone.IsRecording(null))
              {
-				DisableVoiceChat();
-				source.Play();
-
                  int lastPos = Microphone.GetPosition(null);
                  if (lastPos != 0)
                  {

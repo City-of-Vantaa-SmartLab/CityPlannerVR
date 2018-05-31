@@ -66,7 +66,6 @@ GameObject:
   - component: {fileID: 114130250980583898}
   - component: {fileID: 114175708945754118}
   - component: {fileID: 65030743730143356}
-  - component: {fileID: 114820608924116730}
   - component: {fileID: 82124880909034332}
   m_Layer: 15
   m_Name: PhotonAvatar
@@ -846,8 +845,11 @@ MonoBehaviour:
   editorColor: {r: 1, g: 0, b: 0, a: 0}
   fakeColor: {r: 0, g: 1, b: 0, a: 0}
   thickness: 0.002
+  holder: {fileID: 0}
   pointer: {fileID: 0}
   isForNetworking: 1
+  hitPoint: {x: 0, y: 0, z: 0}
+  direction: {x: 0, y: 0, z: 0}
 --- !u!114 &114673407450687480
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -888,17 +890,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7e3a90fd5dac60b43826cd4366b0c74e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!114 &114820608924116730
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1518467711047004}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: cecceb211ee8d744796ae4604af0503c, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!114 &114885442474362824
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -915,8 +906,11 @@ MonoBehaviour:
   editorColor: {r: 1, g: 0, b: 0, a: 0}
   fakeColor: {r: 0, g: 1, b: 0, a: 0}
   thickness: 0.002
+  holder: {fileID: 0}
   pointer: {fileID: 0}
   isForNetworking: 1
+  hitPoint: {x: 0, y: 0, z: 0}
+  direction: {x: 0, y: 0, z: 0}
 --- !u!135 &135054909413997858
 SphereCollider:
   m_ObjectHideFlags: 1
