@@ -76,7 +76,7 @@ public class RecordComment : MonoBehaviour
     {
         //TODO: Buildissa on eri polku ehkä
         //savePath = Application.dataPath+ slash + "Resources" + slash + "Comments" + slash + directoryName + slash;
-        savePath = Application.streamingAssetsPath + slash + slash + "Comments" + slash + directoryName + slash;
+        savePath = Application.streamingAssetsPath +  slash + "Comments" + slash + directoryName + slash;
         audioSavePathExt = "AudioFiles" + slash;
 
         laserLeft = GameObject.Find("Player/SteamVRObjects/Hand1/Laserpointer").GetComponentInChildren<LaserPointer>();
@@ -110,6 +110,8 @@ public class RecordComment : MonoBehaviour
 
         laserLeft.PointerIn += FindTarget;
         laserRight.PointerIn += FindTarget;
+
+		commenter = PhotonPlayerAvatar.LocalPlayerInstance.GetComponent<PhotonView>().owner.NickName;
     }
 
     public void  PlaySoundEffect()
@@ -153,11 +155,11 @@ public class RecordComment : MonoBehaviour
     {
          if (micConnected)
          {
-            DisableVoiceChat();
-            source.Play();
-
-             if (Microphone.IsRecording(null))
+            if (Microphone.IsRecording(null))
              {
+				DisableVoiceChat();
+				source.Play();
+
                  int lastPos = Microphone.GetPosition(null);
                  if (lastPos != 0)
                  {

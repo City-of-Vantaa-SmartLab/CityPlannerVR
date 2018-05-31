@@ -16,6 +16,7 @@ public class OpenCommentTool : MonoBehaviour {
     RecordComment recordComment;
 
     string commentToolTag = "CommentToolTag";
+	string spawnableTag = "Spawnable";
     string buttonTag = "Button";
     string commentObjectTag = "Building";
     CheckPlayerSize playerSize;
@@ -81,7 +82,7 @@ public class OpenCommentTool : MonoBehaviour {
 
     public void ActivateCommentTool(LaserPointer laser, GameObject target)
     {
-        if (target.tag == commentObjectTag || target.tag == "Spawnable")
+		if (target.tag == commentObjectTag || target.tag == spawnableTag)
         {
             playComment.pointedTarget = target.gameObject;
             recordComment.target = target.gameObject;
@@ -96,7 +97,7 @@ public class OpenCommentTool : MonoBehaviour {
             {
                 //CommentTool position
                 commentTool.transform.position = laser.hitPoint - laser.direction;
-                commentTool.transform.localScale = new Vector3(1, 1, 1);
+                commentTool.transform.localScale = Vector3.one;
             }
 
             commentTool.transform.LookAt(gameObject.transform);
