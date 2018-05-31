@@ -332,6 +332,7 @@ public class InputMaster : PunBehaviour {
             {
                 laserButton.OnClicked();
             }
+            laserPointer.gameObject.GetComponent<OpenCommentTool>().ActivateCommentTool(laserPointer, targetedObject);
         }
     }
 

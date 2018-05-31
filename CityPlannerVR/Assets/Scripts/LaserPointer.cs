@@ -50,6 +50,7 @@ public class LaserPointer : PunBehaviour
     CheckPlayerSize checkPlayerSize;
 
     Ray raycast;
+    public Vector3 hitPoint;
 
     private void Awake()
     {
@@ -102,16 +103,6 @@ public class LaserPointer : PunBehaviour
 
         recordComment = commentTool.GetComponentInChildren<RecordComment>();
 
-        //So the RecordPlayers Start can happen before it is disabled
-        Invoke("DisableCommentTool", 0);
-        
-        //PointerIn += OnHoverButtonEnter;
-        PointerIn += OpenCommentOutputPanel;
-        //PointerIn += ActivateCommentTool;
-        PointerIn += HideCommentTool;
-
-        //PointerOut += OnHoverButtonExit;
-        PointerOut += CheckIfHiding;
     }
 
     private void DisableCommentTool()
@@ -196,6 +187,8 @@ public class LaserPointer : PunBehaviour
             args.distance = 0f;
             args.target = previousContact;
             args.hitPoint = Vector3.zero;
+            //Tarun muuttuja
+            hitPoint = Vector3.zero;
             OnPointerOut(args);
             previousContact = null;
         }
@@ -205,6 +198,8 @@ public class LaserPointer : PunBehaviour
             argsIn.distance = hit.distance;
             argsIn.target = hit.transform;
             argsIn.hitPoint = hit.point;
+            //Tarun muuttuja
+            hitPoint = hit.point;
             OnPointerIn(argsIn);
             previousContact = hit.transform;
         }
@@ -254,108 +249,6 @@ public class LaserPointer : PunBehaviour
             }
             else
                 ActivateCube(false);
-        }
-
-    }
-
-    //------------------------------------------------------------------------------------------------------------------------------
-    //Comment stuff
-    //------------------------------------------------------------------------------------------------------------------------------
-
-    //private void OnHoverButtonEnter(object sender, LaserEventArgs e)
-    //{
-    //    if (e.target.tag == buttonTag)
-    //    {
-    //        e.target.gameObject.GetComponent<UnityEngine.UI.Image>().color = Color.blue;
-            
-    //    }
-    //}
-
-    //private void OnHoverButtonExit(object sender, LaserEventArgs e)
-    //{
-    //    if (e.target.tag == buttonTag)
-    //    {
-    //        e.target.gameObject.GetComponent<UnityEngine.UI.Image>().color = Color.green;
-    //    }
-    //}
-
-    private void OpenCommentOutputPanel(object sender, LaserEventArgs e)
-    {
-        if(e.target.tag == commentToolTag && e.target.name == "Empty")
-        {
-            commentOutput.SetActive(true);
-            playComment.LoadComments();
-        }
-    }
-
-    public void ActivateCommentTool(object sender, LaserEventArgs e)
-    {
-        if (e.target.tag == commentObjectTag || e.target.tag == "Props")
-        {
-            playComment.pointedTarget = e.target.gameObject;
-            recordComment.target = e.target.gameObject;
-            commentTool.SetActive(true);
-
-            if(gameObject.transform.eulerAngles.y >= -45 && gameObject.transform.eulerAngles.y < 45)
-            {
-                commentTool.transform.position = gameObject.transform.position + new Vector3(0, player.transform.localScale.y, player.transform.localScale.z);
-            }
-            else if(gameObject.transform.eulerAngles.y >= 45 && gameObject.transform.eulerAngles.y < 135)
-            {
-                commentTool.transform.position = gameObject.transform.position + new Vector3(player.transform.localScale.x, player.transform.localScale.y, 0);
-            }
-            else if (gameObject.transform.eulerAngles.y >= 135 && gameObject.transform.eulerAngles.y < -135)
-            {
-                commentTool.transform.position = gameObject.transform.position + new Vector3(0, player.transform.localScale.y, -player.transform.localScale.z);
-            }
-            else
-            {
-                commentTool.transform.position = gameObject.transform.position + new Vector3(-player.transform.localScale.x, player.transform.localScale.y, 0);
-            }
-            commentTool.transform.LookAt(gameObject.transform);
-            commentTool.transform.localScale = player.transform.localScale;
-
-            CommentToolManager commentToolManager;
-            commentToolManager = commentTool.GetComponent<CommentToolManager>();
-            commentToolManager.targetName = e.target.name;
-
-            //commentToolManager.sender = sender;
-            //commentToolManager.LEArgs = e;
-        }
-    }
-
-    bool closeCommentOutput = false;
-    bool closeCommentTool = false;
-
-    //Hides objects when the laser doesn't hit them anymore
-    void CheckIfHiding(object sender, LaserEventArgs e)
-    {
-        if (e.target.name == commentOutput.name || e.target.name == "Empty")
-        {
-            //if we are closing just the list of comments
-            closeCommentOutput = true;
-        }
-        else if (e.target.tag == commentToolTag)
-        {
-            //if we are closing the whole comment wheel
-            closeCommentTool = true;
-        }
-    }
-
-    void HideCommentTool(object sender, LaserEventArgs e)
-    {
-        if (closeCommentOutput && e.target.tag == commentToolTag && e.target.tag == buttonTag && e.target.name != commentOutput.name)
-        {
-            //if we are closing just the list of comments
-            commentOutput.SetActive(false);
-            closeCommentOutput = false;
-        }
-        else if (closeCommentTool && e.target.tag != commentToolTag && e.target.tag != buttonTag)
-        {
-            //if we are closing the whole comment wheel
-            commentOutput.SetActive(false);
-            commentTool.SetActive(false);
-            closeCommentTool = false;
         }
     }
 }

@@ -266,7 +266,7 @@ public class ToolManager : MonoBehaviour {
         if (teleportHover)
             teleportHover.teleportAllowed = status;
         else
-            Debug.Log("Could not find teleportHover script!");
+            Debug.LogError("Could not find teleportHover script!");
 
         //Debug.Log("Teleporting active: " + status);
     }
