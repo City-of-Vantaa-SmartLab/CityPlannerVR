@@ -5,6 +5,7 @@ using UnityEngine;
 public class OpenCommentTool : MonoBehaviour {
 
     GameObject player;
+    GameObject playerAvatar;
 
     LaserPointer laser;
     PhotonLaserManager photonLaser;
@@ -17,10 +18,14 @@ public class OpenCommentTool : MonoBehaviour {
     string commentToolTag = "CommentToolTag";
     string buttonTag = "Button";
     string commentObjectTag = "Building";
+    CheckPlayerSize playerSize;
 
     void Start()
     {
         player = GameObject.Find("Player");
+        playerSize = player.GetComponent<CheckPlayerSize>();
+
+        playerAvatar = PhotonPlayerAvatar.LocalPlayerInstance;
 
         laser = GetComponent<LaserPointer>();
         photonLaser = GetComponent<PhotonLaserManager>();
@@ -76,17 +81,26 @@ public class OpenCommentTool : MonoBehaviour {
 
     public void ActivateCommentTool(LaserPointer laser, GameObject target)
     {
-        if (target.tag == commentObjectTag || target.tag == "Props")
+        if (target.tag == commentObjectTag || target.tag == "Spawnable")
         {
             playComment.pointedTarget = target.gameObject;
             recordComment.target = target.gameObject;
             commentTool.SetActive(true);
 
-            //CommentTool position
-            commentTool.transform.position = laser.hitPoint - new Vector3(gameObject.transform.position.x, 0, gameObject.transform.position.z);
+            if (playerSize.isSmall)
+            {
+				commentTool.transform.position = (laser.hitPoint - playerAvatar.transform.position)/6 + playerAvatar.transform.position;
+                commentTool.transform.localScale = player.transform.localScale;
+            }
+            else
+            {
+                //CommentTool position
+                commentTool.transform.position = laser.hitPoint - laser.direction;
+                commentTool.transform.localScale = new Vector3(1, 1, 1);
+            }
 
             commentTool.transform.LookAt(gameObject.transform);
-            commentTool.transform.localScale = player.transform.localScale;
+            
 
             CommentToolManager commentToolManager;
             commentToolManager = commentTool.GetComponent<CommentToolManager>();
