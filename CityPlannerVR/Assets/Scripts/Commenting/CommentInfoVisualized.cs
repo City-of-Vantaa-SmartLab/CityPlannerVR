@@ -33,17 +33,17 @@ public class CommentInfoVisualized : MonoBehaviour {
         //}
         Debug.Log("Generating info");
 
-        GenerateTextCell(CurrentComment._data.userName);
-        GenerateTextCell(CurrentComment._data.submittedShortTime);
-        GenerateTextCell(CurrentComment._data.dataString);
+        GenerateTextCell(CurrentComment.data.userName);
+        GenerateTextCell(CurrentComment.data.submittedLongDate);
+        GenerateTextCell(CurrentComment.data.dataString);
 
-        GenerateTextCell(CurrentComment._data.commentedObjectName);
-        GenerateTextCell(CurrentComment._data.quickCheck.ToString());
-        GenerateTextCell(CurrentComment._data.userName);
+        GenerateTextCell(CurrentComment.data.commentedObjectName);
+        GenerateTextCell(CurrentComment.data.quickCheck.ToString());
+        GenerateTextCell(CurrentComment.data.userName);
 
-        GenerateTextCell(CurrentComment._data.userName);
-        GenerateTextCell(CurrentComment._data.userName);
-        GenerateTextCell(CurrentComment._data.userName);
+        GenerateTextCell(CurrentComment.data.userName);
+        GenerateTextCell(CurrentComment.data.userName);
+        GenerateTextCell(CurrentComment.data.userName);
     }
 
     public void GenerateTestImages()

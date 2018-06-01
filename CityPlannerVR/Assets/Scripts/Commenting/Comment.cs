@@ -15,7 +15,7 @@ public class CommentData
     public string commentedObjectName;
     public string SHPath;
     
-    public string submittedShortTime;
+    public string submittedLongDate;
     public Vector3 commentatorPosition;
     public int quickCheck;
 }
@@ -28,120 +28,43 @@ public class Comment {
 
     public enum CommentType { None, Text, Thumb, Voice };
 
-    public CommentType CommentT
-    {
-        get
-        {
-            return currentType;
-        }
-        set
-        {
-            currentType = value;
-        }
-    }
-
-    private CommentType currentType;
-    public string _dataString; //comment's text or a filepath for voice files
-    public CommentData _data; //used for storing and loading data
-
-    public string _userName; //player
-    public string _commentedObjectName;
-    public string _SHPath; //path to the screenshot that was taken with the commit
-    public string _submittedShortTime;
-    public Vector3 _pos;
-    public int _quickCheck;
+    //public CommentType CurrentType { get; set; }
+    public CommentData data; //used for storing and loading data
 
 
     //default constructor
     public Comment()
     {
-        _dataString = null; //comment's text or a filepath for voice files
-        _data = null; //used for storing and loading data
-
-        _userName = null; //player
-        _commentedObjectName = null;
-        _SHPath = null; //path to the screenshot that was taken with the commit
-        _submittedShortTime = null;
-        //_pos = null;
-        _quickCheck = 0;
-
+        data = null;
         OnEnable();
-        Debug.Log("Comment created");
-
+        //Debug.Log("Comment created");
     }
-
-    ////constructor
-    //public Comment(GameObject user, GameObject target, string screenshotPath, CommentType type, string dataString, DateTime submittedTime)
-    //{
-    //    _dataString = dataString;
-    //    CommentT = type;
-
-    //    _SHPath = screenshotPath;
-    //    _userName = user.name;
-    //    _commentedObjectName = target.name;
-    //    _submittedTime = submittedTime;
-    //    _pos = user.transform.position;
-    //    _quickCheck = ConvertToQuickCheck(2);
-    //}
 
     //Not a monobehaviour!
     private void OnEnable()
     {
-        SaveData.OnLoaded += LoadData;
-        SaveData.OnBeforeSave += StoreData;
+        //SaveData.OnLoaded += LoadData;
+        //SaveData.OnBeforeSave += StoreData;
         SaveData.OnBeforeSave += ApplyDataToContainer;
     }
 
     //Not a monobehaviour!
     private void OnDisable()
     {
-        SaveData.OnLoaded -= LoadData;
-        SaveData.OnBeforeSave -= StoreData;
+        //SaveData.OnLoaded -= LoadData;
+        //SaveData.OnBeforeSave -= StoreData;
         SaveData.OnBeforeSave -= ApplyDataToContainer;
     }
 
-    //Needed only if the content is changed during runtime
-    public void StoreData()
-    {
-        _data.dataString = _dataString;
-        _data.type = CommentT;
-
-        _data.userName = _userName;
-        _data.commentedObjectName = _commentedObjectName;
-        _data.SHPath = _SHPath;
-        _data.submittedShortTime = _submittedShortTime;
-        _data.commentatorPosition = _pos;
-        _data.quickCheck = _quickCheck;
-    }
-
-    //Loads variables from CommentData, should be used after initalization (if not created by user)
-    public void LoadData()
-    {
-        _dataString = _data.dataString;
-        CommentT = _data.type;
-
-        _userName = _data.userName;
-        _commentedObjectName = _data.commentedObjectName;
-        _SHPath = _data.SHPath;
-        _submittedShortTime = _data.submittedShortTime;
-        _pos = _data.commentatorPosition;
-        _quickCheck = _data.quickCheck;
-        if (_quickCheck == 0)
-        {
-            _quickCheck = ConvertToQuickCheck(2);
-        }
-    }
-
-    //called by OnBeforeSave event
     public void ApplyDataToContainer()
     {
-        SaveData.AddCommentData(_data);
+        SaveData.AddCommentData(data);
         OnDisable();
     }
 
     public void SortAndAddToLocalList()
     {
-        switch (_data.type)
+        switch (data.type)
         {
             case Comment.CommentType.Text:
                 if (!IsCommentInList(SaveData.commentLists.textComments))
@@ -159,7 +82,7 @@ public class Comment {
                 break;
 
             default:
-                Debug.Log("Type not set for comment (quickcheck: " + _quickCheck + ") by user " + this._userName + " while being sorted!");
+                Debug.Log("Type not set for comment (quickcheck: " + data.quickCheck + ") by user " + this.data.userName + " while being sorted!");
                 break;
         }
     }
@@ -180,10 +103,10 @@ public class Comment {
 
     public bool IsTheSameComment(Comment testComment)
     {
-        if (_quickCheck == testComment._quickCheck &&  //comparing ints is quicker than strings
-            _userName == testComment._userName &&
-            _commentedObjectName == testComment._commentedObjectName &&
-            _dataString == testComment._dataString
+        if (data.quickCheck == testComment.data.quickCheck &&  //comparing ints is quicker than strings
+            data.userName == testComment.data.userName &&
+            data.commentedObjectName == testComment.data.commentedObjectName &&
+            data.dataString == testComment.data.dataString
             )
             return true;
         else
@@ -200,23 +123,23 @@ public class Comment {
         return magic;
     }
 
-    public int ConvertToQuickCheck(int subStringMaxLength)
+    public void GenerateQuickCheck(int subStringMaxLength)
     {
-        string userName = TruncateString(_userName, subStringMaxLength);
-        string objectName = TruncateString(_commentedObjectName, subStringMaxLength);
-        string date = TruncateString(_submittedShortTime, subStringMaxLength);
+        string userName = TruncateString(data.userName, subStringMaxLength);
+        string objectName = TruncateString(data.commentedObjectName, subStringMaxLength);
+        string date = TruncateString(data.submittedLongDate, subStringMaxLength);
         string uberString = userName + objectName + date;
         Debug.Log("Joining strings: " + userName + " " + objectName + " " + date);
         int magic = ConvertFirstCharsToInt(uberString, subStringMaxLength * 4);
         Debug.Log("QuickCheck: " + magic);
-        return magic;
+        data.quickCheck = magic;
     }
 
     public void ConvertToQuickCheck(int maxLength, CommentData data)
     {
         string userName = TruncateString(data.userName, maxLength);
         string objectName = TruncateString(data.commentedObjectName, maxLength);
-        string date = TruncateString(data.submittedShortTime, maxLength);
+        string date = TruncateString(data.submittedLongDate, maxLength);
         string uberString = userName + objectName + date;
         Debug.Log("Joining strings: " + userName + " " + objectName + " " + date);
         int magic = ConvertFirstCharsToInt(uberString, maxLength * 4);
