@@ -34,7 +34,7 @@ public class CommentInfoVisualized : MonoBehaviour {
         Debug.Log("Generating info");
 
         GenerateTextCell(CurrentComment.data.userName);
-        GenerateTextCell(CurrentComment.data.submittedLongDate);
+        GenerateTextCell(CurrentComment.data.submittedShortDate);
         GenerateTextCell(CurrentComment.data.dataString);
 
         GenerateTextCell(CurrentComment.data.commentedObjectName);

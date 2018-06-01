@@ -15,7 +15,8 @@ public class CommentData
     public string commentedObjectName;
     public string SHPath;
     
-    public string submittedLongDate;
+    public string submittedShortDate;
+    public string submittedShortTime;
     public Vector3 commentatorPosition;
     public int quickCheck;
 }
@@ -127,7 +128,7 @@ public class Comment {
     {
         string userName = TruncateString(data.userName, subStringMaxLength);
         string objectName = TruncateString(data.commentedObjectName, subStringMaxLength);
-        string date = TruncateString(data.submittedLongDate, subStringMaxLength);
+        string date = TruncateString(data.submittedShortDate, subStringMaxLength);
         string uberString = userName + objectName + date;
         Debug.Log("Joining strings: " + userName + " " + objectName + " " + date);
         int magic = ConvertFirstCharsToInt(uberString, subStringMaxLength * 4);
@@ -139,7 +140,7 @@ public class Comment {
     {
         string userName = TruncateString(data.userName, maxLength);
         string objectName = TruncateString(data.commentedObjectName, maxLength);
-        string date = TruncateString(data.submittedLongDate, maxLength);
+        string date = TruncateString(data.submittedShortDate, maxLength);
         string uberString = userName + objectName + date;
         Debug.Log("Joining strings: " + userName + " " + objectName + " " + date);
         int magic = ConvertFirstCharsToInt(uberString, maxLength * 4);

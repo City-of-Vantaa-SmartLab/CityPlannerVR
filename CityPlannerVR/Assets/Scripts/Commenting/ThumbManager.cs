@@ -53,18 +53,10 @@ public class ThumbManager : MonoBehaviour {
         tempData.userName = userName;
         tempData.commentedObjectName = commentToolManager.targetName;
         tempData.SHPath = "";
-        tempData.submittedLongDate = System.DateTime.Now.ToShortDateString();
         //tempData.commentatorPosition = player.transform.position;
         tempData.type = Comment.CommentType.Thumb;
         
         tempData.quickCheck = 0; //will be created in saveAndLoadComments script
-
-        //string userName; //player
-        //string commentedObjectName;
-        //string SHPath;
-        //System.DateTime submittedTime;
-        //Vector3 commentatorPosition;
-        //int quickCheck;
 
         return tempData;
     }

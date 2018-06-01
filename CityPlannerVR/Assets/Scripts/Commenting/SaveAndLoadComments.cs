@@ -49,7 +49,8 @@ public class SaveAndLoadComments : MonoBehaviour {
     public Comment CreateNewComment(CommentData data)
     {
         Comment comment = CreateComment();
-        data.submittedLongDate = System.DateTime.Now.ToLongDateString();
+        data.submittedShortDate = System.DateTime.Now.ToShortDateString();
+        data.submittedShortTime = System.DateTime.Now.ToShortTimeString();
         comment.data = data;
         comment.GenerateQuickCheck(3);
         //comment.LoadData();
