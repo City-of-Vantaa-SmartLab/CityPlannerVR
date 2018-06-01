@@ -11,7 +11,8 @@ using UnityEngine.UI;
 public class CommentDepository : MonoBehaviour {
 
     public GameObject testImage;
-    public GameObject targetForVisuals;
+    public GameObject targetForList;
+    
 
     [SerializeField]
     private List<Comment> texts, voices, thumbs = new List<Comment>();
@@ -37,9 +38,9 @@ public class CommentDepository : MonoBehaviour {
         thumbs = SaveData.commentLists.thumbComments;
     }
 
-    public void GenerateVisuals(Comment.CommentType type)
+    public void GenerateListVisuals(Comment.CommentType type)
     {
-        if (!targetForVisuals)
+        if (!targetForList)
         {
             Debug.LogError("No target set for comment visualization!");
             return;
@@ -88,7 +89,7 @@ public class CommentDepository : MonoBehaviour {
 
                 ////go.transform.parent = targetForVisuals.transform;
                 //go.transform.SetParent(targetForVisuals.transform, false);
-                Instantiate(testImage, targetForVisuals.transform, false);
+                Instantiate(testImage, targetForList.transform, false);
             }
 
 
