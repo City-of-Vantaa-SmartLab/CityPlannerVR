@@ -163,7 +163,6 @@ public class PhotonLaserManager : PunBehaviour {
                 laserButton.OnHoverOut();
             }
         }
-
     }
 
 

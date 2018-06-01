@@ -39,8 +39,8 @@ public class SaveAndLoadComments : MonoBehaviour {
     public static Comment CreateOldComment(CommentData data)
     {
         Comment comment = CreateComment();
-        comment._data = data;
-        comment.LoadData();
+        comment.data = data;
+        //comment.LoadData();
         comment.SortAndAddToLocalList();
         return comment;
     }
@@ -49,9 +49,11 @@ public class SaveAndLoadComments : MonoBehaviour {
     public Comment CreateNewComment(CommentData data)
     {
         Comment comment = CreateComment();
-        data.submittedShortTime = System.DateTime.Now.ToShortDateString();
-        comment._data = data;
-        comment.LoadData();
+        data.submittedShortDate = System.DateTime.Now.ToShortDateString();
+        data.submittedShortTime = System.DateTime.Now.ToShortTimeString();
+        comment.data = data;
+        comment.GenerateQuickCheck(3);
+        //comment.LoadData();
         comment.SortAndAddToLocalList();
         //comment.ApplyDataToContainer();  //this will add the comment to savedata's commentcontainer  //should be done via sub in Comment script to savedata
         return comment;
