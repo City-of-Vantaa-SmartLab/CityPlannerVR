@@ -74,7 +74,16 @@ public class CommentDepository : MonoBehaviour {
 
     private void GenerateVisualsOnList(List<Comment> list)
     {
-        
+        CommentListVisualized listing = targetForList.GetComponent<CommentListVisualized>();
+        if (listing)
+        {
+
+        }
+        else
+        {
+            Debug.Log("Could not find component CommentListVisualized!");
+        }
+
     }
 
     public void GenerateTestImages()

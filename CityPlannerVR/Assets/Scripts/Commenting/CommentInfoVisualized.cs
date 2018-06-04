@@ -11,7 +11,6 @@ using UnityEngine.UI;
 
 public class CommentInfoVisualized : MonoBehaviour {
 
-    //public GameObject testImage;
     public GameObject textCell;
 
     private Comment _currentComment;
@@ -35,7 +34,6 @@ public class CommentInfoVisualized : MonoBehaviour {
 
     private void Start()
     {
-        //CurrentComment = GenerateTestComment();
         textCells = new List<GameObject>();
     }
 
@@ -44,11 +42,6 @@ public class CommentInfoVisualized : MonoBehaviour {
         ClearVisuals();
         Debug.Log("Generating info");
 
-        //if (CurrentComment == null)
-        //{
-        //    Debug.Log("No comment selected, switching to latest");
-        //    CurrentComment = ChooseLatestComment();
-        //}
         if (CurrentComment == null)
         {
             Debug.Log("No comment selected, using null values");
@@ -67,19 +60,6 @@ public class CommentInfoVisualized : MonoBehaviour {
         GenerateTextCell(CurrentComment.data.SHPath);
         GenerateTextCell(CurrentComment.data.commentatorPosition.ToString());
     }
-
-    //public void GenerateTestImages()
-    //{
-    //    if (testImage)
-    //    {
-    //        for (int i = 0; i < 5; i++)
-    //        {
-    //            Instantiate(testImage, transform, false);
-    //        }
-    //    }
-    //    else
-    //        Debug.Log("No test image set!");
-    //}
 
     public void GenerateTextCell(string textContent)
     {
@@ -102,7 +82,7 @@ public class CommentInfoVisualized : MonoBehaviour {
         }
     }
 
-    private Comment GenerateTestComment()
+    public static Comment GenerateTestComment()
     {
         Comment newComment = new Comment();
         CommentData data = new CommentData();
