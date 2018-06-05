@@ -66,7 +66,7 @@ public class CameraPathHandler : MonoBehaviour {
 		Subscribe ();
 
 		//myHandNumber = toolManager.myHandNumber;
-		Debug.Log ("myHandNumber = " + myHandNumber);
+		//Debug.Log ("myHandNumber = " + myHandNumber);
 	}
 
     private void OnEnable()

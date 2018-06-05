@@ -59,7 +59,7 @@ public class PlayComment : MonoBehaviour {
 
     Text commentNumber;
 
-    int index;
+    int commentIndexNumber;
 
     GameObject commentButton;
 
@@ -112,7 +112,7 @@ public class PlayComment : MonoBehaviour {
                     commentDictionary.Add(positionDB.list[i].recordName, new VoiceComment(positionDB.list[i].commenterName, positionDB.list[i].targetName , new Vector3(positionDB.list[i].position[0], positionDB.list[i].position[1], positionDB.list[i].position[2]), i));
                 }
 
-                GetAllCommentForObjects();
+                GetAllCommentsForObjects();
                 if (commentsToPlayHere.Count > 0)
                 {
                     CreateButton(commentIndex);
@@ -143,20 +143,24 @@ public class PlayComment : MonoBehaviour {
 
     IEnumerator LoadCommentsFromStreamingAssets()
     {
+        int index = 0;
+        WWW request = null;
+
         for (int i = 0; i < fileInfo.Length; i++)
         {
-            WWW request = new WWW("file:///" + record.SavePath + record.AudioExt + fileInfo[i].Name);
+            request = new WWW("file:///" + record.SavePath + record.AudioExt + fileInfo[i].Name);
             if (fileInfo[i].Name.EndsWith(".wav"))
             {
                 commentClips.Add(request.GetAudioClip());
+                commentClips[index].name = "VoiceComment";
 
-                yield return request;
+                index++;
             }
-
         }
+        yield return request;
     }
 
-    void GetAllCommentForObjects()
+    void GetAllCommentsForObjects()
     {
         //commentsToPlayHere.Clear();
 
@@ -247,14 +251,14 @@ public class PlayComment : MonoBehaviour {
     {
         if (commentDictionary.Count > 0)
         {
-            index = commentIndex + 1;
+            commentIndexNumber = commentIndex + 1;
         }
         else
         {
-            index = 0;
+            commentIndexNumber = 0;
         }
 
         //commentNumber.text = index + "/" + commentDictionary.Count;
-        commentNumber.text = index + "/" + commentsToPlayHere.Count;
+        commentNumber.text = commentIndexNumber + "/" + commentsToPlayHere.Count;
     }
 }

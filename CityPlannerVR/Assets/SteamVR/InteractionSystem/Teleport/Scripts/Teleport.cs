@@ -379,7 +379,7 @@ namespace Valve.VR.InteractionSystem
 
 				if ( showPlayAreaMarker )
 				{
-					//Show the play area marker if this is a teleport area
+                    //Show the play area marker if this is a teleport area
 					TeleportArea teleportArea = pointedAtTeleportMarker as TeleportArea;
 					if ( teleportArea != null && !teleportArea.locked && playAreaPreviewTransform != null )
 					{

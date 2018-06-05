@@ -5,6 +5,7 @@ using UnityEngine;
 public class OpenCommentTool : MonoBehaviour {
 
     GameObject player;
+    GameObject playerAvatar;
 
     LaserPointer laser;
     PhotonLaserManager photonLaser;
@@ -15,12 +16,17 @@ public class OpenCommentTool : MonoBehaviour {
     RecordComment recordComment;
 
     string commentToolTag = "CommentToolTag";
+	string spawnableTag = "Spawnable";
     string buttonTag = "Button";
     string commentObjectTag = "Building";
+    CheckPlayerSize playerSize;
 
     void Start()
     {
         player = GameObject.Find("Player");
+        playerSize = player.GetComponent<CheckPlayerSize>();
+
+        playerAvatar = PhotonPlayerAvatar.LocalPlayerInstance;
 
         laser = GetComponent<LaserPointer>();
         photonLaser = GetComponent<PhotonLaserManager>();
@@ -38,11 +44,11 @@ public class OpenCommentTool : MonoBehaviour {
         //PointerOut += OnHoverButtonExit;
         laser.PointerOut += CheckIfHiding;
 
-        //So the RecordPlayers Start can happen before it is disabled
-        Invoke("DisableCommentTool", 0);
+        //So both hands get the references before commentTool is disabled
+        Invoke("DisableCommentTool", 1);
     }
 
-    private void DisableCommentTool()
+    void DisableCommentTool()
     {
         commentOutput.SetActive(false);
         commentTool.SetActive(false);
@@ -76,17 +82,26 @@ public class OpenCommentTool : MonoBehaviour {
 
     public void ActivateCommentTool(LaserPointer laser, GameObject target)
     {
-        if (target.tag == commentObjectTag || target.tag == "Props")
+		if (target.tag == commentObjectTag || target.tag == spawnableTag)
         {
             playComment.pointedTarget = target.gameObject;
             recordComment.target = target.gameObject;
             commentTool.SetActive(true);
 
-            //CommentTool position
-            commentTool.transform.position = laser.hitPoint - new Vector3(gameObject.transform.position.x, 0, gameObject.transform.position.z);
+            if (playerSize.isSmall)
+            {
+				commentTool.transform.position = (laser.hitPoint - playerAvatar.transform.position)/6 + playerAvatar.transform.position;
+                commentTool.transform.localScale = player.transform.localScale;
+            }
+            else
+            {
+                //CommentTool position
+                commentTool.transform.position = laser.hitPoint - laser.direction;
+                commentTool.transform.localScale = Vector3.one;
+            }
 
             commentTool.transform.LookAt(gameObject.transform);
-            commentTool.transform.localScale = player.transform.localScale;
+            
 
             CommentToolManager commentToolManager;
             commentToolManager = commentTool.GetComponent<CommentToolManager>();

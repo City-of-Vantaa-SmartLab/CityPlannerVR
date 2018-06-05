@@ -51,6 +51,7 @@ public class LaserPointer : PunBehaviour
 
     Ray raycast;
     public Vector3 hitPoint;
+    public Vector3 direction;
 
     private void Awake()
     {
@@ -180,6 +181,8 @@ public class LaserPointer : PunBehaviour
         raycast = new Ray(transform.position, transform.forward);
         RaycastHit hit;
         bool bHit = Physics.Raycast(raycast, out hit);
+
+        direction = raycast.direction;
 
         if (previousContact && previousContact != hit.transform)
         {
