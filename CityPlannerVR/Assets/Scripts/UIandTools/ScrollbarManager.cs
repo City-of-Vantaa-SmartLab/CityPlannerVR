@@ -6,7 +6,7 @@ using UnityEngine.EventSystems;
 
 /// <summary>
 /// Attach this script to a gameobject with a misbehaving scroll rect. Assign scrollbars as needed.
-/// If not using scrollbars use Scroll*Direction* functions instead.
+/// If not using scrollbars Throttlemanager or Scroll*Direction* functions directly.
 /// </summary>
 
 public class ScrollbarManager : MonoBehaviour {
@@ -14,8 +14,14 @@ public class ScrollbarManager : MonoBehaviour {
     public Scrollbar horizontalScrollbar;
     public Scrollbar verticalScrollbar;
     public ScrollRect scrollRect;
+    public ThrottleManager verticalThrottle;
+    public ThrottleManager horizontalThrottle;
+    public bool doNotUseScrollbars;
     private float xValue;
     private float yValue;
+    private float previousXValue;
+    private float previousYValue;
+    private float sensitivity;
 
     public delegate void EventWithCoordinates(float xCoord, float yCoord);
     public event EventWithCoordinates UpdateSliderCoordinates;
@@ -23,23 +29,61 @@ public class ScrollbarManager : MonoBehaviour {
 
     private void Start()
     {
-        scrollRect = gameObject.GetComponent<ScrollRect>();
+        if (!scrollRect)
+            scrollRect = gameObject.GetComponent<ScrollRect>();
+        if (sensitivity == 0)
+            sensitivity = 0.1f;
     }
 
     // Update is called once per frame
     void Update() {
         if (scrollRect)
         {
-            if (horizontalScrollbar)
+            if (!doNotUseScrollbars && horizontalScrollbar)
             {
                 xValue = horizontalScrollbar.value;
-                scrollRect.horizontalNormalizedPosition = xValue;
+                if (xValue != previousXValue)
+                {
+                    scrollRect.horizontalNormalizedPosition = xValue;
+                    previousXValue = xValue;
+                }
             }
-            if (verticalScrollbar)
+            if (!doNotUseScrollbars && verticalScrollbar)
             {
                 yValue = verticalScrollbar.value;
-                scrollRect.verticalNormalizedPosition = yValue;
+                if (yValue != previousYValue)
+                {
+                    scrollRect.verticalNormalizedPosition = yValue;
+                    previousYValue = yValue;
+                }
+                
             }
+
+            if (horizontalScrollbar || verticalScrollbar)
+                OnSliderUpdate(xValue, yValue);
+
+            if (verticalThrottle)
+            {
+                float temp;
+                temp = verticalThrottle.normalAngle - verticalThrottle.driveAngle;
+                if (!(Mathf.Abs(temp) < 1))
+                {
+                    //Debug.Log("Angle difference is sufficient");
+                    if (temp > 0)
+                    {
+                        temp = (temp * sensitivity) / verticalThrottle.drive.maxAngle;
+                        ScrollUp(temp);
+                    }
+                    else
+                    {
+                        temp = (temp * sensitivity) / verticalThrottle.drive.minAngle;
+                        ScrollDown(temp);
+                    }
+                    
+
+                }
+            }
+
         }
     }
 
@@ -77,14 +121,23 @@ public class ScrollbarManager : MonoBehaviour {
         OnSliderUpdate(xValue, yValue);
     }
 
-    public void OnSliderUpdate(float xValue, float yValue)
+    public void OnSliderUpdate(float xCoord, float yCoord)
     {
         if (UpdateSliderCoordinates != null)
-            UpdateSliderCoordinates(xValue, yValue);
+            UpdateSliderCoordinates(xCoord, yCoord);
         if (scrollRect)
         {
             scrollRect.horizontalNormalizedPosition = xValue;
             scrollRect.verticalNormalizedPosition = yValue;
+        }
+
+        if (horizontalScrollbar)
+        {
+            horizontalScrollbar.value = xCoord;
+        }
+        if (verticalScrollbar)
+        {
+            verticalScrollbar.value = yCoord;
         }
     }
 
