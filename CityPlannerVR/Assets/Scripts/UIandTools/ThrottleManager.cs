@@ -1,5 +1,4 @@
-﻿using System;
-using UnityEngine;
+﻿using UnityEngine;
 using Valve.VR.InteractionSystem;
 
 /// <summary>
@@ -9,7 +8,7 @@ using Valve.VR.InteractionSystem;
 public class ThrottleManager : MonoBehaviour {
 
     public CircularDrive drive;
-    public InputMaster inputMaster;
+    public LinearMapping linearMapping;
     public float driveAngle;
     public float normalAngle;
     public bool holding;
@@ -21,23 +20,13 @@ public class ThrottleManager : MonoBehaviour {
 
     private void Update()
     {
-        
         if (drive)
         {
-
             if (holding)
             {
                 driveAngle = drive.outAngle;
-
             }
-            else
-            {
-                ResetPosition();
-                holding = true;
-            }
-
         }
-
     }
 
     private void Initialize()
@@ -46,21 +35,22 @@ public class ThrottleManager : MonoBehaviour {
             drive = gameObject.GetComponent<CircularDrive>();
         if (!drive)
             Debug.LogError("Circulardrive not found!");
-        normalAngle = drive.startAngle;
+        if (!linearMapping)
+            linearMapping = gameObject.GetComponent<LinearMapping>();
+        if (!drive)
+            Debug.LogError("Linearmapping not found!");
+        //normalAngle = drive.startAngle;
     }
 
     public void ResetPosition()
     {
         driveAngle = normalAngle;
-        drive.outAngle = normalAngle; //replace with lerp later
-
-
-
+        drive.outAngle = normalAngle;
         float x = drive.transform.eulerAngles.x;
         float y = drive.transform.eulerAngles.y;
         float z = drive.transform.eulerAngles.z;
 
-        //reset visuals as well
+        //reset visuals as well, replace with lerp later?
         switch (drive.axisOfRotation)
         {
             case CircularDrive.Axis_t.XAxis:
@@ -77,20 +67,20 @@ public class ThrottleManager : MonoBehaviour {
         }
     }
 
-    //private void OnColliderEnter(Collider other)
-    //{
-    //    if (other.CompareTag("GameController"))  //a tag that is in hand!
-    //    {
-    //        holding = true;
-    //    }
-    //}
+    private void OnTriggerEnter(Collider other)
+    {
+        if (other.CompareTag("GameController"))  //a tag that is in hand!
+        {
+            holding = true;
+        }
+    }
 
-    //private void OnColliderExit(Collider other)
-    //{
-    //    if (other.CompareTag("GameController"))
-    //    {
-    //        ResetPosition();
-    //        holding = false;
-    //    }
-    //}
+    private void OnTriggerExit(Collider other)
+    {
+        if (other.CompareTag("GameController"))
+        {
+            ResetPosition();
+            holding = false;
+        }
+    }
 }
