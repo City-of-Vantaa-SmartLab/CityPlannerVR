@@ -44,11 +44,11 @@ public class OpenCommentTool : MonoBehaviour {
         //PointerOut += OnHoverButtonExit;
         laser.PointerOut += CheckIfHiding;
 
-        //So the RecordPlayers Start can happen before it is disabled
-        Invoke("DisableCommentTool", 2);
+        //So both hands get the references before commentTool is disabled
+        Invoke("DisableCommentTool", 1);
     }
 
-    private void DisableCommentTool()
+    void DisableCommentTool()
     {
         commentOutput.SetActive(false);
         commentTool.SetActive(false);

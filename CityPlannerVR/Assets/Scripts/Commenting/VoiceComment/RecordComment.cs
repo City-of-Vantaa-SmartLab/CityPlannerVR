@@ -74,7 +74,6 @@ public class RecordComment : MonoBehaviour
 
     private void Start()
     {
-        //TODO: Buildissa on eri polku ehkä
         //savePath = Application.dataPath+ slash + "Resources" + slash + "Comments" + slash + directoryName + slash;
         savePath = Application.streamingAssetsPath +  slash + "Comments" + slash + directoryName + slash;
         audioSavePathExt = "AudioFiles" + slash;
@@ -113,10 +112,9 @@ public class RecordComment : MonoBehaviour
 
         voiceTrigger = PhotonPlayerAvatar.LocalPlayerInstance.GetComponent<Dissonance.VoiceBroadcastTrigger>();
         commenter = PhotonPlayerAvatar.LocalPlayerInstance.GetComponent<PhotonView>().owner.NickName;
-        Debug.Log("gr angrg");
     }
 
-    public void  PlaySoundEffect()
+    public void PlaySoundEffect()
     {
         source.Play();
     }
@@ -128,7 +126,7 @@ public class RecordComment : MonoBehaviour
             if (e.target.gameObject.layer == LayerMask.NameToLayer("Building")  || e.target.gameObject.layer == LayerMask.NameToLayer("Props"))
             {
                 target = e.target.gameObject;
-                Debug.Log("Target = " + target.name);
+                //Debug.Log("Target = " + target.name);
             }
         }
     }
@@ -138,7 +136,7 @@ public class RecordComment : MonoBehaviour
         if (micConnected)
         {
             DisableVoiceChat();
-            source.Play();
+            PlaySoundEffect();
 
             if (!Microphone.IsRecording(null))
             {
@@ -150,7 +148,6 @@ public class RecordComment : MonoBehaviour
         {
             Debug.LogError("Microphone not connected");
         }
-
     }
 
     public void StopRecord()
@@ -158,11 +155,12 @@ public class RecordComment : MonoBehaviour
          if (micConnected)
          {
             DisableVoiceChat();
-            source.Play();
-
+            
             if (Microphone.IsRecording(null))
              {
-                 int lastPos = Microphone.GetPosition(null);
+                PlaySoundEffect();
+
+                int lastPos = Microphone.GetPosition(null);
                  if (lastPos != 0)
                  {
                  float[] samples = new float[tempAudioClip.samples];
@@ -240,8 +238,12 @@ public class RecordComment : MonoBehaviour
     void LoadOldSavedData()
     {
         XmlSerializer serializer = new XmlSerializer(typeof(PositionDatabase));
-        FileStream file = File.Open(SavePath + slash + positionFileName, FileMode.Open);
-        Debug.Log("File lenght = " + file.Length);
+        if (!File.Exists(SavePath + positionFileName))
+        {
+            File.Create(SavePath + positionFileName);
+        }
+        FileStream file = File.Open(SavePath + positionFileName, FileMode.Open);
+
         if (file.Length > 0)
         {
             positionDB = (PositionDatabase)serializer.Deserialize(file);
