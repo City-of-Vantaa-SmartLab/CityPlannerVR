@@ -1,8 +1,5 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.UI;
-using UnityEngine.EventSystems;
 
 /// <summary>
 /// Attach this script to a gameobject with a misbehaving scroll rect. Assign scrollbars as needed.
@@ -21,7 +18,8 @@ public class ScrollbarManager : MonoBehaviour {
     private float yValue;
     private float previousXValue;
     private float previousYValue;
-    private float sensitivity;
+    private float sensitivityVertical;
+    private float sensitivityHorizontal;
 
     public delegate void EventWithCoordinates(float xCoord, float yCoord);
     public event EventWithCoordinates UpdateSliderCoordinates;
@@ -31,8 +29,8 @@ public class ScrollbarManager : MonoBehaviour {
     {
         if (!scrollRect)
             scrollRect = gameObject.GetComponent<ScrollRect>();
-        if (sensitivity == 0)
-            sensitivity = 0.1f;
+        if (sensitivityVertical == 0)
+            sensitivityVertical = 0.1f;
     }
 
     // Update is called once per frame
@@ -71,15 +69,37 @@ public class ScrollbarManager : MonoBehaviour {
                     //Debug.Log("Angle difference is sufficient");
                     if (temp > 0)
                     {
-                        temp = (temp * sensitivity) / verticalThrottle.drive.maxAngle;
+                        temp = (temp * sensitivityVertical) / verticalThrottle.drive.maxAngle;
                         ScrollUp(temp);
                     }
                     else
                     {
-                        temp = (temp * sensitivity) / verticalThrottle.drive.minAngle;
+                        temp = (temp * sensitivityVertical) / verticalThrottle.drive.minAngle;
                         ScrollDown(temp);
                     }
                     
+
+                }
+            }
+
+            if (horizontalThrottle)
+            {
+                float temp;
+                temp = horizontalThrottle.normalAngle - horizontalThrottle.driveAngle;
+                if (!(Mathf.Abs(temp) < 1))
+                {
+                    //Debug.Log("Angle difference is sufficient");
+                    if (temp > 0)
+                    {
+                        temp = (temp * sensitivityHorizontal) / horizontalThrottle.drive.maxAngle;
+                        ScrollRight(temp);
+                    }
+                    else
+                    {
+                        temp = (temp * sensitivityHorizontal) / horizontalThrottle.drive.minAngle;
+                        ScrollLeft(temp);
+                    }
+
 
                 }
             }
