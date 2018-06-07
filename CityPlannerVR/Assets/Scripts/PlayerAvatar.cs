@@ -21,6 +21,8 @@ public class PlayerAvatar : NetworkBehaviour
 
     //used to determine the height of the table
     private GameObject cityTeleportArea;
+	//Used to call the scalePlayer function from Scale object to scale player big again
+	private ScaleObject scalePlayer;
 
     [SyncVar(hook = "ScaleChange")]
     public Vector3 objScale;
@@ -48,6 +50,8 @@ public class PlayerAvatar : NetworkBehaviour
         cityTeleportArea = GameObject.Find("Environment/TikkuraittiModel_simple/TeleportAreaCity");
 
         playerSize = playerVR.GetComponent<CheckPlayerSize>();
+
+		scalePlayer = GameObject.Find ("ScaleToBigObject").GetComponent<ScaleObject>();
 
         StartCoroutine(TrackHeadCoroutine());
         StartCoroutine(MakeSureSetHand());   
@@ -181,14 +185,19 @@ public class PlayerAvatar : NetworkBehaviour
     //Checks if player tried to jump down from the table
     void CheckPlayerPosition()
     {
+        Debug.Log("CheckPlayerPosition");
         //if we are on pedestrian mode (small)
         if (playerSize.isSmall)
         {
+            Debug.Log("player is small");
             TrackPlayerPosition();
 
             if (playerVR.transform.position.y < cityTeleportArea.transform.position.y)
             {
-                playerVR.transform.position = positions_list[0];
+                Debug.Log("positions_list[0]: " + positions_list[0] + ", positions_list[1]: " + positions_list[1]);
+                //playerVR.transform.position = positions_list[0];
+				playerVR.transform.position = positions_list[1];
+				scalePlayer.ScalePlayer();
             }
         }
     }

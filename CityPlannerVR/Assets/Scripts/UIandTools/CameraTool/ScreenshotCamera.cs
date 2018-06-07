@@ -36,7 +36,7 @@ public class ScreenshotCamera : MonoBehaviour {
         string folder = "Screenshots";
         string fileExtender = ".png";
         string fileName = "screen_" + width + "x" + height + "_" + System.DateTime.Now.ToString("yyyy-MM-dd_HH-mm-ss") + fileExtender;
-        string pathName = Application.persistentDataPath;
+        string pathName = Application.streamingAssetsPath;
         char slash = System.IO.Path.DirectorySeparatorChar;
 
         string folderPathName = pathName + slash + folder;

@@ -122,6 +122,8 @@ namespace Valve.VR.InteractionSystem
 		public static SteamVR_Events.Event< TeleportMarkerBase > PlayerPre = new SteamVR_Events.Event< TeleportMarkerBase >();
 		public static SteamVR_Events.Action< TeleportMarkerBase > PlayerPreAction( UnityAction< TeleportMarkerBase > action ) { return new SteamVR_Events.Action< TeleportMarkerBase >( PlayerPre, action ); }
 
+		//------Tarun koodia-------------------------------
+		public ScaleObject ScalePlayer;
 		//-------------------------------------------------
 		private static Teleport _instance;
 		public static Teleport instance
@@ -864,6 +866,9 @@ namespace Valve.VR.InteractionSystem
 			if ( teleportPoint != null )
 			{
 				teleportPosition = teleportPoint.transform.position;
+                //--------------Tarun koodia-------------------------------------------
+				ScalePlayer.ScalePlayer();
+				//---------------------------------------------------------------------
 
 				//Teleport to a new scene
 				if ( teleportPoint.teleportType == TeleportPoint.TeleportPointType.SwitchToNewScene )
