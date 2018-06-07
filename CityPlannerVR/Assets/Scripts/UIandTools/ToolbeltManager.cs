@@ -16,6 +16,7 @@ public class ToolbeltManager : MonoBehaviour {
     
     private Transform playerCameraTransform;
     private Transform originalParentTransform;
+    public Transform sanctuary;
     private Vector3 originalPos;
     private Quaternion originalRot;
 
@@ -44,7 +45,8 @@ public class ToolbeltManager : MonoBehaviour {
             if (locked && !resetPosition)
             {
                 //transform.parent = transform.root; //will move with player, but not rotate
-                transform.parent = transform.root.parent; //will stay in place
+                //transform.parent = transform.root.parent; //will stay in place, but very laggy
+                transform.parent = sanctuary;
                 resetPosition = true;
             }
             else if (!locked && resetPosition)
@@ -75,6 +77,11 @@ public class ToolbeltManager : MonoBehaviour {
 
         if (!originalParentTransform)
             originalParentTransform = transform.parent;
+        if (!sanctuary)
+        {
+            sanctuary = GameObject.Find("CleanUp").transform;
+        }
+
         originalPos = transform.localPosition;
         originalRot = transform.localRotation;
     }
