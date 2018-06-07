@@ -10,9 +10,19 @@ using System.IO;
 /// </summary>
 
 //for networking
+public class Container<T>
+{
+    public List<T> datas = new List<T>();
+}
+
 public class CommentContainer
 {
     public List<CommentData> commentDatas = new List<CommentData>(); 
+}
+
+public class BuildingContainer
+{
+    public List<SaveAndLoadBuildings.BuildingData> buildingDatas = new List<SaveAndLoadBuildings.BuildingData>();
 }
 
 //for easy accessing and storing locally
@@ -27,33 +37,60 @@ public class SaveData {
 
     public static CommentContainer commentContainer = new CommentContainer();
     public static CommentLists commentLists = new CommentLists();
+    public static BuildingContainer buildingContainer = new BuildingContainer();
 
     public delegate void SerializeAction();
-    public static event SerializeAction OnLoaded;
-    public static event SerializeAction OnBeforeSave;
+    public static event SerializeAction OnLoadedComments;
+    public static event SerializeAction OnBeforeSaveComments;
+    public static event SerializeAction OnLoadedBuildings;
+    public static event SerializeAction OnBeforeSaveBuildings;
 
-    public static void Load(string filepath)
+    public static void LoadComments(string filepath)
     {
-        commentContainer = LoadComments(filepath);
+        commentContainer = LoadCommentDatas(filepath);
 
         foreach (CommentData data in commentContainer.commentDatas)
         {
             SaveAndLoadComments.CreateOldComment(data);
         }
 
-        if (OnLoaded != null)
-            OnLoaded();
-        ClearContainerList();
+        if (OnLoadedComments != null)
+            OnLoadedComments();
+        ClearCommentContainerList();
     }
 
-    public static void Save(string filepath, CommentContainer commentDatas)
+    public static void SaveComments(string filepath, CommentContainer commentDatas)
     {
-        if (OnBeforeSave != null)
-            OnBeforeSave();
-        SaveComments(filepath, commentDatas);
-        ClearContainerList();
+        if (OnBeforeSaveComments != null)
+            OnBeforeSaveComments();
+        SaveCommentDatas(filepath, commentDatas);
+        ClearCommentContainerList();
     }
 
+    public static void LoadBuildings(string filepath)
+    {
+        buildingContainer = LoadBuildinDatas(filepath);
+
+        foreach (var data in buildingContainer.buildingDatas)
+        {
+            SaveAndLoadBuildings.RelocateBuilding(data);
+        }
+
+        if (OnLoadedBuildings != null)
+            OnLoadedBuildings();
+        ClearBuildingContainerList();
+    }
+
+    public static void SaveBuildings(string filepath, BuildingContainer buildingDatas)
+    {
+        if (OnBeforeSaveBuildings != null)
+            OnBeforeSaveBuildings();
+        SaveBuildingDatas(filepath, buildingDatas);
+        ClearCommentContainerList();
+    }
+
+    #region ListManipulations
+    //Copypaste because of static methods
 
     public static void AddCommentData(CommentData data)
     {
@@ -61,7 +98,7 @@ public class SaveData {
         Debug.Log("Comment added to containerlist");
     }
 
-    public static void ClearContainerList()
+    public static void ClearCommentContainerList()
     {
         commentContainer.commentDatas.Clear();
         Debug.Log("CommentContainer cleared");
@@ -75,19 +112,51 @@ public class SaveData {
         Debug.Log("CommentLists cleared");
     }
 
-    private static CommentContainer LoadComments(string filepath)
+    public static void AddbuildingData(SaveAndLoadBuildings.BuildingData data)
+    {
+        buildingContainer.buildingDatas.Add(data);
+        Debug.Log("Building added to containerlist");
+    }
+
+    public static void ClearBuildingContainerList()
+    {
+        buildingContainer.buildingDatas.Clear();
+        Debug.Log("BuildingContainer cleared");
+    }
+
+
+    #endregion
+
+    #region LoadSaveDatas
+
+    private static CommentContainer LoadCommentDatas(string filepath)
     {
         string jason = File.ReadAllText(filepath);
-
         return JsonUtility.FromJson<CommentContainer>(jason);
     }
 
-    private static void SaveComments(string filepath, CommentContainer comments)
+    private static void SaveCommentDatas(string filepath, CommentContainer comments)
     {
         string jason = JsonUtility.ToJson(comments);
         StreamWriter sw = File.CreateText(filepath);  //creates or overwrites file at filepath
         sw.Close();
         File.WriteAllText(filepath, jason);
     }
+
+    private static BuildingContainer LoadBuildinDatas(string filepath)
+    {
+        string jason = File.ReadAllText(filepath);
+        return JsonUtility.FromJson<BuildingContainer>(jason);
+    }
+
+    private static void SaveBuildingDatas(string filepath, BuildingContainer buildings)
+    {
+        string jason = JsonUtility.ToJson(buildings);
+        StreamWriter sw = File.CreateText(filepath);  //creates or overwrites file at filepath
+        sw.Close();
+        File.WriteAllText(filepath, jason);
+    }
+
+    #endregion
 
 }

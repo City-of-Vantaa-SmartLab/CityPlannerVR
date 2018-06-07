@@ -46,7 +46,7 @@ public class Comment {
     {
         //SaveData.OnLoaded += LoadData;
         //SaveData.OnBeforeSave += StoreData;
-        SaveData.OnBeforeSave += ApplyDataToContainer;
+        SaveData.OnBeforeSaveComments += ApplyDataToContainer;
     }
 
     //Not a monobehaviour!
@@ -54,7 +54,7 @@ public class Comment {
     {
         //SaveData.OnLoaded -= LoadData;
         //SaveData.OnBeforeSave -= StoreData;
-        SaveData.OnBeforeSave -= ApplyDataToContainer;
+        SaveData.OnBeforeSaveComments -= ApplyDataToContainer;
     }
 
     public void ApplyDataToContainer()
