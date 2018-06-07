@@ -4,7 +4,7 @@ using UnityEngine;
 using UnityEngine.UI;
 
 /// <summary>
-/// Stores comments locally to lists (by type). For debugging only!
+/// Stores comments locally to lists (by type). Used in conjuction with CommentInfoVisualized.
 /// Use SaveData singleton for easy access to similar lists (like in this script)
 /// </summary>
 
@@ -74,7 +74,16 @@ public class CommentDepository : MonoBehaviour {
 
     private void GenerateVisualsOnList(List<Comment> list)
     {
-        
+        CommentListVisualized listing = targetForList.GetComponent<CommentListVisualized>();
+        if (listing)
+        {
+
+        }
+        else
+        {
+            Debug.Log("Could not find component CommentListVisualized!");
+        }
+
     }
 
     public void GenerateTestImages()

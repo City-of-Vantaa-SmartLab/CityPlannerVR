@@ -18,7 +18,7 @@ public class CommentData
     public string submittedShortDate;
     public string submittedShortTime;
     public Vector3 commentatorPosition;
-    public int quickCheck;
+    public int quickcheck;
 }
 
 //From https://gamedev.stackexchange.com/questions/137523/unity-json-utility-does-not-serialize-datetime
@@ -83,7 +83,7 @@ public class Comment {
                 break;
 
             default:
-                Debug.Log("Type not set for comment (quickcheck: " + data.quickCheck + ") by user " + this.data.userName + " while being sorted!");
+                Debug.Log("Type not set for comment (quickcheck: " + data.quickcheck + ") by user " + this.data.userName + " while being sorted!");
                 break;
         }
     }
@@ -104,7 +104,7 @@ public class Comment {
 
     public bool IsTheSameComment(Comment testComment)
     {
-        if (data.quickCheck == testComment.data.quickCheck &&  //comparing ints is quicker than strings
+        if (data.quickcheck == testComment.data.quickcheck &&  //comparing ints is quicker than strings
             data.userName == testComment.data.userName &&
             data.commentedObjectName == testComment.data.commentedObjectName &&
             data.dataString == testComment.data.dataString
@@ -133,7 +133,7 @@ public class Comment {
         Debug.Log("Joining strings: " + userName + " " + objectName + " " + date);
         int magic = ConvertFirstCharsToInt(uberString, subStringMaxLength * 4);
         Debug.Log("QuickCheck: " + magic);
-        data.quickCheck = magic;
+        data.quickcheck = magic;
     }
 
     public void ConvertToQuickCheck(int maxLength, CommentData data)
@@ -145,7 +145,7 @@ public class Comment {
         Debug.Log("Joining strings: " + userName + " " + objectName + " " + date);
         int magic = ConvertFirstCharsToInt(uberString, maxLength * 4);
         Debug.Log("Adding QuickCheck to data: " + magic);
-        data.quickCheck = magic;
+        data.quickcheck = magic;
     }
 
     private string TruncateString(string str, int maxLength)
