@@ -24,6 +24,8 @@ public class LaserButton : MonoBehaviour {
     PlayComment playComment;
     string commentName;
 
+    RecordComment recordComment;
+
     public void OnClicked()
     {
         //Debug.Log("LASERBUTTON " + gameObject.name + ":ssa TESTAA");
@@ -86,7 +88,14 @@ public class LaserButton : MonoBehaviour {
     public void OnHoverUI()
     {
         SetUI();
+        image.color = Color.green;
+    }
+
+    public void OnUIPressed()
+    {
+        SetUI();
         image.color = Color.blue;
+
     }
 
     public void SetUI()
@@ -125,6 +134,17 @@ public class LaserButton : MonoBehaviour {
     public void OnStopHoverButton()
     {
         material.color = materialColor;
+    }
+    //--------------------------------------------------------------------------------------------------------------------------------
+    //VoiceComment
+    public void StartRecording()
+    {
+        if(recordComment == null)
+        {
+            recordComment = gameObject.GetComponent<RecordComment>();
+        }
+
+        recordComment.StartRecord();
     }
     //--------------------------------------------------------------------------------------------------------------------------------
 #if UNITY_EDITOR

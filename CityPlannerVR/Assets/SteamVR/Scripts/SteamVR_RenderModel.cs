@@ -43,8 +43,8 @@ public class SteamVR_RenderModel : MonoBehaviour
 	// Cached name of this render model for updating component transforms at runtime.
 	public string renderModelName { get; private set; }
 
-	// If someone knows how to keep these from getting cleaned up every time
-	// you exit play mode, let me know.  I've tried marking the RenderModel
+    // If someone knows how to keep these from getting cleaned up every time
+    // you exit playmode, let me know.  I've tried marking the RenderModel
 	// class below as [System.Serializable] and switching to normal public
 	// variables for mesh and material to get them to serialize properly,
 	// as well as tried marking the mesh and material objects as
