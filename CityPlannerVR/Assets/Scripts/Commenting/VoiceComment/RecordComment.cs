@@ -56,6 +56,13 @@ public class RecordComment : MonoBehaviour
     private string savePath;
     private string audioSavePathExt;
 
+    UnityEngine.UI.Text recordTimer;
+    int recordTimeMilliSec;
+    int recordTimeSec;
+
+    GameObject canvas;
+    Coroutine RecordTimerCoroutine;
+
     public string SavePath
     {
         get
@@ -71,6 +78,8 @@ public class RecordComment : MonoBehaviour
             return audioSavePathExt;
         }
     }
+
+   
 
     private void Start()
     {
@@ -112,6 +121,10 @@ public class RecordComment : MonoBehaviour
 
         voiceTrigger = PhotonPlayerAvatar.LocalPlayerInstance.GetComponent<Dissonance.VoiceBroadcastTrigger>();
         commenter = PhotonPlayerAvatar.LocalPlayerInstance.GetComponent<PhotonView>().owner.NickName;
+
+        recordTimer = GetComponentInChildren<UnityEngine.UI.Text>();
+        canvas = GameObject.Find("RecordIndicatorCanvas");
+        canvas.SetActive(false);
     }
 
     public void PlaySoundEffect()
@@ -142,6 +155,8 @@ public class RecordComment : MonoBehaviour
             {
                 tempAudioClip = Microphone.Start(null, true, 30, maxFreq);
                 Debug.Log("Recording started");
+                canvas.SetActive(true);
+                RecordTimerCoroutine = StartCoroutine(RecordTimer());
             }
         }
         else
@@ -150,41 +165,71 @@ public class RecordComment : MonoBehaviour
         }
     }
 
-    public void StopRecord()
+    IEnumerator RecordTimer()
     {
-         if (micConnected)
-         {
+        Debug.Log("Timer started");
+
+        recordTimeMilliSec = 0;
+        recordTimeSec = 0;
+
+        while (true)
+        {
+            yield return new WaitForSeconds(0.01f);
+            if (recordTimeMilliSec >= 99)
+            {
+                recordTimeSec += 1;
+                recordTimeMilliSec = 0;
+            }
+            else
+            {
+                recordTimeMilliSec += 1;
+            }
+            recordTimer.text = string.Format("00:{0:00}:{1:00}", recordTimeSec, recordTimeMilliSec);
+        }
+    }
+
+    public void StopRecord()
+    {   
+        if (micConnected)
+        {
             DisableVoiceChat();
             
             if (Microphone.IsRecording(null))
-             {
+            {
                 PlaySoundEffect();
 
                 int lastPos = Microphone.GetPosition(null);
-                 if (lastPos != 0)
-                 {
-                 float[] samples = new float[tempAudioClip.samples];
-                 tempAudioClip.GetData(samples, 0);
+                if (lastPos != 0)
+                {
+                float[] samples = new float[tempAudioClip.samples];
+                tempAudioClip.GetData(samples, 0);
 
-                 float[] finalSamples = new float[lastPos];
+                float[] finalSamples = new float[lastPos];
 
-                     for (int i = 0; i < finalSamples.Length; i++)
-                     {
-                         finalSamples[i] = samples[i];
-                     }
+                    for (int i = 0; i < finalSamples.Length; i++)
+                    {
+                        finalSamples[i] = samples[i];
+                    }
 
-                     finalAudioClip = AudioClip.Create("FinalAudioClip", finalSamples.Length, 1, maxFreq, false);
+                    finalAudioClip = AudioClip.Create("FinalAudioClip", finalSamples.Length, 1, maxFreq, false);
 
-                     finalAudioClip.SetData(finalSamples, 0);
+                    finalAudioClip.SetData(finalSamples, 0);
 
-                     Microphone.End(null);
-                     Debug.Log("Recording stopped");
-                     SaveRecordedAudio();
-                     //Enable voice chat again
-                     voiceTrigger.Mode = Dissonance.CommActivationMode.VoiceActivation;
-                 }
-             }
-         }
+                    Microphone.End(null);
+                    Debug.Log("Recording stopped");
+                    StopCoroutine(RecordTimerCoroutine);
+                    canvas.SetActive(false);
+
+                    recordTimeSec = 0;
+                    recordTimeMilliSec = 0;
+                    recordTimer.text = string.Format("00:{0:00}:{1:00}", recordTimeSec, recordTimeMilliSec);
+
+                    SaveRecordedAudio();
+                    //Enable voice chat again
+                    voiceTrigger.Mode = Dissonance.CommActivationMode.VoiceActivation;
+                }
+            }
+        }
     }
 
     //void StopRecord(object sender, LaserEventArgs e)
