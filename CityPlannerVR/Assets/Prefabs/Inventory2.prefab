@@ -22,7 +22,7 @@ GameObject:
   - component: {fileID: 33602691877234854}
   - component: {fileID: 65033114872469384}
   - component: {fileID: 23128795968950914}
-  - component: {fileID: 114924440961611308}
+  - component: {fileID: 114696314559512868}
   m_Layer: 0
   m_Name: SpawnSlot (5)
   m_TagString: Untagged
@@ -41,7 +41,7 @@ GameObject:
   - component: {fileID: 33615694808699368}
   - component: {fileID: 65891402253357838}
   - component: {fileID: 23254013417949952}
-  - component: {fileID: 114773052128658434}
+  - component: {fileID: 114706101654086072}
   m_Layer: 0
   m_Name: SpawnSlot (1)
   m_TagString: Untagged
@@ -60,7 +60,7 @@ GameObject:
   - component: {fileID: 33797589736973220}
   - component: {fileID: 65980113545925522}
   - component: {fileID: 23552727558834126}
-  - component: {fileID: 114659864236347256}
+  - component: {fileID: 114465497888327292}
   m_Layer: 0
   m_Name: SpawnSlot (4)
   m_TagString: Untagged
@@ -100,7 +100,7 @@ GameObject:
   - component: {fileID: 33886380326390914}
   - component: {fileID: 65214525454326520}
   - component: {fileID: 23860737845890180}
-  - component: {fileID: 114992689602999236}
+  - component: {fileID: 114774910115170624}
   m_Layer: 0
   m_Name: SpawnSlot (3)
   m_TagString: Untagged
@@ -120,13 +120,14 @@ GameObject:
   - component: {fileID: 65815146078523744}
   - component: {fileID: 23383545434631332}
   - component: {fileID: 114325962832879258}
+  - component: {fileID: 114476735077140014}
   m_Layer: 0
   m_Name: Inventory2
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!1 &1471518842012944
 GameObject:
   m_ObjectHideFlags: 0
@@ -138,7 +139,7 @@ GameObject:
   - component: {fileID: 33398540119724428}
   - component: {fileID: 65425490256785302}
   - component: {fileID: 23261521455627826}
-  - component: {fileID: 114378922992385448}
+  - component: {fileID: 114601259549831888}
   m_Layer: 0
   m_Name: SpawnSlot (7)
   m_TagString: Untagged
@@ -157,7 +158,7 @@ GameObject:
   - component: {fileID: 33828613297919026}
   - component: {fileID: 65492017253294478}
   - component: {fileID: 23135058337209184}
-  - component: {fileID: 114043268390020856}
+  - component: {fileID: 114629580676488466}
   m_Layer: 0
   m_Name: SpawnSlot (8)
   m_TagString: Untagged
@@ -176,7 +177,7 @@ GameObject:
   - component: {fileID: 33876306997239290}
   - component: {fileID: 65651376408706516}
   - component: {fileID: 23096735836871974}
-  - component: {fileID: 114116363411730928}
+  - component: {fileID: 114747575016985248}
   m_Layer: 0
   m_Name: SpawnSlot
   m_TagString: Untagged
@@ -195,7 +196,7 @@ GameObject:
   - component: {fileID: 33177511042819030}
   - component: {fileID: 65583548447032574}
   - component: {fileID: 23065528167557862}
-  - component: {fileID: 114532745723644492}
+  - component: {fileID: 114388401299275542}
   m_Layer: 0
   m_Name: SpawnSlot (6)
   m_TagString: Untagged
@@ -214,7 +215,7 @@ GameObject:
   - component: {fileID: 33031991908686878}
   - component: {fileID: 65218403118408324}
   - component: {fileID: 23769136955738894}
-  - component: {fileID: 114220730566667012}
+  - component: {fileID: 114352926790836162}
   m_Layer: 0
   m_Name: SpawnSlot (2)
   m_TagString: Untagged
@@ -1063,51 +1064,6 @@ MonoBehaviour:
       m_Calls: []
     m_TypeName: UnityEngine.UI.Button+ButtonClickedEvent, UnityEngine.UI, Version=1.0.0.0,
       Culture=neutral, PublicKeyToken=null
---- !u!114 &114043268390020856
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1503082872476880}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 247801ad080795a4c9d45e03c5fdf7ab, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  item: {fileID: 0}
-  objectTag: Spawnable
-  spawnPoint: {fileID: 4310334126089730}
-  itemsInSpawner: []
---- !u!114 &114116363411730928
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1746066872029406}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 247801ad080795a4c9d45e03c5fdf7ab, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  item: {fileID: 0}
-  objectTag: Spawnable
-  spawnPoint: {fileID: 4293454970563422}
-  itemsInSpawner: []
---- !u!114 &114220730566667012
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1895240213432344}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 247801ad080795a4c9d45e03c5fdf7ab, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  item: {fileID: 0}
-  objectTag: Spawnable
-  spawnPoint: {fileID: 4475177079418810}
-  itemsInSpawner: []
 --- !u!114 &114325962832879258
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -1123,6 +1079,22 @@ MonoBehaviour:
   itemData: {fileID: 0}
   databaseSize: 0
   item_int: 0
+--- !u!114 &114352926790836162
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1895240213432344}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3ecb744b4f199664889d3bf7ab4e9cbb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  itemPrefabName: 
+  objectTag: Spawnable
+  spawnPoint: {fileID: 0}
+  itemInSpawner: {fileID: 0}
+  inputMaster: {fileID: 0}
 --- !u!114 &114360542544408218
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -1150,21 +1122,6 @@ MonoBehaviour:
         m_CallState: 1
     m_TypeName: Valve.VR.InteractionSystem.CustomEvents+UnityEventHand, Assembly-CSharp,
       Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
---- !u!114 &114378922992385448
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1471518842012944}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 247801ad080795a4c9d45e03c5fdf7ab, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  item: {fileID: 0}
-  objectTag: Spawnable
-  spawnPoint: {fileID: 4896711673624028}
-  itemsInSpawner: []
 --- !u!114 &114380955613762506
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -1176,7 +1133,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b93b6a877adcbf94c89a9d6e0c0e844d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!114 &114532745723644492
+--- !u!114 &114388401299275542
 MonoBehaviour:
   m_ObjectHideFlags: 1
   m_PrefabParentObject: {fileID: 0}
@@ -1184,13 +1141,41 @@ MonoBehaviour:
   m_GameObject: {fileID: 1748011298327828}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 247801ad080795a4c9d45e03c5fdf7ab, type: 3}
+  m_Script: {fileID: 11500000, guid: 3ecb744b4f199664889d3bf7ab4e9cbb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  item: {fileID: 0}
+  itemPrefabName: 
   objectTag: Spawnable
-  spawnPoint: {fileID: 4884124561573612}
-  itemsInSpawner: []
+  spawnPoint: {fileID: 0}
+  itemInSpawner: {fileID: 0}
+  inputMaster: {fileID: 0}
+--- !u!114 &114465497888327292
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1148908137424834}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3ecb744b4f199664889d3bf7ab4e9cbb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  itemPrefabName: 
+  objectTag: Spawnable
+  spawnPoint: {fileID: 0}
+  itemInSpawner: {fileID: 0}
+  inputMaster: {fileID: 0}
+--- !u!114 &114476735077140014
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1436274083125228}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b93b6a877adcbf94c89a9d6e0c0e844d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!114 &114554450602324602
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -1243,22 +1228,55 @@ MonoBehaviour:
       m_Calls: []
     m_TypeName: UnityEngine.UI.Button+ButtonClickedEvent, UnityEngine.UI, Version=1.0.0.0,
       Culture=neutral, PublicKeyToken=null
---- !u!114 &114659864236347256
+--- !u!114 &114601259549831888
 MonoBehaviour:
   m_ObjectHideFlags: 1
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1148908137424834}
+  m_GameObject: {fileID: 1471518842012944}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 247801ad080795a4c9d45e03c5fdf7ab, type: 3}
+  m_Script: {fileID: 11500000, guid: 3ecb744b4f199664889d3bf7ab4e9cbb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  item: {fileID: 0}
+  itemPrefabName: 
   objectTag: Spawnable
-  spawnPoint: {fileID: 4887372172921970}
-  itemsInSpawner: []
---- !u!114 &114773052128658434
+  spawnPoint: {fileID: 0}
+  itemInSpawner: {fileID: 0}
+  inputMaster: {fileID: 0}
+--- !u!114 &114629580676488466
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1503082872476880}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3ecb744b4f199664889d3bf7ab4e9cbb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  itemPrefabName: 
+  objectTag: Spawnable
+  spawnPoint: {fileID: 0}
+  itemInSpawner: {fileID: 0}
+  inputMaster: {fileID: 0}
+--- !u!114 &114696314559512868
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1033931466170028}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3ecb744b4f199664889d3bf7ab4e9cbb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  itemPrefabName: 
+  objectTag: Spawnable
+  spawnPoint: {fileID: 0}
+  itemInSpawner: {fileID: 0}
+  inputMaster: {fileID: 0}
+--- !u!114 &114706101654086072
 MonoBehaviour:
   m_ObjectHideFlags: 1
   m_PrefabParentObject: {fileID: 0}
@@ -1266,13 +1284,46 @@ MonoBehaviour:
   m_GameObject: {fileID: 1120537173722592}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 247801ad080795a4c9d45e03c5fdf7ab, type: 3}
+  m_Script: {fileID: 11500000, guid: 3ecb744b4f199664889d3bf7ab4e9cbb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  item: {fileID: 0}
+  itemPrefabName: 
   objectTag: Spawnable
-  spawnPoint: {fileID: 4755308128089916}
-  itemsInSpawner: []
+  spawnPoint: {fileID: 0}
+  itemInSpawner: {fileID: 0}
+  inputMaster: {fileID: 0}
+--- !u!114 &114747575016985248
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1746066872029406}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3ecb744b4f199664889d3bf7ab4e9cbb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  itemPrefabName: 
+  objectTag: Spawnable
+  spawnPoint: {fileID: 0}
+  itemInSpawner: {fileID: 0}
+  inputMaster: {fileID: 0}
+--- !u!114 &114774910115170624
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1334706818117660}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3ecb744b4f199664889d3bf7ab4e9cbb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  itemPrefabName: 
+  objectTag: Spawnable
+  spawnPoint: {fileID: 0}
+  itemInSpawner: {fileID: 0}
+  inputMaster: {fileID: 0}
 --- !u!114 &114826673283719758
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -1300,36 +1351,6 @@ MonoBehaviour:
         m_CallState: 2
     m_TypeName: Valve.VR.InteractionSystem.CustomEvents+UnityEventHand, Assembly-CSharp,
       Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
---- !u!114 &114924440961611308
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1033931466170028}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 247801ad080795a4c9d45e03c5fdf7ab, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  item: {fileID: 0}
-  objectTag: Spawnable
-  spawnPoint: {fileID: 4763613131233174}
-  itemsInSpawner: []
---- !u!114 &114992689602999236
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1334706818117660}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 247801ad080795a4c9d45e03c5fdf7ab, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  item: {fileID: 0}
-  objectTag: Spawnable
-  spawnPoint: {fileID: 4319138524077662}
-  itemsInSpawner: []
 --- !u!136 &136076398605110460
 CapsuleCollider:
   m_ObjectHideFlags: 1

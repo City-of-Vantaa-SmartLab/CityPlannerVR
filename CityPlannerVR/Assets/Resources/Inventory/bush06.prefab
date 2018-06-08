@@ -26,9 +26,11 @@ GameObject:
   - component: {fileID: 54918477912539274}
   - component: {fileID: 114729298932132488}
   - component: {fileID: 114917464554674976}
-  - component: {fileID: 114924361992648418}
-  - component: {fileID: 114775050607164338}
   - component: {fileID: 65168748585740318}
+  - component: {fileID: 114343986270442846}
+  - component: {fileID: 114297330463252812}
+  - component: {fileID: 114516487938585862}
+  - component: {fileID: 114706067428193960}
   m_Layer: 0
   m_Name: bush06
   m_TagString: Spawnable
@@ -118,6 +120,65 @@ BoxCollider:
   serializedVersion: 2
   m_Size: {x: 1.9574265, y: 1.6934183, z: 1.3422126}
   m_Center: {x: 0.06804204, y: 0.83104646, z: 0.15802586}
+--- !u!114 &114297330463252812
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1848243473090020}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: aa584fbee541324448dd18d8409c7a41, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  ownerId: 0
+  group: 0
+  OwnerShipWasTransfered: 0
+  prefixBackup: -1
+  synchronization: 3
+  onSerializeTransformOption: 3
+  onSerializeRigidBodyOption: 2
+  ownershipTransfer: 0
+  ObservedComponents:
+  - {fileID: 4010778298719002}
+  ObservedComponentsFoldoutOpen: 1
+  viewIdField: 0
+  instantiationId: -1
+  currentMasterID: -1
+  isRuntimeInstantiated: 0
+--- !u!114 &114343986270442846
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1848243473090020}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2474917abc445a64b94d68b916a22d62, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &114516487938585862
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1848243473090020}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f8d7fa8f51755f34fb68931c466e98a5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &114706067428193960
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1848243473090020}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5d87f268c547c7a47acf9c24852d5753, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!114 &114729298932132488
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -127,17 +188,6 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: b93b6a877adcbf94c89a9d6e0c0e844d, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
---- !u!114 &114775050607164338
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1848243473090020}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 5d60e7f52b31c4a40b997968ec8ff439, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
 --- !u!114 &114840910092000822
@@ -201,38 +251,6 @@ MonoBehaviour:
     m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
       Culture=neutral, PublicKeyToken=null
   snapAttachEaseInCompleted: 0
---- !u!114 &114924361992648418
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1848243473090020}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 372142912, guid: dc443db3e92b4983b9738c1131f555cb, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_SceneId:
-    m_Value: 0
-  m_AssetId:
-    i0: 155
-    i1: 176
-    i2: 146
-    i3: 143
-    i4: 179
-    i5: 65
-    i6: 245
-    i7: 212
-    i8: 185
-    i9: 238
-    i10: 11
-    i11: 166
-    i12: 72
-    i13: 163
-    i14: 211
-    i15: 199
-  m_ServerOnly: 0
-  m_LocalPlayerAuthority: 1
 --- !u!193 &193420366667331362
 Tree:
   m_ObjectHideFlags: 1

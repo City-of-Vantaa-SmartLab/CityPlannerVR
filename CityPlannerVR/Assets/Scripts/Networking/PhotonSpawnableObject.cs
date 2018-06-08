@@ -8,38 +8,50 @@ public class PhotonSpawnableObject : MonoBehaviour {
 	#region Private Attributes
 
 	[SerializeField]
-	private string itemPrefabName;
+	public string itemPrefabName;
 
 	[SerializeField]
 	private string objectTag = "Spawnable";
 
 	[SerializeField]
-	private Transform spawnPoint;
+	public Transform spawnPoint;
 
-	private GameObject itemInSpawner;
+	public GameObject itemInSpawner;
 
-	private InputMaster inputMaster;
+	public InputMaster inputMaster;
 
-	#endregion
+    #endregion
 
-	// Use this for initialization
-	void Start () {
+   //Use this for initialization
 
-		if (PhotonNetwork.isMasterClient) {
-			itemInSpawner = new GameObject ();
-			inputMaster = GameObject.Find ("Player").GetComponent<InputMaster> ();
+   public void GetItems (GameObject dbitem) {
 
-			if (PhotonGameManager.Instance.isMultiplayerSceneLoaded) {
-				InstantiateItemInSpawner ();
-			} else {
-				PhotonGameManager.OnMultiplayerSceneLoaded += () => {
-					InstantiateItemInSpawner ();
-				};
-			}
-		}
-	}
+        if (PhotonNetwork.isMasterClient)
+        {
 
-	private void OnTriggerEnter(Collider other)
+            itemInSpawner = dbitem;
+            itemPrefabName = "Inventory/"+dbitem.name;
+
+            inputMaster = GameObject.Find("Player").GetComponent<InputMaster>();
+
+            if (PhotonGameManager.Instance.isMultiplayerSceneLoaded)
+            {
+
+                InstantiateItemInSpawner();
+
+            }
+            else
+            {
+                PhotonGameManager.OnMultiplayerSceneLoaded += () =>
+                {
+
+                    InstantiateItemInSpawner();
+                };
+            }
+        }
+    }
+
+    private void OnTriggerEnter(Collider other)
 	{
 		Debug.Log ("Spawner entered");
 		if (other.CompareTag("GameController"))
@@ -65,7 +77,7 @@ public class PhotonSpawnableObject : MonoBehaviour {
 		InstantiateRealItem (e.controllerIndex);
 	}
 
-	private void InstantiateItemInSpawner()
+	public void InstantiateItemInSpawner()
 	{
 		GameObject clone = PhotonNetwork.Instantiate(itemPrefabName, spawnPoint.position, spawnPoint.rotation, 0);
 
@@ -107,4 +119,9 @@ public class PhotonSpawnableObject : MonoBehaviour {
 
 		Debug.Log ("Real item instantiated");
 	}
+
+    public void DestroyItemInSpawner()
+    {
+        Destroy(itemInSpawner);
+    }
 }
