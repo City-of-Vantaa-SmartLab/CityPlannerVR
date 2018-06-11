@@ -4,10 +4,10 @@ using System.Collections.Generic;
 using UnityEngine;
 using System.IO;
 
-public class SaveAndLoadBuildings : MonoBehaviour {
+public class SaveAndLoadTransforms : MonoBehaviour {
 
     [Serializable] //attributes for json
-    public class BuildingData
+    public class TransformData
     {
         public string gameObjectName;
         public Vector3 localPosition;
@@ -30,7 +30,7 @@ public class SaveAndLoadBuildings : MonoBehaviour {
     private void Awake()
     {
         folder = "SaveData";
-        fileName = "CommentData";
+        fileName = "TransformData";
         fileExtender = ".dat";
         folderPathName = Application.persistentDataPath + slash + folder;
         pathName = folderPathName + slash + fileName + fileExtender;
@@ -55,8 +55,8 @@ public class SaveAndLoadBuildings : MonoBehaviour {
     private void SubscriptionOn()
     {
         //inputMaster.MenuButtonClicked += HandleMenuClicked;
-        SaveData.OnBeforeSaveBuildings += HandleBeforeSave;
-        SaveData.OnLoadedBuildings += HandleLoading;
+        SaveData<TransformData>.OnBeforeSaveBuildings += HandleBeforeSave;
+        SaveData<TransformData>.OnLoadedBuildings += HandleLoading;
     }
 
 
@@ -65,9 +65,9 @@ public class SaveAndLoadBuildings : MonoBehaviour {
     {
         if (photonBuildingsGO)
         {
-            foreach (Transform t in photonBuildingsGO.transform)
+            foreach (Transform tr in photonBuildingsGO.transform)
             {
-                StoreData(t);
+                StoreData(tr);
             }
         }
     }
@@ -79,24 +79,24 @@ public class SaveAndLoadBuildings : MonoBehaviour {
 
     public void Save()
     {
-        SaveData.SaveBuildings(pathName, SaveData.buildingContainer);
+        SaveData<TransformData>.SaveItems(pathName, SaveData<TransformData>.buildingContainer);
     }
     //add generation script?
     public void Load()
     {
-        SaveData.LoadBuildings(pathName);
+        SaveData<TransformData>.LoadItems(pathName);
     }
 
     private void StoreData(Transform t)
     {
-        BuildingData data = new BuildingData();
+        TransformData data = new TransformData();
         data.localPosition = t.localPosition;
         data.localRotation = t.localRotation;
         data.gameObjectName = t.gameObject.name;
-        SaveData.AddbuildingData(data);
+        SaveData<TransformData>.AddbuildingData(data);
     }
 
-    internal static void RelocateBuilding(BuildingData data)
+    internal static void RelocateTransform(TransformData data)
     {
         GameObject temp = GameObject.Find(data.gameObjectName);
         temp.transform.localPosition = data.localPosition;
@@ -109,7 +109,7 @@ public class SaveAndLoadBuildings : MonoBehaviour {
         return comment;
     }
 
-    public static Comment CreateOldComment(CommentData data)
+    public static Comment CreateOldTransform(CommentData data)
     {
         Comment comment = CreateComment();
         comment.data = data;

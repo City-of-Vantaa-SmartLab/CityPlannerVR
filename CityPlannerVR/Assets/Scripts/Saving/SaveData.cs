@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using System.IO;
+using System;
 
 /// <summary>
 /// Handles the writing and reading of files, as well as stores the commentcontainer.
@@ -9,8 +10,11 @@ using System.IO;
 /// Could be scaled for other types of data as well (later). 
 /// </summary>
 
+//reference: https://msdn.microsoft.com/en-us/library/ms379564(v=vs.80).aspx
+//left off at Generics and casting
+
 //for networking
-public class Container<T>
+public class Container<T>  /*where T : class //such as CommentData class*/
 {
     public List<T> datas = new List<T>();
 }
@@ -18,11 +22,6 @@ public class Container<T>
 public class CommentContainer
 {
     public List<CommentData> commentDatas = new List<CommentData>(); 
-}
-
-public class BuildingContainer
-{
-    public List<SaveAndLoadBuildings.BuildingData> buildingDatas = new List<SaveAndLoadBuildings.BuildingData>();
 }
 
 //for easy accessing and storing locally
@@ -33,11 +32,11 @@ public class CommentLists
     public List<Comment> thumbComments = new List<Comment>();
 }
 
-public class SaveData {
+public class SaveData<T> {
 
     public static CommentContainer commentContainer = new CommentContainer();
     public static CommentLists commentLists = new CommentLists();
-    public static BuildingContainer buildingContainer = new BuildingContainer();
+    public static Container<T> container = new Container<T>();
 
     public delegate void SerializeAction();
     public static event SerializeAction OnLoadedComments;
@@ -67,30 +66,32 @@ public class SaveData {
         ClearCommentContainerList();
     }
 
-    public static void LoadBuildings(string filepath)
+    public static void LoadItems(string filepath)
     {
-        buildingContainer = LoadBuildinDatas(filepath);
-
-        foreach (var data in buildingContainer.buildingDatas)
+        container = LoadDatas(filepath);
+        foreach (T data in container.datas)
         {
-            SaveAndLoadBuildings.RelocateBuilding(data);
+            if (data is CommentData)
+                SaveAndLoadComments.CreateOldComment(data as CommentData);
+            //if (data is TransformData)
+            //    SaveAndLoadTransforms.
+
         }
 
-        if (OnLoadedBuildings != null)
-            OnLoadedBuildings();
-        ClearBuildingContainerList();
+
     }
 
-    public static void SaveBuildings(string filepath, BuildingContainer buildingDatas)
+    internal static void SaveItems(string pathName, object buildingContainer)
     {
-        if (OnBeforeSaveBuildings != null)
-            OnBeforeSaveBuildings();
-        SaveBuildingDatas(filepath, buildingDatas);
-        ClearCommentContainerList();
+        throw new NotImplementedException();
     }
 
-    #region ListManipulations
-    //Copypaste because of static methods
+    private static Container<T> LoadDatas(string filepath)
+    {
+        string jason = File.ReadAllText(filepath);
+        return JsonUtility.FromJson<Container<T>>(jason);
+    }
+
 
     public static void AddCommentData(CommentData data)
     {
@@ -112,22 +113,6 @@ public class SaveData {
         Debug.Log("CommentLists cleared");
     }
 
-    public static void AddbuildingData(SaveAndLoadBuildings.BuildingData data)
-    {
-        buildingContainer.buildingDatas.Add(data);
-        Debug.Log("Building added to containerlist");
-    }
-
-    public static void ClearBuildingContainerList()
-    {
-        buildingContainer.buildingDatas.Clear();
-        Debug.Log("BuildingContainer cleared");
-    }
-
-
-    #endregion
-
-    #region LoadSaveDatas
 
     private static CommentContainer LoadCommentDatas(string filepath)
     {
@@ -143,20 +128,5 @@ public class SaveData {
         File.WriteAllText(filepath, jason);
     }
 
-    private static BuildingContainer LoadBuildinDatas(string filepath)
-    {
-        string jason = File.ReadAllText(filepath);
-        return JsonUtility.FromJson<BuildingContainer>(jason);
-    }
-
-    private static void SaveBuildingDatas(string filepath, BuildingContainer buildings)
-    {
-        string jason = JsonUtility.ToJson(buildings);
-        StreamWriter sw = File.CreateText(filepath);  //creates or overwrites file at filepath
-        sw.Close();
-        File.WriteAllText(filepath, jason);
-    }
-
-    #endregion
 
 }
