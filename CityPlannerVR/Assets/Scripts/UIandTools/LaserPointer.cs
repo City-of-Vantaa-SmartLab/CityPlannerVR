@@ -52,6 +52,7 @@ public class LaserPointer : PunBehaviour
     Ray raycast;
     public Vector3 hitPoint;
     public Vector3 direction;
+	public GameObject target;
 
     private void Awake()
     {
@@ -190,8 +191,10 @@ public class LaserPointer : PunBehaviour
             args.distance = 0f;
             args.target = previousContact;
             args.hitPoint = Vector3.zero;
-            //Tarun muuttuja
+            //---Tarun muuttuja---------------
             hitPoint = Vector3.zero;
+			target = previousContact.gameObject;
+			//--------------------------------
             OnPointerOut(args);
             previousContact = null;
         }
@@ -201,8 +204,10 @@ public class LaserPointer : PunBehaviour
             argsIn.distance = hit.distance;
             argsIn.target = hit.transform;
             argsIn.hitPoint = hit.point;
-            //Tarun muuttuja
+            //---Tarun muuttuja------------------
             hitPoint = hit.point;
+			target = hit.transform.gameObject;
+			//-----------------------------------
             OnPointerIn(argsIn);
             previousContact = hit.transform;
         }
