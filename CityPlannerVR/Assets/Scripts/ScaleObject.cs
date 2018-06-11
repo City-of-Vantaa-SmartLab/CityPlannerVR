@@ -26,6 +26,8 @@ public class ScaleObject : MonoBehaviour {
         }
     }
 
+    public Vector3[] newScales;
+
     private GameObject localPlayer = null;
 
 	ChangeTeleportProperties changeTeleport;
@@ -47,8 +49,8 @@ public class ScaleObject : MonoBehaviour {
         //Debug.Log("ScalePlayer::Scale: Scaling " + objectToScale.gameObject.name);
         //objectToScale.transform.localScale = newScale;
 
-		for (int i = 0; i < objectsToScale.Length; i++) {
-			objectsToScale[i].transform.localScale = newScale;
+        for (int i = 0; i < objectsToScale.Length; i++) {
+            objectsToScale[i].transform.localScale = newScales[i];
 		}
     }
 
