@@ -62,12 +62,12 @@ public class SaveAndLoadComments : MonoBehaviour {
     //Use eg. laserbutton to call the methods below
     public void Save()
     {
-        SaveData<CommentData>.SaveItems(pathName, SaveData<CommentData>.commentContainer);
+        SaveData.SaveDatas(pathName, SaveData.commentContainer);
     }
 
     public void Load()
     {
-        SaveData<CommentData>.LoadItems(pathName);
+        SaveData.LoadItems<CommentData>(pathName);
     }
 
 }

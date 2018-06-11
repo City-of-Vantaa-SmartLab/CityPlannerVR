@@ -44,7 +44,7 @@ public class InputMaster : PunBehaviour {
     public bool hand1Found;
     public bool hand2Found;
 
-    //Ints below are for debugging in inspector: 0 means none, 1 and 2 means the active hand
+    //Ints below are for debugging in inspector's debug mode: 0 means none, 1 and 2 means the active hand
     private int trigger;
     private int grip;
     private int padclicked;

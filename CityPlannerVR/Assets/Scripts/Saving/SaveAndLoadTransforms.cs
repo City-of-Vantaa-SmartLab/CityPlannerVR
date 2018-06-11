@@ -4,20 +4,22 @@ using System.Collections.Generic;
 using UnityEngine;
 using System.IO;
 
-public class SaveAndLoadTransforms : MonoBehaviour {
+[Serializable] //attributes for json
+public class TransformData
+{
+    public string gameObjectName;
+    public string gameObjectParentName;
+    public Vector3 localPosition;
+    public Quaternion localRotation;
+}
 
-    [Serializable] //attributes for json
-    public class TransformData
-    {
-        public string gameObjectName;
-        public Vector3 localPosition;
-        public Quaternion localRotation;
-    }
+public class SaveAndLoadTransforms : MonoBehaviour {
 
     GameObject photonBuildingsGO;
     List<GameObject> photonBuildings;
 
     public string localPlayerName;
+    static public Transform defaultParentCleanup;
     private string folderPathName;
     private string folder;
     private string fileName;
@@ -34,6 +36,11 @@ public class SaveAndLoadTransforms : MonoBehaviour {
         fileExtender = ".dat";
         folderPathName = Application.persistentDataPath + slash + folder;
         pathName = folderPathName + slash + fileName + fileExtender;
+
+        if (!defaultParentCleanup)
+            defaultParentCleanup = GameObject.Find("CleanUp").transform;
+        if (!defaultParentCleanup)
+            Debug.LogError("Default parent could not be set for cleaning up!");
 
         Load();
     }
@@ -55,8 +62,8 @@ public class SaveAndLoadTransforms : MonoBehaviour {
     private void SubscriptionOn()
     {
         //inputMaster.MenuButtonClicked += HandleMenuClicked;
-        SaveData<TransformData>.OnBeforeSaveTransforms += HandleBeforeSave;
-        SaveData<TransformData>.OnLoadedTransforms += HandleLoading;
+        SaveData.OnBeforeSaveTransforms += HandleBeforeSave;
+        SaveData.OnLoadedTransforms += HandleLoading;
     }
 
 
@@ -74,17 +81,17 @@ public class SaveAndLoadTransforms : MonoBehaviour {
 
     private void HandleLoading()
     {
-        throw new NotImplementedException();
+        Debug.Log("Transforms loaded");
     }
 
     public void Save()
     {
-        SaveData<TransformData>.SaveItems(pathName, SaveData<TransformData>.transformContainer);
+        SaveData.SaveDatas(pathName, SaveData.transformContainer);
     }
     //add generation script?
     public void Load()
     {
-        SaveData<TransformData>.LoadItems(pathName);
+        SaveData.LoadItems<TransformData>(pathName);
     }
 
     private void StoreData(Transform t)
@@ -93,31 +100,62 @@ public class SaveAndLoadTransforms : MonoBehaviour {
         data.localPosition = t.localPosition;
         data.localRotation = t.localRotation;
         data.gameObjectName = t.gameObject.name;
+        data.gameObjectParentName = t.parent.name;
         //SaveData<TransformData>.AddbuildingData(data);
         //SaveData<TransformData>.transformContainer
 
     }
 
-    internal static void RelocateTransform(TransformData data)
+    public static void RestoreTransform(TransformData data, Transform holder)
     {
         GameObject temp = GameObject.Find(data.gameObjectName);
-        temp.transform.localPosition = data.localPosition;
-        temp.transform.localRotation = data.localRotation;
+        if (temp)
+            PutInPlace(temp, data, holder);
+        else
+        {
+            Debug.Log("Could not find gameobject with name " + data.gameObjectName + ", creating from prefab...)");
+            GameObject newObject;
+            newObject = Resources.Load<GameObject>("Prefabs/" + data.gameObjectName);
+            if (newObject)
+                PutInPlace(newObject, data, holder);
+        }
     }
 
-    public static Comment CreateComment()
+    private static void PutInPlace(GameObject GO, TransformData data, Transform holder)
     {
-        Comment comment = new Comment();
-        return comment;
+        Transform parent = CheckOrFindOrGenerateParent(data, holder);
+        if (parent)
+            GO.transform.parent = parent;
+        GO.transform.localPosition = data.localPosition;
+        GO.transform.localRotation = data.localRotation;
     }
 
-    public static void MoveOldTransform(TransformData data)
+    private static Transform CheckOrFindOrGenerateParent(TransformData data, Transform previousHolder)
     {
-
-        //Comment comment = CreateComment();
-        //comment.data = data;
-        ////comment.LoadData();
-        //comment.SortAndAddToLocalList();
-        //return comment;
+        if (data.gameObjectParentName == previousHolder.name)
+            return previousHolder;
+        GameObject temp = GameObject.Find(data.gameObjectParentName);
+        if (temp)
+        {
+            SaveData.transformContainer.previousHolder = temp.transform;
+            return temp.transform;
+        }
+        temp = Resources.Load<GameObject>("Prefabs/" + data.gameObjectParentName);
+        if (temp)
+        {
+            SaveData.transformContainer.previousHolder = temp.transform;
+            return temp.transform;
+        }
+        else if (defaultParentCleanup)
+        {
+            Debug.Log("Could not find parent for " + data.gameObjectName + " with name: "
+                + data.gameObjectParentName + ", moving under cleanup object");
+            return defaultParentCleanup;
+        }
+        else
+            return null;
     }
+
+
+
 }
