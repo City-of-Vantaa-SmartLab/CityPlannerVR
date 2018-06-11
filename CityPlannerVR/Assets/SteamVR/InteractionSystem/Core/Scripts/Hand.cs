@@ -91,11 +91,14 @@ namespace Valve.VR.InteractionSystem
 
 		SteamVR_Events.Action inputFocusAction;
 
+        //Tarun debuggaukseen
+        float flScaledSphereRadius;
+        float boxMult;
 
-		//-------------------------------------------------
-		// The Interactable object this Hand is currently hovering over
-		//-------------------------------------------------
-		public Interactable hoveringInteractable
+        //-------------------------------------------------
+        // The Interactable object this Hand is currently hovering over
+        //-------------------------------------------------
+        public Interactable hoveringInteractable
 		{
 			get { return _hoveringInteractable; }
 			set
@@ -481,11 +484,11 @@ namespace Valve.VR.InteractionSystem
 
 			// Pick the closest hovering
 			float flHoverRadiusScale = playerInstance.transform.lossyScale.x;
-			float flScaledSphereRadius = hoverSphereRadius * flHoverRadiusScale;
+			/*float*/ flScaledSphereRadius = hoverSphereRadius * flHoverRadiusScale;
 
 			// if we're close to the floor, increase the radius to make things easier to pick up
 			float handDiff = Mathf.Abs( transform.position.y - playerInstance.trackingOriginTransform.position.y );
-			float boxMult = Util.RemapNumberClamped( handDiff, 0.0f, 0.5f * flHoverRadiusScale, 5.0f, 1.0f ) * flHoverRadiusScale;
+			/*float*/ boxMult = Util.RemapNumberClamped( handDiff, 0.0f, 0.5f * flHoverRadiusScale, 5.0f, 1.0f ) * flHoverRadiusScale;
 
 			// null out old vals
 			for ( int i = 0; i < overlappingColliders.Length; ++i )
@@ -493,16 +496,18 @@ namespace Valve.VR.InteractionSystem
 				overlappingColliders[i] = null;
 			}
 
-			Physics.OverlapBoxNonAlloc(
-				hoverSphereTransform.position - new Vector3( 0, flScaledSphereRadius * boxMult - flScaledSphereRadius, 0 ),
-				new Vector3( flScaledSphereRadius, flScaledSphereRadius * boxMult * 2.0f, flScaledSphereRadius ),
-				overlappingColliders,
-				Quaternion.identity,
-				hoverLayerMask.value
-			);
+            //Physics.OverlapBoxNonAlloc(
+            //    hoverSphereTransform.position - new Vector3(0, flScaledSphereRadius * boxMult - flScaledSphereRadius, 0),
+            //    new Vector3(flScaledSphereRadius, flScaledSphereRadius * boxMult * 2.0f, flScaledSphereRadius),
+            //    overlappingColliders,
+            //    Quaternion.identity,
+            //    hoverLayerMask.value
+            //);
 
-			// DebugVar
-			int iActualColliderCount = 0;
+            Physics.OverlapSphereNonAlloc(hoverSphereTransform.position - new Vector3(0, flScaledSphereRadius * boxMult - flScaledSphereRadius, 0), flScaledSphereRadius * 2f, overlappingColliders, hoverLayerMask.value);
+
+            // DebugVar
+            int iActualColliderCount = 0;
 
 			foreach ( Collider collider in overlappingColliders )
 			{
@@ -724,20 +729,22 @@ namespace Valve.VR.InteractionSystem
 		void FixedUpdate()
 		{
 			UpdateHandPoses();
-		}
+        }
 
 
 		//-------------------------------------------------
 		void OnDrawGizmos()
-		{
-			Gizmos.color = new Color( 0.5f, 1.0f, 0.5f, 0.9f );
-			Transform sphereTransform = hoverSphereTransform ? hoverSphereTransform : this.transform;
-			Gizmos.DrawWireSphere( sphereTransform.position, hoverSphereRadius );
-		}
+        {
+            Gizmos.color = new Color(0.5f, 1.0f, 0.5f, 0.9f);
+            Transform sphereTransform = hoverSphereTransform ? hoverSphereTransform : this.transform;
+            Gizmos.DrawWireSphere(sphereTransform.position, hoverSphereRadius);
+
+            Gizmos.DrawSphere(hoverSphereTransform.position - new Vector3(0, flScaledSphereRadius * boxMult - flScaledSphereRadius, 0), flScaledSphereRadius * 2f);
+        }
 
 
-		//-------------------------------------------------
-		private void HandDebugLog( string msg )
+        //-------------------------------------------------
+        private void HandDebugLog( string msg )
 		{
 			if ( spewDebugText )
 			{
