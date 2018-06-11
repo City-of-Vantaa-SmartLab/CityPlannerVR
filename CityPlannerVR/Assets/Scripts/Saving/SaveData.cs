@@ -14,15 +14,17 @@ using System;
 //left off at Generics and casting
 
 //for networking
-public class Container<T>  /*where T : class //such as CommentData class*/
+public class Container<T> /*where T : class //such as CommentData class*/
 {
     public List<T> datas = new List<T>();
+
+
 }
 
-public class CommentContainer
-{
-    public List<CommentData> commentDatas = new List<CommentData>(); 
-}
+//public class CommentContainer
+//{
+//    public List<CommentData> commentDatas = new List<CommentData>(); 
+//}
 
 //for easy accessing and storing locally
 public class CommentLists
@@ -32,58 +34,61 @@ public class CommentLists
     public List<Comment> thumbComments = new List<Comment>();
 }
 
-public class SaveData<T> {
+public class SaveData <T> {
 
-    public static CommentContainer commentContainer = new CommentContainer();
+    //public static CommentContainer commentContainer = new CommentContainer();
+    public static Container<CommentData> commentContainer = new Container<CommentData>();
+    public static Container<SaveAndLoadTransforms.TransformData> transformContainer = new Container<SaveAndLoadTransforms.TransformData>();
     public static CommentLists commentLists = new CommentLists();
-    public static Container<T> container = new Container<T>();
 
     public delegate void SerializeAction();
     public static event SerializeAction OnLoadedComments;
     public static event SerializeAction OnBeforeSaveComments;
-    public static event SerializeAction OnLoadedBuildings;
-    public static event SerializeAction OnBeforeSaveBuildings;
+    public static event SerializeAction OnLoadedTransforms;
+    public static event SerializeAction OnBeforeSaveTransforms;
 
-    public static void LoadComments(string filepath)
-    {
-        commentContainer = LoadCommentDatas(filepath);
+    //public static void LoadComments(string filepath)
+    //{
+    //    commentContainer = LoadCommentDatas(filepath);
 
-        foreach (CommentData data in commentContainer.commentDatas)
-        {
-            SaveAndLoadComments.CreateOldComment(data);
-        }
+    //    foreach (CommentData data in commentContainer.commentDatas)
+    //    {
+    //        SaveAndLoadComments.CreateOldComment(data);
+    //    }
 
-        if (OnLoadedComments != null)
-            OnLoadedComments();
-        ClearCommentContainerList();
-    }
+    //    if (OnLoadedComments != null)
+    //        OnLoadedComments();
+    //    ClearCommentContainerList();
+    //}
 
-    public static void SaveComments(string filepath, CommentContainer commentDatas)
-    {
-        if (OnBeforeSaveComments != null)
-            OnBeforeSaveComments();
-        SaveCommentDatas(filepath, commentDatas);
-        ClearCommentContainerList();
-    }
+    //public static void SaveComments(string filepath, CommentContainer commentDatas)
+    //{
+    //    if (OnBeforeSaveComments != null)
+    //        OnBeforeSaveComments();
+    //    SaveCommentDatas(filepath, commentDatas);
+    //    ClearCommentContainerList();
+    //}
 
     public static void LoadItems(string filepath)
     {
-        container = LoadDatas(filepath);
-        foreach (T data in container.datas)
+        Container<T> tempContainer;
+        tempContainer = LoadDatas(filepath);
+        foreach (T data in tempContainer.datas)
         {
             if (data is CommentData)
                 SaveAndLoadComments.CreateOldComment(data as CommentData);
-            //if (data is TransformData)
-            //    SaveAndLoadTransforms.
+            if (data is SaveAndLoadTransforms.TransformData)
+                SaveAndLoadTransforms.MoveOldTransform(data as SaveAndLoadTransforms.TransformData);
 
         }
-
-
     }
 
-    internal static void SaveItems(string pathName, object buildingContainer)
+    internal static void SaveItems(string filepath, object container)
     {
-        throw new NotImplementedException();
+        string jason = JsonUtility.ToJson(container);
+        StreamWriter sw = File.CreateText(filepath);  //creates or overwrites file at filepath
+        sw.Close();
+        File.WriteAllText(filepath, jason);
     }
 
     private static Container<T> LoadDatas(string filepath)
@@ -93,15 +98,23 @@ public class SaveData<T> {
     }
 
 
-    public static void AddCommentData(CommentData data)
+    //public static void AddCommentData(CommentData data)
+    //{
+    //    commentContainer.commentDatas.Add(data);
+    //    Debug.Log("Comment added to containerlist");
+    //}
+
+    public static void AddData(T data)
     {
-        commentContainer.commentDatas.Add(data);
-        Debug.Log("Comment added to containerlist");
+        if (data is CommentData)
+            commentContainer.datas.Add(data as CommentData);
+        if (data is SaveAndLoadTransforms.TransformData)
+            transformContainer.datas.Add(data as SaveAndLoadTransforms.TransformData);
     }
 
-    public static void ClearCommentContainerList()
+    public static void ClearContainerList(Container<T> container)
     {
-        commentContainer.commentDatas.Clear();
+        container.datas.Clear();
         Debug.Log("CommentContainer cleared");
     }
 
@@ -114,19 +127,18 @@ public class SaveData<T> {
     }
 
 
-    private static CommentContainer LoadCommentDatas(string filepath)
-    {
-        string jason = File.ReadAllText(filepath);
-        return JsonUtility.FromJson<CommentContainer>(jason);
-    }
+    //private static CommentContainer LoadCommentDatas(string filepath)
+    //{
+    //    string jason = File.ReadAllText(filepath);
+    //    return JsonUtility.FromJson<CommentContainer>(jason);
+    //}
 
-    private static void SaveCommentDatas(string filepath, CommentContainer comments)
-    {
-        string jason = JsonUtility.ToJson(comments);
-        StreamWriter sw = File.CreateText(filepath);  //creates or overwrites file at filepath
-        sw.Close();
-        File.WriteAllText(filepath, jason);
-    }
-
+    //private static void SaveCommentDatas(string filepath, CommentContainer comments)
+    //{
+    //    string jason = JsonUtility.ToJson(comments);
+    //    StreamWriter sw = File.CreateText(filepath);  //creates or overwrites file at filepath
+    //    sw.Close();
+    //    File.WriteAllText(filepath, jason);
+    //}
 
 }

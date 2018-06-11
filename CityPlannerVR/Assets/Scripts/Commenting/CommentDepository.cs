@@ -33,9 +33,9 @@ public class CommentDepository : MonoBehaviour {
 
     private void UpdateLists()
     {
-        texts = SaveData.commentLists.textComments; //copy content or reference?
-        voices = SaveData.commentLists.voiceComments;
-        thumbs = SaveData.commentLists.thumbComments;
+        texts = SaveData<CommentData>.commentLists.textComments; //copy content or reference?
+        voices = SaveData<CommentData>.commentLists.voiceComments;
+        thumbs = SaveData<CommentData>.commentLists.thumbComments;
     }
 
     public void GenerateListVisuals(Comment.CommentType type)

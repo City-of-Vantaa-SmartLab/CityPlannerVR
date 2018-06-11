@@ -21,9 +21,6 @@ public class CommentData
     public int quickcheck;
 }
 
-//From https://gamedev.stackexchange.com/questions/137523/unity-json-utility-does-not-serialize-datetime
-
-
 [Serializable]
 public class Comment {
 
@@ -46,7 +43,7 @@ public class Comment {
     {
         //SaveData.OnLoaded += LoadData;
         //SaveData.OnBeforeSave += StoreData;
-        SaveData.OnBeforeSaveComments += ApplyDataToContainer;
+        SaveData<CommentData>.OnBeforeSaveComments += ApplyDataToContainer;
     }
 
     //Not a monobehaviour!
@@ -54,12 +51,12 @@ public class Comment {
     {
         //SaveData.OnLoaded -= LoadData;
         //SaveData.OnBeforeSave -= StoreData;
-        SaveData.OnBeforeSaveComments -= ApplyDataToContainer;
+        SaveData<CommentData>.OnBeforeSaveComments -= ApplyDataToContainer;
     }
 
     public void ApplyDataToContainer()
     {
-        SaveData.AddCommentData(data);
+        //SaveData<CommentData>.AddCommentData(data);
         OnDisable();
     }
 
@@ -68,18 +65,18 @@ public class Comment {
         switch (data.type)
         {
             case Comment.CommentType.Text:
-                if (!IsCommentInList(SaveData.commentLists.textComments))
-                    SaveData.commentLists.textComments.Add(this);
+                if (!IsCommentInList(SaveData<CommentData>.commentLists.textComments))
+                    SaveData<CommentData>.commentLists.textComments.Add(this);
                 break;
 
             case Comment.CommentType.Voice:
-                if (!IsCommentInList(SaveData.commentLists.textComments))
-                    SaveData.commentLists.voiceComments.Add(this);
+                if (!IsCommentInList(SaveData<CommentData>.commentLists.textComments))
+                    SaveData<CommentData>.commentLists.voiceComments.Add(this);
                 break;
 
             case Comment.CommentType.Thumb:
-                if (!IsCommentInList(SaveData.commentLists.textComments))
-                    SaveData.commentLists.thumbComments.Add(this);
+                if (!IsCommentInList(SaveData<CommentData>.commentLists.textComments))
+                    SaveData<CommentData>.commentLists.thumbComments.Add(this);
                 break;
 
             default:
@@ -91,9 +88,9 @@ public class Comment {
     public bool IsCommentInList(List<Comment> testList)
     {
         Comment temp;
-        for (int i = 0; i < SaveData.commentLists.textComments.Count; i++)
+        for (int i = 0; i < SaveData<CommentData>.commentLists.textComments.Count; i++)
         {
-            temp = SaveData.commentLists.textComments[i];
+            temp = SaveData<CommentData>.commentLists.textComments[i];
             if (IsTheSameComment(temp))
             {
                     return true;

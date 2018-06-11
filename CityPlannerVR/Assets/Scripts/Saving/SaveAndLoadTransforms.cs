@@ -24,8 +24,8 @@ public class SaveAndLoadTransforms : MonoBehaviour {
     private string fileExtender;
     private string pathName;
     private char slash = Path.DirectorySeparatorChar;
-    public bool save;
-    public bool load;
+    //public bool save;
+    //public bool load;
 
     private void Awake()
     {
@@ -55,8 +55,8 @@ public class SaveAndLoadTransforms : MonoBehaviour {
     private void SubscriptionOn()
     {
         //inputMaster.MenuButtonClicked += HandleMenuClicked;
-        SaveData<TransformData>.OnBeforeSaveBuildings += HandleBeforeSave;
-        SaveData<TransformData>.OnLoadedBuildings += HandleLoading;
+        SaveData<TransformData>.OnBeforeSaveTransforms += HandleBeforeSave;
+        SaveData<TransformData>.OnLoadedTransforms += HandleLoading;
     }
 
 
@@ -79,7 +79,7 @@ public class SaveAndLoadTransforms : MonoBehaviour {
 
     public void Save()
     {
-        SaveData<TransformData>.SaveItems(pathName, SaveData<TransformData>.buildingContainer);
+        SaveData<TransformData>.SaveItems(pathName, SaveData<TransformData>.transformContainer);
     }
     //add generation script?
     public void Load()
@@ -93,7 +93,9 @@ public class SaveAndLoadTransforms : MonoBehaviour {
         data.localPosition = t.localPosition;
         data.localRotation = t.localRotation;
         data.gameObjectName = t.gameObject.name;
-        SaveData<TransformData>.AddbuildingData(data);
+        //SaveData<TransformData>.AddbuildingData(data);
+        //SaveData<TransformData>.transformContainer
+
     }
 
     internal static void RelocateTransform(TransformData data)
@@ -109,12 +111,13 @@ public class SaveAndLoadTransforms : MonoBehaviour {
         return comment;
     }
 
-    public static Comment CreateOldTransform(CommentData data)
+    public static void MoveOldTransform(TransformData data)
     {
-        Comment comment = CreateComment();
-        comment.data = data;
-        //comment.LoadData();
-        comment.SortAndAddToLocalList();
-        return comment;
+
+        //Comment comment = CreateComment();
+        //comment.data = data;
+        ////comment.LoadData();
+        //comment.SortAndAddToLocalList();
+        //return comment;
     }
 }
