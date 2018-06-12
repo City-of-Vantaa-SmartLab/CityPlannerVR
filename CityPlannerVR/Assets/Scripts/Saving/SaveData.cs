@@ -49,18 +49,16 @@ public class SaveData {
             if (data is TransformData)
                 SaveAndLoadTransforms.RestoreTransform(data as TransformData, tempContainer.previousHolder);
         }
-        if (tempContainer.datas[0] is CommentData)
+        if (tempContainer.datas.Count != 0 && tempContainer.datas[0] is CommentData)
         {
             if (OnLoadedComments != null)
                 OnLoadedComments();
-            ClearContainerList(commentContainer);
         }
 
-        if (tempContainer.datas[0] is TransformData)
+        if (tempContainer.datas.Count != 0 && tempContainer.datas[0] is TransformData)
         {
             if (OnLoadedTransforms != null)
                 OnLoadedTransforms();
-            ClearContainerList(transformContainer);
         }
     }
 

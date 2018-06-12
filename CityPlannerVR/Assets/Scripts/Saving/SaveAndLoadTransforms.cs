@@ -69,6 +69,8 @@ public class SaveAndLoadTransforms : MonoBehaviour {
     {
         foreach (GameObject GO in holdersToBeSaved)
         {
+            StoreData(GO.transform);
+            Debug.Log("Storing holder's transform: " + GO.name);
             foreach (Transform tr in GO.transform)
             {
                 StoreData(tr);
@@ -86,7 +88,7 @@ public class SaveAndLoadTransforms : MonoBehaviour {
     {
         SaveData.SaveDatas(pathName, SaveData.transformContainer);
     }
-    //add generation script?
+
     public void Load()
     {
         SaveData.LoadItems<TransformData>(pathName);
@@ -94,11 +96,9 @@ public class SaveAndLoadTransforms : MonoBehaviour {
 
     private void StoreData(Transform t)
     {
-
-        TransformData data;
+        TransformData data = new TransformData();
         bool alreadyReplaced = false;
 
-        data = new TransformData();
         data.localPosition = t.localPosition;
         data.localRotation = t.localRotation;
         data.gameObjectName = t.gameObject.name;
@@ -117,9 +117,6 @@ public class SaveAndLoadTransforms : MonoBehaviour {
 
         if (!alreadyReplaced)
             SaveData.AddData(data);
-        //SaveData<TransformData>.AddbuildingData(data);
-        //SaveData<TransformData>.transformContainer
-
     }
 
     public static void RestoreTransform(TransformData data, Transform holder)
