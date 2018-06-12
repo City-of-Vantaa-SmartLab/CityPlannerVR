@@ -11,12 +11,12 @@ public class TransformData
     public string gameObjectParentName;
     public Vector3 localPosition;
     public Quaternion localRotation;
+    public int quickcheck;
 }
 
 public class SaveAndLoadTransforms : MonoBehaviour {
 
-    GameObject photonBuildingsGO;
-    List<GameObject> photonBuildings;
+    public List<GameObject> holdersToBeSaved = new List<GameObject>();
 
     public string localPlayerName;
     static public Transform defaultParentCleanup;
@@ -41,47 +41,45 @@ public class SaveAndLoadTransforms : MonoBehaviour {
             defaultParentCleanup = GameObject.Find("CleanUp").transform;
         if (!defaultParentCleanup)
             Debug.LogError("Default parent could not be set for cleaning up!");
+        SubscriptionOn();
 
         Load();
     }
 
-
-
-    private void Start()
+    private void OnDestroy()
     {
-        Initialize();
+        SubscriptionOff();
     }
-
-    private void Initialize()
-    {
-        if (!photonBuildingsGO)
-            photonBuildingsGO = GameObject.Find("PhotonNewBuildings");
-    }
-
 
     private void SubscriptionOn()
     {
-        //inputMaster.MenuButtonClicked += HandleMenuClicked;
         SaveData.OnBeforeSaveTransforms += HandleBeforeSave;
         SaveData.OnLoadedTransforms += HandleLoading;
+    }
+
+    private void SubscriptionOff()
+    {
+        SaveData.OnBeforeSaveTransforms -= HandleBeforeSave;
+        SaveData.OnLoadedTransforms -= HandleLoading;
     }
 
 
 
     private void HandleBeforeSave()
     {
-        if (photonBuildingsGO)
+        foreach (GameObject GO in holdersToBeSaved)
         {
-            foreach (Transform tr in photonBuildingsGO.transform)
+            foreach (Transform tr in GO.transform)
             {
                 StoreData(tr);
+                Debug.Log("Storing " + tr.name);
             }
         }
     }
 
     private void HandleLoading()
     {
-        Debug.Log("Transforms loaded");
+        Debug.Log("OnLoadedTransforms event fired");
     }
 
     public void Save()
@@ -96,11 +94,29 @@ public class SaveAndLoadTransforms : MonoBehaviour {
 
     private void StoreData(Transform t)
     {
-        TransformData data = new TransformData();
+
+        TransformData data;
+        bool alreadyReplaced = false;
+
+        data = new TransformData();
         data.localPosition = t.localPosition;
         data.localRotation = t.localRotation;
         data.gameObjectName = t.gameObject.name;
         data.gameObjectParentName = t.parent.name;
+        data.quickcheck = GenerateQuickCheck(data, 3);
+        foreach (TransformData trdata in SaveData.transformContainer.datas)
+        {
+            if (IsTheSameTransform(trdata, data))
+            {
+                trdata.localPosition = data.localPosition;
+                trdata.localRotation = data.localRotation;
+                alreadyReplaced = true;
+                break;
+            }
+        }
+
+        if (!alreadyReplaced)
+            SaveData.AddData(data);
         //SaveData<TransformData>.AddbuildingData(data);
         //SaveData<TransformData>.transformContainer
 
@@ -154,6 +170,31 @@ public class SaveAndLoadTransforms : MonoBehaviour {
         }
         else
             return null;
+    }
+
+    public int GenerateQuickCheck(TransformData data, int subStringMaxLength)
+    {
+        string objectName = Comment.TruncateString(data.gameObjectName , subStringMaxLength);
+        string parentName = Comment.TruncateString(data.gameObjectParentName, subStringMaxLength);
+        
+        string uberString = objectName + parentName;
+        Debug.Log("Joining strings: " + objectName + " " + parentName);
+        int magic = Comment.ConvertFirstCharsToInt(uberString, subStringMaxLength * 2);
+        Debug.Log("QuickCheck: " + magic);
+        return magic;
+    }
+
+
+
+    public static bool IsTheSameTransform(TransformData trdata1, TransformData trdata2)
+    {
+        if (trdata1.quickcheck == trdata2.quickcheck &&  //comparing ints is quicker than strings
+            trdata1.gameObjectName == trdata2.gameObjectName &&
+            trdata1.gameObjectParentName == trdata2.gameObjectParentName
+            )
+            return true;
+        else
+            return false;
     }
 
 

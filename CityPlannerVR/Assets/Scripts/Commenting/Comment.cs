@@ -111,7 +111,7 @@ public class Comment {
             return false;
     }
 
-    private int ConvertFirstCharsToInt(string str, int maxLength)
+    public static int ConvertFirstCharsToInt(string str, int maxLength)
     {
         string newStr = TruncateString(str, maxLength);
         byte[] bytes = Encoding.Default.GetBytes(newStr);
@@ -133,19 +133,19 @@ public class Comment {
         data.quickcheck = magic;
     }
 
-    public void ConvertToQuickCheck(int maxLength, CommentData data)
-    {
-        string userName = TruncateString(data.userName, maxLength);
-        string objectName = TruncateString(data.commentedObjectName, maxLength);
-        string date = TruncateString(data.submittedShortDate, maxLength);
-        string uberString = userName + objectName + date;
-        Debug.Log("Joining strings: " + userName + " " + objectName + " " + date);
-        int magic = ConvertFirstCharsToInt(uberString, maxLength * 4);
-        Debug.Log("Adding QuickCheck to data: " + magic);
-        data.quickcheck = magic;
-    }
+    //public void ConvertToQuickCheck(int maxLength, CommentData data)
+    //{
+    //    string userName = TruncateString(data.userName, maxLength);
+    //    string objectName = TruncateString(data.commentedObjectName, maxLength);
+    //    string date = TruncateString(data.submittedShortDate, maxLength);
+    //    string uberString = userName + objectName + date;
+    //    Debug.Log("Joining strings: " + userName + " " + objectName + " " + date);
+    //    int magic = ConvertFirstCharsToInt(uberString, maxLength * 4);
+    //    Debug.Log("Adding QuickCheck to data: " + magic);
+    //    data.quickcheck = magic;
+    //}
 
-    private string TruncateString(string str, int maxLength)
+    public static string TruncateString(string str, int maxLength)
     {
         int length = str.Length;
         if (length > maxLength)
