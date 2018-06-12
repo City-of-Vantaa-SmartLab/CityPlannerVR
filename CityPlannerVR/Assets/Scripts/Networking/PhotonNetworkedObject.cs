@@ -26,18 +26,15 @@ public class PhotonNetworkedObject : Photon.MonoBehaviour {
 			transform.position = Vector3.Lerp (transform.position, this.correctObjectPos, Time.deltaTime * 5);
 			transform.rotation = Quaternion.Lerp (transform.rotation, this.correctObjectRot, Time.deltaTime * 5);
 		} else {
-			if (isAttachedToHand.IsHolding && !isInHand) {
+			if (this.gameObject.GetComponent<Rigidbody> ().isKinematic && isInHand == false) {
+				Debug.LogWarning ("IsKinematic true!");
 				isInHand = true;
-			} else if(!isAttachedToHand.IsHolding && isInHand){
+				this.gameObject.GetComponent<PhotonView> ().RPC ("SetIsKinematic", PhotonTargets.AllBuffered, isInHand);
+			} else if (!this.gameObject.GetComponent<Rigidbody> ().isKinematic && isInHand == true) {
+				Debug.LogWarning ("IsKinematic false!");
 				isInHand = false;
+				this.gameObject.GetComponent<PhotonView> ().RPC ("SetIsKinematic", PhotonTargets.AllBuffered, isInHand);
 			}
-		}
-
-		if (isInHand && this.gameObject.GetComponent<Rigidbody>().useGravity) {
-			this.gameObject.GetComponent<Rigidbody> ().useGravity = false;
-		}
-		if(!isInHand && !this.gameObject.GetComponent<Rigidbody>().useGravity) {
-			this.gameObject.GetComponent<Rigidbody> ().useGravity = true;
 		}
 	}
 
@@ -57,5 +54,11 @@ public class PhotonNetworkedObject : Photon.MonoBehaviour {
 			this.correctObjectRot = (Quaternion)stream.ReceiveNext();
 
 		}
+	}
+
+	[PunRPC]
+	public void SetIsKinematic(bool isTrue)
+	{
+		this.gameObject.GetComponent<Rigidbody> ().isKinematic = isTrue;
 	}
 }
