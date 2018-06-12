@@ -4,38 +4,40 @@ using UnityEngine;
 
 public class AreaSelection : MonoBehaviour {
 
-	public int handNumber;
-
 	private LaserPointer laser;
 	private XRLineRenderer line;
 	private InputMaster inputMaster;
 
-	private string tag = "Untagged";
-
+    private string areaTag = "Untagged";
 	private static int index;
 
 	GameObject areaPoint;
-	static List<GameObject> areaPoints;
+	public static List<GameObject> areaPoints;
 
 	private void Start(){
 		laser = gameObject.transform.parent.GetComponentInChildren<LaserPointer> ();
 		line = GetComponent<XRLineRenderer> ();
 		inputMaster = GetComponentInParent<InputMaster> ();
 
+        areaPoints = new List<GameObject>();
+
 		index = 0;
-
-		inputMaster.TriggerClicked += TriggerPressed;
 	}
 
-	private void TriggerPressed(object sender, ClickedEventArgs e){
-		if (laser.target.tag == tag && e.controllerIndex == handNumber) {
-			CreatePoint ();
-		}
-	}
+    public void ActivateCreatePoint(LaserPointer laser, GameObject target)
+    {
+        if(target.tag == areaTag)
+        {
+            CreatePoint();
+        }
+    }
 
-	private void CreatePoint(){
+
+    private void CreatePoint(){
 		areaPoint = GameObject.CreatePrimitive (PrimitiveType.Sphere);
+        areaPoint.name = "SelectionPoint";
 		areaPoint.transform.position = laser.hitPoint;
+        areaPoint.transform.localScale = new Vector3(0.1f, 0.1f, 0.1f);
 		areaPoints.Add (areaPoint);
 
 		DrawLineBetweenPoints ();
@@ -50,5 +52,6 @@ public class AreaSelection : MonoBehaviour {
 
 	private void ScalePoints(){
 		//Scale points and line when player shrinks down and grows up
+
 	}
 }
