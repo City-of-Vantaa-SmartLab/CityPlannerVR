@@ -103,7 +103,6 @@ namespace Valve.VR.InteractionSystem
 			seeThru.gameObject.SetActive( false );
 		}
 
-
 		//-------------------------------------------------
 		void OnEnable()
 		{

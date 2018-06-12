@@ -22,14 +22,16 @@ GameObject:
   - component: {fileID: 193143122725052424}
   - component: {fileID: 33217160909297794}
   - component: {fileID: 23720497554399682}
-  - component: {fileID: 114428275029537122}
-  - component: {fileID: 114449016348084842}
   - component: {fileID: 114237577777043656}
   - component: {fileID: 54249985595089040}
   - component: {fileID: 114190129636102570}
   - component: {fileID: 114003597541564084}
   - component: {fileID: 65987061256564342}
   - component: {fileID: 114974528639642384}
+  - component: {fileID: 114507640663693244}
+  - component: {fileID: 114546516297957718}
+  - component: {fileID: 114038205727509910}
+  - component: {fileID: 114805286236058162}
   m_Layer: 0
   m_Name: bush03 (3)
   m_TagString: Spawnable
@@ -166,6 +168,17 @@ MonoBehaviour:
     m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
       Culture=neutral, PublicKeyToken=null
   snapAttachEaseInCompleted: 0
+--- !u!114 &114038205727509910
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1450173890949484}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2474917abc445a64b94d68b916a22d62, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!114 &114190129636102570
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -191,7 +204,7 @@ MonoBehaviour:
   velocityAverageFrames: 5
   angularVelocityAverageFrames: 11
   estimateOnAwake: 0
---- !u!114 &114428275029537122
+--- !u!114 &114507640663693244
 MonoBehaviour:
   m_ObjectHideFlags: 1
   m_PrefabParentObject: {fileID: 0}
@@ -199,31 +212,10 @@ MonoBehaviour:
   m_GameObject: {fileID: 1450173890949484}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 372142912, guid: dc443db3e92b4983b9738c1131f555cb, type: 3}
+  m_Script: {fileID: 11500000, guid: 5d87f268c547c7a47acf9c24852d5753, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_SceneId:
-    m_Value: 0
-  m_AssetId:
-    i0: 215
-    i1: 170
-    i2: 132
-    i3: 178
-    i4: 209
-    i5: 42
-    i6: 97
-    i7: 84
-    i8: 43
-    i9: 240
-    i10: 139
-    i11: 178
-    i12: 241
-    i13: 242
-    i14: 198
-    i15: 185
-  m_ServerOnly: 0
-  m_LocalPlayerAuthority: 1
---- !u!114 &114449016348084842
+--- !u!114 &114546516297957718
 MonoBehaviour:
   m_ObjectHideFlags: 1
   m_PrefabParentObject: {fileID: 0}
@@ -231,7 +223,33 @@ MonoBehaviour:
   m_GameObject: {fileID: 1450173890949484}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 5d60e7f52b31c4a40b997968ec8ff439, type: 3}
+  m_Script: {fileID: 11500000, guid: aa584fbee541324448dd18d8409c7a41, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  ownerId: 0
+  group: 0
+  OwnerShipWasTransfered: 0
+  prefixBackup: -1
+  synchronization: 3
+  onSerializeTransformOption: 3
+  onSerializeRigidBodyOption: 2
+  ownershipTransfer: 0
+  ObservedComponents:
+  - {fileID: 4029180164277414}
+  ObservedComponentsFoldoutOpen: 1
+  viewIdField: 0
+  instantiationId: -1
+  currentMasterID: -1
+  isRuntimeInstantiated: 0
+--- !u!114 &114805286236058162
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1450173890949484}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f8d7fa8f51755f34fb68931c466e98a5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
 --- !u!114 &114974528639642384
@@ -240,14 +258,16 @@ MonoBehaviour:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1450173890949484}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 7b261c9e86bd91a479fc414efcb8e679, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   isHighlighted: 0
   isSelected: 0
+  lasersPointing: []
   lista: {fileID: 0}
+  gazeTracker: {fileID: 0}
 --- !u!193 &193143122725052424
 Tree:
   m_ObjectHideFlags: 1

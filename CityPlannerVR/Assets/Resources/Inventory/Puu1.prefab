@@ -40,9 +40,11 @@ GameObject:
   - component: {fileID: 54144071122378146}
   - component: {fileID: 114831644593454226}
   - component: {fileID: 114621995984830102}
-  - component: {fileID: 114280298935310426}
-  - component: {fileID: 114525924874892214}
   - component: {fileID: 65074265473708350}
+  - component: {fileID: 114552844469178952}
+  - component: {fileID: 114644626645097280}
+  - component: {fileID: 114216648902338052}
+  - component: {fileID: 114338913800477514}
   m_Layer: 0
   m_Name: Puu1
   m_TagString: Spawnable
@@ -146,6 +148,17 @@ BoxCollider:
   serializedVersion: 2
   m_Size: {x: 0.95, y: 2.22, z: 1.15}
   m_Center: {x: -0.95, y: 1.3, z: -0.75}
+--- !u!114 &114216648902338052
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1971694577602070}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f8d7fa8f51755f34fb68931c466e98a5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!114 &114269875659001266
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -160,7 +173,7 @@ MonoBehaviour:
   velocityAverageFrames: 5
   angularVelocityAverageFrames: 11
   estimateOnAwake: 0
---- !u!114 &114280298935310426
+--- !u!114 &114338913800477514
 MonoBehaviour:
   m_ObjectHideFlags: 1
   m_PrefabParentObject: {fileID: 0}
@@ -168,31 +181,10 @@ MonoBehaviour:
   m_GameObject: {fileID: 1971694577602070}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 372142912, guid: dc443db3e92b4983b9738c1131f555cb, type: 3}
+  m_Script: {fileID: 11500000, guid: 2474917abc445a64b94d68b916a22d62, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_SceneId:
-    m_Value: 0
-  m_AssetId:
-    i0: 111
-    i1: 12
-    i2: 26
-    i3: 228
-    i4: 122
-    i5: 26
-    i6: 250
-    i7: 164
-    i8: 248
-    i9: 18
-    i10: 35
-    i11: 40
-    i12: 237
-    i13: 178
-    i14: 243
-    i15: 127
-  m_ServerOnly: 0
-  m_LocalPlayerAuthority: 1
---- !u!114 &114525924874892214
+--- !u!114 &114552844469178952
 MonoBehaviour:
   m_ObjectHideFlags: 1
   m_PrefabParentObject: {fileID: 0}
@@ -200,7 +192,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 1971694577602070}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 5d60e7f52b31c4a40b997968ec8ff439, type: 3}
+  m_Script: {fileID: 11500000, guid: 5d87f268c547c7a47acf9c24852d5753, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
 --- !u!114 &114621995984830102
@@ -250,6 +242,32 @@ MonoBehaviour:
     m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
       Culture=neutral, PublicKeyToken=null
   snapAttachEaseInCompleted: 0
+--- !u!114 &114644626645097280
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1971694577602070}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: aa584fbee541324448dd18d8409c7a41, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  ownerId: 0
+  group: 0
+  OwnerShipWasTransfered: 0
+  prefixBackup: -1
+  synchronization: 3
+  onSerializeTransformOption: 3
+  onSerializeRigidBodyOption: 2
+  ownershipTransfer: 0
+  ObservedComponents:
+  - {fileID: 4599643235476750}
+  ObservedComponentsFoldoutOpen: 1
+  viewIdField: 0
+  instantiationId: -1
+  currentMasterID: -1
+  isRuntimeInstantiated: 0
 --- !u!114 &114831644593454226
 MonoBehaviour:
   m_ObjectHideFlags: 1

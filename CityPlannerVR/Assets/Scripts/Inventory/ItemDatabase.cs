@@ -20,13 +20,6 @@ public class ItemDatabase : MonoBehaviour
 
         }
 
-        /*  int i = 0;
-          foreach (GameObject spawnslot in _inventory.GetComponentsInChildren<GameObject>(true))
-          {
-              spawner = spawnslot.GetComponent<ObjectSpawner>();
-              spawner.item = InventoryDB[i];
-              i++;
-          }*/
 
     }
     public GameObject DBAccess(int _i)

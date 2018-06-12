@@ -10,7 +10,11 @@ using UnityEngine.Networking;
 public class ScaleObject : MonoBehaviour {
 
     [SerializeField]
+	[Tooltip("Poistetaan, sitten kun uusi ratkaisu on valmis")]
     private GameObject objectToScale;
+
+	[Tooltip("Put all objects to be scaled with this instance here")]
+	public GameObject[] objectsToScale;
 
     [SerializeField]
     private Vector3 newScale;
@@ -22,13 +26,32 @@ public class ScaleObject : MonoBehaviour {
         }
     }
 
+    public Vector3[] newScales;
+
     private GameObject localPlayer = null;
 
+	ChangeTeleportProperties changeTeleport;
+
+	void Start(){
+		changeTeleport = GetComponent<ChangeTeleportProperties> ();
+	}
+
+	//Called from teleport script, when teleported to teleportPoint
+	public void ScalePlayer(){
+		
+		Scale ();
+		changeTeleport.ChangeProperties ();
+		ScaleNetworkedPlayerAvatar ();
+	}
 
     public void Scale()
     {
         //Debug.Log("ScalePlayer::Scale: Scaling " + objectToScale.gameObject.name);
-        objectToScale.transform.localScale = newScale;
+        //objectToScale.transform.localScale = newScale;
+
+        for (int i = 0; i < objectsToScale.Length; i++) {
+            objectsToScale[i].transform.localScale = newScales[i];
+		}
     }
 
     public void ScaleNetworkedPlayerAvatar()

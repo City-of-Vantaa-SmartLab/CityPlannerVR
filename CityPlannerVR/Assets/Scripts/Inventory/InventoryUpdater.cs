@@ -13,7 +13,7 @@ public class InventoryUpdater : MonoBehaviour
     public GameObject itemDB;
     [SerializeField]
     public ItemDatabase itemData;
-    private LocalObjectSpawner[] spawners;
+    private PhotonSpawnableObject[] spawners;
     public int databaseSize;
     public int item_int = 0;
 
@@ -24,18 +24,20 @@ public class InventoryUpdater : MonoBehaviour
         itemDB = GameObject.Find("ItemDatabase");
         itemData = itemDB.GetComponent<ItemDatabase>();
         databaseSize = itemData.listSize;
-        spawners = gameObject.GetComponentsInChildren<LocalObjectSpawner>(true);
-        InitItems();
+        spawners = gameObject.GetComponentsInChildren<PhotonSpawnableObject>(true);
+        foreach (PhotonSpawnableObject spawn in spawners)
+        {
+            spawn.spawnPoint = spawn.gameObject.transform;
+        }
+            PhotonInitItems();
     }
 
-    public void InitItems()
+    public void PhotonInitItems()
     {
 
-        foreach (LocalObjectSpawner spawn in spawners)
+        foreach (PhotonSpawnableObject spawn in spawners)
         {
-            spawn.item = itemData.DBAccess(item_int);
-            spawn.itemsInSpawner = new List<GameObject>();
-            spawn.InstantiateItem();
+            spawn.GetItems(itemData.DBAccess(item_int));
             item_int++;
         }
     }
@@ -44,18 +46,17 @@ public class InventoryUpdater : MonoBehaviour
     {
         if (item_int < databaseSize)
         {
-            foreach (LocalObjectSpawner spawn in spawners)
+            foreach (PhotonSpawnableObject spawn in spawners)
             {
                 if (item_int <= databaseSize)
                 {
-                    LocalObjectSpawner _spawn = spawn;
+                    PhotonSpawnableObject _spawn = spawn;
                     Debug.Log("ButtonUP");
                     DestroyCurrent(_spawn);
-                    spawn.item = itemData.DBAccessUP(item_int);
+                    spawn.itemInSpawner = itemData.DBAccessUP(item_int);
                     Debug.Log("new item added");
                     item_int++;
-                    spawn.itemsInSpawner = new List<GameObject>();
-                    spawn.InstantiateItem();
+                    spawn.InstantiateItemInSpawner();
                     Debug.Log("New crap added");
                 }
 
@@ -81,45 +82,26 @@ public class InventoryUpdater : MonoBehaviour
         else
         {
             item_int = item_int - 18;
-            foreach (LocalObjectSpawner spawn in spawners)
+            foreach (PhotonSpawnableObject spawn in spawners)
             {
-                LocalObjectSpawner _spawn = spawn;
+                PhotonSpawnableObject _spawn = spawn;
                 Debug.Log("ButtonDown");
                 DestroyCurrent(_spawn);
 
-                spawn.item = itemData.DBAccessDown(item_int);
+                spawn.itemInSpawner = itemData.DBAccessDown(item_int);
                 item_int++;
-                spawn.itemsInSpawner = new List<GameObject>();
-                spawn.InstantiateItem();
+                spawn.InstantiateItemInSpawner();
                 Debug.Log("New crap added");
             }
         }
 
-
-
-        /* foreach (GameObject spawnslot in this.GetComponentsInChildren<GameObject>())
-         {
-             Debug.Log("ButtonDown");
-             spawner = spawnslot.GetComponent<ObjectSpawner>();
-             //spawner.item = null;
-             spawner.item = itemData.DBAccessDown();
-             spawner.itemsInSpawner = new List<GameObject>();
-             spawner.InstantiateItem();
-             */
-
     }
 
-    public void DestroyCurrent(LocalObjectSpawner spawnedObject)
+    public void DestroyCurrent(PhotonSpawnableObject spawnedObject)
     {
         Debug.Log("Destroy Pushed");
-        //List<GameObject> spawners = new List<GameObject>();
-
-        //foreach (LocalObjectSpawner spawnedObject in spawners)
-        // {
         Debug.Log("Lets Destroy");
-        spawnedObject.item = null;
-        spawnedObject.itemsInSpawner.Clear();
-        spawnedObject.DestroyItem();
+        spawnedObject.DestroyItemInSpawner();
 
 
         //}
