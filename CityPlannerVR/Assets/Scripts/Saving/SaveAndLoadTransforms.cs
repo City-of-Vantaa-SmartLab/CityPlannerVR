@@ -4,6 +4,10 @@ using System.Collections.Generic;
 using UnityEngine;
 using System.IO;
 
+/// <summary>
+/// Saves and loads transforms in order from files. Adds gameobjects from prefabs to scene if necessary.
+/// </summary>
+
 [Serializable] //attributes for json
 public class TransformData
 {
@@ -17,12 +21,14 @@ public class TransformData
 public class SaveAndLoadTransforms : MonoBehaviour {
 
     public List<GameObject> holdersToBeSaved = new List<GameObject>();
+    public List<GameObject> startupHolderList = new List<GameObject>();
 
     public string localPlayerName;
     static public Transform defaultParentCleanup;
     private string folderPathName;
     private string folder;
-    private string fileName;
+    private string defaultFileName;
+    private string startupFileName;
     private string fileExtender;
     private string pathName;
     private char slash = Path.DirectorySeparatorChar;
@@ -32,10 +38,10 @@ public class SaveAndLoadTransforms : MonoBehaviour {
     private void Awake()
     {
         folder = "SaveData";
-        fileName = "TransformData";
+        defaultFileName = "TransformData";
+        startupFileName = "StartupTransformData";
         fileExtender = ".dat";
         folderPathName = Application.persistentDataPath + slash + folder;
-        pathName = folderPathName + slash + fileName + fileExtender;
 
         if (!defaultParentCleanup)
             defaultParentCleanup = GameObject.Find("CleanUp").transform;
@@ -43,8 +49,9 @@ public class SaveAndLoadTransforms : MonoBehaviour {
             Debug.LogError("Default parent could not be set for cleaning up!");
         SubscriptionOn();
 
-        Load();
+        LoadStartup();
     }
+
 
     private void OnDestroy()
     {
@@ -63,11 +70,56 @@ public class SaveAndLoadTransforms : MonoBehaviour {
         SaveData.OnLoadedTransforms -= HandleLoading;
     }
 
-
-
     private void HandleBeforeSave()
     {
-        foreach (GameObject GO in holdersToBeSaved)
+        StoreList(holdersToBeSaved);
+    }
+
+    private void HandleLoading()
+    {
+        Debug.Log("OnLoadedTransforms event fired");
+    }
+
+    #region File and list manipulation
+
+    public void Save()
+    {
+        Save(defaultFileName, SaveData.transformContainer);
+    }
+
+    public void Load()
+    {
+        Load(defaultFileName);
+    }
+
+    public void Save(string fileName, Container<TransformData> container)
+    {
+        pathName = folderPathName + slash + fileName + fileExtender;
+        SaveData.SaveDatas(pathName, container);
+    }
+
+    public void Load(string fileName)
+    {
+        pathName = folderPathName + slash + fileName + fileExtender;
+        SaveData.LoadItems<TransformData>(pathName);
+    }
+
+    public void SaveStartupList()
+    {
+        //SaveData.transformContainer.datas.Clear();
+        SaveData.ClearContainer(SaveData.transformContainer);
+        StoreList(startupHolderList);
+        Save(startupFileName, SaveData.transformContainer);
+    }
+
+    public void LoadStartup()
+    {
+        Load(startupFileName);
+    }
+
+    private void StoreList(List<GameObject> gameObjects)
+    {
+        foreach (GameObject GO in gameObjects)
         {
             StoreData(GO.transform);
             Debug.Log("Storing holder's transform: " + GO.name);
@@ -77,21 +129,6 @@ public class SaveAndLoadTransforms : MonoBehaviour {
                 Debug.Log("Storing " + tr.name);
             }
         }
-    }
-
-    private void HandleLoading()
-    {
-        Debug.Log("OnLoadedTransforms event fired");
-    }
-
-    public void Save()
-    {
-        SaveData.SaveDatas(pathName, SaveData.transformContainer);
-    }
-
-    public void Load()
-    {
-        SaveData.LoadItems<TransformData>(pathName);
     }
 
     private void StoreData(Transform t)
@@ -119,6 +156,16 @@ public class SaveAndLoadTransforms : MonoBehaviour {
             SaveData.AddData(data);
     }
 
+    public void GenerateDefaultDataFile()
+    {
+        StoreList(startupHolderList);
+        Debug.Log("Transformdata file created for startup");
+    }
+
+    #endregion
+
+    #region Restoring objects
+
     public static void RestoreTransform(TransformData data, Transform holder)
     {
         GameObject temp = GameObject.Find(data.gameObjectName);
@@ -127,8 +174,8 @@ public class SaveAndLoadTransforms : MonoBehaviour {
         else
         {
             Debug.Log("Could not find gameobject with name " + data.gameObjectName + ", creating from prefab...)");
-            GameObject newObject;
-            newObject = Resources.Load<GameObject>("Prefabs/" + data.gameObjectName);
+
+            GameObject newObject = CreateFromPrefab(data.gameObjectName);
             if (newObject)
                 PutInPlace(newObject, data, holder);
         }
@@ -143,6 +190,19 @@ public class SaveAndLoadTransforms : MonoBehaviour {
         GO.transform.localRotation = data.localRotation;
     }
 
+    private static GameObject CreateFromPrefab(string GOName)
+    {
+        GameObject temp;
+        temp = Resources.Load<GameObject>("Prefabs/" + GOName);
+        if (!temp)
+            temp = Resources.Load<GameObject>("Prefabs/Buildings" + GOName); //add more of these if necessary
+
+        if (temp)
+            return temp;
+        else
+            return null;
+    }
+
     private static Transform CheckOrFindOrGenerateParent(TransformData data, Transform previousHolder)
     {
         if (data.gameObjectParentName == previousHolder.name)
@@ -153,7 +213,7 @@ public class SaveAndLoadTransforms : MonoBehaviour {
             SaveData.transformContainer.previousHolder = temp.transform;
             return temp.transform;
         }
-        temp = Resources.Load<GameObject>("Prefabs/" + data.gameObjectParentName);
+        temp = CreateFromPrefab(data.gameObjectParentName);
         if (temp)
         {
             SaveData.transformContainer.previousHolder = temp.transform;
@@ -169,6 +229,10 @@ public class SaveAndLoadTransforms : MonoBehaviour {
             return null;
     }
 
+    #endregion
+
+    #region QuickCecking
+
     public int GenerateQuickCheck(TransformData data, int subStringMaxLength)
     {
         string objectName = Comment.TruncateString(data.gameObjectName , subStringMaxLength);
@@ -181,8 +245,6 @@ public class SaveAndLoadTransforms : MonoBehaviour {
         return magic;
     }
 
-
-
     public static bool IsTheSameTransform(TransformData trdata1, TransformData trdata2)
     {
         if (trdata1.quickcheck == trdata2.quickcheck &&  //comparing ints is quicker than strings
@@ -194,6 +256,6 @@ public class SaveAndLoadTransforms : MonoBehaviour {
             return false;
     }
 
-
+    #endregion
 
 }

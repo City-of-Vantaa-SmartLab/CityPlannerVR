@@ -84,9 +84,10 @@ public class SaveData {
             transformContainer.datas.Add(data as TransformData);
     }
 
-    public static void ClearContainerList<T>(Container<T> container)
+    public static void ClearContainer<T>(Container<T> container)
     {
         container.datas.Clear();
+        container.previousHolder = null;
         Debug.Log("CommentContainer cleared");
     }
 
