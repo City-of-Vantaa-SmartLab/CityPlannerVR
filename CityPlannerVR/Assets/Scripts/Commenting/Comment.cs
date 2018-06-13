@@ -21,9 +21,6 @@ public class CommentData
     public int quickcheck;
 }
 
-//From https://gamedev.stackexchange.com/questions/137523/unity-json-utility-does-not-serialize-datetime
-
-
 [Serializable]
 public class Comment {
 
@@ -46,7 +43,7 @@ public class Comment {
     {
         //SaveData.OnLoaded += LoadData;
         //SaveData.OnBeforeSave += StoreData;
-        SaveData.OnBeforeSave += ApplyDataToContainer;
+        SaveData.OnBeforeSaveComments += ApplyDataToContainer;
     }
 
     //Not a monobehaviour!
@@ -54,12 +51,12 @@ public class Comment {
     {
         //SaveData.OnLoaded -= LoadData;
         //SaveData.OnBeforeSave -= StoreData;
-        SaveData.OnBeforeSave -= ApplyDataToContainer;
+        SaveData.OnBeforeSaveComments -= ApplyDataToContainer;
     }
 
     public void ApplyDataToContainer()
     {
-        SaveData.AddCommentData(data);
+        //SaveData<CommentData>.AddCommentData(data);
         OnDisable();
     }
 
@@ -73,12 +70,12 @@ public class Comment {
                 break;
 
             case Comment.CommentType.Voice:
-                if (!IsCommentInList(SaveData.commentLists.textComments))
+                if (!IsCommentInList(SaveData.commentLists.voiceComments))
                     SaveData.commentLists.voiceComments.Add(this);
                 break;
 
             case Comment.CommentType.Thumb:
-                if (!IsCommentInList(SaveData.commentLists.textComments))
+                if (!IsCommentInList(SaveData.commentLists.thumbComments))
                     SaveData.commentLists.thumbComments.Add(this);
                 break;
 
@@ -91,9 +88,9 @@ public class Comment {
     public bool IsCommentInList(List<Comment> testList)
     {
         Comment temp;
-        for (int i = 0; i < SaveData.commentLists.textComments.Count; i++)
+        for (int i = 0; i < testList.Count; i++)
         {
-            temp = SaveData.commentLists.textComments[i];
+            temp = testList[i];
             if (IsTheSameComment(temp))
             {
                     return true;
@@ -114,7 +111,7 @@ public class Comment {
             return false;
     }
 
-    private int ConvertFirstCharsToInt(string str, int maxLength)
+    public static int ConvertFirstCharsToInt(string str, int maxLength)
     {
         string newStr = TruncateString(str, maxLength);
         byte[] bytes = Encoding.Default.GetBytes(newStr);
@@ -136,19 +133,19 @@ public class Comment {
         data.quickcheck = magic;
     }
 
-    public void ConvertToQuickCheck(int maxLength, CommentData data)
-    {
-        string userName = TruncateString(data.userName, maxLength);
-        string objectName = TruncateString(data.commentedObjectName, maxLength);
-        string date = TruncateString(data.submittedShortDate, maxLength);
-        string uberString = userName + objectName + date;
-        Debug.Log("Joining strings: " + userName + " " + objectName + " " + date);
-        int magic = ConvertFirstCharsToInt(uberString, maxLength * 4);
-        Debug.Log("Adding QuickCheck to data: " + magic);
-        data.quickcheck = magic;
-    }
+    //public void ConvertToQuickCheck(int maxLength, CommentData data)
+    //{
+    //    string userName = TruncateString(data.userName, maxLength);
+    //    string objectName = TruncateString(data.commentedObjectName, maxLength);
+    //    string date = TruncateString(data.submittedShortDate, maxLength);
+    //    string uberString = userName + objectName + date;
+    //    Debug.Log("Joining strings: " + userName + " " + objectName + " " + date);
+    //    int magic = ConvertFirstCharsToInt(uberString, maxLength * 4);
+    //    Debug.Log("Adding QuickCheck to data: " + magic);
+    //    data.quickcheck = magic;
+    //}
 
-    private string TruncateString(string str, int maxLength)
+    public static string TruncateString(string str, int maxLength)
     {
         int length = str.Length;
         if (length > maxLength)

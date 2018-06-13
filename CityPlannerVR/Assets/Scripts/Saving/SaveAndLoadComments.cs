@@ -16,8 +16,8 @@ public class SaveAndLoadComments : MonoBehaviour {
     private string fileExtender;
     private string pathName;
     private char slash = Path.DirectorySeparatorChar;
-    public bool save;
-    public bool load;
+    //public bool save;
+    //public bool load;
 
     private void Awake()
     {
@@ -59,29 +59,15 @@ public class SaveAndLoadComments : MonoBehaviour {
         return comment;
     }
 
+    //Use eg. laserbutton to call the methods below
     public void Save()
     {
-        SaveData.Save(pathName, SaveData.commentContainer);
+        SaveData.SaveDatas(pathName, SaveData.commentContainer);
     }
 
     public void Load()
     {
-        SaveData.Load(pathName);
+        SaveData.LoadItems<CommentData>(pathName);
     }
 
-    //update will be removed later, when saving is implented in UI
-    private void Update()
-    {
-        if (save)
-        {
-            Save();
-            save = false;
-        }
-
-        if (load)
-        {
-            Load();
-            load = false;
-        }
-    }
 }
