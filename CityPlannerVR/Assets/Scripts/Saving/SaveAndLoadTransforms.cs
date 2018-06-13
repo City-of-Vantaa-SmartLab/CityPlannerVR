@@ -49,7 +49,7 @@ public class SaveAndLoadTransforms : MonoBehaviour {
             Debug.LogError("Default parent could not be set for cleaning up!");
         SubscriptionOn();
 
-        LoadStartup();
+        //LoadStartup();
     }
 
 
