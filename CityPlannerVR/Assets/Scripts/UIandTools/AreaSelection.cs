@@ -14,12 +14,16 @@ public class AreaSelection : MonoBehaviour {
 	GameObject areaPoint;
 	public static List<GameObject> areaPoints;
 
+    private static GameObject areaCollider;
+	CreateAreaCollider createAreaCollider;
+
 	private void Start(){
 		laser = gameObject.transform.parent.GetComponentInChildren<LaserPointer> ();
 		line = GetComponent<XRLineRenderer> ();
 		inputMaster = GetComponentInParent<InputMaster> ();
 
         areaPoints = new List<GameObject>();
+		
 
 		index = 0;
 	}
@@ -32,7 +36,6 @@ public class AreaSelection : MonoBehaviour {
         }
     }
 
-
     private void CreatePoint(){
 		areaPoint = GameObject.CreatePrimitive (PrimitiveType.Sphere);
         areaPoint.name = "SelectionPoint";
@@ -41,6 +44,18 @@ public class AreaSelection : MonoBehaviour {
 		areaPoints.Add (areaPoint);
 
 		DrawLineBetweenPoints ();
+		createAreaCollider.MakeProceduralMesh ();
+
+        if(areaPoints.Count == 1)
+        {
+            //Create this object only once
+            if (areaCollider == null)
+            {
+                areaCollider = new GameObject("AreaCollider");
+                areaCollider.transform.position = Vector3.zero;
+                createAreaCollider = areaCollider.AddComponent<CreateAreaCollider>();
+            }
+        }
 	}
 
 	private void DrawLineBetweenPoints(){
