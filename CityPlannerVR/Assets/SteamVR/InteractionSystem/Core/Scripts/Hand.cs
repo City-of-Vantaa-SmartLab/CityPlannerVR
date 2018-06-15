@@ -292,7 +292,7 @@ namespace Valve.VR.InteractionSystem
 				Transform parentTransform = null;
 				if ( attachedObjects[index].isParentedToHand )
 				{
-					if ( restoreOriginalParent && ( attachedObjects[index].originalParent != null ) )
+					if ( /*restoreOriginalParent &&*/ ( attachedObjects[index].originalParent != null ) ) //Asserin testi, alkuperäisessä ei ollut kommenttia
 					{
 						parentTransform = attachedObjects[index].originalParent.transform;
 					}
