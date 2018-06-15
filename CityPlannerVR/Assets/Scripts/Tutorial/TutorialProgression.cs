@@ -126,7 +126,7 @@ public class TutorialProgression : MonoBehaviour
             }
             else
             {
-                if (matnum == 3 && modelcycle == false)
+                if (matnum == 7 && modelcycle == false)
                 {
                     part_time = tutexts[text_int];
                     part_time.SetActive(false);
