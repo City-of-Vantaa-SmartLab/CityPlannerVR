@@ -126,7 +126,7 @@ public class SaveAndLoadTransforms : MonoBehaviour {
             foreach (Transform tr in GO.transform)
             {
                 StoreData(tr);
-                Debug.Log("Storing " + tr.name);
+                //Debug.Log("Storing " + tr.name);
             }
         }
     }
@@ -205,8 +205,11 @@ public class SaveAndLoadTransforms : MonoBehaviour {
 
     private static Transform CheckOrFindOrGenerateParent(TransformData data, Transform previousHolder)
     {
-        if (data.gameObjectParentName == previousHolder.name)
-            return previousHolder;
+        if (previousHolder != null)
+        {
+            if (data.gameObjectParentName == previousHolder.name)
+                return previousHolder;
+        }
         GameObject temp = GameObject.Find(data.gameObjectParentName);
         if (temp)
         {
@@ -239,9 +242,9 @@ public class SaveAndLoadTransforms : MonoBehaviour {
         string parentName = Comment.TruncateString(data.gameObjectParentName, subStringMaxLength);
         
         string uberString = objectName + parentName;
-        Debug.Log("Joining strings: " + objectName + " " + parentName);
+        //Debug.Log("Joining strings: " + objectName + " " + parentName);
         int magic = Comment.ConvertFirstCharsToInt(uberString, subStringMaxLength * 2);
-        Debug.Log("QuickCheck: " + magic);
+        //Debug.Log("QuickCheck: " + magic);
         return magic;
     }
 
