@@ -7,6 +7,7 @@ public class CreateAreaCollider : MonoBehaviour {
 
     Mesh mesh;
     MeshRenderer meshRenderer;
+    MeshCollider meshCollider;
 
     Vector3[] vertices;
     int[] triangles;
@@ -18,6 +19,9 @@ public class CreateAreaCollider : MonoBehaviour {
     {
         mesh = GetComponent<MeshFilter>().mesh;
         meshRenderer = GetComponent<MeshRenderer>();
+        meshCollider = GetComponent<MeshCollider>();
+
+        //meshCollider.sharedMesh = new Mesh();
     }
 
 
@@ -136,12 +140,19 @@ public class CreateAreaCollider : MonoBehaviour {
     void UpdateMesh()
     {
         mesh.Clear();
+        //meshCollider.sharedMesh.Clear();
 
         mesh.vertices = vertices;
+        //meshCollider.sharedMesh.vertices = vertices;
         mesh.triangles = triangles;
-        mesh.uv = uvs;
+        //meshCollider.sharedMesh.triangles = triangles;
+        //mesh.uv = uvs;
+
+        meshCollider.sharedMesh = null;
+        meshCollider.sharedMesh = mesh;
 
         mesh.RecalculateNormals();
+        meshCollider.sharedMesh.RecalculateBounds();
         mesh.RecalculateBounds();
     }
 }

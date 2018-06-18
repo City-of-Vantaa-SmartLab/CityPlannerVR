@@ -53,6 +53,7 @@ public class AreaSelection : MonoBehaviour {
 		index++;
 	}
 
+    //TODO: scale area points
 	private void ScalePoints(){
 		//Scale points and line when player shrinks down and grows up
 

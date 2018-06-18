@@ -12,7 +12,8 @@ public class GetPlayerName : MonoBehaviour {
 	void Start () {
         text = GetComponentInChildren<Text>();
 
-        text.text = PhotonPlayerAvatar.LocalPlayerInstance.GetComponent<PhotonView>().owner.NickName;
+        //text.text = PhotonPlayerAvatar.LocalPlayerInstance.GetComponent<PhotonView>().owner.NickName;
+        text.text = GetComponentInParent<PhotonView>().owner.NickName;
     }
 
     void Update()
