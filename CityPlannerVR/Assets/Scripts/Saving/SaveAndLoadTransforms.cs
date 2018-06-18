@@ -166,24 +166,32 @@ public class SaveAndLoadTransforms : MonoBehaviour {
 
     #region Restoring objects
 
-    public static void RestoreTransform(TransformData data, Transform holder)
+    public static void RestoreFromContainer<T>(Container<T> tempContainer)
+    {
+        Container<TransformData> currentItems = SaveData.transformContainer;
+
+        //Container<TransformData> sharedGOS = SeparateSharedGOS(tempContainer, currentItems);
+    }
+
+
+    public static void RestoreTransform(TransformData data, Transform previousHolder)
     {
         GameObject temp = GameObject.Find(data.gameObjectName);
         if (temp)
-            PutInPlace(temp, data, holder);
+            PutInPlace(temp, data, previousHolder);
         else
         {
             Debug.Log("Could not find gameobject with name " + data.gameObjectName + ", creating from prefab...)");
 
-            GameObject newObject = CreateFromPrefab(data.gameObjectName);
-            if (newObject)
-                PutInPlace(newObject, data, holder);
+            temp = CreateFromPrefab(data.gameObjectName);
+            if (temp)
+                PutInPlace(temp, data, previousHolder);
         }
     }
 
-    private static void PutInPlace(GameObject GO, TransformData data, Transform holder)
+    private static void PutInPlace(GameObject GO, TransformData data, Transform previousHolder)
     {
-        Transform parent = CheckOrFindOrGenerateParent(data, holder);
+        Transform parent = CheckOrFindOrGenerateParent(data, previousHolder);
         if (parent)
             GO.transform.parent = parent;
         GO.transform.localPosition = data.localPosition;
@@ -260,5 +268,65 @@ public class SaveAndLoadTransforms : MonoBehaviour {
     }
 
     #endregion
+
+
+    public static void ClearLevelFrom(Container<TransformData> holders)
+    {
+        foreach (TransformData data in holders.datas)
+        {
+            GameObject temp = GameObject.Find(data.gameObjectName);
+            if (temp)
+                Destroy(temp);
+        }
+    }
+
+    static private Container<TransformData> SeparateSharedGOS (Container<TransformData> loadingThenMissing, Container<TransformData> filterThenLeftOvers)
+    {
+        Container<TransformData> sharedGOS = new Container<TransformData>();
+        foreach(TransformData data1 in loadingThenMissing.datas)
+        {
+            foreach (TransformData data2 in filterThenLeftOvers.datas)
+            {
+                if (data1.gameObjectName == data2.gameObjectName)
+                {
+                    sharedGOS.datas.Add(data1);
+                    loadingThenMissing.datas.Remove(data1);
+                    filterThenLeftOvers.datas.Remove(data2); //use holder2 later to delete unwanted objects
+                    break;
+                }
+            }
+        }
+        return sharedGOS;
+    }
+
+    public void RestoreToState(Container<TransformData> ItemsLoaded)
+    {
+        //Container<TransformData> newItems = SaveData.LoadDatas<TransformData>(filepath);
+        if (SaveData.transformContainer.datas.Count != 0)
+        {
+            Container<TransformData> sharedContainer;
+            sharedContainer = SeparateSharedGOS(ItemsLoaded, SaveData.transformContainer);  //use different container for robustness?
+            ClearLevelFrom(SaveData.transformContainer);  //delete excess gameobjects
+            foreach (TransformData data in sharedContainer.datas)
+            {
+                RestoreTransform(data, sharedContainer.previousHolder);  //find and place shared objects
+            }
+        }
+
+        foreach (TransformData data in ItemsLoaded.datas)
+        {
+            GameObject temp = CreateFromPrefab(data.gameObjectName);  //instantiate the rest without searching for them
+            if (temp)
+                PutInPlace(temp, data, ItemsLoaded.previousHolder);
+        }
+
+    }
+
+    public void LoadTransformsFromFile(string filepath)
+    {
+        Container<TransformData> tempContainer;
+        tempContainer = SaveData.LoadDatas<TransformData>(filepath);
+        RestoreToState(tempContainer);
+    }
 
 }

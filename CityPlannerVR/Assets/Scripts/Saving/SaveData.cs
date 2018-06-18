@@ -70,7 +70,7 @@ public class SaveData {
         File.WriteAllText(filepath, jason);
     }
 
-    private static Container<T> LoadDatas<T>(string filepath)
+    public static Container<T> LoadDatas<T>(string filepath)
     {
         string jason = File.ReadAllText(filepath);
         return JsonUtility.FromJson<Container<T>>(jason);
@@ -88,7 +88,7 @@ public class SaveData {
     {
         container.datas.Clear();
         container.previousHolder = null;
-        Debug.Log("CommentContainer cleared");
+        Debug.Log("Container cleared");
     }
 
     public static void ClearCommentLists()
