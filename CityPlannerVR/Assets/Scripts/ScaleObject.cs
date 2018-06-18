@@ -9,22 +9,22 @@ using UnityEngine.Networking;
 
 public class ScaleObject : MonoBehaviour {
 
-    [SerializeField]
-	[Tooltip("Poistetaan, sitten kun uusi ratkaisu on valmis")]
-    private GameObject objectToScale;
+    //[SerializeField]
+	//[Tooltip("Poistetaan, sitten kun uusi ratkaisu on valmis")]
+    //private GameObject objectToScale;
 
 	[Tooltip("Put all objects to be scaled with this instance here")]
 	public GameObject[] objectsToScale;
 
-    [SerializeField]
-    private Vector3 newScale;
-    public Vector3 NewScale
-    {
-        get
-        {
-            return newScale;
-        }
-    }
+    //[SerializeField]
+    //private Vector3 newScale;
+    //public Vector3 NewScale
+    //{
+    //    get
+    //    {
+    //        return newScale;
+    //    }
+    //}
 
     public Vector3[] newScales;
 
@@ -71,8 +71,8 @@ public class ScaleObject : MonoBehaviour {
             photonView = pa.GetComponent<PhotonView>();
 
 
-            //pa.UpdateScale(newScale);
-            photonView.RPC("UpdateScale", PhotonTargets.AllBuffered, newScale);
+			//pa.UpdateScale(newScale);							first element is players size (or should be)
+            photonView.RPC("UpdateScale", PhotonTargets.AllBuffered, newScales[0]);
             
         }
 
