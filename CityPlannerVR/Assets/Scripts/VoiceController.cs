@@ -18,7 +18,8 @@ public class VoiceController : MonoBehaviour {
     string whisperTarget;
 	string playerTag = "VRLocalPlayer";
 
-    GameObject indicator;
+    [Tooltip("The object with the particle system to indicate who is speaking")]
+    public GameObject indicator;
     AudioSource source;
 
     [HideInInspector]
@@ -27,7 +28,6 @@ public class VoiceController : MonoBehaviour {
     private void Start()
     {
         comms = GameObject.Find("DissonanceSetup").GetComponent<DissonanceComms>();
-        indicator = GameObject.Find("VoiceIndicator");
         //laser = GameObject.Find("Laserpointer1").GetComponent<LaserPointer>();
         
         indicator.SetActive(false);
@@ -64,13 +64,13 @@ public class VoiceController : MonoBehaviour {
 		if (comms.IsMuted == false) {
 			comms.IsMuted = true;
             //indikoi pelaajille mute
-            source.Play();
+            //source.Play();
 		}
 
 		else {
 			comms.IsMuted = false;
             //indikoi pelaajille unmute
-            source.Play();
+            //source.Play();
 		}
 	}
 
