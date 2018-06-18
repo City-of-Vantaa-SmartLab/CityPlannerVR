@@ -5,7 +5,7 @@ using UnityEngine;
 public class AreaSelection : MonoBehaviour {
 
 	private LaserPointer laser;
-	private XRLineRenderer line;
+	//private XRLineRenderer line;
 	private InputMaster inputMaster;
 
     private string areaTag = "Untagged";
@@ -19,7 +19,7 @@ public class AreaSelection : MonoBehaviour {
 	private void Start(){
 		laser = GetComponentInChildren<LaserPointer> ();
 		createAreaCollider = GameObject.Find ("AreaCollider").GetComponent<CreateAreaCollider> ();
-		line = GameObject.Find("LineObject").GetComponent<XRLineRenderer> ();
+		//line = GameObject.Find("LineObject").GetComponent<XRLineRenderer> ();
 		inputMaster = GetComponentInParent<InputMaster> ();
 
         areaPoints = new List<GameObject>();
@@ -42,16 +42,16 @@ public class AreaSelection : MonoBehaviour {
         areaPoint.transform.localScale = new Vector3(0.1f, 0.1f, 0.1f);
 		areaPoints.Add (areaPoint);
 
-		DrawLineBetweenPoints ();
+		//DrawLineBetweenPoints ();
 		createAreaCollider.MakeProceduralMesh ();
 	}
 
-	private void DrawLineBetweenPoints(){
+	//private void DrawLineBetweenPoints(){
 
-		line.SetVertexCount (index + 1);
-		line.SetPosition (index, areaPoint.transform.position);
-		index++;
-	}
+	//	line.SetVertexCount (index + 1);
+	//	line.SetPosition (index, areaPoint.transform.position);
+	//	index++;
+	//}
 
     //TODO: scale area points
 	private void ScalePoints(){
