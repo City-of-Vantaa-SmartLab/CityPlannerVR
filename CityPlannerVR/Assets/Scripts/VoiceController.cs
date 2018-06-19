@@ -10,7 +10,7 @@ using Dissonance;
 public class VoiceController : MonoBehaviour {
 
 	DissonanceComms comms;
-    VoicePlayerState player;
+    VoicePlayerState localPlayer;
     VoiceBroadcastTrigger voiceTrigger;
     InputMaster inputMaster;
 	//public LaserPointer laser;
@@ -36,7 +36,7 @@ public class VoiceController : MonoBehaviour {
 
         voiceTrigger = GetComponent<VoiceBroadcastTrigger>();
 
-        player = comms.FindPlayer(comms.LocalPlayerName);
+        localPlayer = comms.FindPlayer(comms.LocalPlayerName);
 
         playerName = comms.LocalPlayerName;
 
@@ -44,8 +44,8 @@ public class VoiceController : MonoBehaviour {
 
         inputMaster.Gripped += ToggleMutePlayer;
 
-        player.OnStartedSpeaking += ToggleIndicator;
-        player.OnStoppedSpeaking += ToggleIndicator;
+        localPlayer.OnStartedSpeaking += ToggleIndicator;
+        localPlayer.OnStoppedSpeaking += ToggleIndicator;
 
 		//These could also be two different functions,but they aren't
 		//laser.PointerIn += Whisper;
@@ -55,8 +55,8 @@ public class VoiceController : MonoBehaviour {
     private void OnDestroy()
     {
         //When a player stops playing, we don't need to know if they are still talking
-        player.OnStartedSpeaking -= ToggleIndicator;
-        player.OnStoppedSpeaking -= ToggleIndicator;
+        localPlayer.OnStartedSpeaking -= ToggleIndicator;
+        localPlayer .OnStoppedSpeaking -= ToggleIndicator;
     }
 
     void ToggleMutePlayer(object sender, ClickedEventArgs e)
@@ -80,20 +80,29 @@ public class VoiceController : MonoBehaviour {
         {
             if(comms.IsMuted == false)
             {
-                //Put indicator on
-                indicator.SetActive(true);
+                if (player.Name == localPlayer.Name)
+                {
+                    //Put indicator on
+                    indicator.SetActive(true);
+                }
             }
 
             else
             {
-                //Put indicator off
-                indicator.SetActive(false);
+                if (player.Name == localPlayer.Name)
+                {
+                    //Put indicator off
+                    indicator.SetActive(false);
+                }
             }
         }
         else
         {
-            //Put indicator off
-            indicator.SetActive(false);
+            if (player.Name == localPlayer.Name)
+            {
+                //Put indicator off
+                indicator.SetActive(false);
+            }
         }
 	}
 
