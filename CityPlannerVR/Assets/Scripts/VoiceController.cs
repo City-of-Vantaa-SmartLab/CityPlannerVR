@@ -25,6 +25,25 @@ public class VoiceController : MonoBehaviour {
     [HideInInspector]
     public string playerName;
 
+    bool playerIsSpeaking = false;
+    public bool PlayerIsSpeaking
+    {
+        get { return playerIsSpeaking; }
+        set
+        {
+            playerIsSpeaking = value;
+
+            if (playerIsSpeaking)
+            {
+                indicator.SetActive(true);
+            }
+            else
+            {
+                indicator.SetActive(false);
+            }
+        }
+    }
+
     private void Start()
     {
         comms = GameObject.Find("DissonanceSetup").GetComponent<DissonanceComms>();
@@ -39,6 +58,7 @@ public class VoiceController : MonoBehaviour {
         localPlayer = comms.FindPlayer(comms.LocalPlayerName);
 
         playerName = comms.LocalPlayerName;
+        Debug.Log("Player Name = " + playerName);
 
         source = GetComponent<AudioSource>();
 
@@ -83,7 +103,8 @@ public class VoiceController : MonoBehaviour {
                 if (player.Name == localPlayer.Name)
                 {
                     //Put indicator on
-                    indicator.SetActive(true);
+                    //indicator.SetActive(true);
+                    PlayerIsSpeaking = true;
                 }
             }
 
@@ -92,7 +113,8 @@ public class VoiceController : MonoBehaviour {
                 if (player.Name == localPlayer.Name)
                 {
                     //Put indicator off
-                    indicator.SetActive(false);
+                    //indicator.SetActive(false);
+                    PlayerIsSpeaking = false;
                 }
             }
         }
@@ -101,14 +123,29 @@ public class VoiceController : MonoBehaviour {
             if (player.Name == localPlayer.Name)
             {
                 //Put indicator off
-                indicator.SetActive(false);
+                //indicator.SetActive(false);
+                PlayerIsSpeaking = false;
             }
         }
 	}
 
+    public void OnPhotonSerializeView(PhotonStream stream, PhotonMessageInfo info)
+    {
+        if (stream.isWriting)
+        {
+
+            stream.SendNext(PlayerIsSpeaking);
+        }
+        else
+        {
+            PlayerIsSpeaking = (bool)stream.ReceiveNext();
+
+        }
+    }
+
     //TODO: how is it determined who's the target
-	//TODO: test this
-	void Whisper(object sender, LaserEventArgs e)
+    //TODO: test this
+    void Whisper(object sender, LaserEventArgs e)
     {
 		if (e.target.tag == playerTag) {
 			whisperTarget = e.target.GetComponent<VoiceController>().playerName;
