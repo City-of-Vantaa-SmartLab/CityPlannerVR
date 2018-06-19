@@ -10,7 +10,7 @@ using Dissonance;
 public class VoiceController : MonoBehaviour {
 
 	DissonanceComms comms;
-    VoicePlayerState player;
+    VoicePlayerState localPlayer;
     VoiceBroadcastTrigger voiceTrigger;
     InputMaster inputMaster;
 	//public LaserPointer laser;
@@ -18,7 +18,8 @@ public class VoiceController : MonoBehaviour {
     string whisperTarget;
 	string playerTag = "VRLocalPlayer";
 
-    GameObject indicator;
+    [Tooltip("The object with the particle system to indicate who is speaking")]
+    public GameObject indicator;
     AudioSource source;
 
     [HideInInspector]
@@ -27,7 +28,6 @@ public class VoiceController : MonoBehaviour {
     private void Start()
     {
         comms = GameObject.Find("DissonanceSetup").GetComponent<DissonanceComms>();
-        indicator = GameObject.Find("VoiceIndicator");
         //laser = GameObject.Find("Laserpointer1").GetComponent<LaserPointer>();
         
         indicator.SetActive(false);
@@ -36,7 +36,7 @@ public class VoiceController : MonoBehaviour {
 
         voiceTrigger = GetComponent<VoiceBroadcastTrigger>();
 
-        player = comms.FindPlayer(comms.LocalPlayerName);
+        localPlayer = comms.FindPlayer(comms.LocalPlayerName);
 
         playerName = comms.LocalPlayerName;
 
@@ -44,8 +44,8 @@ public class VoiceController : MonoBehaviour {
 
         inputMaster.Gripped += ToggleMutePlayer;
 
-        player.OnStartedSpeaking += ToggleIndicator;
-        player.OnStoppedSpeaking += ToggleIndicator;
+        localPlayer.OnStartedSpeaking += ToggleIndicator;
+        localPlayer.OnStoppedSpeaking += ToggleIndicator;
 
 		//These could also be two different functions,but they aren't
 		//laser.PointerIn += Whisper;
@@ -55,8 +55,8 @@ public class VoiceController : MonoBehaviour {
     private void OnDestroy()
     {
         //When a player stops playing, we don't need to know if they are still talking
-        player.OnStartedSpeaking -= ToggleIndicator;
-        player.OnStoppedSpeaking -= ToggleIndicator;
+        localPlayer.OnStartedSpeaking -= ToggleIndicator;
+        localPlayer .OnStoppedSpeaking -= ToggleIndicator;
     }
 
     void ToggleMutePlayer(object sender, ClickedEventArgs e)
@@ -64,13 +64,13 @@ public class VoiceController : MonoBehaviour {
 		if (comms.IsMuted == false) {
 			comms.IsMuted = true;
             //indikoi pelaajille mute
-            source.Play();
+            //source.Play();
 		}
 
 		else {
 			comms.IsMuted = false;
             //indikoi pelaajille unmute
-            source.Play();
+            //source.Play();
 		}
 	}
 
@@ -80,20 +80,29 @@ public class VoiceController : MonoBehaviour {
         {
             if(comms.IsMuted == false)
             {
-                //Put indicator on
-                indicator.SetActive(true);
+                if (player.Name == localPlayer.Name)
+                {
+                    //Put indicator on
+                    indicator.SetActive(true);
+                }
             }
 
             else
             {
-                //Put indicator off
-                indicator.SetActive(false);
+                if (player.Name == localPlayer.Name)
+                {
+                    //Put indicator off
+                    indicator.SetActive(false);
+                }
             }
         }
         else
         {
-            //Put indicator off
-            indicator.SetActive(false);
+            if (player.Name == localPlayer.Name)
+            {
+                //Put indicator off
+                indicator.SetActive(false);
+            }
         }
 	}
 

@@ -91,7 +91,7 @@ namespace Valve.VR.InteractionSystem
 
 		SteamVR_Events.Action inputFocusAction;
 
-        //Tarun debuggaukseen
+        //Tarun debuggaukseen (Gizmoja varten) (muuten määritellään UpdateHovering():ssa)
         float flScaledSphereRadius;
         float boxMult;
 

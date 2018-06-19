@@ -37,8 +37,9 @@ public class CheckPlayerSize : MonoBehaviour {
 
     private void Awake()
     {
-        smallScale = scalePlayerToSmall.GetComponent<ScaleObject>().NewScale;
-        largeScale = scalePlayerToLarge.GetComponent<ScaleObject>().NewScale;
+		//														the first element is players scale (or should be)
+        smallScale = scalePlayerToSmall.GetComponent<ScaleObject>().newScales[0];
+		largeScale = scalePlayerToLarge.GetComponent<ScaleObject>().newScales[0];
     }
 
     void CalculateMode()
