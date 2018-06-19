@@ -40,11 +40,11 @@ GameObject:
   - component: {fileID: 4410762907532866}
   - component: {fileID: 33412778467198364}
   - component: {fileID: 23250864212824644}
-  - component: {fileID: 114997887577720836}
-  - component: {fileID: 114340832832342470}
+  - component: {fileID: 114670376564845024}
+  - component: {fileID: 114992486150171860}
   m_Layer: 15
   m_Name: PhotonHandLeft_N
-  m_TagString: GameController
+  m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -63,7 +63,7 @@ GameObject:
   - component: {fileID: 114979108221317110}
   m_Layer: 15
   m_Name: PhotonHandRight_N
-  m_TagString: GameController
+  m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -244,7 +244,6 @@ GameObject:
   - component: {fileID: 23880837976905948}
   - component: {fileID: 114273513201063574}
   - component: {fileID: 114343993500737724}
-  - component: {fileID: 114885442474362824}
   - component: {fileID: 135709044068092856}
   m_Layer: 15
   m_Name: PhotonHandLeft
@@ -265,7 +264,6 @@ GameObject:
   - component: {fileID: 23227254695458158}
   - component: {fileID: 114181054554121060}
   - component: {fileID: 114346554653037894}
-  - component: {fileID: 114667103932328136}
   - component: {fileID: 135054909413997858}
   m_Layer: 15
   m_Name: PhotonHandRight
@@ -349,7 +347,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1262536739336380}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -0.384, y: -0.67, z: -0.008}
+  m_LocalPosition: {x: -0.375, y: -0.641, z: -0.02}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 4459479398957672}
@@ -376,7 +374,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1518467711047004}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -1.7896681, y: 1.989, z: 10.885356}
+  m_LocalPosition: {x: -20.916183, y: -4.2099447, z: 4.4970083}
   m_LocalScale: {x: 2, y: 2, z: 2}
   m_Children:
   - {fileID: 4182853695052026}
@@ -502,7 +500,7 @@ MeshRenderer:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1184234068142068}
-  m_Enabled: 1
+  m_Enabled: 0
   m_CastShadows: 1
   m_ReceiveShadows: 1
   m_DynamicOccludee: 1
@@ -638,7 +636,7 @@ MeshRenderer:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1262536739336380}
-  m_Enabled: 1
+  m_Enabled: 0
   m_CastShadows: 1
   m_ReceiveShadows: 1
   m_DynamicOccludee: 1
@@ -932,7 +930,7 @@ MonoBehaviour:
   ownershipTransfer: 0
   ObservedComponents:
   - {fileID: 114346554653037894}
-  - {fileID: 114667103932328136}
+  - {fileID: 0}
   ObservedComponentsFoldoutOpen: 1
   viewIdField: 0
   instantiationId: -1
@@ -1050,33 +1048,7 @@ MonoBehaviour:
   ownershipTransfer: 0
   ObservedComponents:
   - {fileID: 114343993500737724}
-  - {fileID: 114885442474362824}
-  ObservedComponentsFoldoutOpen: 1
-  viewIdField: 0
-  instantiationId: -1
-  currentMasterID: -1
-  isRuntimeInstantiated: 0
---- !u!114 &114340832832342470
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1184234068142068}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: aa584fbee541324448dd18d8409c7a41, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  ownerId: 0
-  group: 0
-  OwnerShipWasTransfered: 0
-  prefixBackup: -1
-  synchronization: 3
-  onSerializeTransformOption: 3
-  onSerializeRigidBodyOption: 2
-  ownershipTransfer: 0
-  ObservedComponents:
-  - {fileID: 114997887577720836}
+  - {fileID: 0}
   ObservedComponentsFoldoutOpen: 1
   viewIdField: 0
   instantiationId: -1
@@ -1257,28 +1229,32 @@ MonoBehaviour:
   - {fileID: 2100000, guid: f6ae4d3a51373964e96adcaee51836f9, type: 2}
   - {fileID: 2100000, guid: 7a0d4299300ab214a919792c19f73378, type: 2}
   toolbelt: {fileID: 0}
---- !u!114 &114667103932328136
+--- !u!114 &114670376564845024
 MonoBehaviour:
   m_ObjectHideFlags: 1
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1658734535107998}
+  m_GameObject: {fileID: 1184234068142068}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: a4819f2fdf7af9c49b6d6a423a06101d, type: 3}
+  m_Script: {fileID: 11500000, guid: aa584fbee541324448dd18d8409c7a41, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  active: 1
-  triggered: 0
-  editorColor: {r: 1, g: 0, b: 0, a: 0}
-  fakeColor: {r: 0, g: 1, b: 0, a: 0}
-  thickness: 0.002
-  holder: {fileID: 0}
-  pointer: {fileID: 0}
-  isForNetworking: 1
-  hitPoint: {x: 0, y: 0, z: 0}
-  direction: {x: 0, y: 0, z: 0}
-  target: {fileID: 0}
+  ownerId: 0
+  group: 0
+  OwnerShipWasTransfered: 0
+  prefixBackup: -1
+  synchronization: 2
+  onSerializeTransformOption: 3
+  onSerializeRigidBodyOption: 2
+  ownershipTransfer: 0
+  ObservedComponents:
+  - {fileID: 114992486150171860}
+  ObservedComponentsFoldoutOpen: 1
+  viewIdField: 0
+  instantiationId: -1
+  currentMasterID: -1
+  isRuntimeInstantiated: 0
 --- !u!114 &114673407450687480
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -1352,28 +1328,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7e3a90fd5dac60b43826cd4366b0c74e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!114 &114885442474362824
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1648273713572008}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: a4819f2fdf7af9c49b6d6a423a06101d, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  active: 1
-  triggered: 0
-  editorColor: {r: 1, g: 0, b: 0, a: 0}
-  fakeColor: {r: 0, g: 1, b: 0, a: 0}
-  thickness: 0.002
-  holder: {fileID: 0}
-  pointer: {fileID: 0}
-  isForNetworking: 1
-  hitPoint: {x: 0, y: 0, z: 0}
-  direction: {x: 0, y: 0, z: 0}
-  target: {fileID: 0}
 --- !u!114 &114923442700552636
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -1517,7 +1471,7 @@ MonoBehaviour:
     InterpolateOption: 0
     InterpolateMoveTowardsSpeed: 1
     InterpolateLerpSpeed: 0
---- !u!114 &114997887577720836
+--- !u!114 &114992486150171860
 MonoBehaviour:
   m_ObjectHideFlags: 1
   m_PrefabParentObject: {fileID: 0}
