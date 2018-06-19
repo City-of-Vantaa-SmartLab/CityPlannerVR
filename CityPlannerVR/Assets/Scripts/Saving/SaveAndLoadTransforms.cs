@@ -22,6 +22,7 @@ public class SaveAndLoadTransforms : MonoBehaviour {
 
     public List<GameObject> holdersToBeSaved = new List<GameObject>();
     public List<GameObject> startupHolderList = new List<GameObject>();
+    private Container<TransformData> startupContainer = new Container<TransformData>();
 
     public string localPlayerName;
     static public Transform defaultParentCleanup;
@@ -109,9 +110,9 @@ public class SaveAndLoadTransforms : MonoBehaviour {
     public void SaveStartupList()
     {
         //SaveData.transformContainer.datas.Clear();
-        SaveData.ClearContainer(SaveData.transformContainer);
-        StoreList(startupHolderList);
-        Save(startupFileName, SaveData.transformContainer);
+        //SaveData.ClearContainer(SaveData.transformContainer);
+        //StoreList(startupHolderList);
+        Save(startupFileName, startupContainer);
     }
 
     public void LoadStartup()
@@ -158,12 +159,6 @@ public class SaveAndLoadTransforms : MonoBehaviour {
             SaveData.AddData(data);
     }
 
-    public void GenerateDefaultDataFile()
-    {
-        StoreList(startupHolderList);
-        Debug.Log("Transformdata file created for startup");
-    }
-
     #endregion
 
 
@@ -206,12 +201,12 @@ public class SaveAndLoadTransforms : MonoBehaviour {
     private static GameObject CreateFromPrefab(TransformData data)
     {
         GameObject temp;
-        System.Object[] what = new System.Object[0];
+        //System.Object[] what = new System.Object[0];
         //temp = PhotonNetwork.InstantiateSceneObject(data.gameObjectName, data.localPosition, data.localRotation, 0, what);
         //if (!temp)
-            temp = PhotonNetwork.InstantiateSceneObject("Prefabs/" + data.gameObjectName, data.localPosition, data.localRotation, 0, what);
+            temp = PhotonNetwork.InstantiateSceneObject("Prefabs/" + data.gameObjectName, data.localPosition, data.localRotation, 0, null);
         if (!temp)
-            temp = PhotonNetwork.InstantiateSceneObject("Prefabs/PhotonNewBuildings/" + data.gameObjectName, data.localPosition, data.localRotation, 0, what); ; //add more of these if necessary
+            temp = PhotonNetwork.InstantiateSceneObject("Prefabs/PhotonNewBuildings/" + data.gameObjectName, data.localPosition, data.localRotation, 0, null); ; //add more of these if necessary
 
         if (temp)
             return temp;
@@ -265,9 +260,7 @@ public class SaveAndLoadTransforms : MonoBehaviour {
 
     public void ClearLevelFromStartupItems()
     {
-        SaveData.ClearContainer(SaveData.transformContainer);
-        StoreList(startupHolderList);
-        ClearLevelFrom(SaveData.transformContainer);
+        ClearLevelFrom(startupContainer);
     }
 
     // returns C = A ∩ B, where A,B and C are containers. Also modifies A = A ∉ B and B = B ∉ A.
@@ -292,21 +285,16 @@ public class SaveAndLoadTransforms : MonoBehaviour {
 
     public void RestoreToState(Container<TransformData> ItemsLoaded)
     {
-        //Container<TransformData> newItems = SaveData.LoadDatas<TransformData>(filepath);
-        if (SaveData.transformContainer.datas.Count != 0)
+        SaveData.ClearContainer(SaveData.transformContainer);
+        StoreList(holdersToBeSaved);
+
+        Container<TransformData> sharedContainer;
+        sharedContainer = SeparateSharedGOS(ItemsLoaded, SaveData.transformContainer);  //use different container for robustness?
+        ClearLevelFrom(SaveData.transformContainer);   //delete excess gameobjects
+        
+        foreach (TransformData data in sharedContainer.datas)
         {
-            SaveData.ClearContainer(SaveData.transformContainer);
-            StoreList(holdersToBeSaved);
-            StoreList(startupHolderList);
-
-            Container<TransformData> sharedContainer;
-            sharedContainer = SeparateSharedGOS(ItemsLoaded, SaveData.transformContainer);  //use different container for robustness?
-            ClearLevelFrom(SaveData.transformContainer);   //delete excess gameobjects
-
-            foreach (TransformData data in sharedContainer.datas)
-            {
-                RestoreTransform(data, sharedContainer.previousHolder);  //find and place shared objects
-            }
+            RestoreTransform(data, sharedContainer.previousHolder);  //find and place shared objects
         }
 
         //foreach (TransformData data in ItemsLoaded.datas)
