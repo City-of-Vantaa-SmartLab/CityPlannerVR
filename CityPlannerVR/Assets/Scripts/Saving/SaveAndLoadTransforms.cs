@@ -263,6 +263,13 @@ public class SaveAndLoadTransforms : MonoBehaviour {
         }
     }
 
+    public void ClearLevelFromStartupItems()
+    {
+        SaveData.ClearContainer(SaveData.transformContainer);
+        StoreList(startupHolderList);
+        ClearLevelFrom(SaveData.transformContainer);
+    }
+
     // returns C = A ∩ B, where A,B and C are containers. Also modifies A = A ∉ B and B = B ∉ A.
     static private Container<TransformData> SeparateSharedGOS (Container<TransformData> loadingThenMissing, Container<TransformData> filterThenLeftOvers)
     {
