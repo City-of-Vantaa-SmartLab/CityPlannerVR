@@ -42,20 +42,25 @@ public class SaveData {
     {
         Container<T> tempContainer;
         tempContainer = LoadDatas<T>(filepath);
-        foreach (T data in tempContainer.datas)
+        LoadItems<T>(tempContainer);
+    }
+
+    public static void LoadItems<T>(Container<T> container)
+    {
+        foreach (T data in container.datas)
         {
             if (data is CommentData)
                 SaveAndLoadComments.CreateOldComment(data as CommentData);
             if (data is TransformData)
-                SaveAndLoadTransforms.RestoreTransform(data as TransformData, tempContainer.previousHolder);
+                SaveAndLoadTransforms.RestoreTransform(data as TransformData, container.previousHolder);
         }
-        if (tempContainer.datas.Count != 0 && tempContainer.datas[0] is CommentData)
+        if (container.datas.Count != 0 && container.datas[0] is CommentData)
         {
             if (OnLoadedComments != null)
                 OnLoadedComments();
         }
 
-        if (tempContainer.datas.Count != 0 && tempContainer.datas[0] is TransformData)
+        if (container.datas.Count != 0 && container.datas[0] is TransformData)
         {
             if (OnLoadedTransforms != null)
                 OnLoadedTransforms();

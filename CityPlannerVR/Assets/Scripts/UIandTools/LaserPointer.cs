@@ -114,13 +114,16 @@ public class LaserPointer : PunBehaviour
 
     private void InitHolder(Transform targetTransform)
     {
-        if (targetTransform.childCount > 0)
-            holder = targetTransform.GetChild(0).gameObject;
+        //if (targetTransform.childCount > 0)
+        //    holder = targetTransform.GetChild(0).gameObject;
 
         if (holder == null)
         {
             holder = new GameObject();
-            holder.transform.parent = this.transform;
+            if (targetTransform == null)
+                holder.transform.parent = transform;
+            else
+                holder.transform.parent = targetTransform;
             holder.transform.localPosition = Vector3.zero;
             holder.transform.localRotation = Quaternion.identity;
         }

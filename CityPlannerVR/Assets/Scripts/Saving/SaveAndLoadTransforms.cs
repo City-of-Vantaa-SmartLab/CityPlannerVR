@@ -77,8 +77,9 @@ public class SaveAndLoadTransforms : MonoBehaviour {
 
     private void HandleLoading()
     {
-        Debug.Log("OnLoadedTransforms event fired");
+        //Debug.Log("OnLoadedTransforms event fired");
     }
+
 
     #region File and list manipulation
 
@@ -94,6 +95,7 @@ public class SaveAndLoadTransforms : MonoBehaviour {
 
     public void Save(string fileName, Container<TransformData> container)
     {
+        HandleBeforeSave();  //remove this if the event system is implemented
         pathName = folderPathName + slash + fileName + fileExtender;
         SaveData.SaveDatas(pathName, container);
     }
@@ -117,15 +119,15 @@ public class SaveAndLoadTransforms : MonoBehaviour {
         Load(startupFileName);
     }
 
-    private void StoreList(List<GameObject> gameObjects)
+    private void StoreList(List<GameObject> holders)
     {
-        foreach (GameObject GO in gameObjects)
+        foreach (GameObject GO in holders)
         {
-            StoreData(GO.transform);
+            StoreData(GO.transform);  //stores the holder
             Debug.Log("Storing holder's transform: " + GO.name);
             foreach (Transform tr in GO.transform)
             {
-                StoreData(tr);
+                StoreData(tr);  //stores the holder's children
                 //Debug.Log("Storing " + tr.name);
             }
         }
@@ -164,6 +166,7 @@ public class SaveAndLoadTransforms : MonoBehaviour {
 
     #endregion
 
+
     #region Restoring objects
 
     public static void RestoreFromContainer<T>(Container<T> tempContainer)
@@ -183,9 +186,11 @@ public class SaveAndLoadTransforms : MonoBehaviour {
         {
             Debug.Log("Could not find gameobject with name " + data.gameObjectName + ", creating from prefab...)");
 
-            temp = CreateFromPrefab(data.gameObjectName);
+            temp = CreateFromPrefab(data);
             if (temp)
                 PutInPlace(temp, data, previousHolder);
+            else
+                Debug.Log("Could not find prefab!");
         }
     }
 
@@ -198,12 +203,15 @@ public class SaveAndLoadTransforms : MonoBehaviour {
         GO.transform.localRotation = data.localRotation;
     }
 
-    private static GameObject CreateFromPrefab(string GOName)
+    private static GameObject CreateFromPrefab(TransformData data)
     {
         GameObject temp;
-        temp = Resources.Load<GameObject>("Prefabs/" + GOName);
+        System.Object[] what = new System.Object[0];
+        //temp = PhotonNetwork.InstantiateSceneObject(data.gameObjectName, data.localPosition, data.localRotation, 0, what);
+        //if (!temp)
+            temp = PhotonNetwork.InstantiateSceneObject("Prefabs/" + data.gameObjectName, data.localPosition, data.localRotation, 0, what);
         if (!temp)
-            temp = Resources.Load<GameObject>("Prefabs/Buildings" + GOName); //add more of these if necessary
+            temp = PhotonNetwork.InstantiateSceneObject("Prefabs/PhotonNewBuildings/" + data.gameObjectName, data.localPosition, data.localRotation, 0, what); ; //add more of these if necessary
 
         if (temp)
             return temp;
@@ -224,7 +232,7 @@ public class SaveAndLoadTransforms : MonoBehaviour {
             SaveData.transformContainer.previousHolder = temp.transform;
             return temp.transform;
         }
-        temp = CreateFromPrefab(data.gameObjectParentName);
+        temp = CreateFromPrefab(data);
         if (temp)
         {
             SaveData.transformContainer.previousHolder = temp.transform;
@@ -242,13 +250,91 @@ public class SaveAndLoadTransforms : MonoBehaviour {
 
     #endregion
 
+
+    #region Restoring scene
+
+    public static void ClearLevelFrom(Container<TransformData> holders)
+    {
+        foreach (TransformData data in holders.datas)
+        {
+            GameObject temp = GameObject.Find(data.gameObjectName);
+            if (temp)
+                PhotonNetwork.Destroy(temp);
+        }
+    }
+
+    // returns C = A ∩ B, where A,B and C are containers. Also modifies A = A ∉ B and B = B ∉ A.
+    static private Container<TransformData> SeparateSharedGOS (Container<TransformData> loadingThenMissing, Container<TransformData> filterThenLeftOvers)
+    {
+        Container<TransformData> sharedGOS = new Container<TransformData>();
+        foreach(TransformData data1 in loadingThenMissing.datas)
+        {
+            foreach (TransformData data2 in filterThenLeftOvers.datas)
+            {
+                if (data1.gameObjectName == data2.gameObjectName)
+                {
+                    sharedGOS.datas.Add(data1);
+                    loadingThenMissing.datas.Remove(data1);
+                    filterThenLeftOvers.datas.Remove(data2); //use filterThenLeftOvers to delete unwanted objects later
+                    break;
+                }
+            }
+        }
+        return sharedGOS;
+    }
+
+    public void RestoreToState(Container<TransformData> ItemsLoaded)
+    {
+        //Container<TransformData> newItems = SaveData.LoadDatas<TransformData>(filepath);
+        if (SaveData.transformContainer.datas.Count != 0)
+        {
+            SaveData.ClearContainer(SaveData.transformContainer);
+            StoreList(holdersToBeSaved);
+            StoreList(startupHolderList);
+
+            Container<TransformData> sharedContainer;
+            sharedContainer = SeparateSharedGOS(ItemsLoaded, SaveData.transformContainer);  //use different container for robustness?
+            ClearLevelFrom(SaveData.transformContainer);   //delete excess gameobjects
+
+            foreach (TransformData data in sharedContainer.datas)
+            {
+                RestoreTransform(data, sharedContainer.previousHolder);  //find and place shared objects
+            }
+        }
+
+        //foreach (TransformData data in ItemsLoaded.datas)
+        //{
+        //    GameObject temp = CreateFromPrefab(data);  //instantiate the rest without searching for them  //created duplicates!
+        //    if (temp)
+        //        PutInPlace(temp, data, ItemsLoaded.previousHolder);
+        //}
+
+        foreach (TransformData data in ItemsLoaded.datas)
+        {
+            RestoreTransform(data, ItemsLoaded.previousHolder);  //the child objects might come from prefabs after all
+        }
+
+    }
+
+    public void LoadTransformsFromFile(string filepath)
+    {
+        Container<TransformData> tempContainer;
+        tempContainer = SaveData.LoadDatas<TransformData>(filepath);
+        RestoreToState(tempContainer);
+    }
+
+
+
+    #endregion
+
+
     #region QuickCecking
 
     public int GenerateQuickCheck(TransformData data, int subStringMaxLength)
     {
-        string objectName = Comment.TruncateString(data.gameObjectName , subStringMaxLength);
+        string objectName = Comment.TruncateString(data.gameObjectName, subStringMaxLength);
         string parentName = Comment.TruncateString(data.gameObjectParentName, subStringMaxLength);
-        
+
         string uberString = objectName + parentName;
         //Debug.Log("Joining strings: " + objectName + " " + parentName);
         int magic = Comment.ConvertFirstCharsToInt(uberString, subStringMaxLength * 2);
@@ -270,63 +356,5 @@ public class SaveAndLoadTransforms : MonoBehaviour {
     #endregion
 
 
-    public static void ClearLevelFrom(Container<TransformData> holders)
-    {
-        foreach (TransformData data in holders.datas)
-        {
-            GameObject temp = GameObject.Find(data.gameObjectName);
-            if (temp)
-                Destroy(temp);
-        }
-    }
-
-    static private Container<TransformData> SeparateSharedGOS (Container<TransformData> loadingThenMissing, Container<TransformData> filterThenLeftOvers)
-    {
-        Container<TransformData> sharedGOS = new Container<TransformData>();
-        foreach(TransformData data1 in loadingThenMissing.datas)
-        {
-            foreach (TransformData data2 in filterThenLeftOvers.datas)
-            {
-                if (data1.gameObjectName == data2.gameObjectName)
-                {
-                    sharedGOS.datas.Add(data1);
-                    loadingThenMissing.datas.Remove(data1);
-                    filterThenLeftOvers.datas.Remove(data2); //use holder2 later to delete unwanted objects
-                    break;
-                }
-            }
-        }
-        return sharedGOS;
-    }
-
-    public void RestoreToState(Container<TransformData> ItemsLoaded)
-    {
-        //Container<TransformData> newItems = SaveData.LoadDatas<TransformData>(filepath);
-        if (SaveData.transformContainer.datas.Count != 0)
-        {
-            Container<TransformData> sharedContainer;
-            sharedContainer = SeparateSharedGOS(ItemsLoaded, SaveData.transformContainer);  //use different container for robustness?
-            ClearLevelFrom(SaveData.transformContainer);  //delete excess gameobjects
-            foreach (TransformData data in sharedContainer.datas)
-            {
-                RestoreTransform(data, sharedContainer.previousHolder);  //find and place shared objects
-            }
-        }
-
-        foreach (TransformData data in ItemsLoaded.datas)
-        {
-            GameObject temp = CreateFromPrefab(data.gameObjectName);  //instantiate the rest without searching for them
-            if (temp)
-                PutInPlace(temp, data, ItemsLoaded.previousHolder);
-        }
-
-    }
-
-    public void LoadTransformsFromFile(string filepath)
-    {
-        Container<TransformData> tempContainer;
-        tempContainer = SaveData.LoadDatas<TransformData>(filepath);
-        RestoreToState(tempContainer);
-    }
 
 }
