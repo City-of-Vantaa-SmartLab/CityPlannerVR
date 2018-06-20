@@ -107,7 +107,7 @@ public class VoiceController : MonoBehaviour {
                 {
                     //Put indicator on
                     //indicator.SetActive(true);
-                    photonView.RPC("ChangePlayerIsSpeaking", PhotonTargets.All, true);
+                    photonView.RPC("ChangePlayerIsSpeaking", PhotonTargets.All, true, player.Name);
                 }
             }
 
@@ -117,7 +117,7 @@ public class VoiceController : MonoBehaviour {
                 {
                     //Put indicator off
                     //indicator.SetActive(false);
-                    photonView.RPC("ChangePlayerIsSpeaking", PhotonTargets.All, false);
+                    photonView.RPC("ChangePlayerIsSpeaking", PhotonTargets.All, false, player.Name);
                 }
             }
         }
@@ -127,15 +127,18 @@ public class VoiceController : MonoBehaviour {
             {
                 //Put indicator off
                 //indicator.SetActive(false);
-                photonView.RPC("ChangePlayerIsSpeaking", PhotonTargets.All, false);
+                photonView.RPC("ChangePlayerIsSpeaking", PhotonTargets.All, false, player.Name);
             }
         }
 	}
 
     [PunRPC]
-    void ChangePlayerIsSpeaking(bool isSpeaking)
+    void ChangePlayerIsSpeaking(bool isSpeaking, string name)
     {
-        PlayerIsSpeaking = isSpeaking;
+        if (name == localPlayer.Name)
+        {
+            PlayerIsSpeaking = isSpeaking;
+        }
     }
 
     //TODO: how is it determined who's the target
