@@ -13,7 +13,9 @@ public class VoiceController : MonoBehaviour {
     VoicePlayerState localPlayer;
     VoiceBroadcastTrigger voiceTrigger;
     InputMaster inputMaster;
-	//public LaserPointer laser;
+    //public LaserPointer laser;
+
+    PhotonView photonView;
 
     string whisperTarget;
 	string playerTag = "VRLocalPlayer";
@@ -58,9 +60,10 @@ public class VoiceController : MonoBehaviour {
         localPlayer = comms.FindPlayer(comms.LocalPlayerName);
 
         playerName = comms.LocalPlayerName;
-        Debug.Log("Player Name = " + playerName);
 
         source = GetComponent<AudioSource>();
+
+        photonView = GetComponent<PhotonView>();
 
         inputMaster.Gripped += ToggleMutePlayer;
 
@@ -104,7 +107,7 @@ public class VoiceController : MonoBehaviour {
                 {
                     //Put indicator on
                     //indicator.SetActive(true);
-                    PlayerIsSpeaking = true;
+                    photonView.RPC("ChangePlayerIsSpeaking", PhotonTargets.All, true);
                 }
             }
 
@@ -114,7 +117,7 @@ public class VoiceController : MonoBehaviour {
                 {
                     //Put indicator off
                     //indicator.SetActive(false);
-                    PlayerIsSpeaking = false;
+                    photonView.RPC("ChangePlayerIsSpeaking", PhotonTargets.All, false);
                 }
             }
         }
@@ -124,23 +127,15 @@ public class VoiceController : MonoBehaviour {
             {
                 //Put indicator off
                 //indicator.SetActive(false);
-                PlayerIsSpeaking = false;
+                photonView.RPC("ChangePlayerIsSpeaking", PhotonTargets.All, false);
             }
         }
 	}
 
-    public void OnPhotonSerializeView(PhotonStream stream, PhotonMessageInfo info)
+    [PunRPC]
+    void ChangePlayerIsSpeaking(bool isSpeaking)
     {
-        if (stream.isWriting)
-        {
-
-            stream.SendNext(PlayerIsSpeaking);
-        }
-        else
-        {
-            PlayerIsSpeaking = (bool)stream.ReceiveNext();
-
-        }
+        PlayerIsSpeaking = isSpeaking;
     }
 
     //TODO: how is it determined who's the target
