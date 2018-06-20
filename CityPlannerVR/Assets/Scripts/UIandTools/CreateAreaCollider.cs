@@ -11,7 +11,6 @@ public class CreateAreaCollider : MonoBehaviour {
 
     Vector3[] vertices;
     int[] triangles;
-    Vector2[] uvs;
 
     float faceSize;
 
@@ -21,7 +20,6 @@ public class CreateAreaCollider : MonoBehaviour {
         meshRenderer = GetComponent<MeshRenderer>();
         meshCollider = GetComponent<MeshCollider>();
 
-        //meshCollider.sharedMesh = new Mesh();
     }
 
 
@@ -36,8 +34,6 @@ public class CreateAreaCollider : MonoBehaviour {
         {
             triangles = new int[AreaSelection.areaPoints.Count * 6 + ((AreaSelection.areaPoints.Count - 2) * 3) * 2 + 6]; //+ ylös ja alas
         }
-		
-        //uvs = new Vector2[vertices.Length];
 
         int v = 0;
         int m = 0;
@@ -124,15 +120,6 @@ public class CreateAreaCollider : MonoBehaviour {
             }
         }
 
-        //UVs will be same for every tile
-        //for (int i = 0; i < uvs.Length; i += 4)
-        //{
-        //    uvs[i] = new Vector2(0, 0);
-        //    uvs[i + 1] = new Vector2(1, 0);
-        //    uvs[i + 2] = new Vector2(0, 1);
-        //    uvs[i + 3] = new Vector2(1, 1);
-        //}
-
         UpdateMesh();
         
     }
@@ -140,13 +127,10 @@ public class CreateAreaCollider : MonoBehaviour {
     void UpdateMesh()
     {
         mesh.Clear();
-        //meshCollider.sharedMesh.Clear();
+        meshCollider.sharedMesh.Clear();
 
         mesh.vertices = vertices;
-        //meshCollider.sharedMesh.vertices = vertices;
         mesh.triangles = triangles;
-        //meshCollider.sharedMesh.triangles = triangles;
-        //mesh.uv = uvs;
 
         meshCollider.sharedMesh = null;
         meshCollider.sharedMesh = mesh;
