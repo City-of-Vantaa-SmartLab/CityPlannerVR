@@ -22,7 +22,6 @@ GameObject:
   - component: {fileID: 33977153332825342}
   - component: {fileID: 65751377831149690}
   - component: {fileID: 23140865151880288}
-  - component: {fileID: 114862255369825220}
   - component: {fileID: 114170175929084760}
   - component: {fileID: 54332690076507470}
   m_Layer: 0
@@ -127,17 +126,5 @@ MonoBehaviour:
   itemPrefabName: PhotonSmartLabBall
   objectTag: Spawnable
   spawnPoint: {fileID: 4175753895754458}
---- !u!114 &114862255369825220
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1787627988089314}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f0a09f79f0901a64289fe03d8420dd35, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  itemPrefabName: PhotonSmartLabBall
-  objectTag: Spawnable
-  spawnPoint: {fileID: 4175753895754458}
+  itemInSpawner: {fileID: 0}
+  inputMaster: {fileID: 0}
