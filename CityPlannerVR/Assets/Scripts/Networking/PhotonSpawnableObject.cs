@@ -23,14 +23,18 @@ public class PhotonSpawnableObject : MonoBehaviour {
     #endregion
 
    //Use this for initialization
+	void Start()
+	{
+		this.GetItems (null);
+	}
 
    public void GetItems (GameObject dbitem) {
 
         if (PhotonNetwork.isMasterClient)
         {
 
-            itemInSpawner = dbitem;
-            itemPrefabName = "Inventory/"+dbitem.name;
+            //itemInSpawner = dbitem;
+            itemPrefabName = "Inventory/"+itemPrefabName;
 
             inputMaster = GameObject.Find("Player").GetComponent<InputMaster>();
 
@@ -81,7 +85,7 @@ public class PhotonSpawnableObject : MonoBehaviour {
 	{
 		GameObject clone = PhotonNetwork.Instantiate(itemPrefabName, spawnPoint.position, spawnPoint.rotation, 0);
 
-		clone.GetComponent<PhotonView> ().RPC ("FreezeObjectInSpawner", PhotonTargets.AllBuffered, clone);
+		clone.GetComponent<PhotonView> ().RPC ("FreezeObjectInSpawner", PhotonTargets.AllBuffered, clone.GetComponent<PhotonView>().viewID);
 
 		itemInSpawner = clone;
 		Debug.Log ("Spawner item instantiated");
@@ -114,20 +118,4 @@ public class PhotonSpawnableObject : MonoBehaviour {
         Destroy(itemInSpawner);
     }
 
-	[PunRPC]
-	public void FreezeObjectInSpawner(GameObject obj)
-	{
-		Rigidbody rigidObj = obj.GetComponent<Rigidbody>();
-		obj.transform.SetParent(this.transform);
-		rigidObj.constraints = RigidbodyConstraints.FreezeAll;
-
-		BoxCollider colliderB = obj.GetComponent<BoxCollider> ();
-		if (colliderB != null) {
-			colliderB.enabled = false;
-		}
-		CapsuleCollider colliderC = obj.GetComponent<CapsuleCollider> ();
-		if (colliderC != null) {
-			colliderC.enabled = false;
-		}
-	}
 }

@@ -61,4 +61,24 @@ public class PhotonNetworkedObject : Photon.MonoBehaviour {
 	{
 		this.gameObject.GetComponent<Rigidbody> ().isKinematic = isTrue;
 	}
+
+	[PunRPC]
+	public void FreezeObjectInSpawner(int viewId)
+	{
+		GameObject obj = PhotonView.Find (viewId).gameObject;
+		if (obj != null) {
+			Rigidbody rigidObj = obj.GetComponent<Rigidbody> ();
+			//obj.transform.SetParent(this.transform);
+			rigidObj.constraints = RigidbodyConstraints.FreezeAll;
+
+			BoxCollider colliderB = obj.GetComponent<BoxCollider> ();
+			if (colliderB != null) {
+				colliderB.enabled = false;
+			}
+			CapsuleCollider colliderC = obj.GetComponent<CapsuleCollider> ();
+			if (colliderC != null) {
+				colliderC.enabled = false;
+			}
+		}
+	}
 }
