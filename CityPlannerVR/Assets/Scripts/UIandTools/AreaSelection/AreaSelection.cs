@@ -5,7 +5,6 @@ using UnityEngine;
 public class AreaSelection : MonoBehaviour {
 
 	private LaserPointer laser;
-	//private XRLineRenderer line;
 	private InputMaster inputMaster;
 
     private string areaTag = "Untagged";
@@ -14,15 +13,21 @@ public class AreaSelection : MonoBehaviour {
 	GameObject areaPoint;
 	public static List<GameObject> areaPoints;
 
+    private List<Vector3> areaPointPositions;
+
 	CreateAreaCollider createAreaCollider;
+    //The one who is creating this area and thus has the only right to modify stuff inside it
+    private string owner;
 
 	private void Start(){
 		laser = GetComponentInChildren<LaserPointer> ();
 		createAreaCollider = GameObject.Find ("AreaCollider").GetComponent<CreateAreaCollider> ();
-		//line = GameObject.Find("LineObject").GetComponent<XRLineRenderer> ();
 		inputMaster = GetComponentInParent<InputMaster> ();
 
         areaPoints = new List<GameObject>();
+        areaPointPositions = new List<Vector3>();
+
+        owner = GetComponentInParent<PhotonView>().owner.Nickname;
 
 		index = 0;
 	}
@@ -42,16 +47,32 @@ public class AreaSelection : MonoBehaviour {
         areaPoint.transform.localScale = new Vector3(0.1f, 0.1f, 0.1f);
 		areaPoints.Add (areaPoint);
 
-		//DrawLineBetweenPoints ();
-		createAreaCollider.MakeProceduralMesh ();
+        //If this instance of areaPointPosition is up to date
+        if(areaPoints.Count - areaPointPositions.Count == 1)
+        {
+            //The list is already up to date
+            //Add the latest position from areaPoints to areaPointPositions
+            areaPointPositions.Add(areaPoints[areaPoints.Count - 1].transform.position);
+        }
+        else
+        {
+            //The list was not yet up to date
+            for (int i = areaPointPositions.Count + 1; i < areaPoints.Count - areaPointPositions.Count; i++)
+            {
+                areaPointPositions.Add(areaPoints[i].transform.position);
+            }
+        }
+
+        CreateMesh(areaPointPositions);
 	}
 
-	//private void DrawLineBetweenPoints(){
+    //[PunRPC]
+    void CreateMesh(List<Vector3> app, string owner)
+    {
+        //Annetaan varmaan myös owner tätä kautta colliderille, niin se tietää, kukan sen omistaa
+        createAreaCollider.MakeProceduralMesh(app);
+    }
 
-	//	line.SetVertexCount (index + 1);
-	//	line.SetPosition (index, areaPoint.transform.position);
-	//	index++;
-	//}
 
     //TODO: scale area points
 	private void ScalePoints(){

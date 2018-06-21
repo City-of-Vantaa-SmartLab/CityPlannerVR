@@ -23,16 +23,16 @@ public class CreateAreaCollider : MonoBehaviour {
     }
 
 
-    public void MakeProceduralMesh()
+    public void MakeProceduralMesh(List<Vector3> areaPoints)
     {
-        vertices = new Vector3[AreaSelection.areaPoints.Count * 2];
-        if(AreaSelection.areaPoints.Count == 1)
+        vertices = new Vector3[areaPoints.Count * 2];
+        if(areaPoints.Count == 1)
         {
-            triangles = new int[AreaSelection.areaPoints.Count * 6];
+            triangles = new int[areaPoints.Count * 6];
         }
         else
         {
-            triangles = new int[AreaSelection.areaPoints.Count * 6 + ((AreaSelection.areaPoints.Count - 2) * 3) * 2 + 6]; //+ ylös ja alas
+            triangles = new int[areaPoints.Count * 6 + ((areaPoints.Count - 2) * 3) * 2 + 6]; //+ ylös ja alas
         }
 
         int v = 0;
@@ -40,9 +40,9 @@ public class CreateAreaCollider : MonoBehaviour {
         int t = 0;
 
 		
-		for (int i = 0; i < AreaSelection.areaPoints.Count; i++) {
+		for (int i = 0; i < areaPoints.Count; i++) {
                 
-            vertices[v] = AreaSelection.areaPoints[i].transform.position;
+            vertices[v] = areaPoints[i];
             vertices[v + 1] = new Vector3(vertices[v].x, vertices[v].y + 2, vertices[v].z);
 
             v += 2;
@@ -84,7 +84,7 @@ public class CreateAreaCollider : MonoBehaviour {
 			bool jotain = true;
 			int n = 0;
 
-            for (int i = 0; i < AreaSelection.areaPoints.Count - 2; i++)
+            for (int i = 0; i < areaPoints.Count - 2; i++)
             {
                 //Every other point in the list belongs up and others belong down
 
