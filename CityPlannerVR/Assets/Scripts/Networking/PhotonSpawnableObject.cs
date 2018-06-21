@@ -60,7 +60,7 @@ public class PhotonSpawnableObject : MonoBehaviour {
 		Debug.Log ("Spawner entered");
 		if (other.CompareTag("GameController"))
 		{
-			Debug.Log(this.name + " triggered by " + other.name);
+			Debug.LogWarning(this.name + " triggered by " + other.name);
 			inputMaster.TriggerClicked += HandleTriggerClicked;
 		}
 	}
@@ -70,7 +70,7 @@ public class PhotonSpawnableObject : MonoBehaviour {
 		Debug.Log ("Spawner exited");
 		if (other.CompareTag("GameController"))
 		{
-			Debug.Log(this.name + " exited by " + other.name);
+			Debug.LogWarning(this.name + " exited by " + other.name);
 			inputMaster.TriggerClicked -= HandleTriggerClicked;
 		}
 	}
