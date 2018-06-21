@@ -5,7 +5,7 @@ using Valve.VR.InteractionSystem;
 
 public class PhotonSpawnableObject : MonoBehaviour {
 
-	#region Private Attributes
+	#region Public Attributes
 
 	[SerializeField]
 	public string itemPrefabName;
@@ -81,18 +81,7 @@ public class PhotonSpawnableObject : MonoBehaviour {
 	{
 		GameObject clone = PhotonNetwork.Instantiate(itemPrefabName, spawnPoint.position, spawnPoint.rotation, 0);
 
-		Rigidbody r_clone = clone.GetComponent<Rigidbody>();
-		clone.transform.SetParent(this.transform);
-		r_clone.constraints = RigidbodyConstraints.FreezeAll;
-
-		BoxCollider colliderB = clone.GetComponent<BoxCollider> ();
-		if (colliderB != null) {
-			colliderB.enabled = false;
-		}
-		CapsuleCollider colliderC = clone.GetComponent<CapsuleCollider> ();
-		if (colliderC != null) {
-			colliderC.enabled = false;
-		}
+		clone.GetComponent<PhotonView> ().RPC ("FreezeObjectInSpawner", PhotonTargets.AllBuffered, clone);
 
 		itemInSpawner = clone;
 		Debug.Log ("Spawner item instantiated");
@@ -124,4 +113,21 @@ public class PhotonSpawnableObject : MonoBehaviour {
     {
         Destroy(itemInSpawner);
     }
+
+	[PunRPC]
+	public void FreezeObjectInSpawner(GameObject obj)
+	{
+		Rigidbody rigidObj = obj.GetComponent<Rigidbody>();
+		obj.transform.SetParent(this.transform);
+		rigidObj.constraints = RigidbodyConstraints.FreezeAll;
+
+		BoxCollider colliderB = obj.GetComponent<BoxCollider> ();
+		if (colliderB != null) {
+			colliderB.enabled = false;
+		}
+		CapsuleCollider colliderC = obj.GetComponent<CapsuleCollider> ();
+		if (colliderC != null) {
+			colliderC.enabled = false;
+		}
+	}
 }
