@@ -880,7 +880,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8ca2cc563cc33f542a5d9f8f661184ba, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  highLightMaterial: {fileID: 0}
+  highLightMaterial: {fileID: 2100000, guid: 7b939e5e799d98a469f594828ebab52e, type: 2}
   fireHapticsOnHightlight: 1
 --- !u!114 &11450312
 MonoBehaviour:
@@ -959,7 +959,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8ca2cc563cc33f542a5d9f8f661184ba, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  highLightMaterial: {fileID: 0}
+  highLightMaterial: {fileID: 2100000, guid: 7b939e5e799d98a469f594828ebab52e, type: 2}
   fireHapticsOnHightlight: 1
 --- !u!114 &11461462
 MonoBehaviour:
@@ -4576,9 +4576,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f530e1ef95262204c9a799bc2b19c0f3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  myHandNumber: 0
+  myHandNumber: 2
   toolRights: 0
-  inputMaster: {fileID: 0}
+  inputMaster: {fileID: 114634926580666974}
   currentTool: 0
   activeItemContainer: {fileID: 0}
   grabEnabled: 0
@@ -4675,9 +4675,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f530e1ef95262204c9a799bc2b19c0f3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  myHandNumber: 0
+  myHandNumber: 1
   toolRights: 0
-  inputMaster: {fileID: 0}
+  inputMaster: {fileID: 114634926580666974}
   currentTool: 0
   activeItemContainer: {fileID: 0}
   grabEnabled: 0
@@ -4724,7 +4724,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2a9dd52cbc698a041bc3e3238b183652, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  pathPoint: {fileID: 1658839060417316, guid: 51a6dff3c454e854fb937e02878c795b, type: 2}
+  pathPoint: {fileID: 0}
   videoCamera: {fileID: 0}
   cameraScreen: {fileID: 0}
   pathDrawer: {fileID: 0}
@@ -4812,18 +4812,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   onHandClick:
     m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 114270441143594818}
-        m_MethodName: NextItems
-        m_Mode: 1
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 1
+      m_Calls: []
     m_TypeName: Valve.VR.InteractionSystem.CustomEvents+UnityEventHand, Assembly-CSharp,
       Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
 --- !u!114 &114311232595767668
@@ -5011,18 +5000,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   onHandClick:
     m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 114270441143594818}
-        m_MethodName: PreviousItems
-        m_Mode: 1
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
+      m_Calls: []
     m_TypeName: Valve.VR.InteractionSystem.CustomEvents+UnityEventHand, Assembly-CSharp,
       Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
 --- !u!114 &114501660971885272
@@ -5036,7 +5014,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6958d3f000f513042accf6ad3d38e302, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  myHandNumber: 2
+  myHandNumber: 1
   myFakeLaser: {fileID: 0}
   myTargetedObject: {fileID: 0}
   myTool: 3
@@ -5071,8 +5049,8 @@ MonoBehaviour:
   scalePlayerToSmall: {fileID: 0}
   scalePlayerToLarge: {fileID: 0}
   vrCamera: {fileID: 0}
-  clippingPlaneSmall: 0.05
-  clippingPlaneBig: 0.3
+  clippingPlaneSmall: 0.01
+  clippingPlaneBig: 0.23
   player: {fileID: 107946}
   vrcameraObject: {fileID: 0}
 --- !u!114 &114632166264516772
@@ -5140,18 +5118,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   onHandClick:
     m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 114319408186448848}
-        m_MethodName: PreviousItems
-        m_Mode: 1
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
+      m_Calls: []
     m_TypeName: Valve.VR.InteractionSystem.CustomEvents+UnityEventHand, Assembly-CSharp,
       Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
 --- !u!114 &114683708384246348
@@ -5521,18 +5488,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   onHandClick:
     m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 114319408186448848}
-        m_MethodName: NextItems
-        m_Mode: 1
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 1
+      m_Calls: []
     m_TypeName: Valve.VR.InteractionSystem.CustomEvents+UnityEventHand, Assembly-CSharp,
       Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
 --- !u!132 &132000010923692124

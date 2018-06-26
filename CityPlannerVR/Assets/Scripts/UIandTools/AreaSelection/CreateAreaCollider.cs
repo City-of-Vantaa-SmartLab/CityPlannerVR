@@ -127,7 +127,7 @@ public class CreateAreaCollider : MonoBehaviour {
     void UpdateMesh()
     {
         mesh.Clear();
-        meshCollider.sharedMesh.Clear();
+        //meshCollider.sharedMesh.Clear();
 
         mesh.vertices = vertices;
         mesh.triangles = triangles;
