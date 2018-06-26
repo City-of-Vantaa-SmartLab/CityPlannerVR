@@ -12,7 +12,7 @@ public class CreateAreaCollider : MonoBehaviour {
     Vector3[] vertices;
     int[] triangles;
 
-    float faceSize;
+    RestrictObjectInteraction restrictObjectInteraction;
 
     void Awake()
     {
@@ -20,8 +20,21 @@ public class CreateAreaCollider : MonoBehaviour {
         meshRenderer = GetComponent<MeshRenderer>();
         meshCollider = GetComponent<MeshCollider>();
 
+        restrictObjectInteraction = GetComponent<RestrictObjectInteraction>();
+
     }
 
+    public void CallRPC(List<Vector3> app, string owner)
+    {
+       GetComponent<PhotonView>().RPC("CreateMesh", PhotonTargets.All, new object[] { app, owner});
+    }
+
+    [PunRPC]
+    void CreateMesh(List<Vector3> app, string owner)
+    {
+        MakeProceduralMesh(app);
+        restrictObjectInteraction.GetOwnerName(owner);
+    }
 
     public void MakeProceduralMesh(List<Vector3> areaPoints)
     {
@@ -49,7 +62,7 @@ public class CreateAreaCollider : MonoBehaviour {
 
 	    }
 
-        for (int i = 0; i < AreaSelection.areaPoints.Count - 1; i++)
+        for (int i = 0; i < areaPoints.Count - 1; i++)
         {
             if (triangles.Length > 0)
             {
@@ -78,7 +91,7 @@ public class CreateAreaCollider : MonoBehaviour {
         }
 
         //top and bottom of the mesh
-        if(AreaSelection.areaPoints.Count > 2)
+        if(areaPoints.Count > 2)
         {
             //TODO: Rename jotain
 			bool jotain = true;

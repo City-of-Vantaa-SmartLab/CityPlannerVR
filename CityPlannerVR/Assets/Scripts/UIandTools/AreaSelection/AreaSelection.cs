@@ -17,6 +17,7 @@ public class AreaSelection : MonoBehaviour
 
     //Can be sent to others so they can construct the collider
     private List<Vector3> areaPointPositions;
+    private Vector3[] areaPointArray;
 
     GameObject areaCollider;
     CreateAreaCollider createAreaCollider;
@@ -77,16 +78,12 @@ public class AreaSelection : MonoBehaviour
             }
         }
 
-        PhotonPlayerAvatar.LocalPlayerInstance.GetComponent<PhotonView>().RPC("CreateMesh", PhotonTargets.All, false);
-    }
+        areaPointArray = null;
+        areaPointArray = new Vector3[areaPointPositions.Count];
+        //TODO: kopioi lista arrayyn ja laita array eteenpäin
 
-    [PunRPC]
-    void CreateMesh(List<Vector3> app, string owner)
-    {
-        createAreaCollider.MakeProceduralMesh(app);
-        restrictObjectInteraction.GetOwnerName(owner);
+        createAreaCollider.CallRPC(areaPointPositions, owner);
     }
-
 
     //TODO: scale area points
     private void ScalePoints()
