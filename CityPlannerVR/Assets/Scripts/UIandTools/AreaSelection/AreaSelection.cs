@@ -77,10 +77,10 @@ public class AreaSelection : MonoBehaviour
             }
         }
 
-        CreateMesh(areaPointPositions, owner);
+        PhotonPlayerAvatar.LocalPlayerInstance.GetComponent<PhotonView>().RPC("CreateMesh", PhotonTargets.All, false);
     }
 
-    //[PunRPC]
+    [PunRPC]
     void CreateMesh(List<Vector3> app, string owner)
     {
         createAreaCollider.MakeProceduralMesh(app);
