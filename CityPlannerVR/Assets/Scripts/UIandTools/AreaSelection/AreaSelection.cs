@@ -30,6 +30,8 @@ public class AreaSelection : MonoBehaviour
     CreateAreaCollider createAreaCollider;
     RestrictObjectInteraction restrictObjectInteraction;
 
+    PhotonView photonView;
+
     //The one who is creating this area and thus has the only right to modify stuff inside it
     private string owner;
     public string Owner
@@ -62,9 +64,14 @@ public class AreaSelection : MonoBehaviour
     {
         if (!areaColliderSpawned)
         {
-            areaCollider = Instantiate(AreaCollider);
+            areaCollider = (GameObject)PhotonNetwork.InstantiateSceneObject(AreaCollider.name, Vector3.zero, Quaternion.identity, 0, null);
             createAreaCollider = areaCollider.GetComponent<CreateAreaCollider>();
             restrictObjectInteraction = areaCollider.GetComponent<RestrictObjectInteraction>();
+
+            //photonView = areaCollider.AddComponent<PhotonView>();
+            //photonView.ObservedComponents.Add(photonView);
+            
+
             areaColliderSpawned = true;
         }
         areaPoint = GameObject.CreatePrimitive(PrimitiveType.Sphere);
