@@ -4,6 +4,13 @@ using UnityEngine;
 
 public class AreaSelection : MonoBehaviour
 {
+    public GameObject AreaCollider;
+
+    private static bool areaColliderSpawned = false;
+    public bool AreaColliderSpawned
+    {
+        get { return areaColliderSpawned; }
+    }
 
     private LaserPointer laser;
     private InputMaster inputMaster;
@@ -33,11 +40,8 @@ public class AreaSelection : MonoBehaviour
     private void Start()
     {
         laser = GetComponentInChildren<LaserPointer>();
-        areaCollider = GameObject.Find("AreaCollider");
-        createAreaCollider = areaCollider.GetComponent<CreateAreaCollider>();
-        restrictObjectInteraction = areaCollider.GetComponent<RestrictObjectInteraction>();
+        
         inputMaster = GetComponentInParent<InputMaster>();
-
         areaPoints = new List<GameObject>();
         areaPointPositions = new List<Vector3>();
 
@@ -56,6 +60,13 @@ public class AreaSelection : MonoBehaviour
 
     private void CreatePoint()
     {
+        if (!areaColliderSpawned)
+        {
+            areaCollider = Instantiate(AreaCollider);
+            createAreaCollider = areaCollider.GetComponent<CreateAreaCollider>();
+            restrictObjectInteraction = areaCollider.GetComponent<RestrictObjectInteraction>();
+            areaColliderSpawned = true;
+        }
         areaPoint = GameObject.CreatePrimitive(PrimitiveType.Sphere);
         areaPoint.name = "SelectionPoint";
         areaPoint.transform.position = laser.hitPoint;

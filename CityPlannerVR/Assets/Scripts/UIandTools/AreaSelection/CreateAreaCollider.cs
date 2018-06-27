@@ -26,14 +26,14 @@ public class CreateAreaCollider : MonoBehaviour {
 
     public void CallRPC(Vector3[] app, string owner)
     {
-       GetComponent<PhotonView>().RPC("CreateMesh", PhotonTargets.All, new object[] { app, owner});
+       GetComponent<PhotonView>().RPC("CreateMesh", PhotonTargets.All, new object[] {app, owner});
     }
 
     [PunRPC]
     void CreateMesh(Vector3[] app, string owner)
     {
         MakeProceduralMesh(app);
-        restrictObjectInteraction.GetOwnerName(owner);
+        restrictObjectInteraction.SetOwnerName(owner);
     }
 
     public void MakeProceduralMesh(Vector3[] areaPoints)

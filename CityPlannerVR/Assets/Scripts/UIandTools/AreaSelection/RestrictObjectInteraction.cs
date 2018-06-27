@@ -21,7 +21,7 @@ public class RestrictObjectInteraction : MonoBehaviour {
     }
 
     //Is called from AreaSelection script
-    public void GetOwnerName(string owner)
+    public void SetOwnerName(string owner)
     {
         this.owner = owner;
     }
