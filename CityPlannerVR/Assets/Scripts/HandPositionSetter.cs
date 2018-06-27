@@ -24,6 +24,8 @@ public class HandPositionSetter : NetworkBehaviour
 	//Values come from the layer list
     int buildingLayer = 9;
 	int measurePointLayer = 11;
+    int lockedPropsLayer = 19;
+    int normalMask;
     int finalMask;
 
     [TargetRpc]
@@ -40,9 +42,12 @@ public class HandPositionSetter : NetworkBehaviour
         StartCoroutine(TrackNodeCoroutine(node));
         //Debug.Log("HandPositionSetter::TargetSetHand: Hand set");
 
+
+        int lockedPropsLayerMask = 1 << lockedPropsLayer;
         int buildingLayerMask = 1 << buildingLayer;
 		int measureLayerMask = 1 << measurePointLayer;
-		finalMask = ~(buildingLayerMask | measureLayerMask);
+		finalMask = ~(buildingLayerMask | measureLayerMask | lockedPropsLayerMask);
+        normalMask = ~lockedPropsLayerMask;
     }
 
     IEnumerator TrackNodeCoroutine(UnityEngine.XR.XRNode node)
@@ -65,8 +70,8 @@ public class HandPositionSetter : NetworkBehaviour
             {
                 transform.position = playerVR.transform.position + UnityEngine.XR.InputTracking.GetLocalPosition(node);
                 //Player is normal sized again and must be able to move everything again
-				hand1.hoverLayerMask = -1;
-                hand2.hoverLayerMask = -1;
+				hand1.hoverLayerMask = normalMask;
+                hand2.hoverLayerMask = normalMask;
             }
 
             CmdScaleHands(playerVR.transform.localScale * 0.07f);
