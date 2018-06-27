@@ -64,7 +64,7 @@ public class AreaSelection : MonoBehaviour
     {
         if (!areaColliderSpawned)
         {
-            areaCollider = (GameObject)PhotonNetwork.InstantiateSceneObject(AreaCollider.name, Vector3.zero, Quaternion.identity, 0, null);
+            areaCollider = (GameObject)PhotonNetwork.Instantiate(AreaCollider.name, Vector3.zero, Quaternion.identity, 0, null);
             createAreaCollider = areaCollider.GetComponent<CreateAreaCollider>();
             restrictObjectInteraction = areaCollider.GetComponent<RestrictObjectInteraction>();
 
