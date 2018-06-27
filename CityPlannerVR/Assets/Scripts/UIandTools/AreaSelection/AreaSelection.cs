@@ -79,10 +79,10 @@ public class AreaSelection : MonoBehaviour
         }
 
         areaPointArray = null;
-        areaPointArray = new Vector3[areaPointPositions.Count];
-        //TODO: kopioi lista arrayyn ja laita array eteenpäin
-
-        createAreaCollider.CallRPC(areaPointPositions, owner);
+        //areaPointArray = new Vector3[areaPointPositions.Count];
+        areaPointArray = CopyListToArray(areaPoints, areaPoints.Count);
+        
+        createAreaCollider.CallRPC(areaPointArray, owner);
     }
 
     //TODO: scale area points
@@ -91,4 +91,16 @@ public class AreaSelection : MonoBehaviour
         //Scale points and line when player shrinks down and grows up
 
     }
+
+    private Vector3[] CopyListToArray(List<GameObject> list, int length)
+    {
+        Vector3[] array = new Vector3[length];
+
+        for (int i = 0; i < length; i++)
+        {
+            array[i] = list[i].transform.position;
+        }
+
+        return array;
+    } 
 }

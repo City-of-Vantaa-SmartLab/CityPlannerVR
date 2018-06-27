@@ -24,28 +24,28 @@ public class CreateAreaCollider : MonoBehaviour {
 
     }
 
-    public void CallRPC(List<Vector3> app, string owner)
+    public void CallRPC(Vector3[] app, string owner)
     {
        GetComponent<PhotonView>().RPC("CreateMesh", PhotonTargets.All, new object[] { app, owner});
     }
 
     [PunRPC]
-    void CreateMesh(List<Vector3> app, string owner)
+    void CreateMesh(Vector3[] app, string owner)
     {
         MakeProceduralMesh(app);
         restrictObjectInteraction.GetOwnerName(owner);
     }
 
-    public void MakeProceduralMesh(List<Vector3> areaPoints)
+    public void MakeProceduralMesh(Vector3[] areaPoints)
     {
-        vertices = new Vector3[areaPoints.Count * 2];
-        if(areaPoints.Count == 1)
+        vertices = new Vector3[areaPoints.Length * 2];
+        if(areaPoints.Length == 1)
         {
-            triangles = new int[areaPoints.Count * 6];
+            triangles = new int[areaPoints.Length * 6];
         }
         else
         {
-            triangles = new int[areaPoints.Count * 6 + ((areaPoints.Count - 2) * 3) * 2 + 6]; //+ ylös ja alas
+            triangles = new int[areaPoints.Length * 6 + ((areaPoints.Length - 2) * 3) * 2 + 6]; //+ ylös ja alas
         }
 
         int v = 0;
@@ -53,7 +53,7 @@ public class CreateAreaCollider : MonoBehaviour {
         int t = 0;
 
 		
-		for (int i = 0; i < areaPoints.Count; i++) {
+		for (int i = 0; i < areaPoints.Length; i++) {
                 
             vertices[v] = areaPoints[i];
             vertices[v + 1] = new Vector3(vertices[v].x, vertices[v].y + 2, vertices[v].z);
@@ -62,7 +62,7 @@ public class CreateAreaCollider : MonoBehaviour {
 
 	    }
 
-        for (int i = 0; i < areaPoints.Count - 1; i++)
+        for (int i = 0; i < areaPoints.Length - 1; i++)
         {
             if (triangles.Length > 0)
             {
@@ -91,13 +91,13 @@ public class CreateAreaCollider : MonoBehaviour {
         }
 
         //top and bottom of the mesh
-        if(areaPoints.Count > 2)
+        if(areaPoints.Length > 2)
         {
             //TODO: Rename jotain
 			bool jotain = true;
 			int n = 0;
 
-            for (int i = 0; i < areaPoints.Count - 2; i++)
+            for (int i = 0; i < areaPoints.Length - 2; i++)
             {
                 //Every other point in the list belongs up and others belong down
 
