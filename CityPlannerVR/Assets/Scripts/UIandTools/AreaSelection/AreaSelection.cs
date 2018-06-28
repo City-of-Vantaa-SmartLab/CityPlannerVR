@@ -7,17 +7,14 @@ public class AreaSelection : MonoBehaviour
     public GameObject AreaCollider;
     public GameObject AreaColliderDestroyer;
 
-    private static bool areaColliderSpawned = false;
-    public bool AreaColliderSpawned
-    {
-        get { return areaColliderSpawned; }
-    }
+    [HideInInspector]
+    public static bool areaColliderSpawned = false;
 
     private LaserPointer laser;
     private InputMaster inputMaster;
 
-    //TODO: muuta tämä
-    private string areaTag = "Untagged";
+    //All the objects that we can draw the area (the table)
+    private string areaTag = "AreaSelectionPlatform";
     private static int index;
 
     GameObject areaPoint;
