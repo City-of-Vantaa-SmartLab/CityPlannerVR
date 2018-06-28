@@ -219,7 +219,6 @@ public class LaserPointer : PunBehaviour
         {
             //---Tarun muuttuja------------------
             hitPoint = hit.point;
-            target = hit.transform.gameObject;
             //-----------------------------------
         }
         if (bHit && hit.distance < 100f)
