@@ -77,7 +77,7 @@ public class PhotonSpawnableObject : MonoBehaviour {
 
 	private void HandleTriggerClicked(object sender, ClickedEventArgs e)
 	{
-		Debug.Log ("Trigger clicked");
+		Debug.LogWarning ("Trigger clicked");
 		InstantiateRealItem (e.controllerIndex);
 	}
 
@@ -93,6 +93,7 @@ public class PhotonSpawnableObject : MonoBehaviour {
 
 	private void InstantiateRealItem(uint controllerIndex)
 	{
+		Debug.LogWarning ("Starting to instantiate item");
 		GameObject clone = PhotonNetwork.Instantiate(itemPrefabName, spawnPoint.position, spawnPoint.rotation, 0);
 
 		Hand hand;
@@ -102,7 +103,7 @@ public class PhotonSpawnableObject : MonoBehaviour {
 		} else if (controllerIndex == 2) {
 			hand = GameObject.Find ("Hand2").GetComponent<Hand>();
 		} else {
-			Debug.Log ("Failed finding correct hand!");
+			Debug.LogWarning ("Failed finding correct hand!");
 			hand = null;
 		}
 
@@ -110,7 +111,7 @@ public class PhotonSpawnableObject : MonoBehaviour {
 			hand.AttachObject (clone);
 		}
 
-		Debug.Log ("Real item instantiated");
+		Debug.LogWarning ("Real item instantiated");
 	}
 
     public void DestroyItemInSpawner()
