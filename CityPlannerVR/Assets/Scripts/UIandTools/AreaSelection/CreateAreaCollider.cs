@@ -12,7 +12,7 @@ public class CreateAreaCollider : MonoBehaviour {
     Vector3[] vertices;
     int[] triangles;
 
-    float faceSize;
+    RestrictObjectInteraction restrictObjectInteraction;
 
     void Awake()
     {
@@ -20,19 +20,32 @@ public class CreateAreaCollider : MonoBehaviour {
         meshRenderer = GetComponent<MeshRenderer>();
         meshCollider = GetComponent<MeshCollider>();
 
+        restrictObjectInteraction = GetComponent<RestrictObjectInteraction>();
+
     }
 
-
-    public void MakeProceduralMesh()
+    public void CallRPC(Vector3[] app, string owner)
     {
-        vertices = new Vector3[AreaSelection.areaPoints.Count * 2];
-        if(AreaSelection.areaPoints.Count == 1)
+       GetComponent<PhotonView>().RPC("CreateMesh", PhotonTargets.All, new object[] {app, owner});
+    }
+
+    [PunRPC]
+    void CreateMesh(Vector3[] app, string owner)
+    {
+        MakeProceduralMesh(app);
+        restrictObjectInteraction.SetOwnerName(owner);
+    }
+
+    public void MakeProceduralMesh(Vector3[] areaPoints)
+    {
+        vertices = new Vector3[areaPoints.Length * 2];
+        if(areaPoints.Length == 1)
         {
-            triangles = new int[AreaSelection.areaPoints.Count * 6];
+            triangles = new int[areaPoints.Length * 6];
         }
         else
         {
-            triangles = new int[AreaSelection.areaPoints.Count * 6 + ((AreaSelection.areaPoints.Count - 2) * 3) * 2 + 6]; //+ ylös ja alas
+            triangles = new int[areaPoints.Length * 6 + ((areaPoints.Length - 2) * 3) * 2 + 6]; //+ ylös ja alas
         }
 
         int v = 0;
@@ -40,16 +53,16 @@ public class CreateAreaCollider : MonoBehaviour {
         int t = 0;
 
 		
-		for (int i = 0; i < AreaSelection.areaPoints.Count; i++) {
+		for (int i = 0; i < areaPoints.Length; i++) {
                 
-            vertices[v] = AreaSelection.areaPoints[i].transform.position;
+            vertices[v] = areaPoints[i];
             vertices[v + 1] = new Vector3(vertices[v].x, vertices[v].y + 2, vertices[v].z);
 
             v += 2;
 
 	    }
 
-        for (int i = 0; i < AreaSelection.areaPoints.Count - 1; i++)
+        for (int i = 0; i < areaPoints.Length - 1; i++)
         {
             if (triangles.Length > 0)
             {
@@ -78,13 +91,13 @@ public class CreateAreaCollider : MonoBehaviour {
         }
 
         //top and bottom of the mesh
-        if(AreaSelection.areaPoints.Count > 2)
+        if(areaPoints.Length > 2)
         {
             //TODO: Rename jotain
 			bool jotain = true;
 			int n = 0;
 
-            for (int i = 0; i < AreaSelection.areaPoints.Count - 2; i++)
+            for (int i = 0; i < areaPoints.Length - 2; i++)
             {
                 //Every other point in the list belongs up and others belong down
 
@@ -127,7 +140,7 @@ public class CreateAreaCollider : MonoBehaviour {
     void UpdateMesh()
     {
         mesh.Clear();
-        meshCollider.sharedMesh.Clear();
+        //meshCollider.sharedMesh.Clear();
 
         mesh.vertices = vertices;
         mesh.triangles = triangles;
