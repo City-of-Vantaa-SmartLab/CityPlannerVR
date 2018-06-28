@@ -57,6 +57,9 @@ public class PhotonSpawnableObject : MonoBehaviour {
 
     private void OnTriggerEnter(Collider other)
 	{
+		if (inputMaster == null) {
+			inputMaster = GameObject.Find("Player").GetComponent<InputMaster>();
+		}
 		Debug.Log ("Spawner entered");
 		if (other.CompareTag("GameController"))
 		{
@@ -67,6 +70,9 @@ public class PhotonSpawnableObject : MonoBehaviour {
 
 	private void OnTriggerExit(Collider other)
 	{
+		if (inputMaster == null) {
+			inputMaster = GameObject.Find("Player").GetComponent<InputMaster>();
+		}
 		Debug.Log ("Spawner exited");
 		if (other.CompareTag("GameController"))
 		{
