@@ -5,6 +5,7 @@ using UnityEngine;
 public class AreaSelection : MonoBehaviour
 {
     public GameObject AreaCollider;
+    public GameObject AreaColliderDestroyer;
 
     private static bool areaColliderSpawned = false;
     public bool AreaColliderSpawned
@@ -27,6 +28,7 @@ public class AreaSelection : MonoBehaviour
     private Vector3[] areaPointArray;
 
     GameObject areaCollider;
+    GameObject areaColliderDestroyer;
     CreateAreaCollider createAreaCollider;
     RestrictObjectInteraction restrictObjectInteraction;
 
@@ -68,9 +70,8 @@ public class AreaSelection : MonoBehaviour
             createAreaCollider = areaCollider.GetComponent<CreateAreaCollider>();
             restrictObjectInteraction = areaCollider.GetComponent<RestrictObjectInteraction>();
 
-            //photonView = areaCollider.AddComponent<PhotonView>();
-            //photonView.ObservedComponents.Add(photonView);
-            
+            areaColliderDestroyer = Instantiate(AreaColliderDestroyer, new Vector3(laser.hitPoint.x, laser.hitPoint.y + 3f, laser.hitPoint.z), Quaternion.identity);
+            areaColliderDestroyer.GetComponent<DeleteAreaCollider>().areaCollider = areaCollider;
 
             areaColliderSpawned = true;
         }
