@@ -31,6 +31,9 @@ public class AreaSelection : MonoBehaviour
 
     PhotonView photonView;
 
+    Ray raycast;
+    RaycastHit hit;
+
     //The one who is creating this area and thus has the only right to modify stuff inside it
     private string owner;
     public string Owner
