@@ -7,9 +7,6 @@ public class DeleteAreaCollider : MonoBehaviour {
     [HideInInspector]
     public GameObject areaCollider;
 
-    bool canDeleteDestroyer = false;
-
-
     public void DeleteCollider()
     {
         AreaSelection.areaColliderSpawned = false;
@@ -23,16 +20,6 @@ public class DeleteAreaCollider : MonoBehaviour {
         //Destroy the area
         PhotonNetwork.Destroy(areaCollider);
 
-        canDeleteDestroyer = true;
-    }
-
-    public void DeleteDestroyer()
-    {
-        //If we touch the destroyer but won't trigger it we should not destroy the destroyer eather
-        if (canDeleteDestroyer)
-        {
-            //Destroy this object (it is only local)
-            Destroy(gameObject);
-        }
+        Destroy(gameObject);
     }
 }
