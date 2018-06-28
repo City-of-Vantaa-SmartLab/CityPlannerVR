@@ -20,23 +20,31 @@ public class PhotonSpawnableObject : MonoBehaviour {
 
 	public InputMaster inputMaster;
 
+	private bool isFirstTime = true;
+
     #endregion
 
    //Use this for initialization
 	void Start()
 	{
-		this.GetItems (null);
+		
+	}
+
+	void Update() {
+		if (isFirstTime) {
+			itemPrefabName = "Inventory/"+itemPrefabName;
+
+			inputMaster = GameObject.Find("Player").GetComponent<InputMaster>();
+			isFirstTime = false;
+
+			this.GetItems (null);
+		}
 	}
 
    public void GetItems (GameObject dbitem) {
 
         if (PhotonNetwork.isMasterClient)
         {
-
-            //itemInSpawner = dbitem;
-            itemPrefabName = "Inventory/"+itemPrefabName;
-
-            inputMaster = GameObject.Find("Player").GetComponent<InputMaster>();
 
             if (PhotonGameManager.Instance.isMultiplayerSceneLoaded)
             {
