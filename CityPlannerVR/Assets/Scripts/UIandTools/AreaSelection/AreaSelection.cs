@@ -31,9 +31,11 @@ public class AreaSelection : MonoBehaviour
 
     PhotonView photonView;
 
-    Ray raycast;
-    RaycastHit hit;
+    CheckPlayerSize checkPlayerSize;
 
+    Vector3 bigScale;
+    Vector3 smallScale;
+    
     //The one who is creating this area and thus has the only right to modify stuff inside it
     private string owner;
     public string Owner
@@ -49,9 +51,13 @@ public class AreaSelection : MonoBehaviour
         areaPoints = new List<GameObject>();
         areaPointPositions = new List<Vector3>();
 
+        checkPlayerSize = GetComponentInParent<CheckPlayerSize>();
         owner = PhotonPlayerAvatar.LocalPlayerInstance.GetComponent<PhotonView>().owner.NickName;
 
         index = 0;
+
+        bigScale = new Vector3(0.1f, 0.1f, 0.1f);
+        smallScale = new Vector3(0.01f, 0.01f, 0.01f);
     }
 
     public void ActivateCreatePoint(LaserPointer laser, GameObject target)
@@ -78,7 +84,15 @@ public class AreaSelection : MonoBehaviour
         areaPoint = GameObject.CreatePrimitive(PrimitiveType.Sphere);
         areaPoint.name = "SelectionPoint";
         areaPoint.transform.position = laser.hitPoint;
-        areaPoint.transform.localScale = new Vector3(0.1f, 0.1f, 0.1f);
+
+        if (checkPlayerSize.isSmall)
+        {
+            areaPoint.transform.localScale = new Vector3(0.01f, 0.01f, 0.01f);
+        }
+        else
+        {
+            areaPoint.transform.localScale = new Vector3(0.1f, 0.1f, 0.1f);
+        }
         areaPoints.Add(areaPoint);
 
         //If this instance of areaPointPosition is up to date
@@ -104,12 +118,6 @@ public class AreaSelection : MonoBehaviour
         createAreaCollider.CallRPC(areaPointArray, owner);
     }
 
-    //TODO: scale area points
-    private void ScalePoints()
-    {
-        //Scale points and line when player shrinks down and grows up
-
-    }
 
     private Vector3[] CopyListToArray(List<GameObject> list, int length)
     {

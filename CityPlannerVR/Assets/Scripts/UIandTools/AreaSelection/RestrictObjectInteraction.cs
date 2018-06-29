@@ -4,8 +4,7 @@ using UnityEngine;
 
 public class RestrictObjectInteraction : MonoBehaviour {
 
-    //TODO: muuta tämä
-    string restrictionLayer = "Default";
+    string restrictionLayer = "LockedProps";
     string normalLayer = "Props";
 
     string playerAvatarName;

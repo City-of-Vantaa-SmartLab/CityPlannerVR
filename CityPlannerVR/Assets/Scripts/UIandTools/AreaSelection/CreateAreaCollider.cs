@@ -93,15 +93,15 @@ public class CreateAreaCollider : MonoBehaviour {
         //top and bottom of the mesh
         if(areaPoints.Length > 2)
         {
-            //TODO: Rename jotain
-			bool jotain = true;
+            //If we have odd or even number of triangles on top and on bottom of the mesh
+			bool oddTriangles = true;
 			int n = 0;
 
             for (int i = 0; i < areaPoints.Length - 2; i++)
             {
                 //Every other point in the list belongs up and others belong down
 
-                if (jotain)
+                if (oddTriangles)
                 {
                     //down
                     triangles[t]     = 0;
@@ -112,7 +112,7 @@ public class CreateAreaCollider : MonoBehaviour {
                     triangles[t + 4] = n + 3;
                     triangles[t + 5] = 1;
 
-                    jotain = false;
+                    oddTriangles = false;
                 }
 				
 				else{
@@ -125,7 +125,7 @@ public class CreateAreaCollider : MonoBehaviour {
                     triangles[t + 4] = n + 7;
                     triangles[t + 5] = n + 5;
 
-                    jotain = true;
+                    oddTriangles = true;
 
                     n += 4;
                 }
