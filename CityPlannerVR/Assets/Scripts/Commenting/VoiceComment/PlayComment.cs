@@ -193,7 +193,7 @@ public class PlayComment : MonoBehaviour {
         buttonImage.transform.localRotation = Quaternion.identity;
         buttonImage.transform.localScale = Vector3.one;
         buttonText = buttonImage.GetComponentInChildren<Text>();
-        buttonText.text = positionDB.list[index].recordName;
+        buttonText.text = commentsToPlayHere[index];
 
         displayedButton = buttonImage;
     }

@@ -350,6 +350,7 @@ GameObject:
   - component: {fileID: 65677145063313018}
   - component: {fileID: 82205009316946312}
   - component: {fileID: 114805069615432510}
+  - component: {fileID: 114066919056119936}
   m_Layer: 16
   m_Name: CommentList
   m_TagString: CommentToolTag
@@ -1331,7 +1332,8 @@ AudioSource:
   m_GameObject: {fileID: 1850352533580352}
   m_Enabled: 1
   serializedVersion: 4
-  OutputAudioMixerGroup: {fileID: 0}
+  OutputAudioMixerGroup: {fileID: 243609077789347082, guid: 28ae4ee4bd117e14590979a0a22604a6,
+    type: 2}
   m_audioClip: {fileID: 8300000, guid: bcc529078a5d8ac4caf48e8e57a32459, type: 3}
   m_PlayOnAwake: 0
   m_Volume: 1
@@ -1565,6 +1567,17 @@ MonoBehaviour:
     m_VerticalOverflow: 0
     m_LineSpacing: 1
   m_Text: 00:00:00
+--- !u!114 &114066919056119936
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1692853835861146}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 0}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!114 &114082781991102502
 MonoBehaviour:
   m_ObjectHideFlags: 1

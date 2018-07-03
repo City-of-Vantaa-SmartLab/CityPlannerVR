@@ -79,12 +79,12 @@ public class RecordComment : MonoBehaviour
         }
     }
 
-   
+
 
     private void Start()
     {
         //savePath = Application.dataPath+ slash + "Resources" + slash + "Comments" + slash + directoryName + slash;
-        savePath = Application.streamingAssetsPath +  slash + "Comments" + slash + directoryName + slash;
+        savePath = Application.streamingAssetsPath + slash + "Comments" + slash + directoryName + slash;
         audioSavePathExt = "AudioFiles" + slash;
 
         laserLeft = GameObject.Find("Player/SteamVRObjects/Hand1/Laserpointer").GetComponentInChildren<LaserPointer>();
@@ -134,9 +134,9 @@ public class RecordComment : MonoBehaviour
 
     void FindTarget(object sender, LaserEventArgs e)
     {
-        if(e.target.gameObject.layer != LayerMask.NameToLayer(commentLayer))
+        if (e.target.gameObject.layer != LayerMask.NameToLayer(commentLayer))
         {
-            if (e.target.gameObject.layer == LayerMask.NameToLayer("Building")  || e.target.gameObject.layer == LayerMask.NameToLayer("Props"))
+            if (e.target.gameObject.layer == LayerMask.NameToLayer("Building") || e.target.gameObject.layer == LayerMask.NameToLayer("Props"))
             {
                 target = e.target.gameObject;
                 //Debug.Log("Target = " + target.name);
@@ -189,11 +189,11 @@ public class RecordComment : MonoBehaviour
     }
 
     public void StopRecord()
-    {   
+    {
         if (micConnected)
         {
             DisableVoiceChat();
-            
+
             if (Microphone.IsRecording(null))
             {
                 PlaySoundEffect();
@@ -201,16 +201,16 @@ public class RecordComment : MonoBehaviour
                 int lastPos = Microphone.GetPosition(null);
                 if (lastPos != 0)
                 {
-                float[] samples = new float[tempAudioClip.samples];
-                tempAudioClip.GetData(samples, 0);
+                    float[] samples = new float[tempAudioClip.samples];
+                    tempAudioClip.GetData(samples, 0);
 
-                float[] finalSamples = new float[lastPos];
+                    float[] finalSamples = new float[lastPos];
 
                     for (int i = 0; i < finalSamples.Length; i++)
                     {
                         finalSamples[i] = samples[i];
                     }
-
+                    finalSamples = MonitorCommentVolume.CalculateAmplitudeMultiplier(finalSamples);
                     finalAudioClip = AudioClip.Create("FinalAudioClip", finalSamples.Length, 1, maxFreq, false);
 
                     finalAudioClip.SetData(finalSamples, 0);
@@ -232,53 +232,15 @@ public class RecordComment : MonoBehaviour
         }
     }
 
-    //void StopRecord(object sender, LaserEventArgs e)
-    //{
-    //    if (e.target.gameObject.layer == LayerMask.NameToLayer(commentLayer) && e.target.name == "VoiceComment")
-    //    {
-    //        if (micConnected)
-    //        {
-    //            DisableVoiceChat();
-
-    //            if (Microphone.IsRecording(null))
-    //            {
-    //                int lastPos = Microphone.GetPosition(null);
-    //                if (lastPos != 0)
-    //                {
-    //                    float[] samples = new float[tempAudioClip.samples];
-    //                    tempAudioClip.GetData(samples, 0);
-
-    //                    float[] finalSamples = new float[lastPos];
-
-    //                    for (int i = 0; i < finalSamples.Length; i++)
-    //                    {
-    //                        finalSamples[i] = samples[i];
-    //                    }
-
-    //                    finalAudioClip = AudioClip.Create("FinalAudioClip", finalSamples.Length, 1, maxFreq, false);
-
-    //                    finalAudioClip.SetData(finalSamples, 0);
-
-    //                    Microphone.End(null);
-    //                    Debug.Log("Recording stopped");
-    //                    SaveRecordedAudio();
-    //                    //Enable voice chat again
-    //                    voiceTrigger.Mode = Dissonance.CommActivationMode.VoiceActivation;
-    //                }
-    //            }
-    //        }
-    //    }
-    //}
-
     void DisableVoiceChat()
     {
-        if(voiceTrigger.Mode != Dissonance.CommActivationMode.None)
+        if (voiceTrigger.Mode != Dissonance.CommActivationMode.None)
         {
             voiceTrigger.Mode = Dissonance.CommActivationMode.None;
             Microphone.End(null);
         }
     }
-//-----------------------------------------------------------------------------------------------------------------------------------------------------
+    //-----------------------------------------------------------------------------------------------------------------------------------------------------
 
     void LoadOldSavedData()
     {
@@ -293,13 +255,13 @@ public class RecordComment : MonoBehaviour
         {
             positionDB = (PositionDatabase)serializer.Deserialize(file);
             file.Close();
-        }       
+        }
     }
 
 
-void SaveRecordedAudio()
+    void SaveRecordedAudio()
     {
-        string filename = commenter + "_VoiceComment_" + System.DateTime.Now.ToString("yyyy-MM-dd_HH-mm-ss") ;
+        string filename = commenter + "_VoiceComment_" + System.DateTime.Now.ToString("yyyy-MM-dd_HH-mm-ss");
 
         SavWav.Save(filename, finalAudioClip, savePath + audioSavePathExt);
 
@@ -311,11 +273,11 @@ void SaveRecordedAudio()
         positionDB.list[positionDB.list.Count - 1].commenterName = commenter;
         positionDB.list[positionDB.list.Count - 1].recordName = filename;
         positionDB.list[positionDB.list.Count - 1].targetName = target.name;
-           
+
         positionDB.list[positionDB.list.Count - 1].position[0] = target.transform.position.x;
         positionDB.list[positionDB.list.Count - 1].position[1] = target.transform.position.y;
         positionDB.list[positionDB.list.Count - 1].position[2] = target.transform.position.z;
-        
+
         serializer.Serialize(file, positionDB);
         file.Close();
 
