@@ -11,9 +11,6 @@ using UnityEngine.UI;
 
 //Use www class for the server?
 
-//TODO: Kun osotetaan taloa, lista sen talon kommenteista
-//TODO: Käy läpi kommentit ja järjestä/seulo tietyllä tavalla
-
 public struct VoiceComment
 {
     public string commenterName;

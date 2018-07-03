@@ -5,7 +5,7 @@ using Valve.VR.InteractionSystem;
 
 public class PhotonSpawnableObject : MonoBehaviour {
 
-	#region Private Attributes
+	#region Public Attributes
 
 	[SerializeField]
 	public string itemPrefabName;
@@ -20,19 +20,31 @@ public class PhotonSpawnableObject : MonoBehaviour {
 
 	public InputMaster inputMaster;
 
+	private bool isFirstTime = true;
+
     #endregion
 
    //Use this for initialization
+	void Start()
+	{
+		
+	}
+
+	void Update() {
+		if (isFirstTime) {
+			itemPrefabName = "Inventory/"+itemPrefabName;
+
+			inputMaster = GameObject.Find("Player").GetComponent<InputMaster>();
+			isFirstTime = false;
+
+			this.GetItems (null);
+		}
+	}
 
    public void GetItems (GameObject dbitem) {
 
         if (PhotonNetwork.isMasterClient)
         {
-
-            itemInSpawner = dbitem;
-            itemPrefabName = "Inventory/"+dbitem.name;
-
-            inputMaster = GameObject.Find("Player").GetComponent<InputMaster>();
 
             if (PhotonGameManager.Instance.isMultiplayerSceneLoaded)
             {
@@ -53,27 +65,33 @@ public class PhotonSpawnableObject : MonoBehaviour {
 
     private void OnTriggerEnter(Collider other)
 	{
+		if (inputMaster == null) {
+			inputMaster = GameObject.Find("Player").GetComponent<InputMaster>();
+		}
 		Debug.Log ("Spawner entered");
 		if (other.CompareTag("GameController"))
 		{
-			Debug.Log(this.name + " triggered by " + other.name);
+			Debug.LogWarning(this.name + " triggered by " + other.name);
 			inputMaster.TriggerClicked += HandleTriggerClicked;
 		}
 	}
 
 	private void OnTriggerExit(Collider other)
 	{
+		if (inputMaster == null) {
+			inputMaster = GameObject.Find("Player").GetComponent<InputMaster>();
+		}
 		Debug.Log ("Spawner exited");
 		if (other.CompareTag("GameController"))
 		{
-			Debug.Log(this.name + " exited by " + other.name);
+			Debug.LogWarning(this.name + " exited by " + other.name);
 			inputMaster.TriggerClicked -= HandleTriggerClicked;
 		}
 	}
 
 	private void HandleTriggerClicked(object sender, ClickedEventArgs e)
 	{
-		Debug.Log ("Trigger clicked");
+		Debug.LogWarning ("Trigger clicked");
 		InstantiateRealItem (e.controllerIndex);
 	}
 
@@ -81,18 +99,7 @@ public class PhotonSpawnableObject : MonoBehaviour {
 	{
 		GameObject clone = PhotonNetwork.Instantiate(itemPrefabName, spawnPoint.position, spawnPoint.rotation, 0);
 
-		Rigidbody r_clone = clone.GetComponent<Rigidbody>();
-		clone.transform.SetParent(this.transform);
-		r_clone.constraints = RigidbodyConstraints.FreezeAll;
-
-		BoxCollider colliderB = clone.GetComponent<BoxCollider> ();
-		if (colliderB != null) {
-			colliderB.enabled = false;
-		}
-		CapsuleCollider colliderC = clone.GetComponent<CapsuleCollider> ();
-		if (colliderC != null) {
-			colliderC.enabled = false;
-		}
+		clone.GetComponent<PhotonView> ().RPC ("FreezeObjectInSpawner", PhotonTargets.AllBuffered, clone.GetComponent<PhotonView>().viewID);
 
 		itemInSpawner = clone;
 		Debug.Log ("Spawner item instantiated");
@@ -100,6 +107,7 @@ public class PhotonSpawnableObject : MonoBehaviour {
 
 	private void InstantiateRealItem(uint controllerIndex)
 	{
+		Debug.LogWarning ("Starting to instantiate item");
 		GameObject clone = PhotonNetwork.Instantiate(itemPrefabName, spawnPoint.position, spawnPoint.rotation, 0);
 
 		Hand hand;
@@ -109,7 +117,7 @@ public class PhotonSpawnableObject : MonoBehaviour {
 		} else if (controllerIndex == 2) {
 			hand = GameObject.Find ("Hand2").GetComponent<Hand>();
 		} else {
-			Debug.Log ("Failed finding correct hand!");
+			Debug.LogWarning ("Failed finding correct hand!");
 			hand = null;
 		}
 
@@ -117,11 +125,12 @@ public class PhotonSpawnableObject : MonoBehaviour {
 			hand.AttachObject (clone);
 		}
 
-		Debug.Log ("Real item instantiated");
+		Debug.LogWarning ("Real item instantiated");
 	}
 
     public void DestroyItemInSpawner()
     {
         Destroy(itemInSpawner);
     }
+
 }

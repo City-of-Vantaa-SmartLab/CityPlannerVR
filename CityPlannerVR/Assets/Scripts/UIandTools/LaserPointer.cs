@@ -207,16 +207,19 @@ public class LaserPointer : PunBehaviour
             argsIn.distance = hit.distance;
             argsIn.target = hit.transform;
             argsIn.hitPoint = hit.point;
-            //---Tarun muuttuja------------------
-            hitPoint = hit.point;
-			target = hit.transform.gameObject;
-			//-----------------------------------
+            
             OnPointerIn(argsIn);
             previousContact = hit.transform;
         }
         if (!bHit)
         {
             previousContact = null;
+        }
+        else
+        {
+            //---Tarun muuttuja------------------
+            hitPoint = hit.point;
+            //-----------------------------------
         }
         if (bHit && hit.distance < 100f)
         {

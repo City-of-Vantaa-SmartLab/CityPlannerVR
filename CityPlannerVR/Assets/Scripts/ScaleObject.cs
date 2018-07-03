@@ -7,14 +7,15 @@ using UnityEngine.Networking;
 /// Scales the player object when player lets go of this object.
 /// </summary>
 
-public class ScaleObject : MonoBehaviour {
+public class ScaleObject : MonoBehaviour
+{
 
     //[SerializeField]
-	//[Tooltip("Poistetaan, sitten kun uusi ratkaisu on valmis")]
+    //[Tooltip("Poistetaan, sitten kun uusi ratkaisu on valmis")]
     //private GameObject objectToScale;
 
-	[Tooltip("Put all objects to be scaled with this instance here")]
-	public GameObject[] objectsToScale;
+    [Tooltip("Put all objects to be scaled with this instance here")]
+    public GameObject[] objectsToScale;
 
     //[SerializeField]
     //private Vector3 newScale;
@@ -30,39 +31,43 @@ public class ScaleObject : MonoBehaviour {
 
     private GameObject localPlayer = null;
 
-	ChangeTeleportProperties changeTeleport;
+    ChangeTeleportProperties changeTeleport;
 
-	void Start(){
-		changeTeleport = GetComponent<ChangeTeleportProperties> ();
-	}
+    void Start()
+    {
+        changeTeleport = GetComponent<ChangeTeleportProperties>();
+    }
 
-	//Called from teleport script, when teleported to teleportPoint
-	public void ScalePlayer(){
-		
-		Scale ();
-		changeTeleport.ChangeProperties ();
-		ScaleNetworkedPlayerAvatar ();
-	}
+    //Called from teleport script, when teleported to teleportPoint
+    public void ScalePlayer()
+    {
+
+        Scale();
+        changeTeleport.ChangeProperties();
+        ScaleNetworkedPlayerAvatar();
+        ScalePoints();
+    }
 
     public void Scale()
     {
         //Debug.Log("ScalePlayer::Scale: Scaling " + objectToScale.gameObject.name);
         //objectToScale.transform.localScale = newScale;
 
-        for (int i = 0; i < objectsToScale.Length; i++) {
+        for (int i = 0; i < objectsToScale.Length; i++)
+        {
             objectsToScale[i].transform.localScale = newScales[i];
-		}
+        }
     }
 
     public void ScaleNetworkedPlayerAvatar()
     {
-        if(localPlayer == null)
+        if (localPlayer == null)
         {
             FindLocalPlayer();
         }
-                                                 
+
         PhotonPlayerAvatar pa = localPlayer.GetComponent<PhotonPlayerAvatar>();
-        if(pa != null)
+        if (pa != null)
         {
             //Debug.Log("ScaleObject::ScaleNetworkedPlayerAvatar: Scaling player! (" + pa.gameObject.name + ")");
             //pa.UpdateScale(newScale);
@@ -71,9 +76,9 @@ public class ScaleObject : MonoBehaviour {
             photonView = pa.GetComponent<PhotonView>();
 
 
-			//pa.UpdateScale(newScale);							first element is players size (or should be)
+            //pa.UpdateScale(newScale);							first element is players size (or should be)
             photonView.RPC("UpdateScale", PhotonTargets.AllBuffered, newScales[0]);
-            
+
         }
 
         else
@@ -99,6 +104,24 @@ public class ScaleObject : MonoBehaviour {
         if (localPlayer == null)
         {
             Debug.LogError("ScaleObject::FindLocalPlayer: Could not find local player!");
+        }
+    }
+
+    private void ScalePoints()
+    {
+        //Scale points and line when player shrinks down and grows up
+
+        //Player is small and the points should be scaled down
+        for (int i = 0; i < AreaSelection.areaPoints.Count; i++)
+        {
+            if(newScales[0].x >= 1)
+            {
+                AreaSelection.areaPoints[i].transform.localScale = newScales[0] * 0.05f;
+            }
+            else
+            {
+                AreaSelection.areaPoints[i].transform.localScale = newScales[0];
+            }
         }
     }
 }
