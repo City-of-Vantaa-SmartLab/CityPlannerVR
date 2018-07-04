@@ -4,6 +4,7 @@ using UnityEngine;
 
 /// <summary>
 /// Calculate the average amplitude of a voice comment and adjust it if necessary
+/// This was used as a reference: http://teropa.info/blog/2016/08/30/amplitude-and-loudness.html
 /// </summary>
 
 public static class MonitorCommentVolume

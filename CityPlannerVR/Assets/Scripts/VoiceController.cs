@@ -136,6 +136,10 @@ public class VoiceController : MonoBehaviour
         if (photonView.owner.NickName == info.sender.NickName)
         {
             PlayerIsSpeaking = isSpeaking;
+            //Change the priority of a player if they are allowed to and they have something important to say
+            //If(joku bool){
+            //      Priority = high;
+            //}
         }
     }
 
