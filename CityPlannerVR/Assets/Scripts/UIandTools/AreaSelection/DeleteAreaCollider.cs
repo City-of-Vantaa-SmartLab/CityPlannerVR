@@ -2,6 +2,10 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+
+/// <summary>
+/// Destroy the area mesh
+/// </summary>
 public class DeleteAreaCollider : MonoBehaviour {
 
     [HideInInspector]

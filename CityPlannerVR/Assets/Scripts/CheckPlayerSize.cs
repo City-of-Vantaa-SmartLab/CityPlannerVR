@@ -42,14 +42,15 @@ public class CheckPlayerSize : MonoBehaviour {
 		largeScale = scalePlayerToLarge.GetComponent<ScaleObject>().newScales[0];
     }
 
+    /// <summary>
+    /// Check if player is small or big
+    /// </summary>
     void CalculateMode()
     {
         if (transform.localScale == smallScale)
         {
             isInPedesrianMode = true;
             vrCamera.nearClipPlane = clippingPlaneSmall;
-
-
         }
         else if (transform.localScale == largeScale)
         {
