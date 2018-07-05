@@ -8,6 +8,9 @@ using UnityEngine;
 /// </summary>
 public class DeleteAreaCollider : MonoBehaviour {
 
+    /// <summary>
+    /// The area Collider object
+    /// </summary>
     [HideInInspector]
     public GameObject areaCollider;
 

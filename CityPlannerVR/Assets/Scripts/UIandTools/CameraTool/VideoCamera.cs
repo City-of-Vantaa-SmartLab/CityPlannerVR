@@ -5,25 +5,50 @@ using RockVR.Video;
 using RockVR.Vive;
 using RockVR.Vive.Demo;
 
+
+/// <summary>
+/// For taking video footage in game
+/// </summary>
 public class VideoCamera : MonoBehaviour {
 
 	InputMaster inputMaster;
     public CameraProSetUpCtrl cameraProSetUpCtrl;
 
+    /// <summary>
+    /// The controller state of the video camera
+    /// </summary>
 	public ControllerState controllerState = ControllerState.Normal;
+    /// <summary>
+    /// The camera state of the video camera
+    /// </summary>
 	private CameraState cameraState = CameraState.Normal;
 
-	//This value is got from the cameraHandler that activates this object
+    /// <summary>
+    /// This value is got from the cameraHandler that activates this object
+    /// </summary>
 	public int myHandNumber;
-	private uint myDeviceIndex;
 
+    /// <summary>
+    /// The object which shows to the player what camera is seeing
+    /// </summary>
     public GameObject videoCameraScreen;
 
+    /// <summary>
+    /// RenderTexture for showing to the player what the camera sees
+    /// </summary>
     public RenderTexture screenTexture;
+    /// <summary>
+    /// The camera component of this object
+    /// </summary>
     public Camera captureCamera;
 
+    /// <summary>
+    /// Index for the video camera point changing
+    /// </summary>
     int index = 0;
-    //All the fixed points where the screenshot camera can be (first 2 are in players hands)
+    /// <summary>
+    /// All the fixed points where the screenshot camera can be (first 2 are in players hands)
+    /// </summary>
     public GameObject[] points;
 
     void Awake(){
@@ -65,6 +90,9 @@ public class VideoCamera : MonoBehaviour {
         //cameraProSetUpCtrl.DisableCamera();
 	}
 
+    /// <summary>
+    /// Subscribe to input masters events
+    /// </summary>
 	private void Subscribe()
 	{
 		if (inputMaster)
@@ -78,6 +106,9 @@ public class VideoCamera : MonoBehaviour {
 		}
 	}
 
+    /// <summary>
+    /// Unsubscribe from input masters events
+    /// </summary>
 	private void Unsubscribe()
 	{
 		if (inputMaster)
@@ -90,7 +121,11 @@ public class VideoCamera : MonoBehaviour {
 			Debug.LogError("Did not find inputlistener!");
 		}
 	}
-
+    /// <summary>
+    /// Start and stop capturing video
+    /// </summary>
+    /// <param name="sender">The controller which give the info</param>
+    /// <param name="e">The info from the controller</param>
 	private void StartAndStopVideo(object sender, ClickedEventArgs e)
 	{
         if (e.controllerIndex == myHandNumber)
@@ -115,10 +150,13 @@ public class VideoCamera : MonoBehaviour {
 	}
 
     //----------------------------------------------------------------------------------------------------------------------------------------//
-
+    /// <summary>
+    /// Change the point where the camera is 
+    /// </summary>
+    /// <param name="sender">The controller which give the info</param>
+    /// <param name="e">The info from the controller</param>
     void ChangePoint(object sender, ClickedEventArgs e)
     {
-
         if (e.controllerIndex == myHandNumber)
         {
             if (e.padX > 0.7f)
@@ -132,7 +170,9 @@ public class VideoCamera : MonoBehaviour {
         }
     }
 
-
+    /// <summary>
+    /// Change the point where camera is to the right in the array
+    /// </summary>
     void ChangePointRight()
     {
         if (index >= points.Length - 1)
@@ -152,6 +192,9 @@ public class VideoCamera : MonoBehaviour {
         gameObject.transform.localRotation = Quaternion.identity;
     }
 
+    /// <summary>
+    /// Change the point where camera is to the left in the array 
+    /// </summary>
     void ChangePointLeft()
     {
         if (index <= 0)

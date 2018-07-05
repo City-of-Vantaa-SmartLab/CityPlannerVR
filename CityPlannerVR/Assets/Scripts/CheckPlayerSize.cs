@@ -8,15 +8,25 @@ using UnityEngine;
 
 public class CheckPlayerSize : MonoBehaviour {
 
+    [Tooltip("ScaleToSmallObject")]
     public GameObject scalePlayerToSmall;
+    [Tooltip("ScaleToBigObjects")]
     public GameObject scalePlayerToLarge;
     public Camera vrCamera;
+    [Tooltip("NearClipping plane when player is small")]
     public float clippingPlaneSmall;
+    [Tooltip("NearClipping plane when player is big")]
     public float clippingPlaneBig;
     public GameObject player;
     public GameObject vrcameraObject;
 
+    /// <summary>
+    /// Players scale when small
+    /// </summary>
     Vector3 smallScale;
+    /// <summary>
+    /// Players scale when big
+    /// </summary>
     Vector3 largeScale;
 
     private void Start()
@@ -24,8 +34,13 @@ public class CheckPlayerSize : MonoBehaviour {
         vrcameraObject = GameObject.Find("VRCamera (eye)");
         vrCamera = vrcameraObject.GetComponent<Camera>();
     }
-    //are we small
+    ///<summary></summary>
+    ///are we small
+    ///</summary>
     bool isInPedesrianMode = false;
+    ///<summary></summary>
+    ///are we small (read only)
+    ///</summary>
     public bool isSmall
     {
         get

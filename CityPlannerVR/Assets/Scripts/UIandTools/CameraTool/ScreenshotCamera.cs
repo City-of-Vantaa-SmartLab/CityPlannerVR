@@ -4,16 +4,25 @@ using UnityEngine;
 
 /// <summary>
 /// Takes a picture of the scene
-/// (this code was made with the help of this link
-/// https://answers.unity.com/questions/22954/how-to-save-a-picture-take-screenshot-from-a-camer.html)
 /// </summary>
+/// 
+// (this code was made with the help of this link
+// https://answers.unity.com/questions/22954/how-to-save-a-picture-take-screenshot-from-a-camer.html)
 
 public class ScreenshotCamera : MonoBehaviour {
 
+    [Tooltip("Resolution width of the picture")]
 	public int resWidth = 2048;
+    [Tooltip("Resolution Height of the picture")]
 	public int resHeight = 1024;
 
+    /// <summary>
+    /// Screenshot camera objects camera component
+    /// </summary>
 	Camera ssCamera;
+    /// <summary>
+    /// RenderTexture used to show to player what the camera sees
+    /// </summary>
     RenderTexture rt;
     AudioSource clickSound;
 
@@ -25,22 +34,33 @@ public class ScreenshotCamera : MonoBehaviour {
 
     //This value is got from the cameraHandler that activates this object
     public int myHandNumber;
-
+    /// <summary>
+    /// Index for the camera point changing
+    /// </summary>
     int index = 0;
-    //All the fixed points where the screenshot camera can be (first 2 are in players hands)
+    /// <summary>
+    /// All the fixed points where the screenshot camera can be (first 2 are in players hands)
+    /// </summary>
     public GameObject[] points;
 
-
+    /// <summary>
+    /// Makes and returns the name which is given to the screenshot when it's saved
+    /// </summary>
+    /// <param name="width">Width of the picture in pixels</param>
+    /// <param name="height">Height of the picture in pixels</param>
+    /// <returns></returns>
     public static string ScreenshotName(int width, int height){
 
         string folder = "Screenshots";
         string fileExtender = ".png";
         string fileName = "screen_" + width + "x" + height + "_" + System.DateTime.Now.ToString("yyyy-MM-dd_HH-mm-ss") + fileExtender;
         string pathName = Application.streamingAssetsPath;
+        // '/' or '\' depending on the operating system
         char slash = System.IO.Path.DirectorySeparatorChar;
 
         string folderPathName = pathName + slash + folder;
 
+        //If there is no such directory, create one
         if (!System.IO.Directory.Exists(folderPathName))
         {
             System.IO.Directory.CreateDirectory(folderPathName);
@@ -131,6 +151,11 @@ public class ScreenshotCamera : MonoBehaviour {
         }
     }
 
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="sender">Which controller sent info</param>
+    /// <param name="e">The info the controller sent</param>
     void TakeScreenshot(object sender, ClickedEventArgs e)
     {
         if(e.controllerIndex == myHandNumber)
@@ -158,6 +183,11 @@ public class ScreenshotCamera : MonoBehaviour {
     }
     //---------------------------------------------------------------------------------------------------------------------------------------------------------
 
+    /// <summary>
+    /// Change the point where the camera is
+    /// </summary>
+    /// <param name="sender">Which controller sent info</param>
+    /// <param name="e">The info the controller sent</param>
     void ChangePoint(object sender, ClickedEventArgs e) {
 
         if (e.controllerIndex == myHandNumber)
@@ -173,6 +203,9 @@ public class ScreenshotCamera : MonoBehaviour {
         }
     }
 
+    /// <summary>
+    /// Change the point where the camera is to right
+    /// </summary>
     void ChangePointRight()
     {
         if(index >= points.Length - 1)
@@ -190,6 +223,9 @@ public class ScreenshotCamera : MonoBehaviour {
         gameObject.transform.parent.localRotation = Quaternion.identity;
     }
 
+    /// <summary>
+    /// Change the point where the camera is to left
+    /// </summary>
     void ChangePointLeft()
     {
         if (index <= 0)
@@ -206,5 +242,4 @@ public class ScreenshotCamera : MonoBehaviour {
         gameObject.transform.parent.localPosition = Vector3.zero;
         gameObject.transform.parent.localRotation = Quaternion.identity;
     }
-
 }

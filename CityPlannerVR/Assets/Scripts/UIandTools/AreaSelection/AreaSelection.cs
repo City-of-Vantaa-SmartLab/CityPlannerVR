@@ -15,22 +15,35 @@ public class AreaSelection : MonoBehaviour
     private LaserPointer laser;
     private InputMaster inputMaster;
 
-    //All the objects that we can draw the area on (the table)
+    ///<summary>
+    ///All the objects that we can draw the area on (the table)
+    ///</summary>
     private string areaTag = "AreaSelectionPlatform";
 
-    //The point just created
+    ///<summary>
+    ///The point just created
+    ///</summary>
     private GameObject areaPoint;
-    //COnttains reference to every point
+    /// <summary>
+    /// Contains reference to every point
+    /// </summary>
     public static List<GameObject> areaPoints;
-
-    //Can be sent to others so they can construct the collider
+    /// <summary>
+    /// Can be sent to others so they can construct the collider
+    /// </summary>
     private List<Vector3> areaPointPositions;
-    //Vectors can't be sent over network so we store the information in the above vector to this array, when we need to send it
+    /// <summary>
+    /// Vectors can't be sent over network so we store the information in the above vector to this array, when we need to send it
+    /// </summary>
     private Vector3[] areaPointArray;
 
-    //Reference to the instantiated AreaCollider object
+    /// <summary>
+    /// Reference to the instantiated AreaCollider object
+    /// </summary>
     GameObject areaCollider;
-    //Reference to the instantiated AreaColliderDestroyer object
+    /// <summary>
+    /// Reference to the instantiated AreaColliderDestroyer object
+    /// </summary>
     GameObject areaColliderDestroyer;
 
     CreateAreaCollider createAreaCollider;
@@ -38,12 +51,22 @@ public class AreaSelection : MonoBehaviour
     PhotonView photonView;
     CheckPlayerSize checkPlayerSize;
 
-    //The sizes of the points when player is big and small
+    /// <summary>
+    /// The size of points when player is big
+    /// </summary>
     Vector3 bigScale;
+    /// <summary>
+    /// The size of points when player is small
+    /// </summary>
     Vector3 smallScale;
-    
-    //The one who is creating this area and thus has the only right to modify stuff inside it
+
+    /// <summary>
+    /// The one who is creating this area and thus has the only right to modify stuff inside it
+    /// </summary>
     private string owner;
+    /// <summary>
+    /// The one who is creating this area and thus has the only right to modify stuff inside it (read only)
+    /// </summary>
     public string Owner
     {
         get { return owner; }

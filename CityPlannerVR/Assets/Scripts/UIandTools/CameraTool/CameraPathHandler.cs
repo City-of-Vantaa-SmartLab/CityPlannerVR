@@ -2,9 +2,13 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+/// <summary>
+/// Handles the path for the path camera
+/// </summary>
 public class CameraPathHandler : MonoBehaviour {
-
-	//The gameobject to be instantiated
+    ///<summary>
+	///The gameobject to be instantiated
+    ///</summary>
     public GameObject pathPoint;
 
 	public GameObject videoCamera;
@@ -18,9 +22,6 @@ public class CameraPathHandler : MonoBehaviour {
 
     public Valve.VR.InteractionSystem.Hand hand;
 
-
-    //public ToolManager toolManager;
-
     #region private variables
 
     GameObject player;
@@ -29,7 +30,9 @@ public class CameraPathHandler : MonoBehaviour {
 	XRLineRenderer line;
     CheckPlayerSize playerSize;
 
-	//The instantiated gameobject
+    /// <summary>
+    /// The instantiated gameobject
+    /// </summary>
 	GameObject point;
 
 	PathVideoCamera pathVideoCamera;
@@ -64,9 +67,6 @@ public class CameraPathHandler : MonoBehaviour {
     void Start(){
 
 		Subscribe ();
-
-		//myHandNumber = toolManager.myHandNumber;
-		//Debug.Log ("myHandNumber = " + myHandNumber);
 	}
 
     private void OnEnable()

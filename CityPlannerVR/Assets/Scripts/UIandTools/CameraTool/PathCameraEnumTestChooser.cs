@@ -2,6 +2,9 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+/// <summary>
+/// For test purpose only
+/// </summary>
 public class PathCameraEnumTestChooser : MonoBehaviour {
 
 	public PathVideoCamera pathVideoCamera;

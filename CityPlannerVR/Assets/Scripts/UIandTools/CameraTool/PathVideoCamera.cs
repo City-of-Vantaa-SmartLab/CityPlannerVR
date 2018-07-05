@@ -5,9 +5,15 @@ using RockVR.Video;
 using RockVR.Vive;
 using RockVR.Vive.Demo;
 
+/// <summary>
+/// For making paths and then taking video going through the path
+/// </summary>
+
 public class PathVideoCamera : MonoBehaviour {
 
-	//Put all the points on the path here
+    ///<summary>
+	///Put all the points on the path here
+    ///</summary>
 	[HideInInspector]
 	public List<GameObject> pathPoints;
 
@@ -19,7 +25,6 @@ public class PathVideoCamera : MonoBehaviour {
 
 	//This value is got from the cameraHandler that activates this object
 	public int myHandNumber;
-	private uint myDeviceIndex;
 
 	public GameObject videoCameraScreen;
 
@@ -31,6 +36,9 @@ public class PathVideoCamera : MonoBehaviour {
 	[HideInInspector]
 	public Tool tool;
 
+    /// <summary>
+    /// Index for moving the camera through the path
+    /// </summary>
 	int index = 0;
 
 	float cameraSpeed = 0.5f;
@@ -66,7 +74,9 @@ public class PathVideoCamera : MonoBehaviour {
 		//cameraProSetUpCtrl.DisableCamera();
 	}
 		
-
+    /// <summary>
+    /// Start and stop capturing video
+    /// </summary>
 	private void StartAndStopVideo()
 	{
 		if (cameraState == CameraState.Normal)
