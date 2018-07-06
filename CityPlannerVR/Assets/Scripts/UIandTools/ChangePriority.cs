@@ -10,6 +10,9 @@ public class ChangePriority : MonoBehaviour {
     InputMaster inputMaster;
     Dissonance.VoiceBroadcastTrigger voiceTrigger;
 
+    /// <summary>
+    /// Get InputMaster and VoiceBroadcastTrigger every time tis object is picked up
+    /// </summary>
     public void GetInputMaster()
     {
         inputMaster = GetComponentInParent<InputMaster>();
@@ -21,6 +24,7 @@ public class ChangePriority : MonoBehaviour {
     /// </summary>
     public void ChangeSpeakingPriority()
     {
+        //If the player holding this object is admin
         if (inputMaster.Role == InputMaster.RoleType.Admin)
         {
             if(voiceTrigger.Priority == Dissonance.ChannelPriority.None)
