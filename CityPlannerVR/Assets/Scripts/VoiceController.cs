@@ -99,7 +99,10 @@ public class VoiceController : MonoBehaviour
             //source.Play();
         }
     }
-
+    /// <summary>
+    /// Toggle the voice indicator on and off when player starts and stops talking
+    /// </summary>
+    /// <param name="player">The player who is speaking</param>
     void ToggleIndicator(VoicePlayerState player)
     {
         if (player.IsSpeaking && player.Name == localPlayer.Name)
@@ -141,12 +144,6 @@ public class VoiceController : MonoBehaviour
         if (photonView.owner.NickName == info.sender.NickName)
         {
             PlayerIsSpeaking = isSpeaking;
-            //Only admins have chance to speak over everyone else
-            if(inputMaster.Role == InputMaster.RoleType.Admin)
-            {
-                //if(joku bool)
-                voiceTrigger.Priority = ChannelPriority.High;
-            }
         }
     }
 
