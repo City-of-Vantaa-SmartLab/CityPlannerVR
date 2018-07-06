@@ -10,14 +10,17 @@ public class ChangePriority : MonoBehaviour {
     InputMaster inputMaster;
     Dissonance.VoiceBroadcastTrigger voiceTrigger;
 
+    public void GetInputMaster()
+    {
+        inputMaster = GetComponentInParent<InputMaster>();
+        voiceTrigger = PhotonPlayerAvatar.LocalPlayerInstance.GetComponent<Dissonance.VoiceBroadcastTrigger>();
+    }
+
     /// <summary>
     /// Change the admin priority when they pick up and put down the microphone
     /// </summary>
     public void ChangeSpeakingPriority()
     {
-        inputMaster = GetComponentInParent<InputMaster>();
-        voiceTrigger = PhotonPlayerAvatar.LocalPlayerInstance.GetComponent<Dissonance.VoiceBroadcastTrigger>();
-
         if (inputMaster.Role == InputMaster.RoleType.Admin)
         {
             if(voiceTrigger.Priority == Dissonance.ChannelPriority.None)
