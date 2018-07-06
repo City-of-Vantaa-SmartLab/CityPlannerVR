@@ -129,6 +129,11 @@ public class VoiceController : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// Send the message to everyone if this player is speaking
+    /// </summary>
+    /// <param name="isSpeaking">The bool that tells whether or not the player is speaking</param>
+    /// <param name="info">info about the speaker</param>
     [PunRPC]
     void ChangePlayerIsSpeaking(bool isSpeaking, PhotonMessageInfo info)
     {
@@ -136,10 +141,12 @@ public class VoiceController : MonoBehaviour
         if (photonView.owner.NickName == info.sender.NickName)
         {
             PlayerIsSpeaking = isSpeaking;
-            //Change the priority of a player if they are allowed to and they have something important to say
-            //If(joku bool){
-            //      Priority = high;
-            //}
+            //Only admins have chance to speak over everyone else
+            if(inputMaster.Role == InputMaster.RoleType.Admin)
+            {
+                //if(joku bool)
+                voiceTrigger.Priority = ChannelPriority.High;
+            }
         }
     }
 
