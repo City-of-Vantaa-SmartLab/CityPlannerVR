@@ -1,12 +1,24 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-//TODO: liikkuminen niin, että eteenpäin on se mihin kamera katsoo
+/// <summary>
+/// Moves the spectator camera.
+/// </summary>
 public class MoveSpectatorCamera : MonoBehaviour {
 
 	//----------Movement--------------------------
 
 	float speed = 10f;
+	Vector3 cameraPosition;
+
+	float wallXmin = -35f;
+	float wallXmax = 20f;
+
+	float wallYmin = 0f;
+	float wallYmax = 4f;
+
+	float wallZmin = -17f;
+	float wallZmax = 16f;
 
 	//--------------------------------------------
 
@@ -20,10 +32,19 @@ public class MoveSpectatorCamera : MonoBehaviour {
     float rotationY;
 	//--------------------------------------------
 
+	//----------Reset-----------------------------
+	Vector3 defaultPosition = new Vector3(-19, 4, 0);
+	Vector3 defaultRotation = new Vector3(0, 90, 0);
+	//--------------------------------------------
+
+	void Start(){
+		cameraPosition = defaultPosition;
+	}
     void Update() {
 
-		MoveCamera ();
         RotateCamera();
+        MoveCamera ();
+		ResetCamera ();
     }
 
 	/// <summary>
@@ -31,19 +52,45 @@ public class MoveSpectatorCamera : MonoBehaviour {
 	/// </summary>
     void MoveCamera()
     {
-		if (Input.GetKey (KeyCode.W)) {
-			transform.localPosition += Vector3.forward * Time.deltaTime * speed ;
-		}
-		if (Input.GetKey (KeyCode.S)) {
-			transform.localPosition += -Vector3.forward * speed * Time.deltaTime;
-		}
-		if (Input.GetKey (KeyCode.A)) {
-			transform.localPosition += Vector3.left * speed * Time.deltaTime;
-		}
-		if (Input.GetKey (KeyCode.D)) {
-			transform.localPosition += -Vector3.left * speed * Time.deltaTime;
-		}
+        if (Input.GetKey(KeyCode.W))
+        {
+			transform.Translate(Vector3.forward * speed * Time.deltaTime);
+			//RestrictCamera ();
+        }
+        if (Input.GetKey(KeyCode.S))
+        {
+			transform.Translate(-Vector3.forward * speed * Time.deltaTime);
+			//RestrictCamera ();
+        }
+        if (Input.GetKey(KeyCode.A))
+        {
+			transform.Translate(Vector3.left * speed * Time.deltaTime);
+			//RestrictCamera ();
+        }
+        if (Input.GetKey(KeyCode.D))
+        {
+			transform.Translate(-Vector3.left * speed * Time.deltaTime);
+			//RestrictCamera ();
+        }
     }
+
+	/// <summary>
+	/// Prevents the camera to go through walls
+	/// </summary>
+	void RestrictCamera(){
+		if ((transform.position.x < wallXmin) || (transform.position.x > wallXmax)) {
+			transform.position = cameraPosition;
+		}
+		else if ((transform.position.y < wallYmin) || (transform.position.y > wallYmax)) {
+			transform.position = cameraPosition;
+		}
+		else if ((transform.position.z < wallZmin) || (transform.position.z > wallZmax)) {
+			transform.position = cameraPosition;
+		}
+		else {
+			cameraPosition = transform.position;
+		}
+	}
 
 	/// <summary>
 	/// Rotates the spectator camera.
@@ -55,5 +102,15 @@ public class MoveSpectatorCamera : MonoBehaviour {
 		rotationY = Mathf.Clamp(rotationY, minY, maxY);
 
 		transform.localEulerAngles = new Vector3(-rotationY, rotationX, 0);
+	}
+
+	/// <summary>
+	/// Resets the camera position and rotation.
+	/// </summary>
+	void ResetCamera(){
+		if (Input.GetKey (KeyCode.R)) {
+			transform.position = defaultPosition;
+			transform.eulerAngles = defaultRotation;
+		}
 	}
 }
