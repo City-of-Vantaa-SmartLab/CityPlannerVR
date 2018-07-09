@@ -9,6 +9,8 @@ using UnityEngine;
 public class ToolbeltManager : MonoBehaviour {
 
     public int lockAngle;
+    [SerializeField]
+    private float yMaxForLock;
     //public bool faded;
     public bool lockWhenLookingUp = true;
     private bool locked;
@@ -25,6 +27,7 @@ public class ToolbeltManager : MonoBehaviour {
     // Use this for initialization
     void Start () {
         Initialize();
+        yMaxForLock = Mathf.Sin(Mathf.PI * lockAngle / 180);  //v.y = v * sin(alpha) = 1 * sin(lockAngle), when temp is normalized
     }
 	
 	// Update is called once per frame
@@ -35,9 +38,13 @@ public class ToolbeltManager : MonoBehaviour {
             {
                 Vector3 temp;
                 temp = playerCameraTransform.TransformDirection(Vector3.forward);
-                temp = Quaternion.AngleAxis(-lockAngle, Vector3.right) * temp; //rotates the temp vector downwards
-                if (Vector3.Dot(temp, Vector3.up) > 0)  //projects temp to y axis
-                    locked = true;
+                temp.Normalize();
+
+
+                //temp = Quaternion.AngleAxis(-lockAngle, Vector3.right) * temp; //rotates the temp vector downwards
+                //if (Vector3.Dot(temp, Vector3.up) > 0)  //projects temp to y axis
+                if (temp.y > yMaxForLock)
+                locked = true;
                 else
                     locked = false;
             }
@@ -72,7 +79,7 @@ public class ToolbeltManager : MonoBehaviour {
         }
         if (lockAngle == 0)
         {
-            lockAngle = 20;
+            lockAngle = 25;
         }
 
         if (!originalParentTransform)
