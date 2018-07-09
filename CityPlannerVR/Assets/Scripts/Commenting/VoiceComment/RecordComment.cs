@@ -8,28 +8,48 @@ using System.Xml.Serialization;
 
 /// <summary>
 /// Records and saves an audio 
-/// 
-/// Made using tutorial from http://www.41post.com/4884/programming/unity-capturing-audio-from-a-microphone
 /// </summary>
+
+//Made using tutorial from http://www.41post.com/4884/programming/unity-capturing-audio-from-a-microphone
 
 public class RecordComment : MonoBehaviour
 {
-    //Tells if there are no microphones connected
+
+    /// <summary>
+    /// Tells if there are no microphones connected
+    /// </summary>
     private bool micConnected = false;
 
+    /// <summary>
+    /// The minimum Frequency got from the microphone
+    /// </summary>
     private int minFreq;
+
+    /// <summary>
+    /// The maximum Frequency got from the microphone
+    /// </summary>
     private int maxFreq;
 
+    /// <summary>
+    /// The recorded audio is saved into this variable for trimming (the audio is always 30 sek long before trimming)
+    /// </summary>
     private AudioClip tempAudioClip;
+    /// <summary>
+    /// Final version of audio after trimming
+    /// </summary>
     private AudioClip finalAudioClip;
 
     [HideInInspector]
     public Dissonance.VoiceBroadcastTrigger voiceTrigger;
 
-    //The object we are commenting
+    /// <summary>
+    /// The object we are commenting
+    /// </summary>
     [HideInInspector]
     public GameObject target;
-    //The person who commented
+    /// <summary>
+    /// The person who commented
+    /// </summary>
     [HideInInspector]
     public string commenter;
 
@@ -40,29 +60,59 @@ public class RecordComment : MonoBehaviour
 
     string commentLayer = "CommentTool";
 
-    string directoryName = "VoiceComments";
+    const string directoryName = "VoiceComments";
+    /// <summary>
+    /// / or \ depending on the used operating system
+    /// </summary>
     [HideInInspector]
     public char slash = Path.DirectorySeparatorChar;
     [HideInInspector]
     public string positionFileName = "positions.txt";
 
+    /// <summary>
+    /// The position where the target object was during recording
+    /// </summary>
     [HideInInspector]
     public PositionData position;
+    /// <summary>
+    /// Storage for an instance of a PositionDatabase class which is used to record information on text file
+    /// </summary>
     [HideInInspector]
     public PositionDatabase positionDB;
 
+    /// <summary>
+    /// AudioSource for the indicator that recording started and stoped
+    /// </summary>
     AudioSource source;
 
+    /// <summary>
+    /// The path where the text file and the audio data folder are located
+    /// </summary>
     private string savePath;
+    /// <summary>
+    /// Add after savePath to get the location of all the audio files
+    /// </summary>
     private string audioSavePathExt;
 
+    /// <summary>
+    /// Shows player how long the voice comment has been recorded
+    /// </summary>
     UnityEngine.UI.Text recordTimer;
     int recordTimeMilliSec;
     int recordTimeSec;
 
+    /// <summary>
+    /// The canvas which shows the recordTimer
+    /// </summary>
     GameObject canvas;
+    /// <summary>
+    /// Reference to coroutine which counts the recordTimer up when comment is recorded
+    /// </summary>
     Coroutine RecordTimerCoroutine;
 
+    /// <summary>
+    /// The path where the text file and the audio data folder are located (read only)
+    /// </summary>
     public string SavePath
     {
         get
@@ -71,6 +121,9 @@ public class RecordComment : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// Add after savePath to get the location of all the audio files (read only)
+    /// </summary>
     public string AudioExt
     {
         get
@@ -79,12 +132,12 @@ public class RecordComment : MonoBehaviour
         }
     }
 
-   
+
 
     private void Start()
     {
         //savePath = Application.dataPath+ slash + "Resources" + slash + "Comments" + slash + directoryName + slash;
-        savePath = Application.streamingAssetsPath +  slash + "Comments" + slash + directoryName + slash;
+        savePath = Application.streamingAssetsPath + slash + "Comments" + slash + directoryName + slash;
         audioSavePathExt = "AudioFiles" + slash;
 
         laserLeft = GameObject.Find("Player/SteamVRObjects/Hand1/Laserpointer").GetComponentInChildren<LaserPointer>();
@@ -110,11 +163,7 @@ public class RecordComment : MonoBehaviour
 
         source = GetComponent<AudioSource>();
 
-        //Load the old data from the file, so it won't get replaced
         LoadOldSavedData();
-
-        //laserLeft.PointerOut += StopRecord;
-        //laserRight.PointerOut += StopRecord;
 
         laserLeft.PointerIn += FindTarget;
         laserRight.PointerIn += FindTarget;
@@ -127,25 +176,36 @@ public class RecordComment : MonoBehaviour
         canvas.SetActive(false);
     }
 
+    /// <summary>
+    /// Used to play the sound effect when recording is started or stopped
+    /// </summary>
     public void PlaySoundEffect()
     {
         source.Play();
     }
 
+    /// <summary>
+    /// Checks and assigns the target for the voice comment
+    /// </summary>
+    /// <param name="sender">The laser to send this info</param>
+    /// <param name="e">The info that the laser sends</param>
     void FindTarget(object sender, LaserEventArgs e)
     {
-        if(e.target.gameObject.layer != LayerMask.NameToLayer(commentLayer))
+        if (e.target.gameObject.layer != LayerMask.NameToLayer(commentLayer))
         {
-            if (e.target.gameObject.layer == LayerMask.NameToLayer("Building")  || e.target.gameObject.layer == LayerMask.NameToLayer("Props"))
+            if (e.target.gameObject.layer == LayerMask.NameToLayer("Building") || e.target.gameObject.layer == LayerMask.NameToLayer("Props"))
             {
                 target = e.target.gameObject;
                 //Debug.Log("Target = " + target.name);
             }
         }
     }
-
+    /// <summary>
+    /// Start recording the voice comment
+    /// </summary>
     public void StartRecord()
     {
+        //If there is no microphone connected, we can't record anything
         if (micConnected)
         {
             DisableVoiceChat();
@@ -154,7 +214,7 @@ public class RecordComment : MonoBehaviour
             if (!Microphone.IsRecording(null))
             {
                 tempAudioClip = Microphone.Start(null, true, 30, maxFreq);
-                Debug.Log("Recording started");
+                //Debug.Log("Recording started");
                 canvas.SetActive(true);
                 RecordTimerCoroutine = StartCoroutine(RecordTimer());
             }
@@ -165,9 +225,12 @@ public class RecordComment : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// Runs the timer of how long is the recording at the moment
+    /// </summary>
     IEnumerator RecordTimer()
     {
-        Debug.Log("Timer started");
+        //Debug.Log("Timer started");
 
         recordTimeMilliSec = 0;
         recordTimeSec = 0;
@@ -188,38 +251,46 @@ public class RecordComment : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// Stops the recording of the voice comment
+    /// </summary>
     public void StopRecord()
-    {   
+    {
+        //If there is no microphone connected we can't even start the commenting so there is no need to try to stop it
         if (micConnected)
         {
             DisableVoiceChat();
-            
+
             if (Microphone.IsRecording(null))
             {
                 PlaySoundEffect();
 
+                //Basicly how long did the player actually speak in the audio
                 int lastPos = Microphone.GetPosition(null);
                 if (lastPos != 0)
                 {
-                float[] samples = new float[tempAudioClip.samples];
-                tempAudioClip.GetData(samples, 0);
+                    //Get the samples of the temporary audioClip recorded and put the m to array
+                    float[] samples = new float[tempAudioClip.samples];
+                    tempAudioClip.GetData(samples, 0);
 
-                float[] finalSamples = new float[lastPos];
+                    float[] finalSamples = new float[lastPos];
 
+                    //Trim the audio
                     for (int i = 0; i < finalSamples.Length; i++)
                     {
                         finalSamples[i] = samples[i];
                     }
-
+                    finalSamples = MonitorCommentVolume.CalculateAmplitudeMultiplier(finalSamples);
                     finalAudioClip = AudioClip.Create("FinalAudioClip", finalSamples.Length, 1, maxFreq, false);
 
                     finalAudioClip.SetData(finalSamples, 0);
 
                     Microphone.End(null);
-                    Debug.Log("Recording stopped");
+                    //Debug.Log("Recording stopped");
                     StopCoroutine(RecordTimerCoroutine);
                     canvas.SetActive(false);
 
+                    //Reset the timer
                     recordTimeSec = 0;
                     recordTimeMilliSec = 0;
                     recordTimer.text = string.Format("00:{0:00}:{1:00}", recordTimeSec, recordTimeMilliSec);
@@ -231,55 +302,22 @@ public class RecordComment : MonoBehaviour
             }
         }
     }
-
-    //void StopRecord(object sender, LaserEventArgs e)
-    //{
-    //    if (e.target.gameObject.layer == LayerMask.NameToLayer(commentLayer) && e.target.name == "VoiceComment")
-    //    {
-    //        if (micConnected)
-    //        {
-    //            DisableVoiceChat();
-
-    //            if (Microphone.IsRecording(null))
-    //            {
-    //                int lastPos = Microphone.GetPosition(null);
-    //                if (lastPos != 0)
-    //                {
-    //                    float[] samples = new float[tempAudioClip.samples];
-    //                    tempAudioClip.GetData(samples, 0);
-
-    //                    float[] finalSamples = new float[lastPos];
-
-    //                    for (int i = 0; i < finalSamples.Length; i++)
-    //                    {
-    //                        finalSamples[i] = samples[i];
-    //                    }
-
-    //                    finalAudioClip = AudioClip.Create("FinalAudioClip", finalSamples.Length, 1, maxFreq, false);
-
-    //                    finalAudioClip.SetData(finalSamples, 0);
-
-    //                    Microphone.End(null);
-    //                    Debug.Log("Recording stopped");
-    //                    SaveRecordedAudio();
-    //                    //Enable voice chat again
-    //                    voiceTrigger.Mode = Dissonance.CommActivationMode.VoiceActivation;
-    //                }
-    //            }
-    //        }
-    //    }
-    //}
-
+    /// <summary>
+    /// We don't want others to hear what we are saying when commenting
+    /// </summary>
     void DisableVoiceChat()
     {
-        if(voiceTrigger.Mode != Dissonance.CommActivationMode.None)
+        if (voiceTrigger.Mode != Dissonance.CommActivationMode.None)
         {
             voiceTrigger.Mode = Dissonance.CommActivationMode.None;
             Microphone.End(null);
         }
     }
-//-----------------------------------------------------------------------------------------------------------------------------------------------------
+    //-----------------------------------------------------------------------------------------------------------------------------------------------------
 
+    /// <summary>
+    /// Load the old data from the file, so it won't get replaced
+    /// </summary>
     void LoadOldSavedData()
     {
         XmlSerializer serializer = new XmlSerializer(typeof(PositionDatabase));
@@ -293,13 +331,15 @@ public class RecordComment : MonoBehaviour
         {
             positionDB = (PositionDatabase)serializer.Deserialize(file);
             file.Close();
-        }       
+        }
     }
 
-
-void SaveRecordedAudio()
+    /// <summary>
+    /// Save the voice comment as a wav file to savePath location
+    /// </summary>
+    void SaveRecordedAudio()
     {
-        string filename = commenter + "_VoiceComment_" + System.DateTime.Now.ToString("yyyy-MM-dd_HH-mm-ss") ;
+        string filename = commenter + "_VoiceComment_" + System.DateTime.Now.ToString("yyyy-MM-dd_HH-mm-ss");
 
         SavWav.Save(filename, finalAudioClip, savePath + audioSavePathExt);
 
@@ -311,11 +351,11 @@ void SaveRecordedAudio()
         positionDB.list[positionDB.list.Count - 1].commenterName = commenter;
         positionDB.list[positionDB.list.Count - 1].recordName = filename;
         positionDB.list[positionDB.list.Count - 1].targetName = target.name;
-           
+
         positionDB.list[positionDB.list.Count - 1].position[0] = target.transform.position.x;
         positionDB.list[positionDB.list.Count - 1].position[1] = target.transform.position.y;
         positionDB.list[positionDB.list.Count - 1].position[2] = target.transform.position.z;
-        
+
         serializer.Serialize(file, positionDB);
         file.Close();
 

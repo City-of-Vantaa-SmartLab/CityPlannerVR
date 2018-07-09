@@ -99,7 +99,10 @@ public class VoiceController : MonoBehaviour
             //source.Play();
         }
     }
-
+    /// <summary>
+    /// Toggle the voice indicator on and off when player starts and stops talking
+    /// </summary>
+    /// <param name="player">The player who is speaking</param>
     void ToggleIndicator(VoicePlayerState player)
     {
         if (player.IsSpeaking && player.Name == localPlayer.Name)
@@ -107,7 +110,7 @@ public class VoiceController : MonoBehaviour
             if (comms.IsMuted == false)
             {
                 //Put indicator on
-                photonView.RPC("ChangePlayerIsSpeaking", PhotonTargets.All, true);
+                photonView.RPC("ChangePlayerIsSpeaking", PhotonTargets.All, new object[] { true, voiceTrigger.Priority });
 
             }
 
@@ -115,7 +118,7 @@ public class VoiceController : MonoBehaviour
             {
 
                 //Put indicator off
-                photonView.RPC("ChangePlayerIsSpeaking", PhotonTargets.All, false);
+                photonView.RPC("ChangePlayerIsSpeaking", PhotonTargets.All, new object[] { false, voiceTrigger.Priority });
 
             }
         }
@@ -124,18 +127,24 @@ public class VoiceController : MonoBehaviour
             if (player.Name == localPlayer.Name)
             {
                 //Put indicator off
-                photonView.RPC("ChangePlayerIsSpeaking", PhotonTargets.All, false);
+                photonView.RPC("ChangePlayerIsSpeaking", PhotonTargets.All, new object[] { false, voiceTrigger.Priority });
             }
         }
     }
 
+    /// <summary>
+    /// Send the message to everyone if this player is speaking
+    /// </summary>
+    /// <param name="isSpeaking">The bool that tells whether or not the player is speaking</param>
+    /// <param name="info">info about the speaker</param>
     [PunRPC]
-    void ChangePlayerIsSpeaking(bool isSpeaking, PhotonMessageInfo info)
+    void ChangePlayerIsSpeaking(bool isSpeaking, ChannelPriority priority, PhotonMessageInfo info)
     {
         //Debug.Log(string.Format("Info: {0} {1} {2}", info.sender, info.photonView, info.timestamp));
         if (photonView.owner.NickName == info.sender.NickName)
         {
             PlayerIsSpeaking = isSpeaking;
+            voiceTrigger.Priority = priority;
         }
     }
 

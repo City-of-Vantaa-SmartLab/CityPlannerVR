@@ -2,8 +2,15 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+
+/// <summary>
+/// Destroy the area mesh
+/// </summary>
 public class DeleteAreaCollider : MonoBehaviour {
 
+    /// <summary>
+    /// The area Collider object
+    /// </summary>
     [HideInInspector]
     public GameObject areaCollider;
 

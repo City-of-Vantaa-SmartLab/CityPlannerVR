@@ -9,8 +9,9 @@ using System.Xml.Serialization;
 
 using UnityEngine.UI;
 
-//Use www class for the server?
-
+/// <summary>
+/// Info that is saved into a text file so the voice comments can be played later in a right place
+/// </summary>
 public struct VoiceComment
 {
     public string commenterName;
@@ -27,37 +28,84 @@ public struct VoiceComment
     }
 }
 
+/// <summary>
+/// Play the voice comment
+/// </summary>
 [RequireComponent(typeof(AudioSource))]
 public class PlayComment : MonoBehaviour {
 
+    /// <summary>
+    /// All the voice comments are stored here
+    /// </summary>
     List<AudioClip> commentClips;
-	//AudioClip[] comments;
+    /// <summary>
+    /// All the voice comments that are played in this location (i.e Prisma as only comments that are about it)
+    /// </summary>
     List<string> commentsToPlayHere;
+    /// <summary>
+    /// Is used to play the voice comment
+    /// </summary>
 	AudioSource audioSource;
-    //The name of the comment and a struct that contains the name of the commenter and the position of the comment
+    ///<summary>
+    ///The name of the comment and a struct that contains the name of the commenter and the position of the comment
+    ///</summary>
     public Dictionary<string, VoiceComment> commentDictionary;
 
+    /// <summary>
+    /// RecordComment reference
+    /// </summary>
     RecordComment record;
 
+    /// <summary>
+    /// The button displayed at a time
+    /// </summary>
     GameObject displayedButton;
+    /// <summary>
+    /// The index of a voice comment
+    /// </summary>
     int commentIndex = 0;
 
+    /// <summary>
+    /// The position where the target object was during recording
+    /// </summary>
     [HideInInspector]
     public PositionData positionData;
+    /// <summary>
+    /// Storage for an instance of a PositionDatabase class which is used to record information on text file
+    /// </summary>
     [HideInInspector]
     public PositionDatabase positionDB;
 
+    /// <summary>
+    /// The UI image component that is used to display a button for each comment
+    /// </summary>
     GameObject buttonImage;
+    /// <summary>
+    /// The text on a single button
+    /// </summary>
     Text buttonText;
+    /// <summary>
+    /// The ScrollableList panel object that contains all the buttons when they are created
+    /// </summary>
     GameObject panel;
 
     DirectoryInfo info;
     FileInfo[] fileInfo;
 
+    /// <summary>
+    /// The UI text component used to show to the player how many comments are there in particular object
+    /// and which one of the is the player listening
+    /// </summary>
     Text commentNumber;
 
+    /// <summary>
+    /// which one of the comments is the player listening to
+    /// </summary>
     int commentIndexNumber;
 
+    /// <summary>
+    /// Reference to the button object
+    /// </summary>
     GameObject commentButton;
 
     //Is set in laserPointer script
@@ -79,7 +127,9 @@ public class PlayComment : MonoBehaviour {
 
         commentClips = new List<AudioClip>();
     }
-
+    /// <summary>
+    /// Loads all voiceComment files and sorts them
+    /// </summary>
     public void LoadComments(){
 
         InitializeCollections();
@@ -138,6 +188,9 @@ public class PlayComment : MonoBehaviour {
         }
     }
 
+    /// <summary>
+    /// Loads the voice comment clips from the StreamingAssets folder
+    /// </summary>
     IEnumerator LoadCommentsFromStreamingAssets()
     {
         int index = 0;
@@ -157,6 +210,9 @@ public class PlayComment : MonoBehaviour {
         yield return request;
     }
 
+    /// <summary>
+    /// Gets all the comments for one object
+    /// </summary>
     void GetAllCommentsForObjects()
     {
         //commentsToPlayHere.Clear();
@@ -170,6 +226,9 @@ public class PlayComment : MonoBehaviour {
         }
     }
 
+    /// <summary>
+    /// Initilizes all commentDictionary, commentsToPlayHere and commentClips
+    /// </summary>
     void InitializeCollections()
     {
         commentDictionary.Clear();
@@ -179,6 +238,10 @@ public class PlayComment : MonoBehaviour {
 
     }
 
+    /// <summary>
+    /// Creates the button object and puts it under the ScrollableList
+    /// </summary>
+    /// <param name="index">Index of the selected comment in commentsToPlay here</param>
     void CreateButton(int index)
     {
         if (displayedButton != null)
@@ -193,11 +256,15 @@ public class PlayComment : MonoBehaviour {
         buttonImage.transform.localRotation = Quaternion.identity;
         buttonImage.transform.localScale = Vector3.one;
         buttonText = buttonImage.GetComponentInChildren<Text>();
-        buttonText.text = positionDB.list[index].recordName;
+        buttonText.text = commentsToPlayHere[index];
 
         displayedButton = buttonImage;
     }
 
+    /// <summary>
+    /// Plays the comment
+    /// </summary>
+    /// <param name="commentName"></param>
     public void PlayCommentInPosition(string commentName)
     {
         int index = commentsToPlayHere.IndexOf(commentName);
@@ -207,6 +274,9 @@ public class PlayComment : MonoBehaviour {
         audioSource.Play();
     }
 
+    /// <summary>
+    /// Used to scroll comments forward
+    /// </summary>
     public void GoForward()
     {
         if (commentsToPlayHere.Count > 0)
@@ -226,6 +296,9 @@ public class PlayComment : MonoBehaviour {
         }
     }
 
+    /// <summary>
+    /// Used to scroll comments backwards
+    /// </summary>
     public void GoBackward()
     {
         if (commentsToPlayHere.Count > 0)
@@ -244,6 +317,9 @@ public class PlayComment : MonoBehaviour {
         }
     }
 
+    /// <summary>
+    /// Updates the comment number text
+    /// </summary>
     void UpdateCommentNumber()
     {
         if (commentDictionary.Count > 0)
