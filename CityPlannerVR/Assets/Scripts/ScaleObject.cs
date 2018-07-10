@@ -10,28 +10,36 @@ using UnityEngine.Networking;
 public class ScaleObject : MonoBehaviour
 {
 
-    //[SerializeField]
-    //[Tooltip("Poistetaan, sitten kun uusi ratkaisu on valmis")]
-    //private GameObject objectToScale;
+    [SerializeField]
+    [Tooltip("Object to be scaled")]
+    private GameObject objectToScale;
 
-    [Tooltip("Put all objects to be scaled with this instance here")]
-    public GameObject[] objectsToScale;
-
-    //[SerializeField]
-    //private Vector3 newScale;
-    //public Vector3 NewScale
-    //{
-    //    get
-    //    {
-    //        return newScale;
-    //    }
-    //}
-
-    public Vector3[] newScales;
+    [SerializeField]
+    [Tooltip("The new scale of the object")]
+    private Vector3 newScale;
+    /// <summary>
+    /// The new scale of the object (read only)
+    /// </summary>
+    public Vector3 NewScale
+    {
+        get
+        {
+            return newScale;
+        }
+    }
 
     private GameObject localPlayer = null;
 
     ChangeTeleportProperties changeTeleport;
+
+    /// <summary>
+    /// Gravity when player is big
+    /// </summary>
+    readonly Vector3 normalGravity = new Vector3(0, -9.81f, 0);
+    /// <summary>
+    /// Gravity when player is small
+    /// </summary>
+    readonly Vector3 smallGravity = new Vector3(0, -0.5f, 0);
 
     void Start()
     {
@@ -41,24 +49,28 @@ public class ScaleObject : MonoBehaviour
     //Called from teleport script, when teleported to teleportPoint
     public void ScalePlayer()
     {
-
         Scale();
-        changeTeleport.ChangeProperties();
-        ScaleNetworkedPlayerAvatar();
-        ScalePoints();
-    }
 
-    public void Scale()
-    {
-        //Debug.Log("ScalePlayer::Scale: Scaling " + objectToScale.gameObject.name);
-        //objectToScale.transform.localScale = newScale;
-
-        for (int i = 0; i < objectsToScale.Length; i++)
+        if(objectToScale.gameObject.name == "Player")
         {
-            objectsToScale[i].transform.localScale = newScales[i];
+            changeTeleport.ChangeProperties();
+            ScaleNetworkedPlayerAvatar();
+            ScalePoints();
+            ChangeGravity();
         }
     }
 
+    /// <summary>
+    /// Scales the object locally
+    /// </summary>
+    public void Scale()
+    {
+        //Debug.Log("ScalePlayer::Scale: Scaling " + objectToScale.gameObject.name);
+        objectToScale.transform.localScale = newScale;
+    }
+    /// <summary>
+    /// Scales the player avatar through network
+    /// </summary>
     public void ScaleNetworkedPlayerAvatar()
     {
         if (localPlayer == null)
@@ -76,8 +88,8 @@ public class ScaleObject : MonoBehaviour
             photonView = pa.GetComponent<PhotonView>();
 
 
-            //pa.UpdateScale(newScale);							first element is players size (or should be)
-            photonView.RPC("UpdateScale", PhotonTargets.AllBuffered, newScales[0]);
+            //pa.UpdateScale(newScale);
+            photonView.RPC("UpdateScale", PhotonTargets.AllBuffered, newScale);
 
         }
 
@@ -107,6 +119,9 @@ public class ScaleObject : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// Scales area points
+    /// </summary>
     private void ScalePoints()
     {
         //Scale points and line when player shrinks down and grows up
@@ -114,14 +129,30 @@ public class ScaleObject : MonoBehaviour
         //Player is small and the points should be scaled down
         for (int i = 0; i < AreaSelection.areaPoints.Count; i++)
         {
-            if(newScales[0].x >= 1)
+            if(newScale.x >= 1)
             {
-                AreaSelection.areaPoints[i].transform.localScale = newScales[0] * 0.05f;
+                AreaSelection.areaPoints[i].transform.localScale = newScale * 0.05f;
             }
             else
             {
-                AreaSelection.areaPoints[i].transform.localScale = newScales[0];
+                AreaSelection.areaPoints[i].transform.localScale = newScale;
             }
+        }
+    }
+
+    /// <summary>
+    /// To allow players to throw objects better, when they are small
+    /// </summary>
+    private void ChangeGravity()
+    {
+        CheckPlayerSize checkSize = objectToScale.GetComponent<CheckPlayerSize>();
+        if (checkSize.isSmall)
+        {
+            Physics.gravity = smallGravity;
+        }
+        else
+        {
+            Physics.gravity = normalGravity;
         }
     }
 }
