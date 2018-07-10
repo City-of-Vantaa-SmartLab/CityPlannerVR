@@ -1038,7 +1038,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   traceLayerMask:
     serializedVersion: 2
-    m_Bits: 256
+    m_Bits: 262400
   floorFixupTraceLayerMask:
     serializedVersion: 2
     m_Bits: 0
@@ -1062,7 +1062,7 @@ MonoBehaviour:
   showPlayAreaMarker: 1
   teleportFadeTime: 0.1
   meshFadeTime: 0.2
-  arcDistance: 10
+  arcDistance: 15
   onActivateObjectTransform: {fileID: 416618}
   onDeactivateObjectTransform: {fileID: 469890}
   activateObjectTime: 0.1
@@ -1082,6 +1082,7 @@ MonoBehaviour:
   offsetReticleTransform: {fileID: 457198}
   floorDebugSphere: {fileID: 2336214}
   floorDebugLine: {fileID: 12050142}
+  scaleToSmall: {fileID: 0}
 --- !u!114 &11445956
 MonoBehaviour:
   m_ObjectHideFlags: 1
