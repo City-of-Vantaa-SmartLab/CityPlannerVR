@@ -122,8 +122,9 @@ namespace Valve.VR.InteractionSystem
 		public static SteamVR_Events.Event< TeleportMarkerBase > PlayerPre = new SteamVR_Events.Event< TeleportMarkerBase >();
 		public static SteamVR_Events.Action< TeleportMarkerBase > PlayerPreAction( UnityAction< TeleportMarkerBase > action ) { return new SteamVR_Events.Action< TeleportMarkerBase >( PlayerPre, action ); }
 
-		//------Tarun koodia-------------------------------
-		public ScaleObject ScalePlayer;
+        //------Tarun koodia-------------------------------
+        public GameObject scaleToSmall;
+		ScaleObject[] scalePlayer;
 		//-------------------------------------------------
 		private static Teleport _instance;
 		public static Teleport instance
@@ -186,8 +187,13 @@ namespace Valve.VR.InteractionSystem
 			CheckForSpawnPoint();
 
             // NOTE: Disabled teleport hint
-			//Invoke( "ShowTeleportHint", 5.0f );
-		}
+            //Invoke( "ShowTeleportHint", 5.0f );
+
+            //------Tarun koodia------------------------------
+            scalePlayer = scaleToSmall.GetComponents<ScaleObject>();
+            //------------------------------------------------
+
+        }
 
 
 		//-------------------------------------------------
@@ -867,7 +873,10 @@ namespace Valve.VR.InteractionSystem
 			{
 				teleportPosition = teleportPoint.transform.position;
                 //--------------Tarun koodia-------------------------------------------
-				ScalePlayer.ScalePlayer();
+                for (int i = 0; i < scalePlayer.Length; i++)
+                {
+                    scalePlayer[i].ScalePlayer();
+                }
 				//---------------------------------------------------------------------
 
 				//Teleport to a new scene
