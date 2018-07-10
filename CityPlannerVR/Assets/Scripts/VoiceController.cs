@@ -82,6 +82,9 @@ public class VoiceController : MonoBehaviour
         laser1.PointerOut += Whisper;
         laser2.PointerIn += Whisper;
         laser2.PointerOut += Whisper;
+
+
+        photonView.RPC("SetPlayerDissonanceName", PhotonTargets.All, comms.LocalPlayerName);
     }
 
     private void OnDestroy()
@@ -118,7 +121,7 @@ public class VoiceController : MonoBehaviour
             if (comms.IsMuted == false)
             {
                 //Put indicator on
-                photonView.RPC("ChangePlayerIsSpeaking", PhotonTargets.All, new object[] { comms.LocalPlayerName, true, voiceTrigger.Priority });
+                photonView.RPC("ChangePlayerIsSpeaking", PhotonTargets.All, new object[] { true, voiceTrigger.Priority });
 
             }
 
@@ -126,7 +129,7 @@ public class VoiceController : MonoBehaviour
             {
 
                 //Put indicator off
-                photonView.RPC("ChangePlayerIsSpeaking", PhotonTargets.All, new object[] { comms.LocalPlayerName, false, voiceTrigger.Priority });
+                photonView.RPC("ChangePlayerIsSpeaking", PhotonTargets.All, new object[] { false, voiceTrigger.Priority });
 
             }
         }
@@ -135,7 +138,7 @@ public class VoiceController : MonoBehaviour
             if (player.Name == localPlayer.Name)
             {
                 //Put indicator off
-                photonView.RPC("ChangePlayerIsSpeaking", PhotonTargets.All, new object[] { comms.LocalPlayerName, false, voiceTrigger.Priority });
+                photonView.RPC("ChangePlayerIsSpeaking", PhotonTargets.All, new object[] { false, voiceTrigger.Priority });
             }
         }
     }
@@ -143,18 +146,30 @@ public class VoiceController : MonoBehaviour
     /// <summary>
     /// Send the message to everyone if this player is speaking
     /// </summary>
-    /// <param name="name">The dissonance name of the local player for whispering</param>
     /// <param name="isSpeaking">The bool that tells whether or not the player is speaking</param>
     /// <param name="info">info about the speaker</param>
     [PunRPC]
-    void ChangePlayerIsSpeaking(string name, bool isSpeaking, ChannelPriority priority, PhotonMessageInfo info)
+    void ChangePlayerIsSpeaking(bool isSpeaking, ChannelPriority priority, PhotonMessageInfo info)
     {
         //Debug.Log(string.Format("Info: {0} {1} {2}", info.sender, info.photonView, info.timestamp));
         if (photonView.owner.NickName == info.sender.NickName)
         {
-            playerName = name;
+            
             PlayerIsSpeaking = isSpeaking;
             voiceTrigger.Priority = priority;
+        }
+    }
+
+    /// <summary>
+    /// Sets players dissonance name
+    /// </summary>
+    /// <param name="name">The dissonance name of the local player for whispering</param>
+    [PunRPC]
+    void SetPlayerDissonanceName(string name, PhotonMessageInfo info)
+    {
+        if (photonView.owner.NickName == info.sender.NickName)
+        {
+            playerName = name;
         }
     }
 
