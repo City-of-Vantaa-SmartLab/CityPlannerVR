@@ -350,6 +350,13 @@ public class SaveAndLoadTransforms : MonoBehaviour {
 
     #endregion
 
+    public void TestDatabaseTest()
+    {
+        MongoDBAPI.Test();
+    }
 
-
+    public void TestDatabaseClient()
+    {
+        MongoDBAPI.TestClient();
+    }
 }
