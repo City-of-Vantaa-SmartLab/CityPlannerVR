@@ -14,7 +14,8 @@ public class VoiceController : MonoBehaviour
     VoicePlayerState localPlayer;
     VoiceBroadcastTrigger voiceTrigger;
     InputMaster inputMaster;
-    //public LaserPointer laser;
+    LaserPointer laser1;
+    LaserPointer laser2;
 
     PhotonView photonView;
 
@@ -50,7 +51,8 @@ public class VoiceController : MonoBehaviour
     private void Start()
     {
         comms = GameObject.Find("DissonanceSetup").GetComponent<DissonanceComms>();
-        //laser = GameObject.Find("Laserpointer1").GetComponent<LaserPointer>();
+        laser1 = GameObject.Find("Hand1/Laserpointer").GetComponent<LaserPointer>();
+        laser2 = GameObject.Find("Hand2/Laserpointer").GetComponent<LaserPointer>();
 
         indicator.SetActive(false);
 
@@ -72,8 +74,10 @@ public class VoiceController : MonoBehaviour
         localPlayer.OnStoppedSpeaking += ToggleIndicator;
 
         //These could also be two different functions,but they aren't
-        //laser.PointerIn += Whisper;
-        //laser.PointerOut += Whisper;
+        laser1.PointerIn += Whisper;
+        laser1.PointerOut += Whisper;
+        laser2.PointerIn += Whisper;
+        laser2.PointerOut += Whisper;
     }
 
     private void OnDestroy()

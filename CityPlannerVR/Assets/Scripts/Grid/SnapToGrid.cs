@@ -65,6 +65,7 @@ public class SnapToGrid : MonoBehaviour {
 		}
     }
 
+    //Tämän voi yrittää optimoida
     private void Update()
     {
         CheckList();
@@ -141,7 +142,7 @@ public class SnapToGrid : MonoBehaviour {
 		transform.position = ObjectContainer.trashPoint;
 	}
 
-
+    //Change to work with new materials (if needed)
 	void CheckList(){
 
 		if (triggeredTiles.Count == 0) {
