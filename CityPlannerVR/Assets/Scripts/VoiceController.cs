@@ -14,12 +14,17 @@ public class VoiceController : MonoBehaviour
     VoicePlayerState localPlayer;
     VoiceBroadcastTrigger voiceTrigger;
     InputMaster inputMaster;
+    /// <summary>
+    /// Left hand laser
+    /// </summary>
     LaserPointer laser1;
+    /// <summary>
+    /// Right hand laser
+    /// </summary>
     LaserPointer laser2;
 
     PhotonView photonView;
-
-    string whisperTarget;
+    
     string playerTag = "VRLocalPlayer";
 
     [Tooltip("The object with the particle system to indicate who is speaking")]
@@ -29,6 +34,7 @@ public class VoiceController : MonoBehaviour
     [HideInInspector]
     public string playerName;
 
+    string whisperTarget;
     bool playerIsSpeaking = false;
     public bool PlayerIsSpeaking
     {
@@ -61,8 +67,6 @@ public class VoiceController : MonoBehaviour
         voiceTrigger = GetComponent<VoiceBroadcastTrigger>();
 
         localPlayer = comms.FindPlayer(comms.LocalPlayerName);
-
-        playerName = comms.LocalPlayerName;
 
         source = GetComponent<AudioSource>();
 
@@ -114,7 +118,7 @@ public class VoiceController : MonoBehaviour
             if (comms.IsMuted == false)
             {
                 //Put indicator on
-                photonView.RPC("ChangePlayerIsSpeaking", PhotonTargets.All, new object[] { true, voiceTrigger.Priority });
+                photonView.RPC("ChangePlayerIsSpeaking", PhotonTargets.All, new object[] { comms.LocalPlayerName, true, voiceTrigger.Priority });
 
             }
 
@@ -122,7 +126,7 @@ public class VoiceController : MonoBehaviour
             {
 
                 //Put indicator off
-                photonView.RPC("ChangePlayerIsSpeaking", PhotonTargets.All, new object[] { false, voiceTrigger.Priority });
+                photonView.RPC("ChangePlayerIsSpeaking", PhotonTargets.All, new object[] { comms.LocalPlayerName, false, voiceTrigger.Priority });
 
             }
         }
@@ -131,7 +135,7 @@ public class VoiceController : MonoBehaviour
             if (player.Name == localPlayer.Name)
             {
                 //Put indicator off
-                photonView.RPC("ChangePlayerIsSpeaking", PhotonTargets.All, new object[] { false, voiceTrigger.Priority });
+                photonView.RPC("ChangePlayerIsSpeaking", PhotonTargets.All, new object[] { comms.LocalPlayerName, false, voiceTrigger.Priority });
             }
         }
     }
@@ -139,25 +143,28 @@ public class VoiceController : MonoBehaviour
     /// <summary>
     /// Send the message to everyone if this player is speaking
     /// </summary>
+    /// <param name="name">The dissonance name of the local player for whispering</param>
     /// <param name="isSpeaking">The bool that tells whether or not the player is speaking</param>
     /// <param name="info">info about the speaker</param>
     [PunRPC]
-    void ChangePlayerIsSpeaking(bool isSpeaking, ChannelPriority priority, PhotonMessageInfo info)
+    void ChangePlayerIsSpeaking(string name, bool isSpeaking, ChannelPriority priority, PhotonMessageInfo info)
     {
         //Debug.Log(string.Format("Info: {0} {1} {2}", info.sender, info.photonView, info.timestamp));
         if (photonView.owner.NickName == info.sender.NickName)
         {
+            playerName = name;
             PlayerIsSpeaking = isSpeaking;
             voiceTrigger.Priority = priority;
         }
     }
 
-    //TODO: how is it determined who's the target
     //TODO: test this
     void Whisper(object sender, LaserEventArgs e)
     {
         if (e.target.tag == playerTag)
         {
+            Debug.Log("My id = " + playerName);
+            Debug.Log("Friends id = " + e.target.GetComponent<VoiceController>().playerName);
             whisperTarget = e.target.GetComponent<VoiceController>().playerName;
 
             voiceTrigger.ChannelType = CommTriggerTarget.Player;
