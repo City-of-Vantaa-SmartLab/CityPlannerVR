@@ -31,7 +31,7 @@ public class VoiceController : MonoBehaviour
     public GameObject indicator;
     AudioSource source;
 
-    //[HideInInspector]
+    [HideInInspector]
     public string playerName;
 
     string whisperTarget;
@@ -161,8 +161,6 @@ public class VoiceController : MonoBehaviour
         if (e.target.tag == playerTag)
         {
             photonView.RPC("SetPlayerDissonanceName", PhotonTargets.All, comms.LocalPlayerName);
-            Debug.Log("My id = " + playerName);
-            Debug.Log("Friends id = " + e.target.GetComponent<VoiceController>().playerName);
             
             whisperTarget = e.target.GetComponent<VoiceController>().playerName;
 
