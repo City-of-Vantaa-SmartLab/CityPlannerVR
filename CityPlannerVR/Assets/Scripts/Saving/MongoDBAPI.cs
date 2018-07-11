@@ -20,6 +20,8 @@ public class MongoDBAPI {
 
     //private static string defaultConnectionString = "mongodb://192.168.100.21:27017";
 
+    #region variables
+
     public static MongoClient client;
     public static IMongoDatabase activeDatabase;
     public static IMongoCollection<Comment> commentCollection;
@@ -27,7 +29,7 @@ public class MongoDBAPI {
     private static string defaultDB = "tikkuraitti";
     private static string defaultUser = "buser";
     private static string defaultPwd = "1234";
-    private static MongoCredential defaultCredentials =
+    private static MongoCredential defaultDBCredentials =
         MongoCredential.CreateCredential(defaultDB, defaultUser, defaultPwd);
     private static string commentColName = "comments";
     private static string transformColName = "transforms";
@@ -50,8 +52,10 @@ public class MongoDBAPI {
     {
         Server = new MongoServerAddress("192.168.100.21", 27017),
         ServerSelectionTimeout = TimeSpan.FromSeconds(3),
-        Credential = defaultCredentials
+        Credential = defaultDBCredentials
     };
+
+    #endregion
 
     public static void UseDefaultConnections()
     {
@@ -71,12 +75,12 @@ public class MongoDBAPI {
 
     public static void ConnectToDefaultCollections()
     {
-        commentCollection = ConnectToDatabaseCollection<Comment>(commentColName);
-        transformCollection = ConnectToDatabaseCollection<TransformData>(transformColName);
+        //commentCollection = ConnectToDatabaseCollection<Comment>(commentColName);
+        //transformCollection = ConnectToDatabaseCollection<TransformData>(transformColName);
+        commentCollection = activeDatabase.GetCollection<Comment>(commentColName);
+        transformCollection = activeDatabase.GetCollection<TransformData>(transformColName);
+
     }
-
-
-
 
     public static IMongoCollection<T> ConnectToDatabaseCollection<T>(string collectionName)
     {
@@ -91,15 +95,15 @@ public class MongoDBAPI {
         return coll;
     }
 
-    public static void Test()
+    public static void TestConnections()
     {
         UseDefaultConnections();
-        TestClient();
-        Debug.Log("Alkutesti loppui");
+        Debug.Log("Yhteyttä yritetty");
+        //TestMethods();
 
     }
 
-    public static void TestClient()
+    public static void TestMethods()
     {
         Debug.Log("Tämä on testi");
         if (client != null)
@@ -120,7 +124,6 @@ public class MongoDBAPI {
         }
         else
             Debug.Log("MongoClient is null!");
-
     }
 
     public static void ReadComments(IMongoCollection<Comment> collection)
@@ -145,15 +148,9 @@ public class MongoDBAPI {
 
     public static void ReadTransformNames(IMongoCollection<TransformData> collection)
     {
-        //var transformList = collection
-        //.Find(b => b.data != null)
-        //.Limit(5)
-        //.ToListAsync()
-        //.Result;
-
         //Task<List<TransformData>> transformList = collection etc...
         var transformList = collection
-            .Find(b => b.gameObjectName == "r_kioski")
+            .Find(b => b.gameObjectName == "r_kioski" || b.gameObjectName == "PhotonNewBuildings")
             .Limit(5)
             .ToListAsync()
             .Result;
@@ -164,26 +161,11 @@ public class MongoDBAPI {
         }
     }
 
-
-    ////Codes below are from a tutorial: https://www.youtube.com/watch?v=rMbIx4Yk6U8
-    //private static async Task<ReplaceOneResult> SaveAsync<T>(
-    //    this IMongoCollection<T> collection, T entity) where T : IIdentified
-    //{
-    //    return await collection.ReplaceOneAsync(
-    //        i => i.Id == entity.Id,
-    //        entity,
-    //        new UpdateOptions { IsUpsert = true });  //adds the entity, if not found in database
-    //}
-
-    //public interface IIdentified
-    //{
-    //    ObjectId Id { get; }
-    //}
 }
 
 
 
-
+////Codes below are from a tutorial: https://www.youtube.com/watch?v=rMbIx4Yk6U8
 //namespace mongo20
 //{
 //    class Program
