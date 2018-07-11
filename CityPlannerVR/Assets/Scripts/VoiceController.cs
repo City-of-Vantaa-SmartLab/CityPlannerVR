@@ -31,7 +31,7 @@ public class VoiceController : MonoBehaviour
     public GameObject indicator;
     AudioSource source;
 
-    [HideInInspector]
+    //[HideInInspector]
     public string playerName;
 
     string whisperTarget;
@@ -82,9 +82,6 @@ public class VoiceController : MonoBehaviour
         laser1.PointerOut += Whisper;
         laser2.PointerIn += Whisper;
         laser2.PointerOut += Whisper;
-
-
-        photonView.RPC("SetPlayerDissonanceName", PhotonTargets.All, comms.LocalPlayerName);
     }
 
     private void OnDestroy()
@@ -154,32 +151,19 @@ public class VoiceController : MonoBehaviour
         //Debug.Log(string.Format("Info: {0} {1} {2}", info.sender, info.photonView, info.timestamp));
         if (photonView.owner.NickName == info.sender.NickName)
         {
-            
             PlayerIsSpeaking = isSpeaking;
             voiceTrigger.Priority = priority;
         }
     }
 
-    /// <summary>
-    /// Sets players dissonance name
-    /// </summary>
-    /// <param name="name">The dissonance name of the local player for whispering</param>
-    [PunRPC]
-    void SetPlayerDissonanceName(string name, PhotonMessageInfo info)
-    {
-        if (photonView.owner.NickName == info.sender.NickName)
-        {
-            playerName = name;
-        }
-    }
-
-    //TODO: test this
     void Whisper(object sender, LaserEventArgs e)
     {
         if (e.target.tag == playerTag)
         {
+            photonView.RPC("SetPlayerDissonanceName", PhotonTargets.All, comms.LocalPlayerName);
             Debug.Log("My id = " + playerName);
             Debug.Log("Friends id = " + e.target.GetComponent<VoiceController>().playerName);
+            
             whisperTarget = e.target.GetComponent<VoiceController>().playerName;
 
             voiceTrigger.ChannelType = CommTriggerTarget.Player;
@@ -191,4 +175,18 @@ public class VoiceController : MonoBehaviour
             voiceTrigger.ChannelType = CommTriggerTarget.Self;
         }
     }
+    /// <summary>
+    /// Sets players dissonance name
+    /// </summary>
+    /// <param name="name">The dissonance name of the local player for whispering</param>
+    /// <param name="info">info about the speaker</param>
+    [PunRPC]
+    void SetPlayerDissonanceName(string name, PhotonMessageInfo info)
+    {
+        if (photonView.owner.NickName == info.sender.NickName)
+        {
+            playerName = name;
+        }
+    }
+
 }
