@@ -31,6 +31,7 @@ public class SaveAndLoadTransforms : MonoBehaviour {
     private string defaultFileName;
     private string startupFileName;
     private string fileExtender;
+    private string testFileName;
     private string pathName;
     private char slash = Path.DirectorySeparatorChar;
     //public bool save;
@@ -42,6 +43,7 @@ public class SaveAndLoadTransforms : MonoBehaviour {
         defaultFileName = "TransformData";
         startupFileName = "StartupTransformData";
         fileExtender = ".dat";
+        testFileName = "Test";
         folderPathName = Application.persistentDataPath + slash + folder;
 
         if (!defaultParentCleanup)
@@ -355,8 +357,16 @@ public class SaveAndLoadTransforms : MonoBehaviour {
         MongoDBAPI.TestConnections();
     }
 
-    public void TestDatabaseMethods()
+    public void TestDatabaseMethod1()
     {
-        MongoDBAPI.TestMethods();
+        pathName = folderPathName + slash + testFileName + fileExtender;
+        MongoDBAPI.TestMethod1(pathName);
     }
+
+    public void TestDatabaseMethod2()
+    {
+        pathName = folderPathName + slash + testFileName + fileExtender;
+        MongoDBAPI.TestMethod2(pathName);
+    }
+
 }

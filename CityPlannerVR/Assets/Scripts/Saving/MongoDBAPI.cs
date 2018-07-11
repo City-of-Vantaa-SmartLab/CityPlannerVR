@@ -2,11 +2,14 @@
 using System.Collections.Generic;
 using UnityEngine;
 using MongoDB.Bson;
+using MongoDB.Bson.IO;
+using MongoDB.Bson.Serialization;
 using MongoDB.Driver;
 using MongoDB.Driver.Core;
 using System.Threading.Tasks;
 using System.Text;
 using System.Linq;
+using System.IO;
 using System;
 
 public class MongoDBAPI {
@@ -24,8 +27,9 @@ public class MongoDBAPI {
 
     public static MongoClient client;
     public static IMongoDatabase activeDatabase;
-    public static IMongoCollection<Comment> commentCollection;
-    public static IMongoCollection<TransformData> transformCollection;
+    //public static IMongoCollection<Comment> commentCollection;
+    //public static IMongoCollection<Container<TransformData>> transformCollection;
+    public static IMongoCollection<BsonDocument> mongoCollection;
     private static string defaultDB = "tikkuraitti";
     private static string defaultUser = "buser";
     private static string defaultPwd = "1234";
@@ -33,6 +37,7 @@ public class MongoDBAPI {
         MongoCredential.CreateCredential(defaultDB, defaultUser, defaultPwd);
     private static string commentColName = "comments";
     private static string transformColName = "transforms";
+
 
     //private static CollectionData commentColSet = new CollectionData
     //{
@@ -77,9 +82,9 @@ public class MongoDBAPI {
     {
         //commentCollection = ConnectToDatabaseCollection<Comment>(commentColName);
         //transformCollection = ConnectToDatabaseCollection<TransformData>(transformColName);
-        commentCollection = activeDatabase.GetCollection<Comment>(commentColName);
-        transformCollection = activeDatabase.GetCollection<TransformData>(transformColName);
-
+        //commentCollection = activeDatabase.GetCollection<Comment>(commentColName);
+        //transformCollection = activeDatabase.GetCollection<Container<TransformData>>(transformColName);
+        mongoCollection = activeDatabase.GetCollection<BsonDocument>(transformColName);
     }
 
     public static IMongoCollection<T> ConnectToDatabaseCollection<T>(string collectionName)
@@ -97,67 +102,84 @@ public class MongoDBAPI {
 
     public static void TestConnections()
     {
+        Debug.Log("Connecting to database using default settings...");
         UseDefaultConnections();
-        Debug.Log("Yhteyttä yritetty");
-        //TestMethods();
-
-    }
-
-    public static void TestMethods()
-    {
-        Debug.Log("Tämä on testi");
         if (client != null)
         {
             if (activeDatabase != null)
             {
-                //if (commentCollection != null)
-                //ReadComments(commentCollection);
-                //else
-                //    Debug.Log("CommentCollection is null!");
-                if (transformCollection != null)
-                    ReadTransformNames(transformCollection);
+                if (mongoCollection != null)
+                {
+                    Debug.Log("Seems to be working!");
+                }
                 else
-                    Debug.Log("CommentCollection is null!");
+                    Debug.Log("MongoCollection is null!");
             }
             else
                 Debug.Log("Active database is null!");
         }
         else
             Debug.Log("MongoClient is null!");
+
     }
 
-    public static void ReadComments(IMongoCollection<Comment> collection)
+    public static void TestMethod1(string filepath)
     {
-        
-        var commentList = collection
-                .Find(b => b.data != null)
-                .Limit(5)
-                .ToListAsync()
-                .Result;
+        Debug.Log("Tämä on testi1");
+        ImportJSONFileToDatabase(mongoCollection, filepath);
+        //ExportJSONFileFromDatabase(mongoCollection, filepath);
+    }
 
-        foreach(Comment com in commentList)
+    public static void TestMethod2(string filepath)
+    {
+        Debug.Log("Tämä on testi2");
+        //ImportJSONFileToDatabase(mongoCollection, filepath);
+        ExportJSONFileFromDatabase(mongoCollection, filepath);
+    }
+
+    static void ImportJSONFileToDatabase(IMongoCollection<BsonDocument> targetCollection, string filepath)
+    {
+        //Debug.Log("Tämä on");
+        //string jasonFile = File.ReadAllText(filepath);
+        //Debug.Log("turhauttavaa");
+
+        //using (var streamReader = new StreamReader(jasonFile))
+        using (var streamReader = new StreamReader(filepath))
         {
-            Debug.Log(com.data);
+            //Debug.Log("Streamreader start!");
+            string line;
+            while ((line = streamReader.ReadLine()) != null)
+            {
+                //Debug.Log("Readline start!");
+                using (var jsonReader = new JsonReader(line))
+                {
+                    //Debug.Log("Context reached!");
+                    var context = BsonDeserializationContext.CreateRoot(jsonReader);
+                    var document = targetCollection.DocumentSerializer.Deserialize(context);
+                    targetCollection.InsertOne(document);
+                    //Debug.Log("Insert done!");
+                }
+            }
         }
     }
 
-    public static void WriteComment(Comment comment)
+    static void ExportJSONFileFromDatabase(IMongoCollection<BsonDocument> targetCollection, string filepath)
     {
 
-    }
-
-    public static void ReadTransformNames(IMongoCollection<TransformData> collection)
-    {
-        //Task<List<TransformData>> transformList = collection etc...
-        var transformList = collection
-            .Find(b => b.gameObjectName == "r_kioski" || b.gameObjectName == "PhotonNewBuildings")
-            .Limit(5)
-            .ToListAsync()
-            .Result;
-
-        foreach (TransformData tra in transformList)
+        using (var streamWriter = new StreamWriter(filepath))
         {
-            Debug.Log(tra.gameObjectName);
+            var cursor = targetCollection.Find(new BsonDocument()).ToCursor();
+            foreach (var document in cursor.ToEnumerable())
+            {
+                using (var stringWriter = new StringWriter())
+                using (var jsonWriter = new JsonWriter(stringWriter))
+                {
+                    var context = BsonSerializationContext.CreateRoot(jsonWriter);
+                    targetCollection.DocumentSerializer.Serialize(context, document);
+                    var line = stringWriter.ToString();
+                    streamWriter.WriteLine(line);
+                }
+            }
         }
     }
 
