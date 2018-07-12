@@ -4,45 +4,51 @@ using UnityEngine;
 
 public class ChangeFacade : MonoBehaviour {
 
-    [Tooltip("List of all the possible facades for this object")]
-    public GameObject[] facades;
-    int facadeIndex = 0;
     /// <summary>
-    /// The facade that needs to be disabled when new one is activated (the old facade)
+    /// List of all the possible facades for a object
     /// </summary>
-    GameObject previousFacade;
-
-    private void Start()
-    {
-        previousFacade = facades[facadeIndex];
-        foreach (var facade in facades)
-        {
-            facade.SetActive(false);
-        }
-    }
+    public static GameObject[] facades;
+    public static int facadeIndex = 0;
+    public static bool canChangeFacade = false;
 
     /// <summary>
     /// Used to scroll facades
     /// </summary>
     public void ScrollFacades()
     {
-        if (facades.Length > 0)
+        if (canChangeFacade)
         {
-            if (facadeIndex == facades.Length - 1)
+            if (facades.Length > 0)
             {
-                facadeIndex = 0;
-            }
-            else
-            {
-                ++facadeIndex;
+                if (facadeIndex == facades.Length - 1)
+                {
+                    facadeIndex = 0;
+                }
+                else
+                {
+                    ++facadeIndex;
+                }
             }
         }
     }
 
-    void FacadeChange()
+    /// <summary>
+    /// Change the facade of the building selected
+    /// </summary>
+    public void FacadeChange()
     {
-        previousFacade.SetActive(false);
-        facades[facadeIndex].SetActive(true);
-        previousFacade = facades[facadeIndex];
+        if (canChangeFacade) {
+            for (int i = 0; i < facades.Length; i++)
+            {
+                if (i == facadeIndex)
+                {
+                    facades[i].SetActive(true);
+                }
+                else
+                {
+                    facades[i].SetActive(false);
+                }
+            }
+        }
     }
 }

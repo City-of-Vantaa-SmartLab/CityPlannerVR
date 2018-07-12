@@ -8,33 +8,52 @@ using UnityEngine;
 public class SetName : MonoBehaviour {
 
     /// <summary>
-    /// Name of this object
+    /// List of all the possible facades for this object
     /// </summary>
-    private string objectName;
-    /// <summary>
-    /// Name of this object (read only)
-    /// </summary>
-    public string ObjectName
-    {
-        get
-        {
-            return objectName;
-        }
-    }
     GameObject[] facades;
+    int facadeIndex = 0;
 
     private void Start()
     {
-        name = gameObject.name;
         facades = new GameObject[transform.childCount];
         for (int i = 0; i < facades.Length; i++)
         {
             facades[i] = transform.GetChild(i).gameObject;
+            if(i > 0)
+            {
+                facades[i].SetActive(false);
+            }
         }
     }
 
     public void GiveNameAndFacades()
     {
-        
+        HoverTabletManager.commentTarget = gameObject;
+         if(facades.Length > 0)
+        {
+            CheckIndex();
+            //Give the facades to the button
+            ChangeFacade.facades = facades;
+            ChangeFacade.facadeIndex = facadeIndex;
+            ChangeFacade.canChangeFacade = true;
+        }
+        else
+        {
+            ChangeFacade.facades = null;
+            ChangeFacade.facadeIndex = 0;
+            ChangeFacade.canChangeFacade = false;
+        }
+    }
+
+    void CheckIndex()
+    {
+        for (int i = 0; i < facades.Length; i++)
+        {
+            if(facades[i].GetActive() == true)
+            {
+                facadeIndex = i;
+                break;
+            }
+        }
     }
 }
