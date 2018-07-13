@@ -30,6 +30,8 @@ GameObject:
   - component: {fileID: 114506411630724718}
   - component: {fileID: 114180154442880206}
   - component: {fileID: 114975819463913194}
+  - component: {fileID: 114405330046478802}
+  - component: {fileID: 114022910537130216}
   m_Layer: 17
   m_Name: roskakori
   m_TagString: Spawnable
@@ -43,9 +45,9 @@ Transform:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1293068513832398}
-  m_LocalRotation: {x: -0, y: 0.08715578, z: -0, w: 0.9961947}
-  m_LocalPosition: {x: -3.255, y: 0.021, z: 0}
-  m_LocalScale: {x: 0.6, y: 0.6, z: 0.5}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -5.5569, y: -0.2848, z: -1.0676}
+  m_LocalScale: {x: 0.96, y: 0.96, z: 0.96}
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 0
@@ -63,6 +65,7 @@ MeshRenderer:
   m_MotionVectors: 1
   m_LightProbeUsage: 1
   m_ReflectionProbeUsage: 1
+  m_RenderingLayerMask: 4294967295
   m_Materials:
   - {fileID: 2100000, guid: 103a75b511ff51644a034931873a1de1, type: 3}
   m_StaticBatchInfo:
@@ -90,7 +93,7 @@ MeshFilter:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1293068513832398}
-  m_Mesh: {fileID: 4300000, guid: 103a75b511ff51644a034931873a1de1, type: 3}
+  m_Mesh: {fileID: 4300000, guid: a2e754833d1c9c94eb5125fae0d1c742, type: 3}
 --- !u!54 &54484634548687522
 Rigidbody:
   m_ObjectHideFlags: 1
@@ -118,6 +121,43 @@ BoxCollider:
   serializedVersion: 2
   m_Size: {x: 0.05, y: 0.04, z: 0.05}
   m_Center: {x: 4.656613e-10, y: 0, z: 0}
+--- !u!114 &114022910537130216
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1293068513832398}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 54130e423e1880a428951fcf612d724e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  triggeredEvents:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 114405330046478802}
+        m_MethodName: GiveNameAndFacades
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+    m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
+      Culture=neutral, PublicKeyToken=null
+  hoverInEvents:
+    m_PersistentCalls:
+      m_Calls: []
+    m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
+      Culture=neutral, PublicKeyToken=null
+  hoverOutEvents:
+    m_PersistentCalls:
+      m_Calls: []
+    m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
+      Culture=neutral, PublicKeyToken=null
 --- !u!114 &114139110110229364
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -137,18 +177,24 @@ MonoBehaviour:
   snapAttachEaseInCurve:
     serializedVersion: 2
     m_Curve:
-    - serializedVersion: 2
+    - serializedVersion: 3
       time: 0
       value: 0
       inSlope: 0
       outSlope: 0
       tangentMode: 0
-    - serializedVersion: 2
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    - serializedVersion: 3
       time: 1
       value: 1
       inSlope: 0
       outSlope: 0
       tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
@@ -176,6 +222,18 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f8d7fa8f51755f34fb68931c466e98a5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &114405330046478802
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1293068513832398}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 386ba154e282dbe41abeea8d5c4f3204, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  facades: []
 --- !u!114 &114445234554496270
 MonoBehaviour:
   m_ObjectHideFlags: 1
