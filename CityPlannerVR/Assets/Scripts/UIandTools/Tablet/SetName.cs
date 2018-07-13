@@ -7,28 +7,33 @@ using UnityEngine;
 /// </summary>
 public class SetName : MonoBehaviour {
 
+    public delegate void ChangeColor();
+    public static event ChangeColor OnChangeColor;
+
     /// <summary>
     /// List of all the possible facades for this object
     /// </summary>
-    GameObject[] facades;
+    public GameObject[] facades;
     int facadeIndex = 0;
 
     private void Start()
     {
-        facades = new GameObject[transform.childCount];
-        for (int i = 0; i < facades.Length; i++)
+        if(facades.Length > 0)
         {
-            facades[i] = transform.GetChild(i).gameObject;
-            if(i > 0)
+            for (int i = 0; i < facades.Length; i++)
             {
-                facades[i].SetActive(false);
+                if (i > 0)
+                {
+                    facades[i].SetActive(false);
+                }
             }
         }
     }
 
     public void GiveNameAndFacades()
     {
-        HoverTabletManager.commentTarget = gameObject;
+        HoverTabletManager.commentTarget = gameObject;        
+
          if(facades.Length > 0)
         {
             CheckIndex();
@@ -43,6 +48,11 @@ public class SetName : MonoBehaviour {
             ChangeFacade.facadeIndex = 0;
             ChangeFacade.canChangeFacade = false;
         }
+
+        if (OnChangeColor != null)
+        {
+            OnChangeColor();
+        }
     }
 
     void CheckIndex()
@@ -55,5 +65,14 @@ public class SetName : MonoBehaviour {
                 break;
             }
         }
+    }
+
+    public void OnHoverEnter()
+    {
+
+    }
+    public void OnHoverStop()
+    {
+
     }
 }
