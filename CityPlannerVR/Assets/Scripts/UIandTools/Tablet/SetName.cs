@@ -66,13 +66,4 @@ public class SetName : MonoBehaviour {
             }
         }
     }
-
-    public void OnHoverEnter()
-    {
-
-    }
-    public void OnHoverStop()
-    {
-
-    }
 }
