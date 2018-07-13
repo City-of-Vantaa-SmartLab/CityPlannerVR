@@ -11,7 +11,7 @@ using Valve.VR.InteractionSystem;
 
 public class ToolManager : MonoBehaviour {
 
-    public int myHandNumber; //This should be set at inspector to either 1 or 2
+    public int myHandNumber;
     public enum ToolType { Empty, Camera, CommentTester, EditingLaser, Eraser, Painter, PathCamera, VideoCamera };  //includes modes for tools
     public int toolRights;
 
@@ -83,7 +83,7 @@ public class ToolManager : MonoBehaviour {
     private void SubscriptionOn()
     {
         //inputMaster.MenuButtonClicked += HandleMenuClicked;
-        inputMaster.TriggerClicked += HandleTriggerClicked;
+        inputMaster.TriggerClickedInsideToolbelt += HandleTriggerClickedInsideToolbelt;
         inputMaster.RoleChanged += HandleNewRole;
     }
 
@@ -92,7 +92,7 @@ public class ToolManager : MonoBehaviour {
     private void SubscriptionOff()
     {
         //inputMaster.MenuButtonClicked -= HandleMenuClicked;
-        inputMaster.TriggerClicked -= HandleTriggerClicked;
+        inputMaster.TriggerClickedInsideToolbelt -= HandleTriggerClickedInsideToolbelt;
         inputMaster.RoleChanged -= HandleNewRole;
     }
 
@@ -111,7 +111,7 @@ public class ToolManager : MonoBehaviour {
         RotateTool(sender, e);
     }
 
-    private void HandleTriggerClicked(object sender, ClickedEventArgs e)
+    private void HandleTriggerClickedInsideToolbelt(object sender, ClickedEventArgs e)
     {
         if (e.controllerIndex == myHandNumber && activeItemContainer != null)
         {
@@ -300,6 +300,12 @@ public class ToolManager : MonoBehaviour {
         {
             //Debug.Log(this.name + " has been entered by " + other.name);
             activeItemContainer = other.gameObject.GetComponent<ItemContainer>();
+            if (myHandNumber == 1)
+                inputMaster.hand1InsideToolbelt = true;
+            else if (myHandNumber == 2)
+                inputMaster.hand2InsideToolbelt = true;
+            else
+                Debug.LogError("Could not determine hand number for toolmanager!");
         }
     }
 
@@ -309,6 +315,12 @@ public class ToolManager : MonoBehaviour {
         {
             //Debug.Log(this.name + " has left " + other.name);
             activeItemContainer = null;
+            if (myHandNumber == 1)
+                inputMaster.hand1InsideToolbelt = false;
+            else if (myHandNumber == 2)
+                inputMaster.hand2InsideToolbelt = false;
+            else
+                Debug.LogError("Could not determine hand number for toolmanager!");
         }
     }
 }
