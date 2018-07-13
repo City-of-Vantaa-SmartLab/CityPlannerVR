@@ -29,7 +29,8 @@ public class MongoDBAPI {
     public static IMongoDatabase activeDatabase;
     //public static IMongoCollection<Comment> commentCollection;
     //public static IMongoCollection<Container<TransformData>> transformCollection;
-    public static IMongoCollection<BsonDocument> mongoCollection;
+    public static IMongoCollection<BsonDocument> transformCollection;
+    public static IMongoCollection<BsonDocument> commentCollection;
     private static string defaultDB = "tikkuraitti";
     private static string defaultUser = "buser";
     private static string defaultPwd = "1234";
@@ -37,6 +38,7 @@ public class MongoDBAPI {
         MongoCredential.CreateCredential(defaultDB, defaultUser, defaultPwd);
     private static string commentColName = "comments";
     private static string transformColName = "transforms";
+
 
 
     //private static CollectionData commentColSet = new CollectionData
@@ -62,6 +64,11 @@ public class MongoDBAPI {
 
     #endregion
 
+    /// <summary>
+    /// Connects to client and collections, after which you can use transformCollection and
+    /// commentCollection to access data with methods export/import JSONfile to/from Database
+    /// </summary>
+
     public static void UseDefaultConnections()
     {
         ConnectToClient(defaultSettings);
@@ -84,7 +91,8 @@ public class MongoDBAPI {
         //transformCollection = ConnectToDatabaseCollection<TransformData>(transformColName);
         //commentCollection = activeDatabase.GetCollection<Comment>(commentColName);
         //transformCollection = activeDatabase.GetCollection<Container<TransformData>>(transformColName);
-        mongoCollection = activeDatabase.GetCollection<BsonDocument>(transformColName);
+        transformCollection = activeDatabase.GetCollection<BsonDocument>(transformColName);
+        commentCollection = activeDatabase.GetCollection<BsonDocument>(commentColName);
     }
 
     public static IMongoCollection<T> ConnectToDatabaseCollection<T>(string collectionName)
@@ -100,20 +108,21 @@ public class MongoDBAPI {
         return coll;
     }
 
-    public static void TestConnections()
+    public static bool TestConnections()
     {
-        Debug.Log("Connecting to database using default settings...");
-        UseDefaultConnections();
+        //Debug.Log("Connecting to database using default settings...");
+        //UseDefaultConnections();
         if (client != null)
         {
             if (activeDatabase != null)
             {
-                if (mongoCollection != null)
+                if (transformCollection != null && commentCollection != null)
                 {
                     Debug.Log("Seems to be working!");
+                    return true;
                 }
                 else
-                    Debug.Log("MongoCollection is null!");
+                    Debug.Log("At least one collection is null!");
             }
             else
                 Debug.Log("Active database is null!");
@@ -121,39 +130,26 @@ public class MongoDBAPI {
         else
             Debug.Log("MongoClient is null!");
 
+        return false;
     }
 
     public static void TestMethod1(string filepath)
     {
         Debug.Log("Tämä on testi1");
-        ImportJSONFileToDatabase(mongoCollection, filepath);
+        ImportJSONFileToDatabase(transformCollection, filepath);
         //ExportJSONFileFromDatabase(mongoCollection, filepath);
     }
 
-    public static void TestMethod2(string filepath)
+    public static void ImportJSONFileToDatabase(IMongoCollection<BsonDocument> targetCollection, string filepath)
     {
-        Debug.Log("Tämä on testi2");
-        //ImportJSONFileToDatabase(mongoCollection, filepath);
-        ExportJSONFileFromDatabase(mongoCollection, filepath);
-    }
-
-    static void ImportJSONFileToDatabase(IMongoCollection<BsonDocument> targetCollection, string filepath)
-    {
-        //Debug.Log("Tämä on");
-        //string jasonFile = File.ReadAllText(filepath);
-        //Debug.Log("turhauttavaa");
-
-        //using (var streamReader = new StreamReader(jasonFile))
         using (var streamReader = new StreamReader(filepath))
         {
             //Debug.Log("Streamreader start!");
             string line;
             while ((line = streamReader.ReadLine()) != null)
             {
-                //Debug.Log("Readline start!");
                 using (var jsonReader = new JsonReader(line))
                 {
-                    //Debug.Log("Context reached!");
                     var context = BsonDeserializationContext.CreateRoot(jsonReader);
                     var document = targetCollection.DocumentSerializer.Deserialize(context);
                     targetCollection.InsertOne(document);
@@ -163,7 +159,7 @@ public class MongoDBAPI {
         }
     }
 
-    static void ExportJSONFileFromDatabase(IMongoCollection<BsonDocument> targetCollection, string filepath)
+    public static void ExportJSONFileFromDatabase(IMongoCollection<BsonDocument> targetCollection, string filepath)
     {
 
         using (var streamWriter = new StreamWriter(filepath))
@@ -182,6 +178,8 @@ public class MongoDBAPI {
             }
         }
     }
+
+
 
 }
 

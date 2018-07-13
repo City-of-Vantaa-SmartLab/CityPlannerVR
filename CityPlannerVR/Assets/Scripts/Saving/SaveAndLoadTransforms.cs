@@ -32,6 +32,7 @@ public class SaveAndLoadTransforms : MonoBehaviour {
     private string startupFileName;
     private string fileExtender;
     private string testFileName;
+    private string latestFileName;
     private string pathName;
     private char slash = Path.DirectorySeparatorChar;
     //public bool save;
@@ -44,6 +45,7 @@ public class SaveAndLoadTransforms : MonoBehaviour {
         startupFileName = "StartupTransformData";
         fileExtender = ".dat";
         testFileName = "Test";
+        latestFileName = "Latest";
         folderPathName = Application.persistentDataPath + slash + folder;
 
         if (!defaultParentCleanup)
@@ -352,6 +354,8 @@ public class SaveAndLoadTransforms : MonoBehaviour {
 
     #endregion
 
+    #region Database accessing
+
     public void TestDatabaseConnections()
     {
         MongoDBAPI.TestConnections();
@@ -363,10 +367,30 @@ public class SaveAndLoadTransforms : MonoBehaviour {
         MongoDBAPI.TestMethod1(pathName);
     }
 
-    public void TestDatabaseMethod2()
+    public void SaveLatestToDatabase()
     {
-        pathName = folderPathName + slash + testFileName + fileExtender;
-        MongoDBAPI.TestMethod2(pathName);
+        pathName = folderPathName + slash + latestFileName + fileExtender;
+        SaveFileToDatabase(pathName);
     }
+
+    public void LoadLatestFromDatabase()
+    {
+        pathName = folderPathName + slash + latestFileName + fileExtender;
+        MongoDBAPI.UseDefaultConnections();
+        MongoDBAPI.ImportJSONFileToDatabase(MongoDBAPI.transformCollection, pathName);
+    }
+
+    public void SaveFileToDatabase(string filepath)
+    {
+        MongoDBAPI.UseDefaultConnections();
+        MongoDBAPI.ExportJSONFileFromDatabase(MongoDBAPI.transformCollection, filepath);
+    }
+
+    public void LoadFileFromDatabase(MongoDB.Bson.ObjectId objectId)
+    {
+
+    }
+
+    #endregion
 
 }

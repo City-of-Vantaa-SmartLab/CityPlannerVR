@@ -318,7 +318,7 @@ public class InputMaster : PunBehaviour {
         }
     }
 
-    public void SelectByLaser(LaserPointer laserPointer, GameObject targetedObject)
+    public void SelectByLaser(LaserPointer laserPointer, GameObject targetedObject, ClickedEventArgs e)
     {
         if (laserPointer.gameObject.activeSelf && targetedObject != null)
         {
@@ -330,7 +330,7 @@ public class InputMaster : PunBehaviour {
             }
             if (laserButton != null)
             {
-                laserButton.OnClicked();
+                laserButton.OnClicked(e, this);
             }
             laserPointer.gameObject.GetComponent<OpenCommentTool>().ActivateCommentTool(laserPointer, targetedObject);
             laserPointer.gameObject.transform.parent.GetComponentInChildren<AreaSelection>().ActivateCreatePoint(targetedObject);
