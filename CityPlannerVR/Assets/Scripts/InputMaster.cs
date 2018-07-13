@@ -43,6 +43,8 @@ public class InputMaster : PunBehaviour {
 
     public bool hand1Found;
     public bool hand2Found;
+    public bool hand1InsideToolbelt;
+    public bool hand2InsideToolbelt;
 
     //Ints below are for debugging in inspector's debug mode: 0 means none, 1 and 2 means the active hand
     private int trigger;
@@ -56,6 +58,7 @@ public class InputMaster : PunBehaviour {
 
     //Put here the events broadcasted by this script
     public event ClickedEventHandler TriggerClicked;
+    public event ClickedEventHandler TriggerClickedInsideToolbelt;
     public event ClickedEventHandler TriggerUnclicked;
     public event ClickedEventHandler MenuButtonClicked;
     public event ClickedEventHandler MenuButtonUnclicked;
@@ -239,38 +242,37 @@ public class InputMaster : PunBehaviour {
 
     private void OnTriggerClicked(ClickedEventArgs e)
     {
-        if (TriggerClicked != null)
-            TriggerClicked(this, e);
+        if ((hand1InsideToolbelt && e.controllerIndex == 1) || (hand2InsideToolbelt && e.controllerIndex == 2))
+        {
+            TriggerClickedInsideToolbelt?.Invoke(this, e);
+        }
+        else
+            TriggerClicked?.Invoke(this, e);  //Is the same as: if (TriggerClicked != null) TriggerClicked(this, e);
     }
 
     private void OnTriggerUnclicked(ClickedEventArgs e)
     {
-        if (TriggerUnclicked != null)
-            TriggerUnclicked(this, e);
+        TriggerUnclicked?.Invoke(this, e);  //Checks if the event has any subscribers before firing the event
     }
 
     private void OnMenuClicked(ClickedEventArgs e)
     {
-        if (MenuButtonClicked != null)
-            MenuButtonClicked(this, e);
+        MenuButtonClicked?.Invoke(this, e);
     }
 
     private void OnMenuUnclicked(ClickedEventArgs e)
     {
-        if (MenuButtonUnclicked != null)
-            MenuButtonUnclicked(this, e);
+        MenuButtonUnclicked?.Invoke(this, e);
     }
 
     private void OnPadClicked(ClickedEventArgs e)
     {
-        if (PadClicked != null)
-            PadClicked(this, e);
+        PadClicked?.Invoke(this, e);
     }
 
     private void OnPadUnclicked(ClickedEventArgs e)
     {
-        if (PadUnclicked != null)
-            PadUnclicked(this, e);
+        PadUnclicked?.Invoke(this, e);
     }
 
     private void OnPadTouched(ClickedEventArgs e, Hand hand)
@@ -282,26 +284,22 @@ public class InputMaster : PunBehaviour {
     private void OnPadUntouched(ClickedEventArgs e)
     {
         trackCoordinates = false;
-        if (PadUntouched != null)
-            PadUntouched(this, e);
+        PadUntouched?.Invoke(this, e);
     }
 
     private void OnGripped(ClickedEventArgs e)
     {
-        if (Gripped != null)
-            Gripped(this, e);
+        Gripped?.Invoke(this, e);
     }
 
     private void OnUngripped(ClickedEventArgs e)
     {
-        if (Ungripped != null)
-            Ungripped(this, e);
+        Ungripped?.Invoke(this, e);
     }
 
     private void AnnounceRoleChanged()
     {
-        if (RoleChanged != null)
-            RoleChanged(0);
+        RoleChanged?.Invoke(0);
     }
 
     #endregion
@@ -318,7 +316,7 @@ public class InputMaster : PunBehaviour {
         }
     }
 
-    public void SelectByLaser(LaserPointer laserPointer, GameObject targetedObject)
+    public void SelectByLaser(LaserPointer laserPointer, GameObject targetedObject, ClickedEventArgs e)
     {
         if (laserPointer.gameObject.activeSelf && targetedObject != null)
         {
@@ -330,7 +328,7 @@ public class InputMaster : PunBehaviour {
             }
             if (laserButton != null)
             {
-                laserButton.OnClicked();
+                laserButton.OnClicked(e, this);
             }
             laserPointer.gameObject.GetComponent<OpenCommentTool>().ActivateCommentTool(laserPointer, targetedObject);
             laserPointer.gameObject.transform.parent.GetComponentInChildren<AreaSelection>().ActivateCreatePoint(targetedObject);
@@ -351,8 +349,7 @@ public class InputMaster : PunBehaviour {
             padX = e.padX;
             padY = e.padY;
 
-            if (PadTouched != null)
-                PadTouched(this, e);
+            PadTouched?.Invoke(this, e);
             //Debug.Log("tracking...");
             yield return new WaitForSeconds(.1f);
         }

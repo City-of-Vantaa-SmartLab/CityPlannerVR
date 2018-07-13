@@ -6,8 +6,8 @@ using System;
 
 /// <summary>
 /// Handles the writing and reading of files, as well as stores the commentcontainer.
-/// Uses static methods, so that the script does not need to be attached to anything to work.
-/// Could be scaled for other types of data as well (later). 
+/// Savedata is a static class, which utilises another static class called MongoDBAPI to sync with cloud files.
+/// 
 /// </summary>
 
 public class Container<T> /*where T : parentClass  //if needed, eg. CommentData as child class -> through inheritance?*/
@@ -103,5 +103,11 @@ public class SaveData {
         commentLists.thumbComments.Clear();
         Debug.Log("CommentLists cleared");
     }
+
+    //public static void SyncDatasToServer()
+    //{
+    //    MongoDBAPI.UseDefaultConnections();
+    //    MongoDBAPI.ExportJSONFileFromDatabase(MongoDBAPI.transformCollection, )
+    //}
 
 }

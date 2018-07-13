@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
@@ -6,14 +7,17 @@ using Valve.VR.InteractionSystem;
 
 /// <summary>
 /// The method OnClicked is called by Inputmaster in the method SelectByLaser, hover methods are called by PhotonLaserManager.
+/// OnUnclicked can be called directly or by eventsystem using one of the overloaded OnClicked methods for automatic subscribing.
 /// </summary>
 
 
 public class LaserButton : MonoBehaviour {
 
-    public UnityEvent triggeredEvents;
+    public UnityEvent clickedEvents;
+    public UnityEvent unclickedEvents;
     public UnityEvent hoverInEvents;
     public UnityEvent hoverOutEvents;
+    uint subscribedControllerIndex;
 
     MeshRenderer meshRenderer;
     Material material;
@@ -28,8 +32,29 @@ public class LaserButton : MonoBehaviour {
 
     public void OnClicked()
     {
-        //Debug.Log("LASERBUTTON " + gameObject.name + ":ssa TESTAA");
-        triggeredEvents.Invoke();
+        clickedEvents.Invoke();
+    }
+
+    /// <summary>
+    /// Used to subscribe the OnUnclicked events to inputMaster. Only e.controllerIndex is used from ClickedEventArgs parameter.
+    /// </summary>
+
+    public void OnClicked(ClickedEventArgs e, InputMaster inputMaster)
+    {
+        inputMaster.TriggerUnclicked += HandleUnclicked;
+        subscribedControllerIndex = e.controllerIndex;
+        OnClicked();
+    }
+
+    public void OnUnclicked()
+    {
+        unclickedEvents.Invoke();
+    }
+
+    private void OnUnclicked(ClickedEventArgs e, InputMaster inputMaster)
+    {
+        inputMaster.TriggerUnclicked -= HandleUnclicked;
+        OnUnclicked();
     }
 
     public void OnHoverIn()
@@ -41,10 +66,23 @@ public class LaserButton : MonoBehaviour {
     {
         hoverOutEvents.Invoke();
     }
-    public void TestFunction()
+
+    private void HandleUnclicked(object sender, ClickedEventArgs e)
     {
-        //Debug.Log("Testing event!");
+        if (subscribedControllerIndex == e.controllerIndex)
+        {
+            if (sender is InputMaster)
+            {
+                OnUnclicked(e, sender as InputMaster);
+            }
+            else
+            {
+                Debug.LogWarning("Sender not recognized as inputmaster when firing TriggerUnclicked, laserbutton did not unsubscribe!");
+                OnUnclicked();
+            }
+        }
     }
+
     //--------------------------------------------------------------------------------------------------------------------------------
     //ButtonBackground
     public void PlayCommentStart()
@@ -158,9 +196,13 @@ public class LaserButton : MonoBehaviour {
             DrawDefaultInspector();
 
             LaserButton laserButtonScript = (LaserButton)target;
-            if (GUILayout.Button("Test Triggered events"))
+            if (GUILayout.Button("Test clicked events"))
             {
                 laserButtonScript.OnClicked();
+            }
+            if (GUILayout.Button("Test unclicked events"))
+            {
+                laserButtonScript.OnUnclicked();
             }
             if (GUILayout.Button("Test hover in"))
             {

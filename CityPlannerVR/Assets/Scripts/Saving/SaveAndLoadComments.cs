@@ -70,4 +70,32 @@ public class SaveAndLoadComments : MonoBehaviour {
         SaveData.LoadItems<CommentData>(pathName);
     }
 
+    #region Database accessing
+
+    public void SaveToDatabase()
+    {
+        pathName = folderPathName + slash + fileName + fileExtender;
+        MongoDBAPI.UseDefaultConnections();
+        MongoDBAPI.ExportJSONFileFromDatabase(MongoDBAPI.transformCollection, pathName);
+    }
+
+    public void LoadFromDatabase()
+    {
+        pathName = folderPathName + slash + fileName + fileExtender;
+        MongoDBAPI.UseDefaultConnections();
+        MongoDBAPI.ImportJSONFileToDatabase(MongoDBAPI.transformCollection, pathName);
+    }
+
+    public void CountDatabaseCommentContainers()
+    {
+        if (MongoDBAPI.commentCollection == null)
+            MongoDBAPI.UseDefaultConnections();
+        var count = MongoDBAPI.commentCollection.CountDocuments(new MongoDB.Bson.BsonDocument());
+    }
+
+
+    #endregion
+
+
+
 }
