@@ -39,9 +39,11 @@ public class MeasurementPoint : MonoBehaviour {
 
 		if (gameObject.name == "MeasurementStartPoint") {
 			otherPoint = GameObject.FindGameObjectWithTag("EndPoint");
-		} else if (gameObject.name == "MeasurementEndPoint") {
+		}
+        else if (gameObject.name == "MeasurementEndPoint") {
 			otherPoint = GameObject.FindGameObjectWithTag("StartPoint");
-		} else {
+		}
+        else {
 			Debug.LogError ("There is a typo somewhere");
 		}
 

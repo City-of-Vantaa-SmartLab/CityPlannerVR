@@ -75,8 +75,6 @@ namespace Valve.VR.InteractionSystem
 		//-------------------------------------------------
 		void Update()
 		{
-            HideController();
-
             // Only update one per frame
             if ( lastFrameUpdated == Time.renderedFrameCount )
 			{

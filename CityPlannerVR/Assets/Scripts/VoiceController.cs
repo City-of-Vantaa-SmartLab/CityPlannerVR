@@ -14,11 +14,17 @@ public class VoiceController : MonoBehaviour
     VoicePlayerState localPlayer;
     VoiceBroadcastTrigger voiceTrigger;
     InputMaster inputMaster;
-    //public LaserPointer laser;
+    /// <summary>
+    /// Left hand laser
+    /// </summary>
+    LaserPointer laser1;
+    /// <summary>
+    /// Right hand laser
+    /// </summary>
+    LaserPointer laser2;
 
     PhotonView photonView;
-
-    string whisperTarget;
+    
     string playerTag = "VRLocalPlayer";
 
     [Tooltip("The object with the particle system to indicate who is speaking")]
@@ -28,6 +34,7 @@ public class VoiceController : MonoBehaviour
     [HideInInspector]
     public string playerName;
 
+    string whisperTarget;
     bool playerIsSpeaking = false;
     public bool PlayerIsSpeaking
     {
@@ -50,7 +57,8 @@ public class VoiceController : MonoBehaviour
     private void Start()
     {
         comms = GameObject.Find("DissonanceSetup").GetComponent<DissonanceComms>();
-        //laser = GameObject.Find("Laserpointer1").GetComponent<LaserPointer>();
+        laser1 = GameObject.Find("Hand1/Laserpointer").GetComponent<LaserPointer>();
+        laser2 = GameObject.Find("Hand2/Laserpointer").GetComponent<LaserPointer>();
 
         indicator.SetActive(false);
 
@@ -59,8 +67,6 @@ public class VoiceController : MonoBehaviour
         voiceTrigger = GetComponent<VoiceBroadcastTrigger>();
 
         localPlayer = comms.FindPlayer(comms.LocalPlayerName);
-
-        playerName = comms.LocalPlayerName;
 
         source = GetComponent<AudioSource>();
 
@@ -72,8 +78,10 @@ public class VoiceController : MonoBehaviour
         localPlayer.OnStoppedSpeaking += ToggleIndicator;
 
         //These could also be two different functions,but they aren't
-        //laser.PointerIn += Whisper;
-        //laser.PointerOut += Whisper;
+        laser1.PointerIn += Whisper;
+        laser1.PointerOut += Whisper;
+        laser2.PointerIn += Whisper;
+        laser2.PointerOut += Whisper;
     }
 
     private void OnDestroy()
@@ -148,12 +156,12 @@ public class VoiceController : MonoBehaviour
         }
     }
 
-    //TODO: how is it determined who's the target
-    //TODO: test this
     void Whisper(object sender, LaserEventArgs e)
     {
         if (e.target.tag == playerTag)
         {
+            photonView.RPC("SetPlayerDissonanceName", PhotonTargets.All, comms.LocalPlayerName);
+            
             whisperTarget = e.target.GetComponent<VoiceController>().playerName;
 
             voiceTrigger.ChannelType = CommTriggerTarget.Player;
@@ -165,4 +173,18 @@ public class VoiceController : MonoBehaviour
             voiceTrigger.ChannelType = CommTriggerTarget.Self;
         }
     }
+    /// <summary>
+    /// Sets players dissonance name
+    /// </summary>
+    /// <param name="name">The dissonance name of the local player for whispering</param>
+    /// <param name="info">info about the speaker</param>
+    [PunRPC]
+    void SetPlayerDissonanceName(string name, PhotonMessageInfo info)
+    {
+        if (photonView.owner.NickName == info.sender.NickName)
+        {
+            playerName = name;
+        }
+    }
+
 }
