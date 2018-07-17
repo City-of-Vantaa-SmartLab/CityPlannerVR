@@ -30,6 +30,8 @@ GameObject:
   - component: {fileID: 114927937409920192}
   - component: {fileID: 114947200498271564}
   - component: {fileID: 114018692010864988}
+  - component: {fileID: 114768543916910758}
+  - component: {fileID: 114382045267528794}
   m_Layer: 17
   m_Name: katulamppu
   m_TagString: Spawnable
@@ -43,9 +45,9 @@ Transform:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1411247131704118}
-  m_LocalRotation: {x: -0, y: 0.08715578, z: -0, w: 0.9961947}
-  m_LocalPosition: {x: -0.09614079, y: 0.014706664, z: -0.31750393}
-  m_LocalScale: {x: 0.9375, y: 0.9375, z: 0.9375}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 6.4862194, y: -0.5925492, z: -2.08365}
+  m_LocalScale: {x: 1.5, y: 1.5, z: 1.5}
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 0
@@ -63,6 +65,7 @@ MeshRenderer:
   m_MotionVectors: 1
   m_LightProbeUsage: 1
   m_ReflectionProbeUsage: 1
+  m_RenderingLayerMask: 4294967295
   m_Materials:
   - {fileID: 2100000, guid: dfc95debbd8ab1c42912f50b5a1cbb1b, type: 3}
   m_StaticBatchInfo:
@@ -140,6 +143,18 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b93b6a877adcbf94c89a9d6e0c0e844d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &114382045267528794
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1411247131704118}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 386ba154e282dbe41abeea8d5c4f3204, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  facades: []
 --- !u!114 &114618273356804514
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -159,18 +174,24 @@ MonoBehaviour:
   snapAttachEaseInCurve:
     serializedVersion: 2
     m_Curve:
-    - serializedVersion: 2
+    - serializedVersion: 3
       time: 0
       value: 0
       inSlope: 0
       outSlope: 0
       tangentMode: 0
-    - serializedVersion: 2
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    - serializedVersion: 3
       time: 1
       value: 1
       inSlope: 0
       outSlope: 0
       tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
@@ -227,6 +248,48 @@ MonoBehaviour:
   velocityAverageFrames: 5
   angularVelocityAverageFrames: 11
   estimateOnAwake: 0
+--- !u!114 &114768543916910758
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1411247131704118}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 54130e423e1880a428951fcf612d724e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  clickedEvents:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 114382045267528794}
+        m_MethodName: GiveNameAndFacades
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+    m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
+      Culture=neutral, PublicKeyToken=null
+  unclickedEvents:
+    m_PersistentCalls:
+      m_Calls: []
+    m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
+      Culture=neutral, PublicKeyToken=null
+  hoverInEvents:
+    m_PersistentCalls:
+      m_Calls: []
+    m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
+      Culture=neutral, PublicKeyToken=null
+  hoverOutEvents:
+    m_PersistentCalls:
+      m_Calls: []
+    m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
+      Culture=neutral, PublicKeyToken=null
 --- !u!114 &114927937409920192
 MonoBehaviour:
   m_ObjectHideFlags: 1

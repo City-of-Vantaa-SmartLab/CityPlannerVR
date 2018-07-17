@@ -30,6 +30,8 @@ GameObject:
   - component: {fileID: 114308883650603150}
   - component: {fileID: 114720892876999742}
   - component: {fileID: 114122181856690814}
+  - component: {fileID: 114412923353875576}
+  - component: {fileID: 114469254039530692}
   m_Layer: 17
   m_Name: koju_iso
   m_TagString: Spawnable
@@ -44,8 +46,8 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1417077144485390}
   m_LocalRotation: {x: 0, y: 0.6427207, z: 0, w: 0.76610065}
-  m_LocalPosition: {x: 0.3009, y: 0.113, z: 0.1734}
-  m_LocalScale: {x: 0.47834432, y: 0.4783442, z: 0.4783442}
+  m_LocalPosition: {x: -3.0235, y: -0.172, z: -0.3651}
+  m_LocalScale: {x: 1.4, y: 1.4, z: 1.4}
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 0
@@ -63,6 +65,7 @@ MeshRenderer:
   m_MotionVectors: 1
   m_LightProbeUsage: 1
   m_ReflectionProbeUsage: 1
+  m_RenderingLayerMask: 4294967295
   m_Materials:
   - {fileID: 2100000, guid: 8138d87216bfb9c4887d1c4710a168ad, type: 3}
   m_StaticBatchInfo:
@@ -154,6 +157,55 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2474917abc445a64b94d68b916a22d62, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &114412923353875576
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1417077144485390}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 386ba154e282dbe41abeea8d5c4f3204, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  facades: []
+--- !u!114 &114469254039530692
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1417077144485390}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 54130e423e1880a428951fcf612d724e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  triggeredEvents:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 114412923353875576}
+        m_MethodName: GiveNameAndFacades
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+    m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
+      Culture=neutral, PublicKeyToken=null
+  hoverInEvents:
+    m_PersistentCalls:
+      m_Calls: []
+    m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
+      Culture=neutral, PublicKeyToken=null
+  hoverOutEvents:
+    m_PersistentCalls:
+      m_Calls: []
+    m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
+      Culture=neutral, PublicKeyToken=null
 --- !u!114 &114481938811416130
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -195,18 +247,24 @@ MonoBehaviour:
   snapAttachEaseInCurve:
     serializedVersion: 2
     m_Curve:
-    - serializedVersion: 2
+    - serializedVersion: 3
       time: 0
       value: 0
       inSlope: 0
       outSlope: 0
       tangentMode: 0
-    - serializedVersion: 2
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    - serializedVersion: 3
       time: 1
       value: 1
       inSlope: 0
       outSlope: 0
       tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4

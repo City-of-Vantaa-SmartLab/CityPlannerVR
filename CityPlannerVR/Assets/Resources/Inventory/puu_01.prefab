@@ -30,6 +30,8 @@ GameObject:
   - component: {fileID: 114211818085502418}
   - component: {fileID: 114532185949683512}
   - component: {fileID: 114670395663918650}
+  - component: {fileID: 114432965218927390}
+  - component: {fileID: 114017217579619138}
   m_Layer: 17
   m_Name: puu_01
   m_TagString: Spawnable
@@ -44,8 +46,8 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1147966367636772}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 3.437, y: 0.0019, z: 0.099}
-  m_LocalScale: {x: 0.41053113, y: 0.41053122, z: 0.41053113}
+  m_LocalPosition: {x: 0.010845184, y: -0.30857718, z: 0.07478857}
+  m_LocalScale: {x: 0.65, y: 0.65, z: 0.65}
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 0
@@ -118,6 +120,18 @@ BoxCollider:
   serializedVersion: 2
   m_Size: {x: 0.18, y: 0.527, z: 0.18}
   m_Center: {x: 0.0076517463, y: 0.26358226, z: 0.011942547}
+--- !u!114 &114017217579619138
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1147966367636772}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 386ba154e282dbe41abeea8d5c4f3204, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  facades: []
 --- !u!114 &114211818085502418
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -143,6 +157,43 @@ MonoBehaviour:
   velocityAverageFrames: 5
   angularVelocityAverageFrames: 11
   estimateOnAwake: 0
+--- !u!114 &114432965218927390
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1147966367636772}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 54130e423e1880a428951fcf612d724e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  triggeredEvents:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 114017217579619138}
+        m_MethodName: GiveNameAndFacades
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+    m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
+      Culture=neutral, PublicKeyToken=null
+  hoverInEvents:
+    m_PersistentCalls:
+      m_Calls: []
+    m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
+      Culture=neutral, PublicKeyToken=null
+  hoverOutEvents:
+    m_PersistentCalls:
+      m_Calls: []
+    m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
+      Culture=neutral, PublicKeyToken=null
 --- !u!114 &114532185949683512
 MonoBehaviour:
   m_ObjectHideFlags: 1
