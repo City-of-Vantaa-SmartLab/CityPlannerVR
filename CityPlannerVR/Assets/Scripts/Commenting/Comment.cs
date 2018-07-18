@@ -17,7 +17,7 @@ public class CommentData
     
     public string submittedShortDate;
     public string submittedShortTime;
-    public Vector3 commentatorPosition;
+    //public Vector3 commentatorPosition;
     public int quickcheck;
 }
 
@@ -57,6 +57,7 @@ public class Comment {
     public void ApplyDataToContainer()
     {
         //SaveData<CommentData>.AddCommentData(data);
+        //SaveData.AddData(data);
         OnDisable();
     }
 
@@ -153,5 +154,27 @@ public class Comment {
         string newStr = str.Substring(0, length);
         return newStr;
     }
+
+    public static Comment GenerateTestComment()
+    {
+        Comment newComment = new Comment();
+        CommentData data = new CommentData
+        {
+            //commentatorPosition = Vector3.zero,
+            commentedObjectName = "ObjectName",
+            dataString = "Data",
+            quickcheck = 123,
+            SHPath = "Screenshot path",
+            submittedShortDate = DateTime.Now.ToShortDateString(),
+            //submittedShortTime = DateTime.Now.ToShortTimeString(),
+            type = Comment.CommentType.Text,
+            userName = "Username"
+        };
+
+        newComment.data = data;
+
+        return newComment;
+    }
+
 
 }

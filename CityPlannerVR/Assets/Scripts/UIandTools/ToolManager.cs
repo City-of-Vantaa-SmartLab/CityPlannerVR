@@ -12,7 +12,7 @@ using Valve.VR.InteractionSystem;
 public class ToolManager : MonoBehaviour {
 
     public int myHandNumber;
-    public enum ToolType { Empty, Camera, CommentTester, EditingLaser, Eraser, Painter, PathCamera, VideoCamera };  //includes modes for tools
+    public enum ToolType { Empty, Camera, CommentTester, EditingLaser, Eraser, Item, Painter, PathCamera, VideoCamera };  //includes modes for tools
     public int toolRights;
 
     public ToolType Tool
@@ -125,7 +125,7 @@ public class ToolManager : MonoBehaviour {
             else
             {
                 //put getting items over here
-
+                activeItemContainer.OnClicked(sender, e, inputMaster);
             }
         }
     }
@@ -300,6 +300,14 @@ public class ToolManager : MonoBehaviour {
         {
             //Debug.Log(this.name + " has been entered by " + other.name);
             activeItemContainer = other.gameObject.GetComponent<ItemContainer>();
+            if (activeItemContainer == null)
+            {
+                Debug.LogError("Could not find ItemContainer script from a gameobject tagged as ItemSlot!");
+                return;
+            }
+            else
+                activeItemContainer.OnHoverIn();
+
             if (myHandNumber == 1)
                 inputMaster.hand1InsideToolbelt = true;
             else if (myHandNumber == 2)
@@ -314,13 +322,16 @@ public class ToolManager : MonoBehaviour {
         if (other.CompareTag("ItemSlot"))
         {
             //Debug.Log(this.name + " has left " + other.name);
-            activeItemContainer = null;
+            if (activeItemContainer != null)
+                activeItemContainer.OnHoverOut();
+
             if (myHandNumber == 1)
                 inputMaster.hand1InsideToolbelt = false;
             else if (myHandNumber == 2)
                 inputMaster.hand2InsideToolbelt = false;
             else
                 Debug.LogError("Could not determine hand number for toolmanager!");
+            activeItemContainer = null;
         }
     }
 }

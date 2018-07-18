@@ -43,7 +43,7 @@ public class ThumbManager : MonoBehaviour {
     //needs to be cleaned up
     private CommentData CreateThumbData()
     {
-        String userName = SLComments.localPlayerName;
+        String userName = PhotonNetwork.player.NickName;
         //string targetName = commentToolManager.LEArgs.target.name;
 
         CommentData tempData = new CommentData();

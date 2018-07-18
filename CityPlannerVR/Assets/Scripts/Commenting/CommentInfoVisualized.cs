@@ -5,7 +5,7 @@ using UnityEngine;
 using UnityEngine.UI;
 
 /// <summary>
-/// Creates text cells from a prefab into children and inserts commentdata into them.
+/// Creates text cells from a prefab into this gameobject's children and inserts commentdata into them.
 /// Changing CurrentComment will update this object with new cells automatically.
 /// </summary>
 
@@ -45,7 +45,7 @@ public class CommentInfoVisualized : MonoBehaviour {
         if (CurrentComment == null)
         {
             Debug.Log("No comment selected, using null values");
-            CurrentComment = GenerateTestComment();
+            CurrentComment = Comment.GenerateTestComment();
         }
 
         GenerateTextCell(CurrentComment.data.userName);
@@ -58,7 +58,7 @@ public class CommentInfoVisualized : MonoBehaviour {
 
         GenerateTextCell(CurrentComment.data.type.ToString());
         GenerateTextCell(CurrentComment.data.SHPath);
-        GenerateTextCell(CurrentComment.data.commentatorPosition.ToString());
+        //GenerateTextCell(CurrentComment.data.commentatorPosition.ToString());
     }
 
     public void GenerateTextCell(string textContent)
@@ -80,25 +80,6 @@ public class CommentInfoVisualized : MonoBehaviour {
         {
             Debug.LogError("No textcell prefab set or found!");
         }
-    }
-
-    public static Comment GenerateTestComment()
-    {
-        Comment newComment = new Comment();
-        CommentData data = new CommentData();
-        data.commentatorPosition = Vector3.zero;
-        data.commentedObjectName = "ObjectName";
-        data.dataString = "Data";
-        data.quickcheck = 123;
-        data.SHPath = "Screenshot path";
-        data.submittedShortDate = DateTime.Now.ToShortDateString();
-        data.submittedShortTime = DateTime.Now.ToShortTimeString();
-        data.type = Comment.CommentType.Text;
-        data.userName = "Username";
-
-        newComment.data = data;
-
-        return newComment;
     }
 
     private void ClearVisuals()

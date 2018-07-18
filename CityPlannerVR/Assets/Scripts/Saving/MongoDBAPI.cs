@@ -161,10 +161,20 @@ public class MongoDBAPI {
 
     public static void ExportJSONFileFromDatabase(IMongoCollection<BsonDocument> targetCollection, string filepath)
     {
+        ExportJSONFileFromDatabase(null, null, targetCollection, filepath);
+    }
 
+    public static void ExportJSONFileFromDatabase(FilterDefinition<BsonDocument> filter, SortDefinition<BsonDocument> sort,
+        IMongoCollection<BsonDocument> targetCollection, string filepath)
+    {
         using (var streamWriter = new StreamWriter(filepath))
         {
-            var cursor = targetCollection.Find(new BsonDocument()).ToCursor();
+            if (filter == null)
+                filter = new BsonDocument();
+            if (sort == null)
+                sort = Builders<BsonDocument>.Sort.Descending("date");
+            
+            var cursor = targetCollection.Find(filter).ToCursor();
             foreach (var document in cursor.ToEnumerable())
             {
                 using (var stringWriter = new StringWriter())
@@ -179,6 +189,25 @@ public class MongoDBAPI {
         }
     }
 
+
+
+
+    public static void LoadFileFromDatabase(FilterDefinition<BsonDocument> filter,
+        string filepath, IMongoCollection<BsonDocument> collection)
+    {
+        var document = collection.Find(filter).First();
+    }
+
+
+    //instead this could be done with:
+    //var filter = Builders<BsonDocument>.Filter.Eq("i", 10);
+    //var update = Builders<BsonDocument>.Update.Set("i", 110);
+    //collection.UpdateOne(filter, update);
+    public static void UpdateFileInDatabase(FilterDefinition<BsonDocument> filter,
+        UpdateDefinition<BsonDocument> update, IMongoCollection<BsonDocument> collection)
+    {
+        collection.UpdateOne(filter, update);
+    }
 
 
 }

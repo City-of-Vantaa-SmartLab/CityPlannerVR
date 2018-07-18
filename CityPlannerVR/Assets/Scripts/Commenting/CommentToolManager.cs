@@ -14,7 +14,7 @@ public class CommentToolManager : MonoBehaviour {
     public object sender;
 
     void Start () {
-        localPlayerName = GameObject.Find("GameController").GetComponent<SaveAndLoadComments>().localPlayerName;  //this is dumb
+        localPlayerName = PhotonNetwork.player.NickName;
         //LEArgs = null;
         sender = null;
 	}

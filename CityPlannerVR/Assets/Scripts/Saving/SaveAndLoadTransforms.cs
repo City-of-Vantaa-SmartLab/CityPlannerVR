@@ -6,6 +6,7 @@ using System.IO;
 
 /// <summary>
 /// Saves and loads transforms in order from files. Adds gameobjects from prefabs to scene if necessary.
+/// Add holders (the parents) to a list in inspector, after which they can be stored via 
 /// </summary>
 
 [Serializable] //attributes for json
@@ -88,10 +89,18 @@ public class SaveAndLoadTransforms : MonoBehaviour {
 
     #region File and list manipulation
 
+    /// <summary>
+    /// Save using default settings.
+    /// </summary>
+
     public void Save()
     {
         Save(defaultFileName, SaveData.transformContainer);
     }
+
+    /// <summary>
+    /// Load using default settings.
+    /// </summary>
 
     public void Load()
     {
@@ -103,13 +112,17 @@ public class SaveAndLoadTransforms : MonoBehaviour {
         HandleBeforeSave();  //remove this if the event system is implemented
         pathName = folderPathName + slash + fileName + fileExtender;
         SaveData.SaveDatas(pathName, container);
+        MongoDBAPI.ImportJSONFileToDatabase(MongoDBAPI.transformCollection, pathName);
     }
 
     public void Load(string fileName)
     {
         pathName = folderPathName + slash + fileName + fileExtender;
+        MongoDBAPI.ExportJSONFileFromDatabase(MongoDBAPI.commentCollection, pathName);
         SaveData.LoadItems<TransformData>(pathName);
     }
+
+
 
     public void SaveStartupList()
     {
@@ -118,6 +131,10 @@ public class SaveAndLoadTransforms : MonoBehaviour {
         //StoreList(startupHolderList);
         Save(startupFileName, startupContainer);
     }
+
+    /// <summary>
+    /// Load startup items from a dedicated file.
+    /// </summary>
 
     public void LoadStartup()
     {
@@ -168,13 +185,9 @@ public class SaveAndLoadTransforms : MonoBehaviour {
 
     #region Restoring objects
 
-    public static void RestoreFromContainer<T>(Container<T> tempContainer)
-    {
-        Container<TransformData> currentItems = SaveData.transformContainer;
-
-        //Container<TransformData> sharedGOS = SeparateSharedGOS(tempContainer, currentItems);
-    }
-
+    /// <summary>
+    /// Finds or creates a prefab and places it under its parent with saved transform coordinates.
+    /// </summary>
 
     public static void RestoreTransform(TransformData data, Transform previousHolder)
     {
@@ -290,7 +303,7 @@ public class SaveAndLoadTransforms : MonoBehaviour {
     public void RestoreToState(Container<TransformData> ItemsLoaded)
     {
         SaveData.ClearContainer(SaveData.transformContainer);
-        StoreList(holdersToBeSaved);
+        //StoreList(holdersToBeSaved);  //redundant?
 
         Container<TransformData> sharedContainer;
         sharedContainer = SeparateSharedGOS(ItemsLoaded, SaveData.transformContainer);  //use different container for robustness?
@@ -314,6 +327,10 @@ public class SaveAndLoadTransforms : MonoBehaviour {
         }
 
     }
+
+    /// <summary>
+    /// In case we want to avoid the default settings.
+    /// </summary>
 
     public void LoadTransformsFromFile(string filepath)
     {
@@ -356,10 +373,7 @@ public class SaveAndLoadTransforms : MonoBehaviour {
 
     #region Database accessing
 
-    public void TestDatabaseConnections()
-    {
-        MongoDBAPI.TestConnections();
-    }
+
 
     public void TestDatabaseMethod1()
     {
@@ -367,29 +381,20 @@ public class SaveAndLoadTransforms : MonoBehaviour {
         MongoDBAPI.TestMethod1(pathName);
     }
 
-    public void SaveLatestToDatabase()
-    {
-        pathName = folderPathName + slash + latestFileName + fileExtender;
-        SaveFileToDatabase(pathName);
-    }
+    //public void SaveLatestToDatabase()
+    //{
+    //    pathName = folderPathName + slash + latestFileName + fileExtender;
+    //    SaveData.SaveFileToDatabase(pathName, 1);
+    //}
 
-    public void LoadLatestFromDatabase()
-    {
-        pathName = folderPathName + slash + latestFileName + fileExtender;
-        MongoDBAPI.UseDefaultConnections();
-        MongoDBAPI.ImportJSONFileToDatabase(MongoDBAPI.transformCollection, pathName);
-    }
+    //public void LoadLatestFromDatabase()
+    //{
+    //    pathName = folderPathName + slash + latestFileName + fileExtender;
+    //    MongoDBAPI.UseDefaultConnections();
+    //    MongoDBAPI.ImportJSONFileToDatabase(MongoDBAPI.transformCollection, pathName);
+    //}
 
-    public void SaveFileToDatabase(string filepath)
-    {
-        MongoDBAPI.UseDefaultConnections();
-        MongoDBAPI.ExportJSONFileFromDatabase(MongoDBAPI.transformCollection, filepath);
-    }
 
-    public void LoadFileFromDatabase(MongoDB.Bson.ObjectId objectId)
-    {
-
-    }
 
     #endregion
 

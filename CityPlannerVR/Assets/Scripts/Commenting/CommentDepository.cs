@@ -74,7 +74,7 @@ public class CommentDepository : MonoBehaviour {
 
     private void GenerateVisualsOnList(List<Comment> list)
     {
-        CommentListVisualized listing = targetForList.GetComponent<CommentListVisualized>();
+        CommentInfoVisualized listing = targetForList.GetComponent<CommentInfoVisualized>();
         if (listing)
         {
 
