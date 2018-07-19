@@ -19,7 +19,6 @@ public class PlayerCollisionCheck : MonoBehaviour
 	//Separate MonoBehaviour for collisions, because PunBehaviour does not implement collision checks
 	private void OnTriggerEnter(Collider other)
 	{
-		Debug.LogWarning ("Worksccollsioon");
 		this.gameObject.GetComponent<PhotonPlayerAvatar> ().CollisionHappened (other);
 	}
 }
