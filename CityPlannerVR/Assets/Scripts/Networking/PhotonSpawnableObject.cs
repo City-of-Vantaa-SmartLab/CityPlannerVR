@@ -16,6 +16,8 @@ public class PhotonSpawnableObject : MonoBehaviour {
 	[SerializeField]
 	public Transform spawnPoint;
 
+    public GameObject item;
+
 	public GameObject itemInSpawner;
 
 	public InputMaster inputMaster;
@@ -29,17 +31,17 @@ public class PhotonSpawnableObject : MonoBehaviour {
 	{
 		
 	}
+    
+	//void Update() {
+	//	if (isFirstTime) {
+	//		itemPrefabName = "Inventory/"+itemPrefabName;
 
-	void Update() {
-		if (isFirstTime) {
-			itemPrefabName = "Inventory/"+itemPrefabName;
+	//		inputMaster = GameObject.Find("Player").GetComponent<InputMaster>();
+	//		isFirstTime = false;
 
-			inputMaster = GameObject.Find("Player").GetComponent<InputMaster>();
-			isFirstTime = false;
-
-			this.GetItems (null);
-		}
-	}
+	//		this.GetItems (null);
+	//	}
+	//}
 
    public void GetItems (GameObject dbitem) {
 
@@ -49,7 +51,7 @@ public class PhotonSpawnableObject : MonoBehaviour {
             if (PhotonGameManager.Instance.isMultiplayerSceneLoaded)
             {
 
-                InstantiateItemInSpawner();
+                InstantiateLocalItemInSpawner(dbitem);
 
             }
             else
@@ -57,12 +59,13 @@ public class PhotonSpawnableObject : MonoBehaviour {
                 PhotonGameManager.OnMultiplayerSceneLoaded += () =>
                 {
 
-                    InstantiateItemInSpawner();
+                    InstantiateLocalItemInSpawner(dbitem);
                 };
             }
         }
     }
 
+    
     private void OnTriggerEnter(Collider other)
 	{
 		if (inputMaster == null) {
@@ -76,18 +79,20 @@ public class PhotonSpawnableObject : MonoBehaviour {
 		}
 	}
 
-	private void OnTriggerExit(Collider other)
-	{
-		if (inputMaster == null) {
-			inputMaster = GameObject.Find("Player").GetComponent<InputMaster>();
-		}
-		Debug.Log ("Spawner exited");
-		if (other.CompareTag("GameController"))
-		{
-			Debug.LogWarning(this.name + " exited by " + other.name);
-			inputMaster.TriggerClicked -= HandleTriggerClicked;
-		}
-	}
+    private void OnTriggerExit(Collider other)
+    {
+        if (inputMaster == null)
+        {
+            inputMaster = GameObject.Find("Player").GetComponent<InputMaster>();
+        }
+        Debug.Log("Spawner exited");
+        if (other.CompareTag("GameController"))
+        {
+            Debug.LogWarning(this.name + " exited by " + other.name);
+            inputMaster.TriggerClicked -= HandleTriggerClicked;
+        }
+    }
+  
 
 	private void HandleTriggerClicked(object sender, ClickedEventArgs e)
 	{
@@ -95,7 +100,7 @@ public class PhotonSpawnableObject : MonoBehaviour {
 		InstantiateRealItem (e.controllerIndex);
 	}
 
-	public void InstantiateItemInSpawner()
+	/*public void InstantiateItemInSpawner()
 	{
 		GameObject clone = PhotonNetwork.Instantiate(itemPrefabName, spawnPoint.position, spawnPoint.rotation, 0);
 
@@ -103,14 +108,33 @@ public class PhotonSpawnableObject : MonoBehaviour {
 
 		itemInSpawner = clone;
 		Debug.Log ("Spawner item instantiated");
-	}
+	}*/
 
-	private void InstantiateRealItem(uint controllerIndex)
+    public void InstantiateLocalItemInSpawner(GameObject dbItem)
+    {
+        item = dbItem;
+        GameObject clone = Instantiate(item, spawnPoint.position, spawnPoint.rotation);
+
+        Rigidbody r_clone = clone.GetComponent<Rigidbody>();
+
+        clone.transform.SetParent(this.transform);
+        clone.name = item.name;
+        r_clone.constraints = RigidbodyConstraints.FreezeAll;
+        r_clone.GetComponent<Collider>().enabled = false;
+        r_clone.GetComponent<PhotonNetworkedObject>().enabled = false;
+        r_clone.GetComponent<PhotonView>().enabled = false;
+        r_clone.GetComponent<PhotonObjectOwnershipHandler>().enabled = false;
+        itemInSpawner = clone;
+        itemPrefabName = "Inventory/" + item.name;
+        Debug.Log("Spawner item instantiated");
+    }
+
+    private void InstantiateRealItem(uint controllerIndex)
 	{
 		Debug.LogWarning ("Starting to instantiate item");
 		GameObject clone = PhotonNetwork.Instantiate(itemPrefabName, spawnPoint.position, spawnPoint.rotation, 0);
-
-		Hand hand;
+        
+        Hand hand;
 
 		if (controllerIndex == 1) {
 			hand = GameObject.Find ("Hand1").GetComponent<Hand>();

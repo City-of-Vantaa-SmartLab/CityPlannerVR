@@ -247,6 +247,7 @@ GameObject:
   - component: {fileID: 114273513201063574}
   - component: {fileID: 114343993500737724}
   - component: {fileID: 135709044068092856}
+  - component: {fileID: 54108449088674430}
   m_Layer: 15
   m_Name: PhotonHandLeft
   m_TagString: GameController
@@ -363,7 +364,7 @@ Transform:
   m_GameObject: {fileID: 1658734535107998}
   m_LocalRotation: {x: -0.7071068, y: 0, z: 0, w: 0.7071068}
   m_LocalPosition: {x: 0.369, y: -0.47, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalScale: {x: 0.6900001, y: 0.6900001, z: 0.6900001}
   m_Children:
   - {fileID: 4458955744411456}
   m_Father: {fileID: 4709783450553670}
@@ -376,7 +377,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1518467711047004}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -20.916183, y: -4.2099447, z: 4.4970083}
+  m_LocalPosition: {x: 7.1422925, y: -1.6887925, z: 10.461838}
   m_LocalScale: {x: 2, y: 2, z: 2}
   m_Children:
   - {fileID: 4182853695052026}
@@ -422,7 +423,7 @@ Transform:
   m_GameObject: {fileID: 1648273713572008}
   m_LocalRotation: {x: -0.7071068, y: 0, z: 0, w: 0.7071068}
   m_LocalPosition: {x: -0.323, y: -0.464, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalScale: {x: 0.69000006, y: 0.69000006, z: 0.69000006}
   m_Children:
   - {fileID: 4410762907532866}
   m_Father: {fileID: 4709783450553670}
@@ -779,6 +780,21 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
+--- !u!54 &54108449088674430
+Rigidbody:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1648273713572008}
+  serializedVersion: 2
+  m_Mass: 1
+  m_Drag: 0
+  m_AngularDrag: 0.05
+  m_UseGravity: 0
+  m_IsKinematic: 1
+  m_Interpolate: 0
+  m_Constraints: 0
+  m_CollisionDetection: 0
 --- !u!65 &65030743730143356
 BoxCollider:
   m_ObjectHideFlags: 1
@@ -1101,7 +1117,6 @@ MonoBehaviour:
   ownershipTransfer: 0
   ObservedComponents:
   - {fileID: 114343993500737724}
-  - {fileID: 0}
   ObservedComponentsFoldoutOpen: 1
   viewIdField: 0
   instantiationId: -1
@@ -1586,8 +1601,8 @@ SphereCollider:
   m_IsTrigger: 0
   m_Enabled: 1
   serializedVersion: 2
-  m_Radius: 0.09600308
-  m_Center: {x: 0.00029495358, y: -0.017621253, z: -0.013248025}
+  m_Radius: 0.07
+  m_Center: {x: 0.00029495358, y: -0.05, z: 0}
 --- !u!135 &135526440266154556
 SphereCollider:
   m_ObjectHideFlags: 1
@@ -1610,8 +1625,8 @@ SphereCollider:
   m_IsTrigger: 0
   m_Enabled: 1
   serializedVersion: 2
-  m_Radius: 0.09600303
-  m_Center: {x: -0.00029490516, y: -0.017621294, z: -0.013248027}
+  m_Radius: 0.07
+  m_Center: {x: -0.00029490516, y: -0.017621294, z: 0}
 --- !u!136 &136500146872510220
 CapsuleCollider:
   m_ObjectHideFlags: 1

@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+
 //using UnityEngine.Networking;
 
 /// <summary>
@@ -16,6 +17,9 @@ public class InventoryUpdater : MonoBehaviour
     private PhotonSpawnableObject[] spawners;
     public int databaseSize;
     public int item_int = 0;
+    public float lastitemdec;
+    public float lastitemf;
+    public int lastitem;
 
 
     private void Start()
@@ -24,6 +28,19 @@ public class InventoryUpdater : MonoBehaviour
         itemDB = GameObject.Find("ItemDatabase");
         itemData = itemDB.GetComponent<ItemDatabase>();
         databaseSize = itemData.listSize;
+
+        float checknumber = (databaseSize*1.0f / 9.0f);
+        lastitemdec = Mathf.Repeat(checknumber, 1.0f);
+     
+        if (lastitemdec == 0.0f)
+            lastitem = 9;
+        else
+        {
+            lastitemf = 9 * lastitemdec;
+            lastitem = Mathf.RoundToInt(lastitemf);
+        }
+            
+       
         spawners = gameObject.GetComponentsInChildren<PhotonSpawnableObject>(true);
         foreach (PhotonSpawnableObject spawn in spawners)
         {
@@ -56,7 +73,7 @@ public class InventoryUpdater : MonoBehaviour
                     spawn.itemInSpawner = itemData.DBAccessUP(item_int);
                     Debug.Log("new item added");
                     item_int++;
-                    spawn.InstantiateItemInSpawner();
+                    spawn.InstantiateLocalItemInSpawner(spawn.itemInSpawner);
                     Debug.Log("New crap added");
                 }
 
@@ -78,7 +95,24 @@ public class InventoryUpdater : MonoBehaviour
         if (item_int <= 9)
         {
             Debug.Log("DeactivateButton");
+            item_int = 9;
         }
+        else if (item_int == databaseSize)
+        {
+            item_int = item_int - (9 + lastitem);
+            foreach (PhotonSpawnableObject spawn in spawners)
+            {
+                PhotonSpawnableObject _spawn = spawn;
+                Debug.Log("ButtonDown");
+                DestroyCurrent(_spawn);
+
+                spawn.itemInSpawner = itemData.DBAccessDown(item_int);
+                item_int++;
+                spawn.InstantiateLocalItemInSpawner(spawn.itemInSpawner);
+                Debug.Log("New crap added");
+            }
+        }
+
         else
         {
             item_int = item_int - 18;
@@ -90,7 +124,7 @@ public class InventoryUpdater : MonoBehaviour
 
                 spawn.itemInSpawner = itemData.DBAccessDown(item_int);
                 item_int++;
-                spawn.InstantiateItemInSpawner();
+                spawn.InstantiateLocalItemInSpawner(spawn.itemInSpawner);
                 Debug.Log("New crap added");
             }
         }
