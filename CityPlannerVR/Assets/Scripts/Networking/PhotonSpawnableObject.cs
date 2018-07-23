@@ -21,8 +21,10 @@ public class PhotonSpawnableObject : MonoBehaviour {
 	public GameObject itemInSpawner;
 
 	public InputMaster inputMaster;
+    public MenuSpawner menuObject;
 
-	private bool isFirstTime = true;
+    //private bool isFirstTime = true;
+    public bool menuIsActive;
 
     #endregion
 
@@ -50,7 +52,7 @@ public class PhotonSpawnableObject : MonoBehaviour {
 
             if (PhotonGameManager.Instance.isMultiplayerSceneLoaded)
             {
-
+            
                 InstantiateLocalItemInSpawner(dbitem);
 
             }
@@ -58,7 +60,7 @@ public class PhotonSpawnableObject : MonoBehaviour {
             {
                 PhotonGameManager.OnMultiplayerSceneLoaded += () =>
                 {
-
+                   
                     InstantiateLocalItemInSpawner(dbitem);
                 };
             }
@@ -94,10 +96,16 @@ public class PhotonSpawnableObject : MonoBehaviour {
     }
   
 
-	private void HandleTriggerClicked(object sender, ClickedEventArgs e)
+	public void HandleTriggerClicked(object sender, ClickedEventArgs e)
 	{
-		Debug.LogWarning ("Trigger clicked");
-		InstantiateRealItem (e.controllerIndex);
+        //menuObject = this.gameObject.GetComponentInParent<MenuSpawner>();
+        //menuIsActive = menuObject.menuActive;
+        //if (menuIsActive)
+        //{
+            Debug.LogWarning("Trigger clicked");
+            InstantiateRealItem(e.controllerIndex);
+        //}
+		
 	}
 
 	/*public void InstantiateItemInSpawner()

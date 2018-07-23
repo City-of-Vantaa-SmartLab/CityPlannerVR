@@ -51,7 +51,7 @@ public class InventoryUpdater : MonoBehaviour
 
     public void PhotonInitItems()
     {
-
+        
         foreach (PhotonSpawnableObject spawn in spawners)
         {
             spawn.GetItems(itemData.DBAccess(item_int));

@@ -12,10 +12,10 @@ public class MenuSpawner : MonoBehaviour
     private Hand hand2;
     public Transform _camera;
     public GameObject menu;
-    private bool menuActive = false;
+    public bool menuActive = false;
     private InputMaster inputMaster;
+    private PhotonSpawnableObject[] spawnslots;
     private bool isFirstTime = true;
-
 
     void Update()
     {
@@ -40,6 +40,7 @@ public class MenuSpawner : MonoBehaviour
         //menu.transform.position = new Vector3(menu.transform.position.x - 1, menu.transform.position.y, menu.transform.position.z - 0.5f);
         menu.transform.eulerAngles = new Vector3(-35, 130, 0);
         menu.SetActive(false);
+        spawnslots = gameObject.GetComponentsInChildren<PhotonSpawnableObject>(true);
 
         inputMaster = GameObject.Find("Player").GetComponent<InputMaster>();
         if (inputMaster)
@@ -89,6 +90,11 @@ public class MenuSpawner : MonoBehaviour
 
             else
             {
+                foreach (PhotonSpawnableObject spawnslot in spawnslots)
+                {
+
+                    inputMaster.TriggerClicked -= spawnslot.HandleTriggerClicked;
+                }
                 menuActive = false;
                 menu.SetActive(false);
             }
