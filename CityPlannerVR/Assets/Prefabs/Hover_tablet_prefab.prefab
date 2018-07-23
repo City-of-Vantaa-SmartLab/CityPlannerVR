@@ -103,7 +103,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1246265415911214}
   m_LocalRotation: {x: -0, y: 0.7071068, z: -0, w: 0.7071068}
-  m_LocalPosition: {x: 12.17, y: 1.877172, z: 1.989}
+  m_LocalPosition: {x: -6.421, y: 1.877172, z: -2.421}
   m_LocalScale: {x: 0.13870127, y: 0.13870122, z: 0.13870127}
   m_Children:
   - {fileID: 4682860395302066}
@@ -293,6 +293,17 @@ MonoBehaviour:
   clickedEvents:
     m_PersistentCalls:
       m_Calls:
+      - m_Target: {fileID: 114940190258100770}
+        m_MethodName: ScrollFacades
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
       - m_Target: {fileID: 114940190258100770}
         m_MethodName: FacadeChange
         m_Mode: 1
