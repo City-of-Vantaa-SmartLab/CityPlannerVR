@@ -19,6 +19,8 @@ public class ChangeFacade : MonoBehaviour {
         SetName.OnChangeColor += ChangeButtonColor;
 
         meshRenderer.material.color = Color.gray;
+
+        Debug.Log("ChangeFacade start");
     }
 
     void ChangeButtonColor()
