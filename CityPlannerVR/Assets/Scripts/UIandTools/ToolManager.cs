@@ -131,7 +131,7 @@ public class ToolManager : MonoBehaviour {
             {
                 if (activeItemContainer.tool == ToolType.Item)
                 {
-                    activeItemContainer.gameObject.GetComponent<PhotonSpawnableObject>().InstantiateRealItem();
+                    activeItemContainer.gameObject.GetComponent<PhotonSpawnableObject>().InstantiateRealItem(myHandNumber);
                 }
                 else
                     activeItemContainer.OnClicked(sender, e, inputMaster);
