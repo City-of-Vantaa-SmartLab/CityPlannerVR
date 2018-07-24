@@ -90,11 +90,12 @@ public class MenuSpawner : MonoBehaviour
 
             else
             {
-                foreach (PhotonSpawnableObject spawnslot in spawnslots)
-                {
+                //foreach (PhotonSpawnableObject spawnslot in spawnslots)
+                //{
 
-                  //  inputMaster.TriggerClicked -= spawnslot.HandleTriggerClicked;
-                }
+                //  //  inputMaster.TriggerClicked -= spawnslot.HandleTriggerClicked;
+                //}
+                inputMaster.ClearItemSlots();
                 menuActive = false;
                 menu.SetActive(false);
             }

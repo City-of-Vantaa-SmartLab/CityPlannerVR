@@ -85,6 +85,7 @@ public class ToolManager : MonoBehaviour {
         //inputMaster.MenuButtonClicked += HandleMenuClicked;
         inputMaster.TriggerClickedInsideToolbelt += HandleTriggerClickedInsideToolbelt;
         inputMaster.RoleChanged += HandleNewRole;
+        inputMaster.ClearActiveItemSlots += HandleClearItemSlots;
     }
 
 
@@ -94,6 +95,8 @@ public class ToolManager : MonoBehaviour {
         //inputMaster.MenuButtonClicked -= HandleMenuClicked;
         inputMaster.TriggerClickedInsideToolbelt -= HandleTriggerClickedInsideToolbelt;
         inputMaster.RoleChanged -= HandleNewRole;
+        inputMaster.ClearActiveItemSlots -= HandleClearItemSlots;
+
     }
 
     private void FindHandNumber()
@@ -126,8 +129,12 @@ public class ToolManager : MonoBehaviour {
             }
             else
             {
-                //put getting items over here
-                activeItemContainer.OnClicked(sender, e, inputMaster);
+                if (activeItemContainer.tool == ToolType.Item)
+                {
+                    activeItemContainer.gameObject.GetComponent<PhotonSpawnableObject>().InstantiateRealItem();
+                }
+                else
+                    activeItemContainer.OnClicked(sender, e, inputMaster);
             }
         }
     }
@@ -136,6 +143,11 @@ public class ToolManager : MonoBehaviour {
     {
         toolRights = GetIntForRole(inputMaster.Role);
         //Debug.Log("New Rights int: " + toolRights);
+    }
+
+    private void HandleClearItemSlots(int index)
+    {
+        activeItemContainer = null;
     }
 
     // move under Tool property?

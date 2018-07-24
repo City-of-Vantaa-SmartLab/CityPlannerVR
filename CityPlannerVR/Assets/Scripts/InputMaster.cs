@@ -72,6 +72,7 @@ public class InputMaster : PunBehaviour {
     public delegate void EventWithIndex(int deviceIndex);
     public event EventWithIndex ClearSelections; //event for highlightselection
     public event EventWithIndex RoleChanged;
+    public event EventWithIndex ClearActiveItemSlots;
     //public event EventWithIndex Hand1DeviceFound;
     //public event EventWithIndex Hand2DeviceFound;
 
@@ -302,6 +303,11 @@ public class InputMaster : PunBehaviour {
         RoleChanged?.Invoke(0);
     }
 
+    public void ClearItemSlots()
+    {
+        ClearActiveItemSlots?.Invoke(0);
+    }
+
     #endregion
 
     public void LaserIsOff()
@@ -354,36 +360,8 @@ public class InputMaster : PunBehaviour {
             yield return new WaitForSeconds(.1f);
         }
     }
-    
-    ////this could be added to scripts that need them, or centralized here if there are too many
-    //IEnumerator TrackHandNodeCoroutine(UnityEngine.XR.XRNode node, GameObject hand)
-    //{
-    //    while (true)
-    //    {
-    //        hand.transform.rotation = UnityEngine.XR.InputTracking.GetLocalRotation(node);
 
-    //        if (playerSize.isSmall)
-    //        {
-    //            //all the axes are same for scale, so no matter which one is used. (If they're not, something is wrong and it should be fixed)
-    //            hand.transform.position = playerGO.transform.position + UnityEngine.XR.InputTracking.GetLocalPosition(node) * playerGO.transform.localScale.x;
-    //            //Now player won't be able to pick up building or other stuff we don't want when they are shrinked down on the table
-    //            //hand1.hoverLayerMask = finalMask;
-    //            //hand2.hoverLayerMask = finalMask;
-    //        }
 
-    //        //Check if we are in god mode (big)
-    //        else
-    //        {
-    //            hand.transform.position = playerGO.transform.position + UnityEngine.XR.InputTracking.GetLocalPosition(node);
-    //            //Player is normal sized again and must be able to move everything again
-    //            //hand1.hoverLayerMask = -1;
-    //            //hand2.hoverLayerMask = -1;
-    //        }
 
-    //        //CmdScaleHands(playerVR.transform.localScale * 0.07f);
-
-    //        yield return null;
-    //    }
-    //}
 
 }
