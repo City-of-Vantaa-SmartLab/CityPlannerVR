@@ -93,7 +93,7 @@ public class MenuSpawner : MonoBehaviour
                 foreach (PhotonSpawnableObject spawnslot in spawnslots)
                 {
 
-                    inputMaster.TriggerClicked -= spawnslot.HandleTriggerClicked;
+                  //  inputMaster.TriggerClicked -= spawnslot.HandleTriggerClicked;
                 }
                 menuActive = false;
                 menu.SetActive(false);
