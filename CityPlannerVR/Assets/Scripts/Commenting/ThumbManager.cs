@@ -55,7 +55,8 @@ public class ThumbManager : MonoBehaviour {
         tempData.SHPath = "";
         //tempData.commentatorPosition = player.transform.position;
         tempData.type = Comment.CommentType.Thumb;
-        
+        //tempData.type = 2;
+
         tempData.quickcheck = 0; //will be created in saveAndLoadComments script
 
         return tempData;

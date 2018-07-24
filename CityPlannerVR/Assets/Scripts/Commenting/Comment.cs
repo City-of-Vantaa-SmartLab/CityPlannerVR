@@ -9,6 +9,7 @@ public class CommentData
 {
     //CommentMetaData metaData;
     public string dataString;
+    //public int type;
     public Comment.CommentType type;
 
     public string userName; //player
@@ -58,6 +59,7 @@ public class Comment {
     {
         //SaveData<CommentData>.AddCommentData(data);
         //SaveData.AddData(data);
+        AddCommentDataToSavedata();
         OnDisable();
     }
 
@@ -66,16 +68,19 @@ public class Comment {
         switch (data.type)
         {
             case Comment.CommentType.Text:
+                //case 1:
                 if (!IsCommentInList(SaveData.commentLists.textComments))
                     SaveData.commentLists.textComments.Add(this);
                 break;
 
             case Comment.CommentType.Voice:
+                //case 3:
                 if (!IsCommentInList(SaveData.commentLists.voiceComments))
                     SaveData.commentLists.voiceComments.Add(this);
                 break;
 
             case Comment.CommentType.Thumb:
+                //case 2:
                 if (!IsCommentInList(SaveData.commentLists.thumbComments))
                     SaveData.commentLists.thumbComments.Add(this);
                 break;
@@ -168,12 +173,19 @@ public class Comment {
             submittedShortDate = DateTime.Now.ToShortDateString(),
             //submittedShortTime = DateTime.Now.ToShortTimeString(),
             type = Comment.CommentType.Text,
+            //type = 1,
             userName = "Username"
         };
 
         newComment.data = data;
-
+        newComment.AddCommentDataToSavedata();
         return newComment;
+    }
+
+    public void AddCommentDataToSavedata()
+    {
+        //Debug.Log("Adding comment data to savedata list");
+        SaveData.AddData(this.data);
     }
 
 

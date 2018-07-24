@@ -10,6 +10,7 @@ using System;
 /// 
 /// </summary>
 
+[Serializable]
 public class Container<T> /*where T : parentClass  //if needed, eg. CommentData as child class -> through inheritance?*/
 {
     public List<T> datas = new List<T>();

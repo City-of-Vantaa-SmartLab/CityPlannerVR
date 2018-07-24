@@ -113,6 +113,8 @@ public class ToolManager : MonoBehaviour {
 
     private void HandleTriggerClickedInsideToolbelt(object sender, ClickedEventArgs e)
     {
+        if (myHandNumber == 0)
+            FindHandNumber();
         if (e.controllerIndex == myHandNumber && activeItemContainer != null)
         {
             if (activeItemContainer.isToolContainer)
@@ -296,7 +298,7 @@ public class ToolManager : MonoBehaviour {
 
     private void OnTriggerEnter(Collider other)
     {
-        if (other.CompareTag("ItemSlot"))
+        if (other.CompareTag("ItemSlot") || other.CompareTag("SpawnSlot"))
         {
             //Debug.Log(this.name + " has been entered by " + other.name);
             activeItemContainer = other.gameObject.GetComponent<ItemContainer>();
@@ -319,7 +321,7 @@ public class ToolManager : MonoBehaviour {
 
     private void OnTriggerExit(Collider other)
     {
-        if (other.CompareTag("ItemSlot"))
+        if (other.CompareTag("ItemSlot") || other.CompareTag("SpawnSlot"))
         {
             //Debug.Log(this.name + " has left " + other.name);
             if (activeItemContainer != null)

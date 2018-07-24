@@ -25,7 +25,6 @@ public class SaveAndLoadTransforms : MonoBehaviour {
     public List<GameObject> startupHolderList = new List<GameObject>();
     private Container<TransformData> startupContainer = new Container<TransformData>();
 
-    public string localPlayerName;
     static public Transform defaultParentCleanup;
     private string folderPathName;
     private string folder;
@@ -118,7 +117,8 @@ public class SaveAndLoadTransforms : MonoBehaviour {
     public void Load(string fileName)
     {
         pathName = folderPathName + slash + fileName + fileExtender;
-        MongoDBAPI.ExportJSONFileFromDatabase(MongoDBAPI.commentCollection, pathName);
+        MongoDBAPI.UseDefaultConnections();
+        MongoDBAPI.ExportJSONFileFromDatabase(MongoDBAPI.transformCollection, pathName);
         SaveData.LoadItems<TransformData>(pathName);
     }
 
@@ -145,6 +145,11 @@ public class SaveAndLoadTransforms : MonoBehaviour {
     {
         foreach (GameObject GO in holders)
         {
+            if (GO == null)
+            {
+                Debug.Log("GameObject is null!");
+                continue;
+            }
             StoreData(GO.transform);  //stores the holder
             Debug.Log("Storing holder's transform: " + GO.name);
             foreach (Transform tr in GO.transform)

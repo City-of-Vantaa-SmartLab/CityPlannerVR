@@ -4,7 +4,7 @@ using UnityEngine;
 using UnityEngine.Events;
 
 /// <summary>
-/// Toolslot and items need to be tagged as itemslots. Can be used to trigger events, but then the tooltype MUST BE ITEM.
+/// Toolslot and items need to be tagged as ItemSlots or SpawnSlot. Can be used to trigger events, but then the tooltype MUST BE ITEM.
 /// Events also require that the gameobject attached has a trigger collider (checked in ToolManager) and a rigidbody,
 /// but this might change in later revisions.
 /// </summary>
@@ -22,7 +22,7 @@ public class ItemContainer : MonoBehaviour {
     public UnityEvent unclickedEvents;
     public UnityEvent hoverInEvents;
     public UnityEvent hoverOutEvents;
-    uint subscribedControllerIndex;
+    public uint subscribedControllerIndex;
 
 
 

@@ -68,6 +68,8 @@ public class SaveAndLoadComments : MonoBehaviour
     public void Load()
     {
         LoadFromDatabase();
+        //Container<CommentData> tempContainer;
+        //tempContainer = SaveData.LoadDatas<CommentData>(pathName);
         SaveData.LoadItems<CommentData>(pathName);
     }
 
