@@ -61,7 +61,6 @@ public class OpenCommentTool : MonoBehaviour {
     public void ActivateCommentTool()
     {
         playComment.pointedTarget = HoverTabletManager.commentTarget.gameObject;
-        recordComment.target = HoverTabletManager.commentTarget.gameObject;
         commentTool.SetActive(true);
 
         //CommentTool position

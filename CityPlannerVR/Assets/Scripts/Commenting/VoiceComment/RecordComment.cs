@@ -14,7 +14,6 @@ using System.Xml.Serialization;
 
 public class RecordComment : MonoBehaviour
 {
-
     /// <summary>
     /// Tells if there are no microphones connected
     /// </summary>
@@ -43,22 +42,10 @@ public class RecordComment : MonoBehaviour
     public Dissonance.VoiceBroadcastTrigger voiceTrigger;
 
     /// <summary>
-    /// The object we are commenting
-    /// </summary>
-    [HideInInspector]
-    public GameObject target;
-    /// <summary>
     /// The person who commented
     /// </summary>
     [HideInInspector]
     public string commenter;
-
-
-    //Lasers for both hands, so it doesn't matter which hand is used
-    LaserPointer laserRight;
-    LaserPointer laserLeft;
-
-    string commentLayer = "CommentTool";
 
     const string directoryName = "VoiceComments";
     /// <summary>
@@ -97,14 +84,14 @@ public class RecordComment : MonoBehaviour
     /// <summary>
     /// Shows player how long the voice comment has been recorded
     /// </summary>
-    UnityEngine.UI.Text recordTimer;
+    public UnityEngine.UI.Text recordTimer;
     int recordTimeMilliSec;
     int recordTimeSec;
 
     /// <summary>
     /// The canvas which shows the recordTimer
     /// </summary>
-    GameObject canvas;
+    //----GameObject canvas;
     /// <summary>
     /// Reference to coroutine which counts the recordTimer up when comment is recorded
     /// </summary>
@@ -131,17 +118,13 @@ public class RecordComment : MonoBehaviour
             return audioSavePathExt;
         }
     }
-
-
+    //---------------------------------------------------------------------------------------------
 
     private void Start()
     {
         //savePath = Application.dataPath+ slash + "Resources" + slash + "Comments" + slash + directoryName + slash;
         savePath = Application.streamingAssetsPath + slash + "Comments" + slash + directoryName + slash;
         audioSavePathExt = "AudioFiles" + slash;
-
-        laserLeft = GameObject.Find("Player/SteamVRObjects/Hand1/Laserpointer").GetComponentInChildren<LaserPointer>();
-        laserRight = GameObject.Find("Player/SteamVRObjects/Hand2/Laserpointer").GetComponentInChildren<LaserPointer>();
 
         if (Microphone.devices.Length <= 0)
         {
@@ -165,41 +148,22 @@ public class RecordComment : MonoBehaviour
 
         LoadOldSavedData();
 
-        laserLeft.PointerIn += FindTarget;
-        laserRight.PointerIn += FindTarget;
-
         voiceTrigger = PhotonPlayerAvatar.LocalPlayerInstance.GetComponent<Dissonance.VoiceBroadcastTrigger>();
         commenter = PhotonPlayerAvatar.LocalPlayerInstance.GetComponent<PhotonView>().owner.NickName;
 
-        recordTimer = GetComponentInChildren<UnityEngine.UI.Text>();
-        canvas = GameObject.Find("RecordIndicatorCanvas");
-        canvas.SetActive(false);
+        //----recordTimer = GetComponentInChildren<UnityEngine.UI.Text>();
+        //----canvas = GameObject.Find("RecordIndicatorCanvas");
+        //----canvas.SetActive(false);
     }
 
     /// <summary>
     /// Used to play the sound effect when recording is started or stopped
     /// </summary>
-    public void PlaySoundEffect()
+    private void PlaySoundEffect()
     {
         source.Play();
     }
 
-    /// <summary>
-    /// Checks and assigns the target for the voice comment
-    /// </summary>
-    /// <param name="sender">The laser to send this info</param>
-    /// <param name="e">The info that the laser sends</param>
-    void FindTarget(object sender, LaserEventArgs e)
-    {
-        if (e.target.gameObject.layer != LayerMask.NameToLayer(commentLayer))
-        {
-            if (e.target.gameObject.layer == LayerMask.NameToLayer("Building") || e.target.gameObject.layer == LayerMask.NameToLayer("Props"))
-            {
-                target = e.target.gameObject;
-                //Debug.Log("Target = " + target.name);
-            }
-        }
-    }
     /// <summary>
     /// Start recording the voice comment
     /// </summary>
@@ -215,7 +179,7 @@ public class RecordComment : MonoBehaviour
             {
                 tempAudioClip = Microphone.Start(null, true, 30, maxFreq);
                 //Debug.Log("Recording started");
-                canvas.SetActive(true);
+                //-----canvas.SetActive(true);
                 RecordTimerCoroutine = StartCoroutine(RecordTimer());
             }
         }
@@ -288,7 +252,7 @@ public class RecordComment : MonoBehaviour
                     Microphone.End(null);
                     //Debug.Log("Recording stopped");
                     StopCoroutine(RecordTimerCoroutine);
-                    canvas.SetActive(false);
+                    //----canvas.SetActive(false);
 
                     //Reset the timer
                     recordTimeSec = 0;
@@ -313,6 +277,7 @@ public class RecordComment : MonoBehaviour
             Microphone.End(null);
         }
     }
+
     //-----------------------------------------------------------------------------------------------------------------------------------------------------
 
     /// <summary>
@@ -330,8 +295,9 @@ public class RecordComment : MonoBehaviour
         if (file.Length > 0)
         {
             positionDB = (PositionDatabase)serializer.Deserialize(file);
-            file.Close();
         }
+
+        file.Close();
     }
 
     /// <summary>
@@ -344,17 +310,19 @@ public class RecordComment : MonoBehaviour
         SavWav.Save(filename, finalAudioClip, savePath + audioSavePathExt);
 
         XmlSerializer serializer = new XmlSerializer(typeof(PositionDatabase));
-        FileStream file = File.Create(savePath + positionFileName);
+        
+        
+        FileStream file = File.Create(savePath + positionFileName); 
 
         positionDB.list.Add(new PositionData());
 
         positionDB.list[positionDB.list.Count - 1].commenterName = commenter;
         positionDB.list[positionDB.list.Count - 1].recordName = filename;
-        positionDB.list[positionDB.list.Count - 1].targetName = target.name;
+        positionDB.list[positionDB.list.Count - 1].targetName = HoverTabletManager.commentTarget.name;
 
-        positionDB.list[positionDB.list.Count - 1].position[0] = target.transform.position.x;
-        positionDB.list[positionDB.list.Count - 1].position[1] = target.transform.position.y;
-        positionDB.list[positionDB.list.Count - 1].position[2] = target.transform.position.z;
+        positionDB.list[positionDB.list.Count - 1].position[0] = HoverTabletManager.commentTarget.transform.position.x;
+        positionDB.list[positionDB.list.Count - 1].position[1] = HoverTabletManager.commentTarget.transform.position.y;
+        positionDB.list[positionDB.list.Count - 1].position[2] = HoverTabletManager.commentTarget.transform.position.z;
 
         serializer.Serialize(file, positionDB);
         file.Close();
