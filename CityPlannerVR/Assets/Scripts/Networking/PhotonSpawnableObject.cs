@@ -23,6 +23,10 @@ public class PhotonSpawnableObject : MonoBehaviour {
 	public InputMaster inputMaster;
     public MenuSpawner menuObject;
 
+    public Hand hand1;
+    public Hand hand2;
+    public ItemContainer itemContainer;
+
     //private bool isFirstTime = true;
     public bool menuIsActive;
 
@@ -31,8 +35,10 @@ public class PhotonSpawnableObject : MonoBehaviour {
    //Use this for initialization
 	void Start()
 	{
-		
-	}
+        hand1 = GameObject.Find("Hand1").GetComponent<Hand>();
+        hand2 = GameObject.Find("Hand2").GetComponent<Hand>();
+        itemContainer = this.gameObject.GetComponent<ItemContainer>();
+    }
     
 	//void Update() {
 	//	if (isFirstTime) {
@@ -68,47 +74,42 @@ public class PhotonSpawnableObject : MonoBehaviour {
     }
 
     
-    private void OnTriggerEnter(Collider other)
-	{
-		if (inputMaster == null) {
-			inputMaster = GameObject.Find("Player").GetComponent<InputMaster>();
-		}
-		Debug.Log ("Spawner entered");
-		if (other.CompareTag("GameController"))
-		{
-			Debug.LogWarning(this.name + " triggered by " + other.name);
-			inputMaster.TriggerClicked += HandleTriggerClicked;
-		}
-	}
+ //   private void OnTriggerEnter(Collider other)
+	//{
+	//	if (inputMaster == null) {
+	//		inputMaster = GameObject.Find("Player").GetComponent<InputMaster>();
+	//	}
+	//	Debug.Log ("Spawner entered");
+	//	if (other.CompareTag("GameController"))
+	//	{
+	//		Debug.LogWarning(this.name + " triggered by " + other.name);
+	//		inputMaster.TriggerClicked += HandleTriggerClicked;
+	//	}
+	//}
 
-    private void OnTriggerExit(Collider other)
-    {
-        if (inputMaster == null)
-        {
-            inputMaster = GameObject.Find("Player").GetComponent<InputMaster>();
-        }
-        Debug.Log("Spawner exited");
-        if (other.CompareTag("GameController"))
-        {
-            Debug.LogWarning(this.name + " exited by " + other.name);
-            inputMaster.TriggerClicked -= HandleTriggerClicked;
-        }
-    }
+ //   private void OnTriggerExit(Collider other)
+ //   {
+ //       if (inputMaster == null)
+ //       {
+ //           inputMaster = GameObject.Find("Player").GetComponent<InputMaster>();
+ //       }
+ //       Debug.Log("Spawner exited");
+ //       if (other.CompareTag("GameController"))
+ //       {
+ //           Debug.LogWarning(this.name + " exited by " + other.name);
+ //           inputMaster.TriggerClicked -= HandleTriggerClicked;
+ //       }
+ //   }
   
 
-	public void HandleTriggerClicked(object sender, ClickedEventArgs e)
-	{
-        //menuObject = this.gameObject.GetComponentInParent<MenuSpawner>();
-        //menuIsActive = menuObject.menuActive;
-        //if (menuIsActive)
-        //{
-            Debug.LogWarning("Trigger clicked");
-            InstantiateRealItem(e.controllerIndex);
-        //}
+	//public void HandleTriggerClicked(object sender, ClickedEventArgs e)
+	//{
+ //           Debug.LogWarning("Trigger clicked");
+ //           InstantiateRealItem(e.controllerIndex);
 		
-	}
+	//}
 
-	/*public void InstantiateItemInSpawner()
+    /*public void InstantiateItemInSpawner()
 	{
 		GameObject clone = PhotonNetwork.Instantiate(itemPrefabName, spawnPoint.position, spawnPoint.rotation, 0);
 
@@ -137,25 +138,31 @@ public class PhotonSpawnableObject : MonoBehaviour {
         Debug.Log("Spawner item instantiated");
     }
 
-    private void InstantiateRealItem(uint controllerIndex)
+    public void InstantiateRealItem()
 	{
 		Debug.LogWarning ("Starting to instantiate item");
-		GameObject clone = PhotonNetwork.Instantiate(itemPrefabName, spawnPoint.position, spawnPoint.rotation, 0);
+		//GameObject clone = PhotonNetwork.Instantiate(itemPrefabName, spawnPoint.position, spawnPoint.rotation, 0);
+
         
-        Hand hand;
 
-		if (controllerIndex == 1) {
-			hand = GameObject.Find ("Hand1").GetComponent<Hand>();
-		} else if (controllerIndex == 2) {
-			hand = GameObject.Find ("Hand2").GetComponent<Hand>();
-		} else {
-			Debug.LogWarning ("Failed finding correct hand!");
-			hand = null;
+		if (itemContainer.subscribedControllerIndex == 1) {
+			
+            GameObject clone = PhotonNetwork.Instantiate(itemPrefabName, spawnPoint.position, spawnPoint.rotation, 0);
+            hand1.AttachObject(clone);
+            }
+
+        else if (itemContainer.subscribedControllerIndex == 2) {
+	
+            GameObject clone = PhotonNetwork.Instantiate(itemPrefabName, spawnPoint.position, spawnPoint.rotation, 0);
+            hand2.AttachObject(clone);
+            }
+        else {
+            Debug.LogWarning("Failed finding correct hand!");
 		}
 
-		if (hand != null) {
+	/*	if (hand != null) {
 			hand.AttachObject (clone);
-		}
+		}*/
 
 		Debug.LogWarning ("Real item instantiated");
 	}
