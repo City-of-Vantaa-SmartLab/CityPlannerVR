@@ -5,7 +5,7 @@ using MongoDB.Bson;
 using MongoDB.Bson.IO;
 using MongoDB.Bson.Serialization;
 using MongoDB.Driver;
-using MongoDB.Driver.Core;
+//using MongoDB.Driver.Core;
 using System.Threading.Tasks;
 using System.Text;
 using System.Linq;
@@ -55,11 +55,19 @@ public class MongoDBAPI {
     //};
 
     //private static SslSettings defaultSSL;
+    //private static MongoClientSettings defaultSettings = new MongoClientSettings
+    //{
+    //    Server = new MongoServerAddress("192.168.100.21", 27017),
+    //    ServerSelectionTimeout = TimeSpan.FromSeconds(3),
+    //    Credential = defaultDBCredentials
+    //};
+
+    //new default settings for port forwarded setup
     private static MongoClientSettings defaultSettings = new MongoClientSettings
     {
-        Server = new MongoServerAddress("192.168.100.21", 27017),
-        ServerSelectionTimeout = TimeSpan.FromSeconds(3),
-        Credential = defaultDBCredentials
+        Server = new MongoServerAddress("127.0.0.1", 27018),
+        ServerSelectionTimeout = TimeSpan.FromSeconds(3)
+        //Credential = defaultDBCredentials
     };
 
     #endregion
@@ -77,6 +85,10 @@ public class MongoDBAPI {
             activeDatabase = client.GetDatabase(defaultDB);
             if (activeDatabase != null)
                 ConnectToDefaultCollections();
+        }
+        else
+        {
+            Debug.Log("Server client is null!");
         }
     }
 
@@ -161,10 +173,22 @@ public class MongoDBAPI {
 
     public static void ExportJSONFileFromDatabase(IMongoCollection<BsonDocument> targetCollection, string filepath)
     {
+        ExportJSONFileFromDatabase(null, null, null, targetCollection, filepath, true);
+    }
 
+    public static void ExportJSONFileFromDatabase(FilterDefinition<BsonDocument> filter, SortDefinition<BsonDocument> sort,
+        ProjectionDefinition<BsonDocument> projection, IMongoCollection<BsonDocument> targetCollection, string filepath, bool excludeID)
+    {
         using (var streamWriter = new StreamWriter(filepath))
         {
-            var cursor = targetCollection.Find(new BsonDocument()).ToCursor();
+            if (filter == null)
+                filter = new BsonDocument();
+            if (sort == null)
+                sort = Builders<BsonDocument>.Sort.Descending("date");
+            if (projection == null)
+                projection = Builders<BsonDocument>.Projection.Exclude("_id");
+
+            var cursor = targetCollection.Find(filter).Project(projection).Sort(sort).ToCursor();
             foreach (var document in cursor.ToEnumerable())
             {
                 using (var stringWriter = new StringWriter())
@@ -179,6 +203,25 @@ public class MongoDBAPI {
         }
     }
 
+
+
+
+    public static void LoadFileFromDatabase(FilterDefinition<BsonDocument> filter,
+        string filepath, IMongoCollection<BsonDocument> collection)
+    {
+        var document = collection.Find(filter).First();
+    }
+
+
+    //instead this could be done with:
+    //var filter = Builders<BsonDocument>.Filter.Eq("i", 10);
+    //var update = Builders<BsonDocument>.Update.Set("i", 110);
+    //collection.UpdateOne(filter, update);
+    public static void UpdateFileInDatabase(FilterDefinition<BsonDocument> filter,
+        UpdateDefinition<BsonDocument> update, IMongoCollection<BsonDocument> collection)
+    {
+        collection.UpdateOne(filter, update);
+    }
 
 
 }

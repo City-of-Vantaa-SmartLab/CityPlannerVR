@@ -7,9 +7,8 @@ using System.IO;
 /// The middleman between Comment and SaveData scripts. Manages local lists of comments in the depository.
 /// </summary>
 
-public class SaveAndLoadComments : MonoBehaviour {
-
-    public string localPlayerName;
+public class SaveAndLoadComments : MonoBehaviour
+{
     private string folderPathName;
     private string folder;
     private string fileName;
@@ -63,10 +62,14 @@ public class SaveAndLoadComments : MonoBehaviour {
     public void Save()
     {
         SaveData.SaveDatas(pathName, SaveData.commentContainer);
+        SaveToDatabase();
     }
 
     public void Load()
     {
+        LoadFromDatabase();
+        //Container<CommentData> tempContainer;
+        //tempContainer = SaveData.LoadDatas<CommentData>(pathName);
         SaveData.LoadItems<CommentData>(pathName);
     }
 
@@ -74,28 +77,44 @@ public class SaveAndLoadComments : MonoBehaviour {
 
     public void SaveToDatabase()
     {
-        pathName = folderPathName + slash + fileName + fileExtender;
+        //pathName = folderPathName + slash + fileName + fileExtender;
         MongoDBAPI.UseDefaultConnections();
-        MongoDBAPI.ExportJSONFileFromDatabase(MongoDBAPI.transformCollection, pathName);
+        MongoDBAPI.ImportJSONFileToDatabase(MongoDBAPI.commentCollection, pathName);
     }
 
-    public void LoadFromDatabase()
+    private void LoadFromDatabase()
     {
-        pathName = folderPathName + slash + fileName + fileExtender;
+        //pathName = folderPathName + slash + fileName + fileExtender;
         MongoDBAPI.UseDefaultConnections();
-        MongoDBAPI.ImportJSONFileToDatabase(MongoDBAPI.transformCollection, pathName);
+        MongoDBAPI.ExportJSONFileFromDatabase(MongoDBAPI.commentCollection, pathName);
     }
 
-    public void CountDatabaseCommentContainers()
+    private void CountDatabaseCommentContainers()
     {
         if (MongoDBAPI.commentCollection == null)
             MongoDBAPI.UseDefaultConnections();
         var count = MongoDBAPI.commentCollection.CountDocuments(new MongoDB.Bson.BsonDocument());
     }
 
+    public void LoadCommentsForVizualisation(string userName, bool descendingByDate)
+    {
+        var filter = MongoDB.Driver.Builders<MongoDB.Bson.BsonDocument>.Filter.Exists("i");
+        var sort = MongoDB.Driver.Builders<MongoDB.Bson.BsonDocument>.Sort.Descending("i");
+
+    }
+
 
     #endregion
 
+    public void GenerateTestComments()
+    {
+        for (int i = 0; i < 5; i++)
+        {
+            Comment testComment = Comment.GenerateTestComment();
+            testComment.data.dataString += i;
+            testComment.SortAndAddToLocalList();
+        }
+    }
 
 
 }

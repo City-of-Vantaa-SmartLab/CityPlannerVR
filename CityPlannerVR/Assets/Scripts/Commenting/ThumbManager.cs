@@ -43,7 +43,7 @@ public class ThumbManager : MonoBehaviour {
     //needs to be cleaned up
     private CommentData CreateThumbData()
     {
-        String userName = SLComments.localPlayerName;
+        String userName = PhotonNetwork.player.NickName;
         //string targetName = commentToolManager.LEArgs.target.name;
 
         CommentData tempData = new CommentData();
@@ -55,7 +55,8 @@ public class ThumbManager : MonoBehaviour {
         tempData.SHPath = "";
         //tempData.commentatorPosition = player.transform.position;
         tempData.type = Comment.CommentType.Thumb;
-        
+        //tempData.type = 2;
+
         tempData.quickcheck = 0; //will be created in saveAndLoadComments script
 
         return tempData;

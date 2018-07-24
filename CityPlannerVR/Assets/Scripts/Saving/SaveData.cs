@@ -10,10 +10,13 @@ using System;
 /// 
 /// </summary>
 
+[Serializable]
 public class Container<T> /*where T : parentClass  //if needed, eg. CommentData as child class -> through inheritance?*/
 {
     public List<T> datas = new List<T>();
     public Transform previousHolder = null; //used when loading transformdata
+    public string date;
+    public string userWhoSaved;
 }
 
 //for easy accessing and storing locally
@@ -29,6 +32,7 @@ public class SaveData {
 
     //public static CommentContainer commentContainer = new CommentContainer();
     public static Container<CommentData> commentContainer = new Container<CommentData>();
+    public static Container<CommentData> commentContainerForVizualisation = new Container<CommentData>();
     public static Container<TransformData> transformContainer = new Container<TransformData>();
     public static CommentLists commentLists = new CommentLists();
 
@@ -67,8 +71,11 @@ public class SaveData {
         }
     }
 
-    internal static void SaveDatas(string filepath, object container)
+    internal static void SaveDatas<T>(string filepath, Container<T> container)
     {
+        container.date = System.DateTime.Now.ToShortDateString();
+        container.userWhoSaved = PhotonNetwork.player.NickName;
+
         string jason = JsonUtility.ToJson(container);
         StreamWriter sw = File.CreateText(filepath);  //creates or overwrites file at filepath
         sw.Close();
@@ -104,10 +111,20 @@ public class SaveData {
         Debug.Log("CommentLists cleared");
     }
 
-    //public static void SyncDatasToServer()
-    //{
-    //    MongoDBAPI.UseDefaultConnections();
-    //    MongoDBAPI.ExportJSONFileFromDatabase(MongoDBAPI.transformCollection, )
-    //}
+    // Collection indexes:
+    // 1: transformCollection 
+
+    /// <summary>
+    /// Saves a JSON file in the filepath to database according to collectionIndex
+    /// </summary>
+    /// <param name="collectionIndex">0: commentCollection, 1: transformCollection</param>
+
+    public static void SaveFileToDatabase(string filepath, int collectionIndex)
+    {
+        MongoDBAPI.UseDefaultConnections();
+        if (collectionIndex == 1)
+            MongoDBAPI.ExportJSONFileFromDatabase(MongoDBAPI.transformCollection, filepath);
+    }
+
 
 }
