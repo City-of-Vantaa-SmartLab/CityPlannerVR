@@ -4,47 +4,26 @@ using UnityEngine;
 
 public class OpenCommentTool : MonoBehaviour {
 
-    GameObject player;
     GameObject playerAvatar;
-
-    LaserPointer laser;
-    PhotonLaserManager photonLaser;
 
     GameObject commentTool;
     GameObject commentOutput;
     PlayComment playComment;
     RecordComment recordComment;
 
-    string commentToolTag = "CommentToolTag";
-	string spawnableTag = "Spawnable";
-    string buttonTag = "Button";
-    string commentObjectTag = "Building";
     CheckPlayerSize playerSize;
 
     void Start()
     {
-        player = GameObject.Find("Player");
-        playerSize = player.GetComponent<CheckPlayerSize>();
-
         playerAvatar = PhotonPlayerAvatar.LocalPlayerInstance;
-
-        laser = GetComponent<LaserPointer>();
-        photonLaser = GetComponent<PhotonLaserManager>();
 
         commentTool = GameObject.Find("CommentTool");
         commentOutput = GameObject.Find("CommentList");
         playComment = commentOutput.GetComponent<PlayComment>();
         recordComment = commentTool.GetComponentInChildren<RecordComment>();
 
-        //PointerIn += OnHoverButtonEnter;
-        laser.PointerIn += OpenCommentOutputPanel;
-        //PointerIn += ActivateCommentTool;
-        laser.PointerIn += HideCommentTool;
-
-        //PointerOut += OnHoverButtonExit;
-        laser.PointerOut += CheckIfHiding;
-
         //So both hands get the references before commentTool is disabled
+        //TODO: TARKISTA ONKO TARPEELLINEN
         Invoke("DisableCommentTool", 1);
     }
 
@@ -71,76 +50,39 @@ public class OpenCommentTool : MonoBehaviour {
     //    }
     //}
 
-    public void OpenCommentOutputPanel(object sender, LaserEventArgs e)
+    public void OpenCommentOutputPanel()
     {
-        if (e.target.tag == commentToolTag && e.target.name == "Empty")
-        {
-            commentOutput.SetActive(true);
-            playComment.LoadComments();
-        }
+        
+        commentOutput.SetActive(true);
+        playComment.LoadComments();
+        
     }
 
-    public void ActivateCommentTool(LaserPointer laser, GameObject target)
+    public void ActivateCommentTool()
     {
-		if (target.tag == commentObjectTag || target.tag == spawnableTag)
-        {
-            playComment.pointedTarget = target.gameObject;
-            recordComment.target = target.gameObject;
-            commentTool.SetActive(true);
+        playComment.pointedTarget = HoverTabletManager.commentTarget.gameObject;
+        commentTool.SetActive(true);
 
-            if (playerSize.isSmall)
-            {
-				commentTool.transform.position = (laser.hitPoint - playerAvatar.transform.position)/6 + playerAvatar.transform.position;
-                commentTool.transform.localScale = player.transform.localScale;
-            }
-            else
-            {
-                //CommentTool position
-                commentTool.transform.position = laser.hitPoint - laser.direction;
-                commentTool.transform.localScale = Vector3.one;
-            }
+        //CommentTool position
+        commentTool.transform.position = transform.position;
+        commentTool.transform.localScale = Vector3.one;
+        
 
-            commentTool.transform.LookAt(gameObject.transform);
-            
+        commentTool.transform.LookAt(gameObject.transform);
 
-            CommentToolManager commentToolManager;
-            commentToolManager = commentTool.GetComponent<CommentToolManager>();
-            commentToolManager.targetName = target.name;
-        }
+
+        CommentToolManager commentToolManager;
+        commentToolManager = commentTool.GetComponent<CommentToolManager>();
+        commentToolManager.targetName = HoverTabletManager.commentTarget.name;
     }
 
-    bool closeCommentOutput = false;
-    bool closeCommentTool = false;
-
-    //Hides objects when the laser doesn't hit them anymore
-    public void CheckIfHiding(object sender, LaserEventArgs e)
+    public void HideCommentTool()
     {
-        if (e.target.name == commentOutput.name || e.target.name == "Empty")
-        {
-            //if we are closing just the list of comments
-            closeCommentOutput = true;
-        }
-        else if (e.target.tag == commentToolTag)
-        {
-            //if we are closing the whole comment wheel
-            closeCommentTool = true;
-        }
-    }
-
-    public void HideCommentTool(object sender, LaserEventArgs e)
-    {
-        if (closeCommentOutput && e.target.tag == commentToolTag && e.target.tag == buttonTag && e.target.name != commentOutput.name)
-        {
-            //if we are closing just the list of comments
-            commentOutput.SetActive(false);
-            closeCommentOutput = false;
-        }
-        else if (closeCommentTool && e.target.tag != commentToolTag && e.target.tag != buttonTag)
+        if(commentOutput.GetActive() == true)
         {
             //if we are closing the whole comment wheel
             commentOutput.SetActive(false);
             commentTool.SetActive(false);
-            closeCommentTool = false;
         }
     }
 }
