@@ -138,20 +138,20 @@ public class PhotonSpawnableObject : MonoBehaviour {
         Debug.Log("Spawner item instantiated");
     }
 
-    public void InstantiateRealItem()
+    public void InstantiateRealItem(int controllerindex)
 	{
 		Debug.LogWarning ("Starting to instantiate item");
 		//GameObject clone = PhotonNetwork.Instantiate(itemPrefabName, spawnPoint.position, spawnPoint.rotation, 0);
 
         
 
-		if (itemContainer.subscribedControllerIndex == 1) {
+		if (controllerindex == 1) {
 			
             GameObject clone = PhotonNetwork.Instantiate(itemPrefabName, spawnPoint.position, spawnPoint.rotation, 0);
             hand1.AttachObject(clone);
             }
 
-        else if (itemContainer.subscribedControllerIndex == 2) {
+        else if (controllerindex == 2) {
 	
             GameObject clone = PhotonNetwork.Instantiate(itemPrefabName, spawnPoint.position, spawnPoint.rotation, 0);
             hand2.AttachObject(clone);
