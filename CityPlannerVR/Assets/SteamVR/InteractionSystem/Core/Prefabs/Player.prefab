@@ -1294,6 +1294,7 @@ GameObject:
   - component: {fileID: 23503148501818544}
   - component: {fileID: 114186473316541638}
   - component: {fileID: 54135411241298868}
+  - component: {fileID: 114850847523166374}
   m_Layer: 21
   m_Name: SpawnSlot (7)
   m_TagString: SpawnSlot
@@ -1369,6 +1370,7 @@ GameObject:
   - component: {fileID: 23050554208192266}
   - component: {fileID: 114927575484625510}
   - component: {fileID: 54273805315844720}
+  - component: {fileID: 114022184113970918}
   m_Layer: 21
   m_Name: SpawnSlot (4)
   m_TagString: SpawnSlot
@@ -1410,6 +1412,7 @@ GameObject:
   - component: {fileID: 23669923466168626}
   - component: {fileID: 114018902459679302}
   - component: {fileID: 54116223101769182}
+  - component: {fileID: 114918712582229874}
   m_Layer: 21
   m_Name: SpawnSlot (3)
   m_TagString: SpawnSlot
@@ -1430,6 +1433,7 @@ GameObject:
   - component: {fileID: 23496109299404050}
   - component: {fileID: 114666500700444476}
   - component: {fileID: 54907635760689782}
+  - component: {fileID: 114667178650513112}
   m_Layer: 21
   m_Name: SpawnSlot (6)
   m_TagString: SpawnSlot
@@ -1482,6 +1486,7 @@ GameObject:
   - component: {fileID: 23959010472855402}
   - component: {fileID: 114392623037417706}
   - component: {fileID: 54299487325697876}
+  - component: {fileID: 114784023298938422}
   m_Layer: 21
   m_Name: SpawnSlot (8)
   m_TagString: SpawnSlot
@@ -1620,6 +1625,7 @@ GameObject:
   - component: {fileID: 23810205274024200}
   - component: {fileID: 114348378121411902}
   - component: {fileID: 54240632640746090}
+  - component: {fileID: 114189976717518366}
   m_Layer: 21
   m_Name: SpawnSlot (2)
   m_TagString: SpawnSlot
@@ -1779,6 +1785,7 @@ GameObject:
   - component: {fileID: 23954208865866736}
   - component: {fileID: 114341123682496538}
   - component: {fileID: 54154911344826734}
+  - component: {fileID: 114199423477490312}
   m_Layer: 21
   m_Name: SpawnSlot (5)
   m_TagString: SpawnSlot
@@ -1909,6 +1916,7 @@ GameObject:
   - component: {fileID: 23238224543210356}
   - component: {fileID: 114673196516189810}
   - component: {fileID: 54571545157153804}
+  - component: {fileID: 114483105616640952}
   m_Layer: 21
   m_Name: SpawnSlot (1)
   m_TagString: SpawnSlot
@@ -4455,6 +4463,40 @@ MonoBehaviour:
   PageIndex: 0
   previousPage: 0
   nextPages: 
+--- !u!114 &114022184113970918
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1059844031076300}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5eda615d4490ccc4ba1d6a048e840bcf, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  tool: 8
+  isToolContainer: 1
+  persistentContainer: 0
+  clickedEvents:
+    m_PersistentCalls:
+      m_Calls: []
+    m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
+      Culture=neutral, PublicKeyToken=null
+  unclickedEvents:
+    m_PersistentCalls:
+      m_Calls: []
+    m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
+      Culture=neutral, PublicKeyToken=null
+  hoverInEvents:
+    m_PersistentCalls:
+      m_Calls: []
+    m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
+      Culture=neutral, PublicKeyToken=null
+  hoverOutEvents:
+    m_PersistentCalls:
+      m_Calls: []
+    m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
+      Culture=neutral, PublicKeyToken=null
 --- !u!114 &114038798615615966
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -4548,22 +4590,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5eda615d4490ccc4ba1d6a048e840bcf, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  tool: 5
-  isToolContainer: 0
+  tool: 8
+  isToolContainer: 1
+  persistentContainer: 0
   clickedEvents:
     m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 114385552863576224}
-        m_MethodName: InstantiateRealItem
-        m_Mode: 1
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
+      m_Calls: []
     m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
       Culture=neutral, PublicKeyToken=null
   unclickedEvents:
@@ -4581,7 +4613,6 @@ MonoBehaviour:
       m_Calls: []
     m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
       Culture=neutral, PublicKeyToken=null
-  subscribedControllerIndex: 0
 --- !u!114 &114144552354877284
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -4622,6 +4653,74 @@ MonoBehaviour:
   hand2: {fileID: 0}
   itemContainer: {fileID: 0}
   menuIsActive: 0
+--- !u!114 &114189976717518366
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1418487428056620}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5eda615d4490ccc4ba1d6a048e840bcf, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  tool: 8
+  isToolContainer: 1
+  persistentContainer: 0
+  clickedEvents:
+    m_PersistentCalls:
+      m_Calls: []
+    m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
+      Culture=neutral, PublicKeyToken=null
+  unclickedEvents:
+    m_PersistentCalls:
+      m_Calls: []
+    m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
+      Culture=neutral, PublicKeyToken=null
+  hoverInEvents:
+    m_PersistentCalls:
+      m_Calls: []
+    m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
+      Culture=neutral, PublicKeyToken=null
+  hoverOutEvents:
+    m_PersistentCalls:
+      m_Calls: []
+    m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
+      Culture=neutral, PublicKeyToken=null
+--- !u!114 &114199423477490312
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1690909476351478}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5eda615d4490ccc4ba1d6a048e840bcf, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  tool: 8
+  isToolContainer: 1
+  persistentContainer: 0
+  clickedEvents:
+    m_PersistentCalls:
+      m_Calls: []
+    m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
+      Culture=neutral, PublicKeyToken=null
+  unclickedEvents:
+    m_PersistentCalls:
+      m_Calls: []
+    m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
+      Culture=neutral, PublicKeyToken=null
+  hoverInEvents:
+    m_PersistentCalls:
+      m_Calls: []
+    m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
+      Culture=neutral, PublicKeyToken=null
+  hoverOutEvents:
+    m_PersistentCalls:
+      m_Calls: []
+    m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
+      Culture=neutral, PublicKeyToken=null
 --- !u!114 &114220426255420478
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -4771,8 +4870,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   voiceTrigger: {fileID: 0}
   commenter: 
-  slash: 92
-  positionFileName: positions.txt
   position:
     commenterName: 
     recordName: 
@@ -4984,6 +5081,40 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b93b6a877adcbf94c89a9d6e0c0e844d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &114483105616640952
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1818691695241160}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5eda615d4490ccc4ba1d6a048e840bcf, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  tool: 8
+  isToolContainer: 1
+  persistentContainer: 0
+  clickedEvents:
+    m_PersistentCalls:
+      m_Calls: []
+    m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
+      Culture=neutral, PublicKeyToken=null
+  unclickedEvents:
+    m_PersistentCalls:
+      m_Calls: []
+    m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
+      Culture=neutral, PublicKeyToken=null
+  hoverInEvents:
+    m_PersistentCalls:
+      m_Calls: []
+    m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
+      Culture=neutral, PublicKeyToken=null
+  hoverOutEvents:
+    m_PersistentCalls:
+      m_Calls: []
+    m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
+      Culture=neutral, PublicKeyToken=null
 --- !u!114 &114488055394099700
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -5326,6 +5457,40 @@ MonoBehaviour:
   hand2: {fileID: 0}
   itemContainer: {fileID: 0}
   menuIsActive: 0
+--- !u!114 &114667178650513112
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1159548133556594}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5eda615d4490ccc4ba1d6a048e840bcf, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  tool: 8
+  isToolContainer: 1
+  persistentContainer: 0
+  clickedEvents:
+    m_PersistentCalls:
+      m_Calls: []
+    m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
+      Culture=neutral, PublicKeyToken=null
+  unclickedEvents:
+    m_PersistentCalls:
+      m_Calls: []
+    m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
+      Culture=neutral, PublicKeyToken=null
+  hoverInEvents:
+    m_PersistentCalls:
+      m_Calls: []
+    m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
+      Culture=neutral, PublicKeyToken=null
+  hoverOutEvents:
+    m_PersistentCalls:
+      m_Calls: []
+    m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
+      Culture=neutral, PublicKeyToken=null
 --- !u!114 &114673196516189810
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -5545,6 +5710,40 @@ MonoBehaviour:
         m_CallState: 2
     m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
       Culture=neutral, PublicKeyToken=null
+--- !u!114 &114784023298938422
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1248331990890490}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5eda615d4490ccc4ba1d6a048e840bcf, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  tool: 8
+  isToolContainer: 1
+  persistentContainer: 0
+  clickedEvents:
+    m_PersistentCalls:
+      m_Calls: []
+    m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
+      Culture=neutral, PublicKeyToken=null
+  unclickedEvents:
+    m_PersistentCalls:
+      m_Calls: []
+    m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
+      Culture=neutral, PublicKeyToken=null
+  hoverInEvents:
+    m_PersistentCalls:
+      m_Calls: []
+    m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
+      Culture=neutral, PublicKeyToken=null
+  hoverOutEvents:
+    m_PersistentCalls:
+      m_Calls: []
+    m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
+      Culture=neutral, PublicKeyToken=null
 --- !u!114 &114807733844280832
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -5576,6 +5775,40 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   index: 0
   origin: {fileID: 0}
+--- !u!114 &114850847523166374
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1025007866820332}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5eda615d4490ccc4ba1d6a048e840bcf, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  tool: 8
+  isToolContainer: 1
+  persistentContainer: 0
+  clickedEvents:
+    m_PersistentCalls:
+      m_Calls: []
+    m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
+      Culture=neutral, PublicKeyToken=null
+  unclickedEvents:
+    m_PersistentCalls:
+      m_Calls: []
+    m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
+      Culture=neutral, PublicKeyToken=null
+  hoverInEvents:
+    m_PersistentCalls:
+      m_Calls: []
+    m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
+      Culture=neutral, PublicKeyToken=null
+  hoverOutEvents:
+    m_PersistentCalls:
+      m_Calls: []
+    m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
+      Culture=neutral, PublicKeyToken=null
 --- !u!114 &114891023223578906
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -5617,6 +5850,40 @@ MonoBehaviour:
   pathDrawer: {fileID: 0}
   myHandNumber: 0
   hand: {fileID: 11450312}
+--- !u!114 &114918712582229874
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1126890385972794}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5eda615d4490ccc4ba1d6a048e840bcf, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  tool: 8
+  isToolContainer: 1
+  persistentContainer: 0
+  clickedEvents:
+    m_PersistentCalls:
+      m_Calls: []
+    m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
+      Culture=neutral, PublicKeyToken=null
+  unclickedEvents:
+    m_PersistentCalls:
+      m_Calls: []
+    m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
+      Culture=neutral, PublicKeyToken=null
+  hoverInEvents:
+    m_PersistentCalls:
+      m_Calls: []
+    m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
+      Culture=neutral, PublicKeyToken=null
+  hoverOutEvents:
+    m_PersistentCalls:
+      m_Calls: []
+    m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
+      Culture=neutral, PublicKeyToken=null
 --- !u!114 &114927575484625510
 MonoBehaviour:
   m_ObjectHideFlags: 1

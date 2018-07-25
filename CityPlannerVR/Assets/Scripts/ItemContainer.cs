@@ -31,12 +31,18 @@ public class ItemContainer : MonoBehaviour {
 
     void Start()
     {
+        PhotonSpawnableObject tempCheck = GetComponent<PhotonSpawnableObject>();
+        if (tempCheck)
+            tool = ToolManager.ToolType.Item;
+
         //sphereCol = GetComponent<SphereCollider>();
         if (tool != ToolManager.ToolType.Item)
         {
             isToolContainer = true;
             ReplaceVisibleHolder();
         }
+        else
+            isToolContainer = false;
     }
 
     public void OnClicked()
