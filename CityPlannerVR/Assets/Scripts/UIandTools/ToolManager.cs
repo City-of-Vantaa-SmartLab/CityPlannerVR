@@ -12,7 +12,7 @@ using Valve.VR.InteractionSystem;
 public class ToolManager : MonoBehaviour {
 
     public int myHandNumber;
-    public enum ToolType { Empty, Camera, CommentTester, EditingLaser, Eraser, Item, Painter, PathCamera, VideoCamera };  //includes modes for tools
+    public enum ToolType { Empty, Camera, CommentTester, EditingLaser, Eraser, Painter, PathCamera, VideoCamera, Item};  //includes modes for tools
     public int toolRights;
 
     public ToolType Tool
@@ -23,11 +23,18 @@ public class ToolManager : MonoBehaviour {
         }
         private set
         {
-            currentTool = value;
-            if (myHandNumber != 0 && AnnounceToolChanged != null)
+            if (ChangeToolTest(value))
             {
-                AnnounceToolChanged((uint)myHandNumber, currentTool);
+                SetInputPropertiesByToolType(value);
+                Debug.Log("Tool changed from " + Tool + " to " + value + " on hand" + myHandNumber);
+                currentTool = value;
+                if (myHandNumber != 0 && AnnounceToolChanged != null)
+                {
+                    AnnounceToolChanged((uint)myHandNumber, currentTool);
+                }
             }
+            else
+                Debug.Log("No right for tooltype: " + value);
         }
     }
 
@@ -82,7 +89,6 @@ public class ToolManager : MonoBehaviour {
 
     private void SubscriptionOn()
     {
-        //inputMaster.MenuButtonClicked += HandleMenuClicked;
         inputMaster.TriggerClickedInsideToolbelt += HandleTriggerClickedInsideToolbelt;
         inputMaster.RoleChanged += HandleNewRole;
         inputMaster.ClearActiveItemSlots += HandleClearItemSlots;
@@ -92,7 +98,6 @@ public class ToolManager : MonoBehaviour {
 
     private void SubscriptionOff()
     {
-        //inputMaster.MenuButtonClicked -= HandleMenuClicked;
         inputMaster.TriggerClickedInsideToolbelt -= HandleTriggerClickedInsideToolbelt;
         inputMaster.RoleChanged -= HandleNewRole;
         inputMaster.ClearActiveItemSlots -= HandleClearItemSlots;
@@ -109,11 +114,6 @@ public class ToolManager : MonoBehaviour {
             Debug.Log("Hand number could not be determined for toolmanager!");
     }
 
-    private void HandleMenuClicked(object sender, ClickedEventArgs e)
-    {
-        RotateTool(sender, e);
-    }
-
     private void HandleTriggerClickedInsideToolbelt(object sender, ClickedEventArgs e)
     {
         if (myHandNumber == 0)
@@ -122,21 +122,36 @@ public class ToolManager : MonoBehaviour {
         {
             if (activeItemContainer.isToolContainer)
             {
-                if (activeItemContainer.tool == Tool)
-                    ChangeTool(ToolType.Empty);
-                else
-                    ChangeTool(activeItemContainer.tool);
+                if (activeItemContainer.persistentContainer)
+                {
+                    Tool = activeItemContainer.tool;
+                }
+                else if(!(Tool == activeItemContainer.tool))
+                    SwapTools();
+
             }
             else
             {
                 if (activeItemContainer.tool == ToolType.Item)
                 {
-                    activeItemContainer.gameObject.GetComponent<PhotonSpawnableObject>().InstantiateRealItem(myHandNumber);
+                    PhotonSpawnableObject photonObject =
+                        activeItemContainer.gameObject.GetComponent<PhotonSpawnableObject>();
+                    if (photonObject)
+                        photonObject.InstantiateRealItem(myHandNumber);
                 }
-                else
-                    activeItemContainer.OnClicked(sender, e, inputMaster);
             }
+            activeItemContainer.OnClicked(sender, e, inputMaster);
         }
+    }
+
+    private void SwapTools()
+    {
+        ToolType tempTool = Tool;
+        Tool = activeItemContainer.tool;
+
+        activeItemContainer.tool = tempTool;
+
+        activeItemContainer.ReplaceVisibleHolder();
     }
 
     private void HandleNewRole(int index)
@@ -150,27 +165,17 @@ public class ToolManager : MonoBehaviour {
         activeItemContainer = null;
     }
 
-    // move under Tool property?
-    public bool ChangeTool(ToolType toolType)
+    public bool ChangeToolTest(ToolType toolType)
     {
+        if (toolType == ToolType.Item)
+            return false;
         int test;
         test = GetBitMaskForTool(toolType);
 
-        //Debug.Log("Tool " + toolType +" test:" + test + " and testresult: " + (toolRights & test));
         if ((toolRights & test) != 0)
-        //if (toolType == ToolType.Empty || GetIntFromBitArray((test2.And(toolRights2))) != 0)
-        {
-            Tool = toolType;  //setting value triggers event onToolChange
-            SetInputPropertiesByToolType();
-            Debug.Log("Tool changed to " + Tool + " on hand" + myHandNumber);
             return true;
-        }
         else
-        {
-            Debug.Log("No right for tooltype: " + toolType);
             return false;
-        }
-
     }
 
     public void RotateTool(object sender, ClickedEventArgs e)
@@ -181,12 +186,13 @@ public class ToolManager : MonoBehaviour {
             toolToBe++;
             if (toolToBe >= numberOfTools)
                 toolToBe = 0;
-            while (!ChangeTool((ToolType)toolToBe))
+            while (toolToBe != 0 || !ChangeToolTest((ToolType)toolToBe))
             {
                 toolToBe++;
                 if (toolToBe >= numberOfTools)
                     toolToBe = 0;
             }
+            Tool = (ToolType)toolToBe;
         }
     }
 
@@ -247,11 +253,11 @@ public class ToolManager : MonoBehaviour {
         return magic;
     }
 
-    private void SetInputPropertiesByToolType()
+    private void SetInputPropertiesByToolType(ToolType toolType)
     {
         bool teleport;
         bool grab;
-        int toolMask = GetBitMaskForTool(Tool);
+        int toolMask = GetBitMaskForTool(toolType);
         //int teleportMask = Convert.ToInt32("00000001", 2); //enabled on empty
         //int grabMask = Convert.ToInt32("00000001", 2); 
         int teleportMask = 1;  
@@ -298,14 +304,6 @@ public class ToolManager : MonoBehaviour {
         {
             hand.hoverLayerMask = finalMask;
         }
-
-        //if (teleportHover)
-        //    teleportHover.overrideHoverLock = status;  //only overrides the lock, does not lock it!
-        //else
-        //    Debug.Log("Could not find teleportHover script!");
-
-        //Debug.Log("Grabbing active: " + status);
-
     }
 
     private void OnTriggerEnter(Collider other)
