@@ -52,11 +52,6 @@ public class PlayComment : MonoBehaviour {
     public Dictionary<string, VoiceComment> commentDictionary;
 
     /// <summary>
-    /// RecordComment reference
-    /// </summary>
-    RecordComment record;
-
-    /// <summary>
     /// The button displayed at a time
     /// </summary>
     GameObject displayedButton;
@@ -96,7 +91,7 @@ public class PlayComment : MonoBehaviour {
     /// The UI text component used to show to the player how many comments are there in particular object
     /// and which one of the is the player listening
     /// </summary>
-    Text commentNumber;
+    //---Text commentNumber;
 
     /// <summary>
     /// which one of the comments is the player listening to
@@ -111,21 +106,31 @@ public class PlayComment : MonoBehaviour {
     //Is set in laserPointer script
     public GameObject pointedTarget;
 
+    bool isFirstEnable = true;
+
     void Awake(){
 		audioSource = GetComponent<AudioSource> ();
 
         commentsToPlayHere = new List<string>();
         commentDictionary = new Dictionary<string, VoiceComment>();
 
-        panel = GameObject.Find("CommentTool/CommentList/Canvas/Panel/ScrollableList");
+        panel = GameObject.Find("Hover_tablet_prefab/PagesCanvas/ReadCommentsPage/CommentList/ScrollableList");
 
-        record = gameObject.transform.parent.GetComponentInChildren<RecordComment>();
-
-        commentNumber = GetComponentInChildren<Text>();
+        //---commentNumber = GetComponentInChildren<Text>();
 
         commentButton = (GameObject)Resources.Load("ButtonBackgroundImage");
 
         commentClips = new List<AudioClip>();
+    }
+
+    private void OnEnable()
+    {
+        //If this is done before Awake, don't load comments
+        if (!isFirstEnable)
+        {
+            LoadComments();
+        }
+        isFirstEnable = false;
     }
     /// <summary>
     /// Loads all voiceComment files and sorts them
@@ -135,9 +140,9 @@ public class PlayComment : MonoBehaviour {
         InitializeCollections();
         //Debug.Log(record.SavePath + record.AudioExt);
 
-        if (Directory.Exists(record.SavePath + record.AudioExt))
+        if (Directory.Exists(RecordComment.SavePath + RecordComment.AudioExt))
         {
-            info = new DirectoryInfo(record.SavePath + record.AudioExt);
+            info = new DirectoryInfo(RecordComment.SavePath + RecordComment.AudioExt);
             fileInfo = info.GetFiles();
             if(fileInfo.Length > 0)
             {
@@ -147,7 +152,7 @@ public class PlayComment : MonoBehaviour {
                 StartCoroutine(LoadCommentsFromStreamingAssets());
 
                 XmlSerializer serializer = new XmlSerializer(typeof(PositionDatabase));
-                FileStream file = File.Open(record.SavePath + record.slash + record.positionFileName, FileMode.Open);
+                FileStream file = File.Open(RecordComment.SavePath + RecordComment.slash + RecordComment.positionFileName, FileMode.Open);
                 if (file.Length > 0)
                 {
                     positionDB = (PositionDatabase)serializer.Deserialize(file);
@@ -182,7 +187,7 @@ public class PlayComment : MonoBehaviour {
                     buttonText.text = "No comments for this object";
 
                     displayedButton = buttonImage;
-                    commentNumber.text = "0/0";
+                    //---commentNumber.text = "0/0";
                 }
             }
         }
@@ -198,7 +203,7 @@ public class PlayComment : MonoBehaviour {
 
         for (int i = 0; i < fileInfo.Length; i++)
         {
-            request = new WWW("file:///" + record.SavePath + record.AudioExt + fileInfo[i].Name);
+            request = new WWW("file:///" + RecordComment.SavePath + RecordComment.AudioExt + fileInfo[i].Name);
             if (fileInfo[i].Name.EndsWith(".wav"))
             {
                 commentClips.Add(request.GetAudioClip());
@@ -332,6 +337,6 @@ public class PlayComment : MonoBehaviour {
         }
 
         //commentNumber.text = index + "/" + commentDictionary.Count;
-        commentNumber.text = commentIndexNumber + "/" + commentsToPlayHere.Count;
+        //---commentNumber.text = commentIndexNumber + "/" + commentsToPlayHere.Count;
     }
 }

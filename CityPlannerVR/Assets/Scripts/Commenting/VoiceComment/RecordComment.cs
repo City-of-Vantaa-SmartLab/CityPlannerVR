@@ -52,9 +52,9 @@ public class RecordComment : MonoBehaviour
     /// / or \ depending on the used operating system
     /// </summary>
     [HideInInspector]
-    public char slash = Path.DirectorySeparatorChar;
+    public static char slash = Path.DirectorySeparatorChar;
     [HideInInspector]
-    public string positionFileName = "positions.txt";
+    public static string positionFileName = "positions.txt";
 
     /// <summary>
     /// The position where the target object was during recording
@@ -75,11 +75,11 @@ public class RecordComment : MonoBehaviour
     /// <summary>
     /// The path where the text file and the audio data folder are located
     /// </summary>
-    private string savePath;
+    private static string savePath;
     /// <summary>
     /// Add after savePath to get the location of all the audio files
     /// </summary>
-    private string audioSavePathExt;
+    private static string audioSavePathExt;
 
     /// <summary>
     /// Shows player how long the voice comment has been recorded
@@ -100,7 +100,7 @@ public class RecordComment : MonoBehaviour
     /// <summary>
     /// The path where the text file and the audio data folder are located (read only)
     /// </summary>
-    public string SavePath
+    public static string SavePath
     {
         get
         {
@@ -111,7 +111,7 @@ public class RecordComment : MonoBehaviour
     /// <summary>
     /// Add after savePath to get the location of all the audio files (read only)
     /// </summary>
-    public string AudioExt
+    public static string AudioExt
     {
         get
         {
