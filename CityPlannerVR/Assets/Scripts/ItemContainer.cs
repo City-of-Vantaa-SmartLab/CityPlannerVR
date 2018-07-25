@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
@@ -13,8 +14,10 @@ using UnityEngine.Events;
 public class ItemContainer : MonoBehaviour {
 
     public ToolManager.ToolType tool;
-    //[HideInInspector]
+    [HideInInspector]
     public bool isToolContainer;
+    public bool persistentContainer;
+    private GameObject toolHolder;
 
     //private SphereCollider sphereCol;
 
@@ -22,7 +25,7 @@ public class ItemContainer : MonoBehaviour {
     public UnityEvent unclickedEvents;
     public UnityEvent hoverInEvents;
     public UnityEvent hoverOutEvents;
-    public uint subscribedControllerIndex;
+    private uint subscribedControllerIndex;  //only used for OnUnclicked method
 
 
 
@@ -30,9 +33,11 @@ public class ItemContainer : MonoBehaviour {
     {
         //sphereCol = GetComponent<SphereCollider>();
         if (tool != ToolManager.ToolType.Item)
+        {
             isToolContainer = true;
+            ReplaceVisibleHolder();
+        }
     }
-
 
     public void OnClicked()
     {
@@ -54,6 +59,7 @@ public class ItemContainer : MonoBehaviour {
     private void OnUnclicked(ClickedEventArgs e, InputMaster inputMaster)
     {
         inputMaster.TriggerUnclicked -= HandleUnclicked;
+        subscribedControllerIndex = 0;
         OnUnclicked();
     }
 
@@ -77,15 +83,36 @@ public class ItemContainer : MonoBehaviour {
             }
             else
             {
-                Debug.LogWarning("Sender not recognized as inputmaster when firing TriggerUnclicked, laserbutton did not unsubscribe!");
+                Debug.LogWarning("Sender not recognized as inputmaster when firing TriggerUnclicked, itemcontainer did not unsubscribe!");
                 OnUnclicked();
             }
         }
     }
 
-    public void TestingIsFun(int test)
+    public void ReplaceVisibleHolder()
     {
-        Debug.Log("I AM TEST " + test);
+        if (toolHolder != null)
+            Destroy(toolHolder);
+
+        GameObject prefab = null;
+        if (tool == ToolManager.ToolType.EditingLaser)
+            prefab = (GameObject)Resources.Load("Prefabs/ToolHolders/LaserpointerHolder");
+        else if (tool == ToolManager.ToolType.Camera)
+            prefab = (GameObject)Resources.Load("Prefabs/ToolHolders/CameraHolder");
+
+
+        if (prefab == null)
+        {
+            Debug.Log("Could not load prefab!");
+            return;
+        }
+
+        toolHolder = Instantiate(prefab);
+
+        Vector3 localPos = toolHolder.transform.localPosition;
+        toolHolder.transform.parent = transform;
+        toolHolder.transform.localScale = Vector3.one;
+        toolHolder.transform.localPosition = localPos;
     }
 
 #if UNITY_EDITOR
