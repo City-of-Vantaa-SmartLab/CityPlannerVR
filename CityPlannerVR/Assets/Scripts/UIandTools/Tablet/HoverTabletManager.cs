@@ -25,7 +25,8 @@ public class HoverTabletManager : MonoBehaviour {
         childCount = pagesCanvas.transform.childCount;
         pages = new Page[childCount];
         GetAllPages();
-        AssignPageIndexes();
+        //AssignPageIndexes();
+        DeactivatePages();
     }
 
     /// <summary> Finds all the pages below the PagesCanvas </summary>
@@ -34,6 +35,17 @@ public class HoverTabletManager : MonoBehaviour {
         for (int i = 0; i < childCount; i++)
         {
             pages[i] = pagesCanvas.transform.GetChild(i).GetComponent<Page>();
+        }
+    }
+
+    void DeactivatePages()
+    {
+        for (int i = 0; i < pages.Length; i++)
+        {
+            if (i != 2)
+            {
+                pages[i].gameObject.SetActive(false);
+            }
         }
     }
 
