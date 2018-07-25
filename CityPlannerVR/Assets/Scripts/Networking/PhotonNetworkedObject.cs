@@ -13,13 +13,21 @@ public class PhotonNetworkedObject : Photon.MonoBehaviour {
 	private bool isInHand = false;
 	private IsAttachedToHand isAttachedToHand = null;
 
-	#endregion
+    private bool firstTime = true;
+
+    #endregion
+
+    //variables for destroying the object if on the floor
+    public int destroyCountermax = 5;
+    public float destroyWaitSeconds = 1.0f;
 	
 	// Update is called once per frame
 	void Update () {
 
-		if (isAttachedToHand == null) {
+
+        if (isAttachedToHand == null) {
 			isAttachedToHand = this.gameObject.GetComponent<IsAttachedToHand> ();
+
 		}
 
 		if (!photonView.isMine) {
@@ -81,4 +89,18 @@ public class PhotonNetworkedObject : Photon.MonoBehaviour {
 			}
 		}
 	}
+
+    public IEnumerator ObjectDestroyCounter()
+    {
+        Debug.Log(gameObject.name + " Coroutine Started");
+        int counter = 0;
+        while (counter < destroyCountermax)
+        {
+            counter++;
+            yield return new WaitForSeconds(destroyWaitSeconds);
+        }
+        PhotonNetwork.Destroy(gameObject);
+    }
+
+
 }
