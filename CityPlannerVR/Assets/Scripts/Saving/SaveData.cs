@@ -4,11 +4,7 @@ using UnityEngine;
 using System.IO;
 using System;
 
-/// <summary>
-/// Handles the writing and reading of files, as well as stores the commentcontainer.
-/// Savedata is a static class, which utilises another static class called MongoDBAPI to sync with cloud files.
-/// 
-/// </summary>
+
 
 [Serializable]
 public class Container<T> /*where T : parentClass  //if needed, eg. CommentData as child class -> through inheritance?*/
@@ -19,7 +15,11 @@ public class Container<T> /*where T : parentClass  //if needed, eg. CommentData 
     public string userWhoSaved;
 }
 
-//for easy accessing and storing locally
+/// <summary>
+/// Handles the writing and reading of files, as well as stores the default comment and transform containers.
+/// Savedata is a static class, which utilises another static class called MongoDBAPI to sync with cloud files.
+/// 
+/// </summary>
 
 public class SaveData {
 
@@ -34,6 +34,8 @@ public class SaveData {
     public static Container<CommentData> commentContainer = new Container<CommentData>();
     public static Container<CommentData> commentContainerForVizualisation = new Container<CommentData>();
     public static Container<TransformData> transformContainer = new Container<TransformData>();
+    public static Container<TransformData> startupContainer = new Container<TransformData>();
+
     public static CommentLists commentLists = new CommentLists();
 
     public delegate void SerializeAction();
@@ -42,6 +44,10 @@ public class SaveData {
     public static event SerializeAction OnLoadedTransforms;
     public static event SerializeAction OnBeforeSaveTransforms;
 
+    /// <summary>
+    /// Loads a file and processes it to scene.
+    /// </summary>
+
     public static void LoadItems<T>(string filepath)
     {
         Container<T> tempContainer;
@@ -49,22 +55,26 @@ public class SaveData {
         LoadItems<T>(tempContainer);
     }
 
-    public static void LoadItems<T>(Container<T> container)
+    /// <summary>
+    /// Processes source container to generate comments and restore transforms.
+    /// </summary>
+
+    public static void LoadItems<T>(Container<T> sourceContainer)
     {
-        foreach (T data in container.datas)
+        foreach (T data in sourceContainer.datas)
         {
             if (data is CommentData)
                 SaveAndLoadComments.CreateOldComment(data as CommentData);
             if (data is TransformData)
-                SaveAndLoadTransforms.RestoreTransform(data as TransformData, container.previousHolder);
+                SaveAndLoadTransforms.RestoreTransform(data as TransformData, sourceContainer.previousHolder);
         }
-        if (container.datas.Count != 0 && container.datas[0] is CommentData)
+        if (sourceContainer.datas.Count != 0 && sourceContainer.datas[0] is CommentData)
         {
             if (OnLoadedComments != null)
                 OnLoadedComments();
         }
 
-        if (container.datas.Count != 0 && container.datas[0] is TransformData)
+        if (sourceContainer.datas.Count != 0 && sourceContainer.datas[0] is TransformData)
         {
             if (OnLoadedTransforms != null)
                 OnLoadedTransforms();
@@ -81,6 +91,10 @@ public class SaveData {
         sw.Close();
         File.WriteAllText(filepath, jason);
     }
+
+    /// <summary>
+    /// Reads a file and returns them in a container.
+    /// </summary>
 
     public static Container<T> LoadDatas<T>(string filepath)
     {
@@ -123,7 +137,7 @@ public class SaveData {
     {
         MongoDBAPI.UseDefaultConnections();
         if (collectionIndex == 1)
-            MongoDBAPI.ExportJSONFileFromDatabase(MongoDBAPI.transformCollection, filepath);
+            MongoDBAPI.ImportJSONFileToDatabase(MongoDBAPI.transformCollection, filepath);
     }
 
 

@@ -23,7 +23,6 @@ public class SaveAndLoadTransforms : MonoBehaviour {
 
     public List<GameObject> holdersToBeSaved = new List<GameObject>();
     public List<GameObject> startupHolderList = new List<GameObject>();
-    private Container<TransformData> startupContainer = new Container<TransformData>();
 
     static public Transform defaultParentCleanup;
     private string folderPathName;
@@ -82,6 +81,7 @@ public class SaveAndLoadTransforms : MonoBehaviour {
 
     private void HandleLoading()
     {
+        RestoreToState(SaveData.transformContainer);
         //Debug.Log("OnLoadedTransforms event fired");
     }
 
@@ -89,36 +89,47 @@ public class SaveAndLoadTransforms : MonoBehaviour {
     #region File and list manipulation
 
     /// <summary>
-    /// Save using default settings.
+    /// Save transformcontainer to local file and DB using default settings.
     /// </summary>
 
     public void Save()
     {
-        Save(defaultFileName, SaveData.transformContainer);
+        Save(defaultFileName, SaveData.transformContainer, true);
     }
 
     /// <summary>
-    /// Load using default settings.
+    /// Load to transformcontainer from DB using default settings.
     /// </summary>
 
     public void Load()
     {
-        Load(defaultFileName);
+        Load(defaultFileName, true);
     }
 
-    public void Save(string fileName, Container<TransformData> container)
+    /// <summary>
+    /// Saves a container to a filepath derived from filename parameter. Optionally uploads the savedata to a database using default settings.
+    /// </summary>
+
+    public void Save(string fileName, Container<TransformData> container, bool useDatabase)
     {
         HandleBeforeSave();  //remove this if the event system is implemented
         pathName = folderPathName + slash + fileName + fileExtender;
         SaveData.SaveDatas(pathName, container);
-        MongoDBAPI.ImportJSONFileToDatabase(MongoDBAPI.transformCollection, pathName);
+        if (useDatabase)
+        {
+            MongoDBAPI.UseDefaultConnections();
+            MongoDBAPI.ImportJSONFileToDatabase(MongoDBAPI.transformCollection, pathName);
+        }
     }
 
-    public void Load(string fileName)
+    public void Load(string fileName, bool useDatabase)
     {
         pathName = folderPathName + slash + fileName + fileExtender;
-        MongoDBAPI.UseDefaultConnections();
-        MongoDBAPI.ExportJSONFileFromDatabase(MongoDBAPI.transformCollection, pathName);
+        if (useDatabase)
+        {
+            MongoDBAPI.UseDefaultConnections();
+            MongoDBAPI.ExportJSONFileFromDatabase(MongoDBAPI.transformCollection, pathName);
+        }
         SaveData.LoadItems<TransformData>(pathName);
     }
 
@@ -129,16 +140,19 @@ public class SaveAndLoadTransforms : MonoBehaviour {
         //SaveData.transformContainer.datas.Clear();
         //SaveData.ClearContainer(SaveData.transformContainer);
         //StoreList(startupHolderList);
-        Save(startupFileName, startupContainer);
+        Save(startupFileName, SaveData.startupContainer, false);
     }
 
     /// <summary>
     /// Load startup items from a dedicated file.
     /// </summary>
 
-    public void LoadStartup()
+    private void LoadStartup(bool useDatabase)
     {
-        Load(startupFileName);
+        pathName = folderPathName + slash + startupFileName + fileExtender;
+        if (useDatabase)
+            MongoDBAPI.ExportJSONFileFromDatabase(MongoDBAPI.transformCollection, pathName);
+        SaveData.startupContainer = SaveData.LoadDatas<TransformData>(pathName);
     }
 
     private void StoreList(List<GameObject> holders)
@@ -270,7 +284,17 @@ public class SaveAndLoadTransforms : MonoBehaviour {
 
     #region Restoring scene
 
-    public static void ClearLevelFrom(Container<TransformData> holders)
+    public void ResetScene()
+    {
+        if (SaveData.startupContainer  == null)
+            LoadStartup(false);
+        if (SaveData.startupContainer == null)
+            LoadStartup(true);
+        RestoreToState(SaveData.startupContainer);
+    }
+
+
+    private static void ClearLevelFrom(Container<TransformData> holders)
     {
         foreach (TransformData data in holders.datas)
         {
@@ -278,11 +302,6 @@ public class SaveAndLoadTransforms : MonoBehaviour {
             if (temp)
                 PhotonNetwork.Destroy(temp);
         }
-    }
-
-    public void ClearLevelFromStartupItems()
-    {
-        ClearLevelFrom(startupContainer);
     }
 
     // returns C = A ∩ B, where A,B and C are containers. Also modifies A = A ∉ B and B = B ∉ A.
