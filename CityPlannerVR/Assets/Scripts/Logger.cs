@@ -51,7 +51,7 @@ public class Logger : MonoBehaviour {
 
 	private string GetTimeSinceJoin()
 	{
-		
+		return null;
 	}
 
 	public void LogLine(string action)
