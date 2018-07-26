@@ -147,6 +147,11 @@ public class PhotonConnection : Photon.PunBehaviour {
 	public override void OnPhotonInstantiate(PhotonMessageInfo info) {
 		//Checks after instantiation
 	}
-
+		
 	#endregion
+
+	public int GetNumberOfClients()
+	{
+		return PhotonNetwork.room.PlayerCount;
+	}
 }
