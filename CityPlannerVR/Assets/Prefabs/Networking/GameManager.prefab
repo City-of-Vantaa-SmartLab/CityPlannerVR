@@ -36,7 +36,7 @@ Transform:
   m_GameObject: {fileID: 1992031269696446}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalScale: {x: -20, y: 1, z: 5}
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 0
@@ -53,8 +53,16 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   MaxPlayersPerRoom: 4
-  playerPrefab: {fileID: 1793506895774366, guid: f75a70e30abef0c498baa5376e795bf0,
+  playerPrefabMale: {fileID: 1518467711047004, guid: 7d61ac16b9bfa214ab5f6a534535e782,
     type: 2}
+  playerPrefabFemale: {fileID: 1518467711047004, guid: 7d61ac16b9bfa214ab5f6a534535e782,
+    type: 2}
+  playerSpawnPoints: []
+  playerSpawnPoint: {x: -32, y: 0, z: 7}
+  playerSpawnPoint1: {x: -22, y: 0, z: 7}
+  playerSpawnPoint2: {x: -32, y: 0, z: 7}
+  playerSpawnPoint3: {x: -32, y: 0, z: 14}
+  playerSpawnPoint4: {x: -32, y: 0, z: 14}
   connection: {fileID: 114747894185814876}
 --- !u!114 &114747894185814876
 MonoBehaviour:
