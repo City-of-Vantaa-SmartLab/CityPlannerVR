@@ -2,35 +2,35 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class WaitTimer
+public class Timer 
 {
 	public string name;
-	public float waitTime = 1f;
-	public float waitTimer;
 	public bool isFirstRound = true;
 }
 
-public class GeneralTimer
+public class WaitTimer : Timer
 {
-	public string name;
+	public float waitTime = 1f;
+	public float waitTimer;
+}
+
+public class GeneralTimer : Timer
+{
 	public float genTimer;
-	public bool isFirstRound = true;
 	public bool shouldStop = false;
 }
 
-public class IntervalTimer
+public class IntervalTimer : Timer
 {
-	public string name;
 	public float interTimer;
 	public float interval;
 	public float currentInterval = 0;
-	public bool isFirstRound = true;
 	public bool shouldStop = false;
 }
 
-public class BasicTimers : MonoBehaviour {
+public class BasicTimer : MonoBehaviour {
 
-	//STILL NEED STOPPERS AND EVENTS FOR WAIT END AND INTERVAL AND GETTTERS FOR CURRENT TIME
+	//STILL NEED STOPPERS AND EVENTS FOR WAIT END AND INTERVAL
 
 	private List<WaitTimer> waitTimers = new List<WaitTimer>();
 	private List<GeneralTimer> genTimers = new List<GeneralTimer>();
@@ -119,5 +119,51 @@ public class BasicTimers : MonoBehaviour {
 		newTimer.interTimer = tmpTime;
 		interTimers.Add (newTimer);
 		Debug.LogWarning ("IntervalTimer " + newTimer.name + " active!");
+	}
+
+	//Timertype 1 = wait, 2 = general, 3 = interval
+	private Timer GetTimerByName(int timerType, string timerName)
+	{
+		if (timerType == 1) {
+			foreach (WaitTimer wt in waitTimers) {
+				if (wt.name.Equals (timerName)) {
+					return wt as WaitTimer;
+				}
+			}
+			return null;
+		} else if (timerType == 2) {
+			foreach (GeneralTimer gt in genTimers) {
+				if (gt.name.Equals (timerName)) {
+					return gt as GeneralTimer;
+				}
+			}
+			return null;
+		} else if (timerType == 3) {
+			foreach (IntervalTimer it in interTimers) {
+				if (it.name.Equals (timerName)) {
+					return it as IntervalTimer;
+				}
+			}
+			return null;
+		} else {
+			return null;
+		}
+	}
+
+	public string GetCurrentTime(int timerType, string timerName)
+	{
+		Timer timer = GetTimerByName (timerType, timerName);
+		if (timerType == 1) {
+			WaitTimer wt = timer as WaitTimer;
+			return wt.waitTimer.ToString ();
+		} else if (timerType == 2) {
+			GeneralTimer gt = timer as GeneralTimer;
+			return gt.genTimer.ToString ();
+		} else if (timerType == 3) {
+			IntervalTimer it = timer as IntervalTimer;
+			return it.interTimer.ToString ();
+		} else {
+			return null;
+		}
 	}
 }

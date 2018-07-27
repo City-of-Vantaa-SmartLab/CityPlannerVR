@@ -26,7 +26,12 @@ public class Logger : MonoBehaviour {
 
 	private string currentJSON = "";
 
+	private const string LOG_TIMER_NAME = "LoggingTimer";
+	private const float LOG_SAVE_INTERVAL = 30;
+
 	#endregion
+
+	//LAST SAVE BEFORE QUITTING
 
 	// Use this for initialization
 	void Start () {
@@ -46,12 +51,12 @@ public class Logger : MonoBehaviour {
 
 	private void StartTimer()
 	{
-		
+		this.gameObject.GetComponent<BasicTimer> ().StarIntervalTimer (LOG_TIMER_NAME, LOG_SAVE_INTERVAL);
 	}
 
 	private string GetTimeSinceJoin()
 	{
-		return null;
+		return this.gameObject.GetComponent<BasicTimer> ().GetCurrentTime (3, LOG_TIMER_NAME);
 	}
 
 	public void LogLine(string action)
