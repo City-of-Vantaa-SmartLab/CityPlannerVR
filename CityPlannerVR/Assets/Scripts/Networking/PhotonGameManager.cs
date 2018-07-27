@@ -198,11 +198,11 @@ public class PhotonGameManager : MonoBehaviour {
 			// It gets synced by using PhotonNetwork.Instantiate
 			GameObject player;
 			if (isMale) {
-				player = PhotonNetwork.Instantiate (this.playerPrefabMale.name, playerSpawnPoints[connection.GetNumberOfClients()-1], Quaternion.identity, 0);
+				player = PhotonNetwork.Instantiate (this.playerPrefabMale.name, playerSpawnPoints[connection.GetNumberOfClients()], Quaternion.identity, 0);
 			} else {
-				player = PhotonNetwork.Instantiate (this.playerPrefabFemale.name, playerSpawnPoints[connection.GetNumberOfClients()-1], Quaternion.identity, 0);
+				player = PhotonNetwork.Instantiate (this.playerPrefabFemale.name, playerSpawnPoints[connection.GetNumberOfClients()], Quaternion.identity, 0);
 			}
-			Debug.Log ("Player instantiated at: " + playerSpawnPoints[connection.GetNumberOfClients()-1].x.ToString () + "," + playerSpawnPoints[connection.GetNumberOfClients()-1].y.ToString () + "," + playerSpawnPoints[connection.GetNumberOfClients()-1].z.ToString ());
+			Debug.Log ("Player instantiated at: " + playerSpawnPoints[connection.GetNumberOfClients()].x.ToString () + "," + playerSpawnPoints[connection.GetNumberOfClients()].y.ToString () + "," + playerSpawnPoints[connection.GetNumberOfClients()].z.ToString ());
 			Debug.Log ("Actual location: " + player.transform.position.x.ToString () + "," + player.transform.position.y.ToString () + "," + player.transform.position.z.ToString ());
 		}
 	}

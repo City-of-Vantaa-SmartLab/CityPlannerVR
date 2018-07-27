@@ -8,6 +8,7 @@ public class PhotonConnection : Photon.PunBehaviour {
 
 	//The PUN loglevel
 	public PhotonLogLevel Loglevel = PhotonLogLevel.Informational;
+	public int count = 0;
 
 	#endregion
 
@@ -152,6 +153,19 @@ public class PhotonConnection : Photon.PunBehaviour {
 
 	public int GetNumberOfClients()
 	{
-		return PhotonNetwork.room.PlayerCount;
+		int countreturn;
+		if (count >= 3) {
+			count = 0;
+			countreturn = count;
+			count++;
+			return countreturn;
+		} 
+
+		else {
+			countreturn = count;
+			count++;
+			return countreturn;
+		}
+
 	}
 }
