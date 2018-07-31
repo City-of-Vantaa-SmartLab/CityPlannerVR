@@ -9,9 +9,7 @@ public class UltimateDestroyer : MonoBehaviour {
     private void OnCollisionEnter(Collision other)
 
     {
-        
         PhotonNetwork.Destroy(other.gameObject);
-        
     }
 }
 

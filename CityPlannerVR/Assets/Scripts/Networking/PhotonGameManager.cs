@@ -43,14 +43,18 @@ public class PhotonGameManager : MonoBehaviour {
 	public GameObject playerPrefabMale;
 	public GameObject playerPrefabFemale;
 	private bool isMale = true;
-	public Vector3 playerSpawnPoint;
+    public List<Vector3> playerSpawnPoints;
+    public Vector3 playerSpawnPoint1;
+    public Vector3 playerSpawnPoint2;
+    public Vector3 playerSpawnPoint3;
+    public Vector3 playerSpawnPoint4;
 
-	#endregion
+    #endregion
 
-	#region Private Variables
+    #region Private Variables
 
-	//Track current network state
-	NetworkState state = NetworkState.DISCONNECTED;
+    //Track current network state
+    NetworkState state = NetworkState.DISCONNECTED;
 
 	public PhotonConnection connection;
 
@@ -67,7 +71,15 @@ public class PhotonGameManager : MonoBehaviour {
 		Instance = this;
 		connection = GetComponent<PhotonConnection> ();
 		isMultiplayerSceneLoaded = false;
-	}
+        playerSpawnPoints = new List<Vector3>()
+        {
+            playerSpawnPoint1,
+            playerSpawnPoint2,
+            playerSpawnPoint3,
+            playerSpawnPoint4
+        };
+
+    }
 
 	void OnEnable()
 	{
@@ -186,11 +198,11 @@ public class PhotonGameManager : MonoBehaviour {
 			// It gets synced by using PhotonNetwork.Instantiate
 			GameObject player;
 			if (isMale) {
-				player = PhotonNetwork.Instantiate (this.playerPrefabMale.name, playerSpawnPoint, Quaternion.identity, 0);
+				player = PhotonNetwork.Instantiate (this.playerPrefabMale.name, playerSpawnPoints[connection.GetNumberOfClients()], Quaternion.identity, 0);
 			} else {
-				player = PhotonNetwork.Instantiate (this.playerPrefabFemale.name, playerSpawnPoint, Quaternion.identity, 0);
+				player = PhotonNetwork.Instantiate (this.playerPrefabFemale.name, playerSpawnPoints[connection.GetNumberOfClients()], Quaternion.identity, 0);
 			}
-			Debug.Log ("Player instantiated at: " + playerSpawnPoint.x.ToString () + "," + playerSpawnPoint.y.ToString () + "," + playerSpawnPoint.z.ToString ());
+			Debug.Log ("Player instantiated at: " + playerSpawnPoints[connection.GetNumberOfClients()].x.ToString () + "," + playerSpawnPoints[connection.GetNumberOfClients()].y.ToString () + "," + playerSpawnPoints[connection.GetNumberOfClients()].z.ToString ());
 			Debug.Log ("Actual location: " + player.transform.position.x.ToString () + "," + player.transform.position.y.ToString () + "," + player.transform.position.z.ToString ());
 		}
 	}
