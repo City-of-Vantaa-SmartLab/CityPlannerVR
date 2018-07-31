@@ -27,13 +27,14 @@ public class SaveThisAsTransform : MonoBehaviour {
         {
             //SaveData.gameObjectsToBeSaved.Add(gameObject);
         }
-
+        SaveData.amountOfTransforms++;
         SubscriptionOn();
 	}
 
     private void OnDestroy()
     {
         //SaveData.gameObjectsToBeSaved.Remove(gameObject);
+        SaveData.amountOfTransforms--;
         SubscriptionOff();
     }
 
@@ -70,8 +71,10 @@ public class SaveThisAsTransform : MonoBehaviour {
 
     private void HandleSaveAnnouncement()
     {
+        Debug.Log(gameObject.name + " received Before save event!");
         SaveAndLoadTransforms.StoreData(transform);
         Debug.Log(gameObject.name + " was saved as transform!");
+        SaveData.transformCount++;
         //SaveData.AddData(SaveAndLoadTransforms.GenerateTransformData(transform));
     }
 

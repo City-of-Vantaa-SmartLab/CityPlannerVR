@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using UnityEngine;
@@ -86,7 +87,7 @@ public class SaveAndLoadTransforms : MonoBehaviour {
 
     public void Save()
     {
-        Save(defaultFileName, SaveData.transformContainer, /*SaveData.gameObjectsToBeSaved,*/ false);
+        Save(defaultFileName, SaveData.transformContainer, false);
     }
 
     /// <summary>
@@ -102,10 +103,25 @@ public class SaveAndLoadTransforms : MonoBehaviour {
     /// Saves a container to a filepath derived from filename parameter. Optionally uploads the savedata to a database using default settings.
     /// </summary>
 
-    public void Save(string fileName, Container<TransformData> container, /*List<GameObject> GOSToBeSaved,*/ bool useDatabase)
+    public void Save(string fileName, Container<TransformData> container, bool useDatabase)
     {
-        //StoreList(GOSToBeSaved);
+        StartCoroutine(SaveWhenContainerIsReady(fileName, container, useDatabase));
+    }
+
+    private IEnumerator SaveWhenContainerIsReady(string fileName, Container<TransformData> container, bool useDatabase)
+    {
+        Debug.Log("Starting coroutine...");
         pathName = folderPathName + slash + fileName + fileExtender;
+
+        SaveData.transformCount = 0;
+        SaveData.BeforeSavingTransforms();
+
+        while (SaveData.transformCount < SaveData.amountOfTransforms)
+        {
+            yield return new WaitForSeconds(.2f);
+            Debug.Log("Waiting for 0,2s....");
+        }
+        SaveData.transformCount = 0;
         SaveData.SaveDatas(pathName, container);
         //SaveData.ClearContainer(container);
         if (useDatabase)
@@ -113,6 +129,7 @@ public class SaveAndLoadTransforms : MonoBehaviour {
             MongoDBAPI.UseDefaultConnections();
             MongoDBAPI.ImportJSONFileToDatabase(MongoDBAPI.transformCollection, pathName);
         }
+        Debug.Log("Saving done!");
     }
 
     public void Load(string fileName, bool useDatabase)
@@ -132,11 +149,7 @@ public class SaveAndLoadTransforms : MonoBehaviour {
 
     public void SaveStartupList()
     {
-        //SaveData.transformContainer.datas.Clear();
-        //SaveData.ClearContainer(SaveData.transformContainer);
-        //StoreList(startupHolderList);
-        //Save(startupFileName, SaveData.startupContainer, /*SaveData.startupObjectsList,*/ false);
-        Save(startupFileName, SaveData.transformContainer, /*SaveData.startupObjectsList,*/ false);
+        Save(startupFileName, SaveData.transformContainer, false);
     }
 
     /// <summary>
@@ -203,9 +216,13 @@ public class SaveAndLoadTransforms : MonoBehaviour {
             localPosition = t.localPosition,
             localRotation = t.localRotation,
             gameObjectName = t.gameObject.name,
-            gameObjectParentName = t.parent.name
         };
-        data.quickcheck = GenerateQuickCheck(data, 3);
+
+        if (t.parent == null)
+            data.gameObjectParentName = "";
+        else
+            data.gameObjectParentName = t.parent.name;
+        data.quickcheck = GenerateQuickCheck(data, 2);
         return data;
     }
 
@@ -247,18 +264,40 @@ public class SaveAndLoadTransforms : MonoBehaviour {
 
     private static GameObject CreateFromPrefab(TransformData data)
     {
+        string GOName = RemovePossibleCloneFromEnd(data.gameObjectName);
         GameObject temp;
         //System.Object[] what = new System.Object[0];
         //temp = PhotonNetwork.InstantiateSceneObject(data.gameObjectName, data.localPosition, data.localRotation, 0, what);
         //if (!temp)
-            temp = PhotonNetwork.InstantiateSceneObject("Prefabs/" + data.gameObjectName, data.localPosition, data.localRotation, 0, null);
+
+        //object superTemp = Resources.Load("Prefabs/" + GOName);
+        //if (superTemp == null)
+        //    superTemp = Resources.Load("Prefabs/Inventory/" + GOName);
+        //if (superTemp == null)
+        //    superTemp = Resources.Load("Prefabs/PhotonNewBuildings/" + GOName);
+
+        temp = PhotonNetwork.InstantiateSceneObject("Prefabs/Inventory/" + GOName, data.localPosition, data.localRotation, 0, null);
         if (!temp)
-            temp = PhotonNetwork.InstantiateSceneObject("Prefabs/PhotonNewBuildings/" + data.gameObjectName, data.localPosition, data.localRotation, 0, null); ; //add more of these if necessary
+            temp = PhotonNetwork.InstantiateSceneObject("Prefabs/PhotonNewBuildings/" + GOName, data.localPosition, data.localRotation, 0, null); ; //add more of these if necessary
+        if (!temp)
+            temp = PhotonNetwork.InstantiateSceneObject("Prefabs/" + GOName, data.localPosition, data.localRotation, 0, null); ; 
 
         if (temp)
             return temp;
         else
             return null;
+    }
+
+    private static string RemovePossibleCloneFromEnd(string gameObjectName)
+    {
+        string cloneString = "(Clone)";
+        if (gameObjectName.EndsWith(cloneString))
+        {
+            string temp = gameObjectName.Substring(0, gameObjectName.Length - cloneString.Length);
+            return temp;
+        }
+
+        return gameObjectName;
     }
 
     private static Transform CheckForParent(TransformData data, Transform previousHolder)
@@ -393,13 +432,22 @@ public class SaveAndLoadTransforms : MonoBehaviour {
 
     public static int GenerateQuickCheck(TransformData data, int subStringMaxLength)
     {
-        string objectName = Comment.TruncateString(data.gameObjectName, subStringMaxLength);
-        string parentName = Comment.TruncateString(data.gameObjectParentName, subStringMaxLength);
+        string objectName;
+        string parentName;
+        if (!string.IsNullOrEmpty(data.gameObjectName))
+            objectName = Comment.TruncateString(data.gameObjectName, subStringMaxLength);
+        else
+            objectName = "";
+
+        if (!string.IsNullOrEmpty(data.gameObjectParentName))
+            parentName = Comment.TruncateString(data.gameObjectParentName, subStringMaxLength);
+        else
+            parentName = "";
 
         string uberString = objectName + parentName;
-        //Debug.Log("Joining strings: " + objectName + " " + parentName);
+        Debug.Log("Joining strings: " + objectName + " " + parentName);
         int magic = Comment.ConvertFirstCharsToInt(uberString, subStringMaxLength * 2);
-        //Debug.Log("QuickCheck: " + magic);
+        Debug.Log("QuickCheck: " + magic);
         return magic;
     }
 

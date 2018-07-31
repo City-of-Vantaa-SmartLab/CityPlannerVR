@@ -21,7 +21,7 @@ public class Container<T> /*where T : parentClass  //if needed, eg. CommentData 
 /// 
 /// </summary>
 
-public class SaveData {
+public class SaveData : MonoBehaviour {
 
     public class CommentLists
     {
@@ -30,11 +30,13 @@ public class SaveData {
         public List<Comment> thumbComments = new List<Comment>();
     }
 
-    //public static CommentContainer commentContainer = new CommentContainer();
     public static Container<CommentData> commentContainer = new Container<CommentData>();
     public static Container<CommentData> commentContainerForVizualisation = new Container<CommentData>();
     public static Container<TransformData> transformContainer = new Container<TransformData>();
     public static Container<TransformData> startupContainer = new Container<TransformData>();
+    public static int amountOfTransforms = 0;
+    public static int transformCount;
+
 
     //public static List<GameObject> gameObjectsToBeSaved = new List<GameObject>();
     //public static List<GameObject> startupObjectsList = new List<GameObject>();
@@ -106,11 +108,11 @@ public class SaveData {
     internal static void SaveDatas<T>(string filepath, Container<T> container)
     {
         Debug.Log("Starting to save datas...");
-        if (container is Container<TransformData>)
-        {
-            Debug.Log("Saving transform datas...");
-            if (OnBeforeSaveTransforms != null) OnBeforeSaveTransforms();
-        }
+        //if (container is Container<TransformData>)
+        //{
+        //    Debug.Log("Saving transform datas...");
+        //    if (OnBeforeSaveTransforms != null) OnBeforeSaveTransforms();
+        //}
 
         if (container is Container<CommentData>)
             if (OnBeforeSaveComments != null) OnBeforeSaveComments();
