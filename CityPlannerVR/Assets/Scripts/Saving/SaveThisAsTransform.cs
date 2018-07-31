@@ -56,7 +56,7 @@ public class SaveThisAsTransform : MonoBehaviour {
     {
         if (isPartOfStartup)
         {
-            SaveAndLoadTransforms.RestoreTransform(gameObject, initData, parent);
+            SaveAndLoadTransforms.RestoreTransform(gameObject, initData, parent, false);
         }
         else
         {
@@ -71,9 +71,9 @@ public class SaveThisAsTransform : MonoBehaviour {
 
     private void HandleSaveAnnouncement()
     {
-        Debug.Log(gameObject.name + " received Before save event!");
+        //Debug.Log(gameObject.name + " received Before save event!");
         SaveAndLoadTransforms.StoreData(transform);
-        Debug.Log(gameObject.name + " was saved as transform!");
+        //Debug.Log(gameObject.name + " was saved as transform!");
         SaveData.transformCount++;
         //SaveData.AddData(SaveAndLoadTransforms.GenerateTransformData(transform));
     }

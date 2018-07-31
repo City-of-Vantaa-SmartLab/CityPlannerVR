@@ -21,7 +21,7 @@ public class Container<T> /*where T : parentClass  //if needed, eg. CommentData 
 /// 
 /// </summary>
 
-public class SaveData : MonoBehaviour {
+public class SaveData {
 
     public class CommentLists
     {
@@ -90,7 +90,7 @@ public class SaveData : MonoBehaviour {
             if (data is CommentData)
                 SaveAndLoadComments.CreateOldComment(data as CommentData);
             if (data is TransformData)
-                SaveAndLoadTransforms.RestoreTransform(null, data as TransformData, sourceContainer.previousHolder);
+                SaveAndLoadTransforms.RestoreTransform(null, data as TransformData, sourceContainer.previousHolder, true);
         }
         if (sourceContainer.datas.Count != 0 && sourceContainer.datas[0] is CommentData)
         {
@@ -107,7 +107,7 @@ public class SaveData : MonoBehaviour {
 
     internal static void SaveDatas<T>(string filepath, Container<T> container)
     {
-        Debug.Log("Starting to save datas...");
+        //Debug.Log("Starting to save datas...");
         //if (container is Container<TransformData>)
         //{
         //    Debug.Log("Saving transform datas...");
@@ -128,17 +128,8 @@ public class SaveData : MonoBehaviour {
         sw.Close();
         File.WriteAllText(filepath, jason);
         ClearContainer(container);
-        Debug.Log("Saving data finished!");
+        //Debug.Log("Saving data finished!");
     }
-
-    public static async Task SaveAsync<T>(string filepath, Container<T> container, int milliSeconds)
-    {
-        Debug.Log("Delay start...");
-        await Task.Delay(milliSeconds);
-        Debug.Log("Delay over!");
-
-    }
-
 
     /// <summary>
     /// Reads a file and returns them in a container.
@@ -162,7 +153,7 @@ public class SaveData : MonoBehaviour {
     {
         container.datas.Clear();
         container.previousHolder = null;
-        Debug.Log("Container cleared");
+        //Debug.Log("Container cleared");
     }
 
     public static void ClearCommentLists()
@@ -170,7 +161,7 @@ public class SaveData : MonoBehaviour {
         commentLists.textComments.Clear();
         commentLists.voiceComments.Clear();
         commentLists.thumbComments.Clear();
-        Debug.Log("CommentLists cleared");
+        //Debug.Log("CommentLists cleared");
     }
 
     // Collection indexes:

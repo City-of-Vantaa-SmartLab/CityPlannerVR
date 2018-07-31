@@ -110,7 +110,7 @@ public class SaveAndLoadTransforms : MonoBehaviour {
 
     private IEnumerator SaveWhenContainerIsReady(string fileName, Container<TransformData> container, bool useDatabase)
     {
-        Debug.Log("Starting coroutine...");
+        //Debug.Log("Starting coroutine...");
         pathName = folderPathName + slash + fileName + fileExtender;
 
         SaveData.transformCount = 0;
@@ -118,8 +118,8 @@ public class SaveAndLoadTransforms : MonoBehaviour {
 
         while (SaveData.transformCount < SaveData.amountOfTransforms)
         {
-            yield return new WaitForSeconds(.2f);
-            Debug.Log("Waiting for 0,2s....");
+            Debug.Log("Waiting for 0,1s....");
+            yield return new WaitForSeconds(.1f);
         }
         SaveData.transformCount = 0;
         SaveData.SaveDatas(pathName, container);
@@ -129,7 +129,7 @@ public class SaveAndLoadTransforms : MonoBehaviour {
             MongoDBAPI.UseDefaultConnections();
             MongoDBAPI.ImportJSONFileToDatabase(MongoDBAPI.transformCollection, pathName);
         }
-        Debug.Log("Saving done!");
+        //Debug.Log("Saving done!");
     }
 
     public void Load(string fileName, bool useDatabase)
@@ -235,22 +235,25 @@ public class SaveAndLoadTransforms : MonoBehaviour {
     /// Finds or creates a prefab and places it under its parent with saved transform coordinates.
     /// </summary>
 
-    public static void RestoreTransform(GameObject objectToBeRestored, TransformData data, Transform previousHolder)
+    public static void RestoreTransform(GameObject objectToBeRestored, TransformData data, Transform previousHolder, bool createNewWithoutSearching)
     {
-        if (objectToBeRestored == null)
-            objectToBeRestored = GameObject.Find(data.gameObjectName);
-        if (objectToBeRestored)
-            PutInPlace(objectToBeRestored, data, previousHolder);
-        else
+        if (!createNewWithoutSearching)
         {
-            Debug.Log("Could not find gameobject with name " + data.gameObjectName + ", creating from prefab...)");
-
-            objectToBeRestored = CreateFromPrefab(data);
+            if (objectToBeRestored == null)
+                objectToBeRestored = GameObject.Find(data.gameObjectName);
             if (objectToBeRestored)
                 PutInPlace(objectToBeRestored, data, previousHolder);
             else
-                Debug.Log("Could not find prefab!");
+            {
+                Debug.Log("Could not find gameobject with name " + data.gameObjectName + ", creating from prefab...)");
+            }
         }
+
+        objectToBeRestored = CreateFromPrefab(data);
+        if (objectToBeRestored)
+            PutInPlace(objectToBeRestored, data, previousHolder);
+        else
+            Debug.Log("Could not find prefab!");
     }
 
     private static void PutInPlace(GameObject GO, TransformData data, Transform previousHolder)
@@ -276,23 +279,29 @@ public class SaveAndLoadTransforms : MonoBehaviour {
         //if (superTemp == null)
         //    superTemp = Resources.Load("Prefabs/PhotonNewBuildings/" + GOName);
 
-        temp = PhotonNetwork.InstantiateSceneObject("Prefabs/Inventory/" + GOName, data.localPosition, data.localRotation, 0, null);
+        temp = PhotonNetwork.InstantiateSceneObject("Inventory/" + GOName, data.localPosition, data.localRotation, 0, null);
         if (!temp)
             temp = PhotonNetwork.InstantiateSceneObject("Prefabs/PhotonNewBuildings/" + GOName, data.localPosition, data.localRotation, 0, null); ; //add more of these if necessary
         if (!temp)
             temp = PhotonNetwork.InstantiateSceneObject("Prefabs/" + GOName, data.localPosition, data.localRotation, 0, null); ; 
 
         if (temp)
+        {
+            if (temp.GetComponent<SaveThisAsTransform>() == null)
+                temp.AddComponent<SaveThisAsTransform>();
             return temp;
+        }
         else
             return null;
     }
 
     private static string RemovePossibleCloneFromEnd(string gameObjectName)
     {
+        //Debug.Log("Removing possible clone...");
         string cloneString = "(Clone)";
         if (gameObjectName.EndsWith(cloneString))
         {
+            //Debug.Log("Removing clonestring!");
             string temp = gameObjectName.Substring(0, gameObjectName.Length - cloneString.Length);
             return temp;
         }
@@ -364,7 +373,11 @@ public class SaveAndLoadTransforms : MonoBehaviour {
         }
     }
 
-    // returns C = A ∩ B, where A,B and C are containers. Also modifies A = A ∉ B and B = B ∉ A.
+
+    /// <summary>
+    /// Returns C = A ∩ B, where A,B and C are containers. Also modifies A = A ∉ B and B = B ∉ A.
+    /// </summary>
+
     static private Container<TransformData> SeparateSharedGOS (Container<TransformData> loadingThenMissing, Container<TransformData> filterThenLeftOvers)
     {
         Container<TransformData> sharedGOS = new Container<TransformData>();
@@ -384,6 +397,10 @@ public class SaveAndLoadTransforms : MonoBehaviour {
         return sharedGOS;
     }
 
+    /// <summary>
+    /// 
+    /// </summary>
+
     public void RestoreToState(Container<TransformData> ItemsLoaded)
     {
         SaveData.ClearContainer(SaveData.transformContainer);
@@ -395,7 +412,7 @@ public class SaveAndLoadTransforms : MonoBehaviour {
         
         foreach (TransformData data in sharedContainer.datas)
         {
-            RestoreTransform(null, data, sharedContainer.previousHolder);  //find and place shared objects
+            RestoreTransform(null, data, sharedContainer.previousHolder, false);  //find and place shared objects
         }
 
         //foreach (TransformData data in ItemsLoaded.datas)
@@ -407,9 +424,8 @@ public class SaveAndLoadTransforms : MonoBehaviour {
 
         foreach (TransformData data in ItemsLoaded.datas)
         {
-            RestoreTransform(null, data, ItemsLoaded.previousHolder);  //the child objects might come from prefabs after all
+            RestoreTransform(null, data, ItemsLoaded.previousHolder, true);
         }
-
     }
 
     /// <summary>
@@ -445,9 +461,9 @@ public class SaveAndLoadTransforms : MonoBehaviour {
             parentName = "";
 
         string uberString = objectName + parentName;
-        Debug.Log("Joining strings: " + objectName + " " + parentName);
+        //Debug.Log("Joining strings: " + objectName + " " + parentName);
         int magic = Comment.ConvertFirstCharsToInt(uberString, subStringMaxLength * 2);
-        Debug.Log("QuickCheck: " + magic);
+        //Debug.Log("QuickCheck: " + magic);
         return magic;
     }
 

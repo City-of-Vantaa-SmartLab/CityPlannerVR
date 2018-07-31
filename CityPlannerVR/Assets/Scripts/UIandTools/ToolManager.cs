@@ -26,15 +26,15 @@ public class ToolManager : MonoBehaviour {
             if (ChangeToolTest(value))
             {
                 SetInputPropertiesByToolType(value);
-                Debug.Log("Tool changed from " + Tool + " to " + value + " on hand" + myHandNumber);
+                //Debug.Log("Tool changed from " + Tool + " to " + value + " on hand" + myHandNumber);
                 currentTool = value;
                 if (myHandNumber != 0 && AnnounceToolChanged != null)
                 {
                     AnnounceToolChanged((uint)myHandNumber, currentTool);
                 }
             }
-            else
-                Debug.Log("No right for tooltype: " + value);
+            //else
+            //    Debug.Log("No right for tooltype: " + value);
         }
     }
 

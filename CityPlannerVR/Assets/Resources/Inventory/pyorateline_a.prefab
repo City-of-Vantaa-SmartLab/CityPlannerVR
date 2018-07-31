@@ -30,6 +30,7 @@ GameObject:
   - component: {fileID: 114987178388824490}
   - component: {fileID: 114369862878988364}
   - component: {fileID: 65798536028623034}
+  - component: {fileID: 114274924745134832}
   m_Layer: 0
   m_Name: pyorateline_a
   m_TagString: Spawnable
@@ -119,6 +120,25 @@ BoxCollider:
   serializedVersion: 2
   m_Size: {x: 0.10000001, y: 0.01966247, z: 0.028353121}
   m_Center: {x: 0.0000000055879354, y: 0.009048747, z: -0.00022169296}
+--- !u!114 &114274924745134832
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1190194953655562}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 463eed8ac306c8b4cb23eb46b3aba426, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  isPartOfStartup: 0
+  parent: {fileID: 0}
+  initData:
+    gameObjectName: 
+    gameObjectParentName: 
+    localPosition: {x: 0, y: 0, z: 0}
+    localRotation: {x: 0, y: 0, z: 0, w: 0}
+    quickcheck: 0
 --- !u!114 &114369862878988364
 MonoBehaviour:
   m_ObjectHideFlags: 1

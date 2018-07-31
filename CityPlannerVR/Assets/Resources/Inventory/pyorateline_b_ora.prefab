@@ -30,6 +30,7 @@ GameObject:
   - component: {fileID: 54015190391967422}
   - component: {fileID: 114516130186426734}
   - component: {fileID: 114341011190295796}
+  - component: {fileID: 114398897321795628}
   m_Layer: 0
   m_Name: pyorateline_b_ora
   m_TagString: Spawnable
@@ -154,6 +155,25 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5d87f268c547c7a47acf9c24852d5753, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &114398897321795628
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1055305696942956}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 463eed8ac306c8b4cb23eb46b3aba426, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  isPartOfStartup: 0
+  parent: {fileID: 0}
+  initData:
+    gameObjectName: 
+    gameObjectParentName: 
+    localPosition: {x: 0, y: 0, z: 0}
+    localRotation: {x: 0, y: 0, z: 0, w: 0}
+    quickcheck: 0
 --- !u!114 &114463801198528496
 MonoBehaviour:
   m_ObjectHideFlags: 1

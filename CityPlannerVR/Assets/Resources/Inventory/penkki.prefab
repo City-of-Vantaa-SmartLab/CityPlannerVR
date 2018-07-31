@@ -32,6 +32,7 @@ GameObject:
   - component: {fileID: 114469899112960858}
   - component: {fileID: 114739563167894274}
   - component: {fileID: 114042059121561764}
+  - component: {fileID: 114497322071845470}
   m_Layer: 17
   m_Name: penkki
   m_TagString: Spawnable
@@ -219,6 +220,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2474917abc445a64b94d68b916a22d62, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  destroyCountermax: 5
+  destroyWaitSeconds: 1
 --- !u!114 &114490322176623288
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -230,6 +233,25 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b93b6a877adcbf94c89a9d6e0c0e844d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &114497322071845470
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1115728294077250}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 463eed8ac306c8b4cb23eb46b3aba426, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  isPartOfStartup: 0
+  parent: {fileID: 0}
+  initData:
+    gameObjectName: 
+    gameObjectParentName: 
+    localPosition: {x: 0, y: 0, z: 0}
+    localRotation: {x: 0, y: 0, z: 0, w: 0}
+    quickcheck: 0
 --- !u!114 &114545409124674542
 MonoBehaviour:
   m_ObjectHideFlags: 1
