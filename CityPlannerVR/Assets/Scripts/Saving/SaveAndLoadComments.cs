@@ -44,24 +44,12 @@ public class SaveAndLoadComments : MonoBehaviour
         return comment;
     }
 
-    //Use this when the user creates an entirely new comment
-    public Comment CreateNewComment(CommentData data)
-    {
-        Comment comment = CreateComment();
-        data.submittedShortDate = System.DateTime.Now.ToShortDateString();
-        data.submittedShortTime = System.DateTime.Now.ToShortTimeString();
-        comment.data = data;
-        comment.GenerateQuickCheck(3);
-        //comment.LoadData();
-        comment.SortAndAddToLocalList();
-        //comment.ApplyDataToContainer();  //this will add the comment to savedata's commentcontainer  //should be done via sub in Comment script to savedata
-        return comment;
-    }
 
     //Use eg. laserbutton to call the methods below
     public void Save()
     {
         SaveData.SaveDatas(pathName, SaveData.commentContainer);
+        //SaveData.ClearContainer(SaveData.commentContainer);
         SaveToDatabase();
     }
 

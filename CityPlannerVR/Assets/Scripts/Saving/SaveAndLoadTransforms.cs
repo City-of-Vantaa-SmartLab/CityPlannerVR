@@ -1,12 +1,12 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
-using UnityEngine;
 using System.IO;
+using UnityEngine;
 
 /// <summary>
-/// Saves and loads transforms in order from files. Adds gameobjects from prefabs to scene if necessary.
-/// Add holders (the parents) to a list in inspector, after which they can be stored via 
+/// Transformdata is a package, which is used with SaveAndLoadTransforms class to export
+/// and import gameobject's positional data with external files.
 /// </summary>
 
 [Serializable] //attributes for json
@@ -19,11 +19,15 @@ public class TransformData
     public int quickcheck;
 }
 
+/// <summary>
+/// Used in saving and loading a predefined set of transforms (in SaveData class) to an external file.
+/// It is also used when storing said data to a database, with the help of MongoDBAPI.
+/// </summary>
+
 public class SaveAndLoadTransforms : MonoBehaviour {
 
-    public List<GameObject> holdersToBeSaved = new List<GameObject>();
-    public List<GameObject> startupHolderList = new List<GameObject>();
-    private Container<TransformData> startupContainer = new Container<TransformData>();
+    //public List<GameObject> holdersToBeSaved = new List<GameObject>();  //moved under SaveData
+    //public List<GameObject> startupHolderList = new List<GameObject>();
 
     static public Transform defaultParentCleanup;
     private string folderPathName;
@@ -35,8 +39,6 @@ public class SaveAndLoadTransforms : MonoBehaviour {
     private string latestFileName;
     private string pathName;
     private char slash = Path.DirectorySeparatorChar;
-    //public bool save;
-    //public bool load;
 
     private void Awake()
     {
@@ -49,12 +51,9 @@ public class SaveAndLoadTransforms : MonoBehaviour {
         folderPathName = Application.persistentDataPath + slash + folder;
 
         if (!defaultParentCleanup)
-            defaultParentCleanup = GameObject.Find("CleanUp").transform;
-        if (!defaultParentCleanup)
-            Debug.LogError("Default parent could not be set for cleaning up!");
+            defaultParentCleanup = GameObject.Find("CleanUp").transform ?? new GameObject("CleanUp").transform;
         SubscriptionOn();
 
-        //LoadStartup();
     }
 
 
@@ -65,23 +64,17 @@ public class SaveAndLoadTransforms : MonoBehaviour {
 
     private void SubscriptionOn()
     {
-        SaveData.OnBeforeSaveTransforms += HandleBeforeSave;
         SaveData.OnLoadedTransforms += HandleLoading;
     }
 
     private void SubscriptionOff()
     {
-        SaveData.OnBeforeSaveTransforms -= HandleBeforeSave;
         SaveData.OnLoadedTransforms -= HandleLoading;
-    }
-
-    private void HandleBeforeSave()
-    {
-        StoreList(holdersToBeSaved);
     }
 
     private void HandleLoading()
     {
+        RestoreToState(SaveData.transformContainer);
         //Debug.Log("OnLoadedTransforms event fired");
     }
 
@@ -89,61 +82,92 @@ public class SaveAndLoadTransforms : MonoBehaviour {
     #region File and list manipulation
 
     /// <summary>
-    /// Save using default settings.
+    /// Save transformcontainer to local file and DB using default settings.
     /// </summary>
 
     public void Save()
     {
-        Save(defaultFileName, SaveData.transformContainer);
+        Save(defaultFileName, SaveData.transformContainer, false);
     }
 
     /// <summary>
-    /// Load using default settings.
+    /// Load to transformcontainer from DB using default settings.
     /// </summary>
 
     public void Load()
     {
-        Load(defaultFileName);
+        Load(defaultFileName, false);
     }
 
-    public void Save(string fileName, Container<TransformData> container)
+    /// <summary>
+    /// Saves a container to a filepath derived from filename parameter. Optionally uploads the savedata to a database using default settings.
+    /// </summary>
+
+    public void Save(string fileName, Container<TransformData> container, bool useDatabase)
     {
-        HandleBeforeSave();  //remove this if the event system is implemented
+        StartCoroutine(SaveWhenContainerIsReady(fileName, container, useDatabase));
+    }
+
+    private IEnumerator SaveWhenContainerIsReady(string fileName, Container<TransformData> container, bool useDatabase)
+    {
+        Debug.Log("Starting coroutine...");
         pathName = folderPathName + slash + fileName + fileExtender;
+
+        SaveData.transformCount = 0;
+        SaveData.BeforeSavingTransforms();
+
+        while (SaveData.transformCount < SaveData.amountOfTransforms)
+        {
+            yield return new WaitForSeconds(.2f);
+            Debug.Log("Waiting for 0,2s....");
+        }
+        SaveData.transformCount = 0;
         SaveData.SaveDatas(pathName, container);
-        MongoDBAPI.ImportJSONFileToDatabase(MongoDBAPI.transformCollection, pathName);
+        //SaveData.ClearContainer(container);
+        if (useDatabase)
+        {
+            MongoDBAPI.UseDefaultConnections();
+            MongoDBAPI.ImportJSONFileToDatabase(MongoDBAPI.transformCollection, pathName);
+        }
+        Debug.Log("Saving done!");
     }
 
-    public void Load(string fileName)
+    public void Load(string fileName, bool useDatabase)
     {
         pathName = folderPathName + slash + fileName + fileExtender;
-        MongoDBAPI.UseDefaultConnections();
-        MongoDBAPI.ExportJSONFileFromDatabase(MongoDBAPI.transformCollection, pathName);
+        if (useDatabase)
+        {
+            MongoDBAPI.UseDefaultConnections();
+            MongoDBAPI.ExportJSONFileFromDatabase(MongoDBAPI.transformCollection, pathName);
+        }
         SaveData.LoadItems<TransformData>(pathName);
     }
 
-
+    /// <summary>
+    /// For redundancy and testing alternative startups
+    /// </summary>
 
     public void SaveStartupList()
     {
-        //SaveData.transformContainer.datas.Clear();
-        //SaveData.ClearContainer(SaveData.transformContainer);
-        //StoreList(startupHolderList);
-        Save(startupFileName, startupContainer);
+        Save(startupFileName, SaveData.transformContainer, false);
     }
 
     /// <summary>
     /// Load startup items from a dedicated file.
     /// </summary>
 
-    public void LoadStartup()
+    private void LoadStartup(bool useDatabase)
     {
-        Load(startupFileName);
+        //pathName = folderPathName + slash + startupFileName + fileExtender;
+        //if (useDatabase)
+        //    MongoDBAPI.ExportJSONFileFromDatabase(MongoDBAPI.transformCollection, pathName);
+        //SaveData.startupContainer = SaveData.LoadDatas<TransformData>(pathName);
+        Load(startupFileName, useDatabase);
     }
 
-    private void StoreList(List<GameObject> holders)
+    private void StoreList(List<GameObject> GOSToBeSaved)
     {
-        foreach (GameObject GO in holders)
+        foreach (GameObject GO in GOSToBeSaved)
         {
             if (GO == null)
             {
@@ -152,37 +176,54 @@ public class SaveAndLoadTransforms : MonoBehaviour {
             }
             StoreData(GO.transform);  //stores the holder
             Debug.Log("Storing holder's transform: " + GO.name);
-            foreach (Transform tr in GO.transform)
-            {
-                StoreData(tr);  //stores the holder's children
-                //Debug.Log("Storing " + tr.name);
-            }
+            //foreach (Transform tr in GO.transform)
+            //{
+            //    StoreData(tr);  //stores the holder's children
+            //    //Debug.Log("Storing " + tr.name);
+            //}
         }
     }
 
-    private void StoreData(Transform t)
+    /// <summary>
+    /// Evaluates a transform's properties to a transformdata class, which is added to savedatas transformcontainer.
+    /// If a transformdata with the same gameobjectname is found, its position is updated instead of adding it again to the container.
+    /// </summary>
+
+    public static void StoreData(Transform t)
     {
-        TransformData data = new TransformData();
+        TransformData data = GenerateTransformData(t);
         bool alreadyReplaced = false;
 
-        data.localPosition = t.localPosition;
-        data.localRotation = t.localRotation;
-        data.gameObjectName = t.gameObject.name;
-        data.gameObjectParentName = t.parent.name;
-        data.quickcheck = GenerateQuickCheck(data, 3);
-        foreach (TransformData trdata in SaveData.transformContainer.datas)
-        {
-            if (IsTheSameTransform(trdata, data))
-            {
-                trdata.localPosition = data.localPosition;
-                trdata.localRotation = data.localRotation;
-                alreadyReplaced = true;
-                break;
-            }
-        }
+        //foreach (TransformData trdata in SaveData.transformContainer.datas)  //This was in place for duplicates. Redundant since better container management
+        //{
+        //    if (IsTheSameTransform(trdata, data))
+        //    {
+        //        trdata.localPosition = data.localPosition;
+        //        trdata.localRotation = data.localRotation;
+        //        alreadyReplaced = true;
+        //        break;
+        //    }
+        //}
 
         if (!alreadyReplaced)
             SaveData.AddData(data);
+    }
+
+    public static TransformData GenerateTransformData(Transform t)
+    {
+        TransformData data = new TransformData
+        {
+            localPosition = t.localPosition,
+            localRotation = t.localRotation,
+            gameObjectName = t.gameObject.name,
+        };
+
+        if (t.parent == null)
+            data.gameObjectParentName = "";
+        else
+            data.gameObjectParentName = t.parent.name;
+        data.quickcheck = GenerateQuickCheck(data, 2);
+        return data;
     }
 
     #endregion
@@ -194,18 +235,19 @@ public class SaveAndLoadTransforms : MonoBehaviour {
     /// Finds or creates a prefab and places it under its parent with saved transform coordinates.
     /// </summary>
 
-    public static void RestoreTransform(TransformData data, Transform previousHolder)
+    public static void RestoreTransform(GameObject objectToBeRestored, TransformData data, Transform previousHolder)
     {
-        GameObject temp = GameObject.Find(data.gameObjectName);
-        if (temp)
-            PutInPlace(temp, data, previousHolder);
+        if (objectToBeRestored == null)
+            objectToBeRestored = GameObject.Find(data.gameObjectName);
+        if (objectToBeRestored)
+            PutInPlace(objectToBeRestored, data, previousHolder);
         else
         {
             Debug.Log("Could not find gameobject with name " + data.gameObjectName + ", creating from prefab...)");
 
-            temp = CreateFromPrefab(data);
-            if (temp)
-                PutInPlace(temp, data, previousHolder);
+            objectToBeRestored = CreateFromPrefab(data);
+            if (objectToBeRestored)
+                PutInPlace(objectToBeRestored, data, previousHolder);
             else
                 Debug.Log("Could not find prefab!");
         }
@@ -213,7 +255,7 @@ public class SaveAndLoadTransforms : MonoBehaviour {
 
     private static void PutInPlace(GameObject GO, TransformData data, Transform previousHolder)
     {
-        Transform parent = CheckOrFindOrGenerateParent(data, previousHolder);
+        Transform parent = CheckForParent(data, previousHolder);
         if (parent)
             GO.transform.parent = parent;
         GO.transform.localPosition = data.localPosition;
@@ -222,13 +264,23 @@ public class SaveAndLoadTransforms : MonoBehaviour {
 
     private static GameObject CreateFromPrefab(TransformData data)
     {
+        string GOName = RemovePossibleCloneFromEnd(data.gameObjectName);
         GameObject temp;
         //System.Object[] what = new System.Object[0];
         //temp = PhotonNetwork.InstantiateSceneObject(data.gameObjectName, data.localPosition, data.localRotation, 0, what);
         //if (!temp)
-            temp = PhotonNetwork.InstantiateSceneObject("Prefabs/" + data.gameObjectName, data.localPosition, data.localRotation, 0, null);
+
+        //object superTemp = Resources.Load("Prefabs/" + GOName);
+        //if (superTemp == null)
+        //    superTemp = Resources.Load("Prefabs/Inventory/" + GOName);
+        //if (superTemp == null)
+        //    superTemp = Resources.Load("Prefabs/PhotonNewBuildings/" + GOName);
+
+        temp = PhotonNetwork.InstantiateSceneObject("Prefabs/Inventory/" + GOName, data.localPosition, data.localRotation, 0, null);
         if (!temp)
-            temp = PhotonNetwork.InstantiateSceneObject("Prefabs/PhotonNewBuildings/" + data.gameObjectName, data.localPosition, data.localRotation, 0, null); ; //add more of these if necessary
+            temp = PhotonNetwork.InstantiateSceneObject("Prefabs/PhotonNewBuildings/" + GOName, data.localPosition, data.localRotation, 0, null); ; //add more of these if necessary
+        if (!temp)
+            temp = PhotonNetwork.InstantiateSceneObject("Prefabs/" + GOName, data.localPosition, data.localRotation, 0, null); ; 
 
         if (temp)
             return temp;
@@ -236,7 +288,19 @@ public class SaveAndLoadTransforms : MonoBehaviour {
             return null;
     }
 
-    private static Transform CheckOrFindOrGenerateParent(TransformData data, Transform previousHolder)
+    private static string RemovePossibleCloneFromEnd(string gameObjectName)
+    {
+        string cloneString = "(Clone)";
+        if (gameObjectName.EndsWith(cloneString))
+        {
+            string temp = gameObjectName.Substring(0, gameObjectName.Length - cloneString.Length);
+            return temp;
+        }
+
+        return gameObjectName;
+    }
+
+    private static Transform CheckForParent(TransformData data, Transform previousHolder)
     {
         if (previousHolder != null)
         {
@@ -249,16 +313,16 @@ public class SaveAndLoadTransforms : MonoBehaviour {
             SaveData.transformContainer.previousHolder = temp.transform;
             return temp.transform;
         }
-        temp = CreateFromPrefab(data);
-        if (temp)
-        {
-            SaveData.transformContainer.previousHolder = temp.transform;
-            return temp.transform;
-        }
+        //temp = CreateFromPrefab(data);
+        //if (temp)
+        //{
+        //    SaveData.transformContainer.previousHolder = temp.transform;
+        //    return temp.transform;
+        //}
         else if (defaultParentCleanup)
         {
-            Debug.Log("Could not find parent for " + data.gameObjectName + " with name: "
-                + data.gameObjectParentName + ", moving under cleanup object");
+            //Debug.Log("Could not find parent for " + data.gameObjectName + " with name: "
+            //    + data.gameObjectParentName + ", moving under cleanup object");
             return defaultParentCleanup;
         }
         else
@@ -270,7 +334,27 @@ public class SaveAndLoadTransforms : MonoBehaviour {
 
     #region Restoring scene
 
-    public static void ClearLevelFrom(Container<TransformData> holders)
+    public void ResetSceneQuick()
+    {
+        SaveData.ResetScene(true);
+
+        //if (SaveData.startupContainer  == null)
+        //    LoadStartup(false);
+        //if (SaveData.startupContainer == null)
+        //    LoadStartup(true);
+        //RestoreToState(SaveData.startupContainer);
+    }
+
+    public void ResetSceneFromDefaultFile()
+    {
+        LoadStartup(false);
+        if (SaveData.startupContainer == null)
+            LoadStartup(true);
+        RestoreToState(SaveData.startupContainer);
+    }
+
+
+        private static void ClearLevelFrom(Container<TransformData> holders)
     {
         foreach (TransformData data in holders.datas)
         {
@@ -278,11 +362,6 @@ public class SaveAndLoadTransforms : MonoBehaviour {
             if (temp)
                 PhotonNetwork.Destroy(temp);
         }
-    }
-
-    public void ClearLevelFromStartupItems()
-    {
-        ClearLevelFrom(startupContainer);
     }
 
     // returns C = A ∩ B, where A,B and C are containers. Also modifies A = A ∉ B and B = B ∉ A.
@@ -316,7 +395,7 @@ public class SaveAndLoadTransforms : MonoBehaviour {
         
         foreach (TransformData data in sharedContainer.datas)
         {
-            RestoreTransform(data, sharedContainer.previousHolder);  //find and place shared objects
+            RestoreTransform(null, data, sharedContainer.previousHolder);  //find and place shared objects
         }
 
         //foreach (TransformData data in ItemsLoaded.datas)
@@ -328,7 +407,7 @@ public class SaveAndLoadTransforms : MonoBehaviour {
 
         foreach (TransformData data in ItemsLoaded.datas)
         {
-            RestoreTransform(data, ItemsLoaded.previousHolder);  //the child objects might come from prefabs after all
+            RestoreTransform(null, data, ItemsLoaded.previousHolder);  //the child objects might come from prefabs after all
         }
 
     }
@@ -351,15 +430,24 @@ public class SaveAndLoadTransforms : MonoBehaviour {
 
     #region QuickCecking
 
-    public int GenerateQuickCheck(TransformData data, int subStringMaxLength)
+    public static int GenerateQuickCheck(TransformData data, int subStringMaxLength)
     {
-        string objectName = Comment.TruncateString(data.gameObjectName, subStringMaxLength);
-        string parentName = Comment.TruncateString(data.gameObjectParentName, subStringMaxLength);
+        string objectName;
+        string parentName;
+        if (!string.IsNullOrEmpty(data.gameObjectName))
+            objectName = Comment.TruncateString(data.gameObjectName, subStringMaxLength);
+        else
+            objectName = "";
+
+        if (!string.IsNullOrEmpty(data.gameObjectParentName))
+            parentName = Comment.TruncateString(data.gameObjectParentName, subStringMaxLength);
+        else
+            parentName = "";
 
         string uberString = objectName + parentName;
-        //Debug.Log("Joining strings: " + objectName + " " + parentName);
+        Debug.Log("Joining strings: " + objectName + " " + parentName);
         int magic = Comment.ConvertFirstCharsToInt(uberString, subStringMaxLength * 2);
-        //Debug.Log("QuickCheck: " + magic);
+        Debug.Log("QuickCheck: " + magic);
         return magic;
     }
 

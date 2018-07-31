@@ -204,8 +204,8 @@ public class PhotonLaserManager : PunBehaviour {
     {
         if (myFakeLaser)
             myFakeLaser.ActivateFakeLaserRPC(active);
-        else
-            Debug.Log("No fake laser found for " + transform.parent.name);
+        //else
+            //Debug.Log("No fake laser found for " + transform.parent.name);
     }
 
     public void DeactivateObject()

@@ -26,19 +26,19 @@ public class ThumbManager : MonoBehaviour {
         Debug.Log("THUMBS MANAGER TESTAA");
     }
 
-    public void CreateThumbUp()
-    {
-        CommentData tempData = CreateThumbData();
-        tempData.dataString = "1";
-        SLComments.CreateNewComment(tempData);
-    }
+    //public void CreateThumbUp()
+    //{
+    //    CommentData tempData = CreateThumbData();
+    //    tempData.dataString = "1";
+    //    SLComments.CreateNewComment(tempData);
+    //}
 
-    public void CreateThumbDown()
-    {
-        CommentData tempData = CreateThumbData();
-        tempData.dataString = "0";
-        SLComments.CreateNewComment(tempData);
-    }
+    //public void CreateThumbDown()
+    //{
+    //    CommentData tempData = CreateThumbData();
+    //    tempData.dataString = "0";
+    //    SLComments.CreateNewComment(tempData);
+    //}
 
     //needs to be cleaned up
     private CommentData CreateThumbData()

@@ -68,7 +68,7 @@ public class MenuSpawner : MonoBehaviour
         if (e.controllerIndex == 1)
         {
 
-            Debug.Log("Gripped1");
+            //Debug.Log("Gripped1");
         }
 
         else if (e.controllerIndex == 2)
@@ -100,7 +100,7 @@ public class MenuSpawner : MonoBehaviour
                 menu.SetActive(false);
             }
 
-            Debug.Log("Gripped2");
+            //Debug.Log("Gripped2");
         }
     }
 

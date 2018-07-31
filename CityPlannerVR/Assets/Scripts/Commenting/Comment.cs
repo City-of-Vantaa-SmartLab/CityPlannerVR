@@ -119,11 +119,22 @@ public class Comment {
 
     public static int ConvertFirstCharsToInt(string str, int maxLength)
     {
+        Debug.Log("Starting conversion process...");
         string newStr = TruncateString(str, maxLength);
+        Debug.Log("String truncated...");
         byte[] bytes = Encoding.Default.GetBytes(newStr);
+        Debug.Log("Encoding done...");
         if (BitConverter.IsLittleEndian)
             Array.Reverse(bytes);
+        if (bytes.Length < 4)
+        {
+            byte[] temp = new byte[4];
+            bytes.CopyTo(temp, 0);
+            bytes = temp;
+        }
+        Debug.Log("Bytes are in order and proper size...");
         int magic = BitConverter.ToInt32(bytes, 0);
+        Debug.Log("Conversion done!");
         return magic;
     }
 
@@ -188,5 +199,42 @@ public class Comment {
         SaveData.AddData(this.data);
     }
 
+    public static void GenerateTextComment(string commentString, GameObject targetObject)
+    {
+        CommentData tempData = GenerateMetaData(CommentType.Text, targetObject);
+        Comment comment = SaveAndLoadComments.CreateComment();
+        tempData.dataString = commentString;
+
+        comment.data = tempData;
+        comment.GenerateQuickCheck(3);
+        comment.SortAndAddToLocalList();
+        comment.AddCommentDataToSavedata();
+    }
+
+    /// <summary>
+    /// Creates metadata for commentdata. Does not log targetobject name and datastring!
+    /// </summary>
+
+    private static CommentData GenerateMetaData(CommentType commentType)
+    {
+        CommentData tempData = new CommentData();
+        tempData.userName = PhotonNetwork.player.NickName;
+        tempData.SHPath = "";
+        tempData.type = commentType;
+        tempData.submittedShortDate = System.DateTime.Now.ToShortDateString();
+        tempData.submittedShortTime = System.DateTime.Now.ToShortTimeString();
+
+        tempData.quickcheck = 0; //should be created later
+
+        return tempData;
+    }
+
+    private static CommentData GenerateMetaData(CommentType commentType, GameObject targetObject)
+    {
+        CommentData tempData = GenerateMetaData(commentType);
+        tempData.commentedObjectName = targetObject.name;
+
+        return tempData;
+    }
 
 }

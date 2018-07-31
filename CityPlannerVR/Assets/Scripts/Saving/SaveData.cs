@@ -3,12 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using System.IO;
 using System;
-
-/// <summary>
-/// Handles the writing and reading of files, as well as stores the commentcontainer.
-/// Savedata is a static class, which utilises another static class called MongoDBAPI to sync with cloud files.
-/// 
-/// </summary>
+using System.Threading.Tasks;
 
 [Serializable]
 public class Container<T> /*where T : parentClass  //if needed, eg. CommentData as child class -> through inheritance?*/
@@ -16,12 +11,17 @@ public class Container<T> /*where T : parentClass  //if needed, eg. CommentData 
     public List<T> datas = new List<T>();
     public Transform previousHolder = null; //used when loading transformdata
     public string date;
+    public string time;
     public string userWhoSaved;
 }
 
-//for easy accessing and storing locally
+/// <summary>
+/// Handles the writing and reading of files, as well as stores the default comment and transform containers.
+/// Savedata is a static class, which utilises another static class called MongoDBAPI to sync with cloud files.
+/// 
+/// </summary>
 
-public class SaveData {
+public class SaveData : MonoBehaviour {
 
     public class CommentLists
     {
@@ -30,10 +30,18 @@ public class SaveData {
         public List<Comment> thumbComments = new List<Comment>();
     }
 
-    //public static CommentContainer commentContainer = new CommentContainer();
     public static Container<CommentData> commentContainer = new Container<CommentData>();
     public static Container<CommentData> commentContainerForVizualisation = new Container<CommentData>();
     public static Container<TransformData> transformContainer = new Container<TransformData>();
+    public static Container<TransformData> startupContainer = new Container<TransformData>();
+    public static int amountOfTransforms = 0;
+    public static int transformCount;
+
+
+    //public static List<GameObject> gameObjectsToBeSaved = new List<GameObject>();
+    //public static List<GameObject> startupObjectsList = new List<GameObject>();
+
+
     public static CommentLists commentLists = new CommentLists();
 
     public delegate void SerializeAction();
@@ -41,6 +49,28 @@ public class SaveData {
     public static event SerializeAction OnBeforeSaveComments;
     public static event SerializeAction OnLoadedTransforms;
     public static event SerializeAction OnBeforeSaveTransforms;
+    public static event SerializeAction OnQuickResetScene;
+    public static event SerializeAction OnSlowResetScene;
+
+    public static void BeforeSavingTransforms()
+    {
+        if (OnBeforeSaveTransforms != null)
+            OnBeforeSaveTransforms();
+    }
+
+    public static void ResetScene(bool quick)
+    {
+        if (quick && OnQuickResetScene != null)
+            OnQuickResetScene();
+        else if (OnSlowResetScene != null)
+            OnSlowResetScene();
+    }
+
+
+
+    /// <summary>
+    /// Loads a file and processes it to scene.
+    /// </summary>
 
     public static void LoadItems<T>(string filepath)
     {
@@ -49,22 +79,26 @@ public class SaveData {
         LoadItems<T>(tempContainer);
     }
 
-    public static void LoadItems<T>(Container<T> container)
+    /// <summary>
+    /// Processes source container to generate comments and restore transforms.
+    /// </summary>
+
+    public static void LoadItems<T>(Container<T> sourceContainer)
     {
-        foreach (T data in container.datas)
+        foreach (T data in sourceContainer.datas)
         {
             if (data is CommentData)
                 SaveAndLoadComments.CreateOldComment(data as CommentData);
             if (data is TransformData)
-                SaveAndLoadTransforms.RestoreTransform(data as TransformData, container.previousHolder);
+                SaveAndLoadTransforms.RestoreTransform(null, data as TransformData, sourceContainer.previousHolder);
         }
-        if (container.datas.Count != 0 && container.datas[0] is CommentData)
+        if (sourceContainer.datas.Count != 0 && sourceContainer.datas[0] is CommentData)
         {
             if (OnLoadedComments != null)
                 OnLoadedComments();
         }
 
-        if (container.datas.Count != 0 && container.datas[0] is TransformData)
+        if (sourceContainer.datas.Count != 0 && sourceContainer.datas[0] is TransformData)
         {
             if (OnLoadedTransforms != null)
                 OnLoadedTransforms();
@@ -73,14 +107,42 @@ public class SaveData {
 
     internal static void SaveDatas<T>(string filepath, Container<T> container)
     {
+        Debug.Log("Starting to save datas...");
+        //if (container is Container<TransformData>)
+        //{
+        //    Debug.Log("Saving transform datas...");
+        //    if (OnBeforeSaveTransforms != null) OnBeforeSaveTransforms();
+        //}
+
+        if (container is Container<CommentData>)
+            if (OnBeforeSaveComments != null) OnBeforeSaveComments();
+
+        //await SaveAsync<T>(filepath, container, 2000); //Ks. Santerin timer scripti GameManagerissa!
+
         container.date = System.DateTime.Now.ToShortDateString();
+        container.time = System.DateTime.Now.ToShortTimeString();
         container.userWhoSaved = PhotonNetwork.player.NickName;
 
         string jason = JsonUtility.ToJson(container);
         StreamWriter sw = File.CreateText(filepath);  //creates or overwrites file at filepath
         sw.Close();
         File.WriteAllText(filepath, jason);
+        ClearContainer(container);
+        Debug.Log("Saving data finished!");
     }
+
+    public static async Task SaveAsync<T>(string filepath, Container<T> container, int milliSeconds)
+    {
+        Debug.Log("Delay start...");
+        await Task.Delay(milliSeconds);
+        Debug.Log("Delay over!");
+
+    }
+
+
+    /// <summary>
+    /// Reads a file and returns them in a container.
+    /// </summary>
 
     public static Container<T> LoadDatas<T>(string filepath)
     {
@@ -123,8 +185,7 @@ public class SaveData {
     {
         MongoDBAPI.UseDefaultConnections();
         if (collectionIndex == 1)
-            MongoDBAPI.ExportJSONFileFromDatabase(MongoDBAPI.transformCollection, filepath);
+            MongoDBAPI.ImportJSONFileToDatabase(MongoDBAPI.transformCollection, filepath);
     }
-
 
 }
