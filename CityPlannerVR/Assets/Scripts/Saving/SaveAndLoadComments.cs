@@ -62,6 +62,7 @@ public class SaveAndLoadComments : MonoBehaviour
     public void Save()
     {
         SaveData.SaveDatas(pathName, SaveData.commentContainer);
+        //SaveData.ClearContainer(SaveData.commentContainer);
         SaveToDatabase();
     }
 

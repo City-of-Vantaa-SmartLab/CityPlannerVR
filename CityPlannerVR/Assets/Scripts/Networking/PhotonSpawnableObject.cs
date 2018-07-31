@@ -148,12 +148,14 @@ public class PhotonSpawnableObject : MonoBehaviour {
 		if (controllerindex == 1) {
 			
             GameObject clone = PhotonNetwork.Instantiate(itemPrefabName, spawnPoint.position, spawnPoint.rotation, 0);
+            clone.AddComponent<SaveThisAsTransform>();
             hand1.AttachObject(clone);
             }
 
         else if (controllerindex == 2) {
 	
             GameObject clone = PhotonNetwork.Instantiate(itemPrefabName, spawnPoint.position, spawnPoint.rotation, 0);
+            clone.AddComponent<SaveThisAsTransform>();
             hand2.AttachObject(clone);
             }
         else {

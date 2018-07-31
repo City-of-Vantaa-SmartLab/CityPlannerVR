@@ -100,11 +100,14 @@ public class ItemContainer : MonoBehaviour {
         if (toolHolder != null)
             Destroy(toolHolder);
 
+        if (tool == ToolManager.ToolType.Empty)
+            return;
         GameObject prefab = null;
         if (tool == ToolManager.ToolType.EditingLaser)
             prefab = (GameObject)Resources.Load("Prefabs/ToolHolders/LaserpointerHolder");
         else if (tool == ToolManager.ToolType.Camera)
             prefab = (GameObject)Resources.Load("Prefabs/ToolHolders/CameraHolder");
+
 
 
         if (prefab == null)
