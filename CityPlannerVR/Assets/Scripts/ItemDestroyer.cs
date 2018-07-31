@@ -12,7 +12,7 @@ public class ItemDestroyer : MonoBehaviour {
     private void OnCollisionEnter(Collision other)
    
     {
-        Debug.Log(other.gameObject.name + " hit floor");
+        //Debug.Log(other.gameObject.name + " hit floor");
         prop = other.gameObject;
         propN = prop.GetComponent<PhotonNetworkedObject>();
 
@@ -26,7 +26,7 @@ public class ItemDestroyer : MonoBehaviour {
 
     private void OnCollisionExit(Collision other)
     {
-        Debug.Log(prop.name + " exited floor");
+        //Debug.Log(prop.name + " exited floor");
         if (prop.CompareTag("Spawnable"))
         {
             propN.StopCoroutine(itemdestroy);

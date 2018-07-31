@@ -30,6 +30,7 @@ GameObject:
   - component: {fileID: 54215781040136168}
   - component: {fileID: 114067452305376848}
   - component: {fileID: 114965847924878130}
+  - component: {fileID: 114485140513397828}
   m_Layer: 0
   m_Name: koju_iso
   m_TagString: Spawnable
@@ -225,6 +226,25 @@ MonoBehaviour:
   velocityAverageFrames: 5
   angularVelocityAverageFrames: 11
   estimateOnAwake: 0
+--- !u!114 &114485140513397828
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1728167611415124}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 463eed8ac306c8b4cb23eb46b3aba426, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  isPartOfStartup: 0
+  parent: {fileID: 0}
+  initData:
+    gameObjectName: 
+    gameObjectParentName: 
+    localPosition: {x: 0, y: 0, z: 0}
+    localRotation: {x: 0, y: 0, z: 0, w: 0}
+    quickcheck: 0
 --- !u!114 &114554154188217846
 MonoBehaviour:
   m_ObjectHideFlags: 1

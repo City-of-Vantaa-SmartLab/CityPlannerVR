@@ -30,6 +30,7 @@ GameObject:
   - component: {fileID: 54941924993078944}
   - component: {fileID: 114288739388695856}
   - component: {fileID: 114895077529101802}
+  - component: {fileID: 114914172328508164}
   m_Layer: 0
   m_Name: varjo_sin
   m_TagString: Spawnable
@@ -258,3 +259,22 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5d87f268c547c7a47acf9c24852d5753, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &114914172328508164
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1875174019384036}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 463eed8ac306c8b4cb23eb46b3aba426, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  isPartOfStartup: 0
+  parent: {fileID: 0}
+  initData:
+    gameObjectName: 
+    gameObjectParentName: 
+    localPosition: {x: 0, y: 0, z: 0}
+    localRotation: {x: 0, y: 0, z: 0, w: 0}
+    quickcheck: 0

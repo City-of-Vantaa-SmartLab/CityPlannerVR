@@ -35,11 +35,11 @@ public class PhotonNetworkedObject : Photon.MonoBehaviour {
 			transform.rotation = Quaternion.Lerp (transform.rotation, this.correctObjectRot, Time.deltaTime * 5);
 		} else {
 			if (this.gameObject.GetComponent<Rigidbody> ().isKinematic && isInHand == false) {
-				Debug.LogWarning ("IsKinematic true!");
+				//Debug.LogWarning ("IsKinematic true!");
 				isInHand = true;
 				this.gameObject.GetComponent<PhotonView> ().RPC ("SetIsKinematic", PhotonTargets.AllBuffered, isInHand);
 			} else if (!this.gameObject.GetComponent<Rigidbody> ().isKinematic && isInHand == true) {
-				Debug.LogWarning ("IsKinematic false!");
+				//Debug.LogWarning ("IsKinematic false!");
 				isInHand = false;
 				this.gameObject.GetComponent<PhotonView> ().RPC ("SetIsKinematic", PhotonTargets.AllBuffered, isInHand);
 			}
@@ -92,7 +92,7 @@ public class PhotonNetworkedObject : Photon.MonoBehaviour {
 
     public IEnumerator ObjectDestroyCounter()
     {
-        Debug.Log(gameObject.name + " Coroutine Started");
+        //Debug.Log(gameObject.name + " Coroutine Started");
         int counter = 0;
         while (counter < destroyCountermax)
         {

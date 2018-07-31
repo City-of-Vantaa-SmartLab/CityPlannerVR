@@ -119,11 +119,11 @@ public class Comment {
 
     public static int ConvertFirstCharsToInt(string str, int maxLength)
     {
-        Debug.Log("Starting conversion process...");
+        //Debug.Log("Starting conversion process...");
         string newStr = TruncateString(str, maxLength);
-        Debug.Log("String truncated...");
+        //Debug.Log("String truncated...");
         byte[] bytes = Encoding.Default.GetBytes(newStr);
-        Debug.Log("Encoding done...");
+        //Debug.Log("Encoding done...");
         if (BitConverter.IsLittleEndian)
             Array.Reverse(bytes);
         if (bytes.Length < 4)
@@ -132,9 +132,9 @@ public class Comment {
             bytes.CopyTo(temp, 0);
             bytes = temp;
         }
-        Debug.Log("Bytes are in order and proper size...");
+        //Debug.Log("Bytes are in order and proper size...");
         int magic = BitConverter.ToInt32(bytes, 0);
-        Debug.Log("Conversion done!");
+        //Debug.Log("Conversion done!");
         return magic;
     }
 
@@ -144,9 +144,9 @@ public class Comment {
         string objectName = TruncateString(data.commentedObjectName, subStringMaxLength);
         string date = TruncateString(data.submittedShortDate, subStringMaxLength);
         string uberString = userName + objectName + date;
-        Debug.Log("Joining strings: " + userName + " " + objectName + " " + date);
+        //Debug.Log("Joining strings: " + userName + " " + objectName + " " + date);
         int magic = ConvertFirstCharsToInt(uberString, subStringMaxLength * 4);
-        Debug.Log("QuickCheck: " + magic);
+        //Debug.Log("QuickCheck: " + magic);
         data.quickcheck = magic;
     }
 

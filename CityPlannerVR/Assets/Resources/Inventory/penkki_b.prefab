@@ -30,6 +30,7 @@ GameObject:
   - component: {fileID: 114682141105565254}
   - component: {fileID: 114287085534926208}
   - component: {fileID: 114744553795071116}
+  - component: {fileID: 114016976226699626}
   m_Layer: 0
   m_Name: penkki_b
   m_TagString: Spawnable
@@ -119,6 +120,25 @@ BoxCollider:
   serializedVersion: 2
   m_Size: {x: 0.075941235, y: 0.040855348, z: 0.030350547}
   m_Center: {x: 0, y: -0.0008040052, z: 0.000029092189}
+--- !u!114 &114016976226699626
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1647358198771344}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 463eed8ac306c8b4cb23eb46b3aba426, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  isPartOfStartup: 0
+  parent: {fileID: 0}
+  initData:
+    gameObjectName: 
+    gameObjectParentName: 
+    localPosition: {x: 0, y: 0, z: 0}
+    localRotation: {x: 0, y: 0, z: 0, w: 0}
+    quickcheck: 0
 --- !u!114 &114287085534926208
 MonoBehaviour:
   m_ObjectHideFlags: 1

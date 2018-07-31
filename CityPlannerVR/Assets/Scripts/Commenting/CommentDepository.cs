@@ -4,7 +4,8 @@ using UnityEngine;
 using UnityEngine.UI;
 
 /// <summary>
-/// Used in conjuction with CommentInfoVisualized to display metadata. 
+/// Used in conjuction with CommentInfoVisualized to display metadata. If CommentInfoVisualized component
+/// is not in the same GameObject, drag the appropriate gameobjet to targetForMetaData.
 /// </summary>
 
 public class CommentDepository : MonoBehaviour {
@@ -19,7 +20,9 @@ public class CommentDepository : MonoBehaviour {
 
     private void Start()
     {
-        if (targetForMetaData)
+        if (!targetForMetaData)
+            metaDataHolder = gameObject.GetComponent<CommentInfoVisualized>();
+        else
             metaDataHolder = targetForMetaData.GetComponent<CommentInfoVisualized>();
         if (!metaDataHolder)
             Debug.Log("Could not find comment metadata visualization component!");
@@ -34,6 +37,10 @@ public class CommentDepository : MonoBehaviour {
         GenerateListVisuals(Comment.CommentType.Text, 0);
     }
 
+    /// <summary>
+    /// Changes current visualized list and executes update
+    /// </summary>
+
     public void GenerateListVisuals(Comment.CommentType type, int index)
     {
         if (!targetForMetaData)
@@ -45,9 +52,9 @@ public class CommentDepository : MonoBehaviour {
         switch (type)
         {
             case Comment.CommentType.Text:
-                //if (currentType != Comment.CommentType.Text)
+                //if (currentType != Comment.CommentType.Text)  
                 //{
-                    currentList = SaveData.commentLists.textComments;
+                    currentList = SaveData.commentLists.textComments;   //If the list is not a reference, continuous updating is required!
                     currentType = Comment.CommentType.Text;
                 //}
                 break;
@@ -80,6 +87,8 @@ public class CommentDepository : MonoBehaviour {
         if (currentList != null)
             GenerateVisualsOnList(currentList, index);
     }
+
+
 
     private void GenerateVisualsOnList(List<Comment> list, int listIndex)
     {

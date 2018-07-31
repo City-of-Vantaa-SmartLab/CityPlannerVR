@@ -32,6 +32,7 @@ GameObject:
   - component: {fileID: 114951426138850776}
   - component: {fileID: 114340504942708900}
   - component: {fileID: 114887655670307542}
+  - component: {fileID: 114952524147181516}
   m_Layer: 0
   m_Name: PhotonSmartLabBall
   m_TagString: Spawnable
@@ -65,6 +66,7 @@ MeshRenderer:
   m_MotionVectors: 1
   m_LightProbeUsage: 1
   m_ReflectionProbeUsage: 1
+  m_RenderingLayerMask: 4294967295
   m_Materials:
   - {fileID: 2100000, guid: c6d09e3c7004d0f42b42fd4f6ee35c2c, type: 2}
   m_StaticBatchInfo:
@@ -127,18 +129,24 @@ MonoBehaviour:
   snapAttachEaseInCurve:
     serializedVersion: 2
     m_Curve:
-    - serializedVersion: 2
+    - serializedVersion: 3
       time: 0
       value: 0
       inSlope: 0
       outSlope: 0
       tangentMode: 0
-    - serializedVersion: 2
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    - serializedVersion: 3
       time: 1
       value: 1
       inSlope: 0
       outSlope: 0
       tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
@@ -265,30 +273,42 @@ MonoBehaviour:
     InterpolateSpeedCurve:
       serializedVersion: 2
       m_Curve:
-      - serializedVersion: 2
+      - serializedVersion: 3
         time: -1
         value: 0
         inSlope: 0
         outSlope: Infinity
         tangentMode: 0
-      - serializedVersion: 2
+        weightedMode: 0
+        inWeight: 0.33333334
+        outWeight: 0.33333334
+      - serializedVersion: 3
         time: 0
         value: 1
         inSlope: 0
         outSlope: 0
         tangentMode: 0
-      - serializedVersion: 2
+        weightedMode: 0
+        inWeight: 0.33333334
+        outWeight: 0.33333334
+      - serializedVersion: 3
         time: 1
         value: 1
         inSlope: 0
         outSlope: 1
         tangentMode: 0
-      - serializedVersion: 2
+        weightedMode: 0
+        inWeight: 0.33333334
+        outWeight: 0.33333334
+      - serializedVersion: 3
         time: 4
         value: 4
         inSlope: 1
         outSlope: 0
         tangentMode: 0
+        weightedMode: 0
+        inWeight: 0.33333334
+        outWeight: 0.33333334
       m_PreInfinity: 2
       m_PostInfinity: 2
       m_RotationOrder: 4
@@ -318,6 +338,27 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2474917abc445a64b94d68b916a22d62, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  destroyCountermax: 5
+  destroyWaitSeconds: 1
+--- !u!114 &114952524147181516
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1084360598056174}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 463eed8ac306c8b4cb23eb46b3aba426, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  isPartOfStartup: 0
+  parent: {fileID: 0}
+  initData:
+    gameObjectName: 
+    gameObjectParentName: 
+    localPosition: {x: 0, y: 0, z: 0}
+    localRotation: {x: 0, y: 0, z: 0, w: 0}
+    quickcheck: 0
 --- !u!136 &136280195931612002
 CapsuleCollider:
   m_ObjectHideFlags: 1
