@@ -199,9 +199,9 @@ public class Comment {
         SaveData.AddData(this.data);
     }
 
-    public static void GenerateTextComment(string commentString, GameObject targetObject)
+    public static void GenerateTextComment(string commentString, GameObject targetObject, string screenshotPath)
     {
-        CommentData tempData = GenerateMetaData(CommentType.Text, targetObject);
+        CommentData tempData = GenerateMetaData(CommentType.Text, targetObject, screenshotPath);
         Comment comment = SaveAndLoadComments.CreateComment();
         tempData.dataString = commentString;
 
@@ -215,24 +215,21 @@ public class Comment {
     /// Creates metadata for commentdata. Does not log targetobject name and datastring!
     /// </summary>
 
-    private static CommentData GenerateMetaData(CommentType commentType)
+    private static CommentData GenerateMetaData(CommentType commentType, GameObject targetObject, string screenshotPath)
     {
         CommentData tempData = new CommentData();
         tempData.userName = PhotonNetwork.player.NickName;
-        tempData.SHPath = "";
+        tempData.SHPath = screenshotPath;
         tempData.type = commentType;
         tempData.submittedShortDate = System.DateTime.Now.ToShortDateString();
         tempData.submittedShortTime = System.DateTime.Now.ToShortTimeString();
 
         tempData.quickcheck = 0; //should be created later
 
-        return tempData;
-    }
-
-    private static CommentData GenerateMetaData(CommentType commentType, GameObject targetObject)
-    {
-        CommentData tempData = GenerateMetaData(commentType);
-        tempData.commentedObjectName = targetObject.name;
+        if (targetObject == null)
+            tempData.commentedObjectName = "Yleinen";
+        else
+            tempData.commentedObjectName = targetObject.name;
 
         return tempData;
     }

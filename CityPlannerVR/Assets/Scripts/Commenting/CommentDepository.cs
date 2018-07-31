@@ -4,61 +4,68 @@ using UnityEngine;
 using UnityEngine.UI;
 
 /// <summary>
-/// Stores comments locally to lists (by type). Used in conjuction with CommentInfoVisualized.
-/// Use SaveData singleton for easy access to similar lists (like in this script)
+/// Used in conjuction with CommentInfoVisualized to display metadata. 
 /// </summary>
 
 public class CommentDepository : MonoBehaviour {
 
     public GameObject testImage;
-    public GameObject targetForList;
-    
+    public GameObject targetForMetaData;
+    public CommentInfoVisualized metaDataHolder;
+    public List<Comment> currentList;
+    public Comment.CommentType currentType;
+
+    private int currentCommentIndex;
+
+    private void Start()
+    {
+        if (targetForMetaData)
+            metaDataHolder = targetForMetaData.GetComponent<CommentInfoVisualized>();
+        if (!metaDataHolder)
+            Debug.Log("Could not find comment metadata visualization component!");
+    }
+
 
     [SerializeField]
     private List<Comment> texts, voices, thumbs = new List<Comment>();
 
-
-    void Start () {
-        //InitializeCommentLists();
-        InvokeRepeating("UpdateLists", 1, 3);
+    public void ChooseTextComments()
+    {
+        GenerateListVisuals(Comment.CommentType.Text, 0);
     }
 
-
-    void InitializeCommentLists()
+    public void GenerateListVisuals(Comment.CommentType type, int index)
     {
-        texts = new List<Comment>();
-        voices = new List<Comment>();
-        thumbs = new List<Comment>();
-    }
-
-    private void UpdateLists()
-    {
-        texts = SaveData.commentLists.textComments; //copy content or reference?
-        voices = SaveData.commentLists.voiceComments;
-        thumbs = SaveData.commentLists.thumbComments;
-    }
-
-    public void GenerateListVisuals(Comment.CommentType type)
-    {
-        if (!targetForList)
+        if (!targetForMetaData)
         {
             Debug.LogError("No target set for comment visualization!");
             return;
         }
-        Debug.Log("Generating list for type: " + type);
+
         switch (type)
         {
             case Comment.CommentType.Text:
-                //GenerateVisualsOnList(texts);
-                GenerateTestImages();
+                //if (currentType != Comment.CommentType.Text)
+                //{
+                    currentList = SaveData.commentLists.textComments;
+                    currentType = Comment.CommentType.Text;
+                //}
                 break;
 
             case Comment.CommentType.Thumb:
-                GenerateVisualsOnList(voices);
+                if (currentType != Comment.CommentType.Thumb)
+                {
+                    currentList = SaveData.commentLists.thumbComments;
+                    currentType = Comment.CommentType.Thumb;
+                }
                 break;
 
             case Comment.CommentType.Voice:
-                GenerateVisualsOnList(thumbs);
+                if (currentType != Comment.CommentType.Voice)
+                {
+                    currentList = SaveData.commentLists.voiceComments;
+                    currentType = Comment.CommentType.Voice;
+                }
                 break;
 
             case Comment.CommentType.None:
@@ -66,25 +73,49 @@ public class CommentDepository : MonoBehaviour {
                 break;
 
             default:
-                Debug.LogError("No such comment type!");
+                Debug.LogError("Invalid comment type!");
                 break;
 
         }
+        if (currentList != null)
+            GenerateVisualsOnList(currentList, index);
     }
 
-    private void GenerateVisualsOnList(List<Comment> list)
+    private void GenerateVisualsOnList(List<Comment> list, int listIndex)
     {
-        CommentInfoVisualized listing = targetForList.GetComponent<CommentInfoVisualized>();
-        if (listing)
+        if (!metaDataHolder)
+            metaDataHolder = targetForMetaData.GetComponent<CommentInfoVisualized>();
+        if (metaDataHolder)
         {
-
+            metaDataHolder.CurrentComment = list[listIndex];  //Changing current comment holder should clear the old one automatically and generate new visuals
         }
         else
         {
             Debug.Log("Could not find component CommentListVisualized!");
         }
-
     }
+
+    public void RotateComment(bool forwards)
+    {
+        if (currentList.Count == 0)
+        {
+            Debug.Log("Current comment list is empty!");
+            return;
+        }
+        int nextCommentIndex = currentCommentIndex;
+        if (forwards)
+            nextCommentIndex++;
+        else
+            nextCommentIndex--;
+
+        if (nextCommentIndex >= currentList.Count)
+            nextCommentIndex = 0;
+        if (nextCommentIndex < 0)
+            nextCommentIndex = currentList.Count - 1;
+        GenerateVisualsOnList(currentList, nextCommentIndex);
+    }
+
+
 
     public void GenerateTestImages()
     {
@@ -98,7 +129,7 @@ public class CommentDepository : MonoBehaviour {
 
                 ////go.transform.parent = targetForVisuals.transform;
                 //go.transform.SetParent(targetForVisuals.transform, false);
-                Instantiate(testImage, targetForList.transform, false);
+                Instantiate(testImage, targetForMetaData.transform, false);
             }
 
 
