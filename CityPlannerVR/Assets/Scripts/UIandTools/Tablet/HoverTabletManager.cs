@@ -19,18 +19,38 @@ public class HoverTabletManager : MonoBehaviour {
     /// <summary> The amount of pages </summary>
     private int childCount;
 
+    /// <summary>
+    /// The index of a page in an array
+    /// </summary>
+    public int currentlyActivePageIndex = 0;
+    /// <summary>
+    /// The index of a page given to it
+    /// </summary>
+    private int pageIndex;
+    public int PageIndex
+    {
+        get
+        {
+            return pageIndex;
+        }
+        set
+        {
+            pageIndex = value;
+            ChangePage();
+        }
+    }
+
     private void Start()
     {
         pagesCanvas = GameObject.Find("PagesCanvas");
         childCount = pagesCanvas.transform.childCount;
         pages = new Page[childCount];
         GetAllPages();
-        //AssignPageIndexes();
-        DeactivatePages();
+        ActivateAndDeactivatePages();
     }
 
     /// <summary> Finds all the pages below the PagesCanvas </summary>
-    void GetAllPages()
+    private void GetAllPages()
     {
         for (int i = 0; i < childCount; i++)
         {
@@ -38,27 +58,36 @@ public class HoverTabletManager : MonoBehaviour {
         }
     }
 
-    void DeactivatePages()
+    private void ActivateAndDeactivatePages()
     {
         for (int i = 0; i < pages.Length; i++)
         {
-            if (i != 2)
+            if (i == currentlyActivePageIndex)
+            {
+                pages[i].gameObject.SetActive(true);
+            }
+            else
             {
                 pages[i].gameObject.SetActive(false);
             }
         }
     }
 
-    /// <summary> Finds and assigns an unic index to pages of the tablet </summary>
-    void AssignPageIndexes()
+    private void ChangePage()
+    {
+        GetPageIndex();
+        ActivateAndDeactivatePages();
+    }
+
+    private void GetPageIndex()
     {
         for (int i = 0; i < pages.Length; i++)
         {
-            pages[i].PageIndex = i;
-            //close all other pages except the first one
-            if(i != 2)
+            //Check the index of the page in the list
+            if (pages[i].PageIndex == pageIndex)
             {
-                pages[i].gameObject.SetActive(false);
+                currentlyActivePageIndex = i;
+                break;
             }
         }
     }
