@@ -11,7 +11,7 @@ public class RemoteGrabber : MonoBehaviour {
     public List<GameObject> targetList;
     private InputMaster inputMaster;
     private ToolManager toolManager;
-    private ToolManager.ToolType myTool;
+    private ToolManager.ToolType myToolType = ToolManager.ToolType.RemoteGrabber;
     private Hand myHand;
     private CapsuleCollider myCollider;
     private MeshRenderer myMesh;
@@ -44,7 +44,6 @@ public class RemoteGrabber : MonoBehaviour {
         toolManager = GetComponentInParent<ToolManager>();
         if (toolManager)
         {
-            myTool = toolManager.Tool;
             myHandNumber = toolManager.myHandNumber;
         }
         myMesh = gameObject.GetComponent<MeshRenderer>();
@@ -59,8 +58,7 @@ public class RemoteGrabber : MonoBehaviour {
 
     private void CheckTool()
     {
-        myTool = toolManager.Tool;
-        TogglePower(myTool == ToolManager.ToolType.Empty);
+        TogglePower(toolManager.Tool == myToolType);
     }
 
     private void Subscribe()
@@ -122,8 +120,7 @@ public class RemoteGrabber : MonoBehaviour {
     private void HandleToolChange(uint handNumber, ToolManager.ToolType tool)
     {
         myHandNumber = (int)handNumber;
-        myTool = tool;
-        if (tool == ToolManager.ToolType.Empty)
+        if (tool == myToolType)
             TogglePower(true);
         else
         {
