@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
 using Valve.VR.InteractionSystem;
+using UnityEngine.UI;
 
 /// <summary>
 /// The method OnClicked is called by Inputmaster in the method SelectByLaser, hover methods are called by PhotonLaserManager.
@@ -23,7 +24,9 @@ public class LaserButton : MonoBehaviour {
     Material material;
     Color materialColor;
 
-    UnityEngine.UI.Image image;
+    Image image;
+    SpriteRenderer sprite;
+
 
     PlayComment playComment;
     string commentName;
@@ -136,7 +139,7 @@ public class LaserButton : MonoBehaviour {
 
     }
 
-    public void SetUI()
+    private void SetUI()
     {
         if (image == null)
         {
@@ -158,7 +161,7 @@ public class LaserButton : MonoBehaviour {
         material.color = Color.yellow;
     }
 
-    public void SetMaterial()
+    private void SetMaterial()
     {
         if(meshRenderer == null)
         {
@@ -184,6 +187,30 @@ public class LaserButton : MonoBehaviour {
 
         recordComment.StartRecord();
     }
+    //--------------------------------------------------------------------------------------------------------------------------------
+
+    //All sorts of buttons in the hover tablet
+    public void OnHoverSprite()
+    {
+        SetSprite();
+        sprite.color = Color.gray;
+    }
+
+    private void SetSprite()
+    {
+        if (sprite == null)
+        {
+            sprite = GetComponent<SpriteRenderer>();
+            materialColor = sprite.color;
+        }
+    }
+    //All sorts of buttons in the hover tablet
+    public void OnStopHoverSprite()
+    {
+        sprite.color = materialColor;
+    }
+
+
     //--------------------------------------------------------------------------------------------------------------------------------
 #if UNITY_EDITOR
     //using UnityEditor;
