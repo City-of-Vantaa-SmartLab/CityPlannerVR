@@ -12,7 +12,7 @@ using Valve.VR.InteractionSystem;
 public class ToolManager : MonoBehaviour {
 
     public int myHandNumber;
-    public enum ToolType { Empty, Camera, CommentTester, EditingLaser, Eraser, Painter, PathCamera, VideoCamera, Item};  //includes modes for tools
+    public enum ToolType { Empty, Camera, RemoteGrabber, EditingLaser, Eraser, Painter, PathCamera, VideoCamera, Item};  //includes modes for tools
     public int toolRights;
 
     public ToolType Tool
@@ -48,8 +48,7 @@ public class ToolManager : MonoBehaviour {
 
 
     private int numberOfTools = System.Enum.GetValues(typeof(ToolType)).Length;
-    [SerializeField]
-    private InputMaster inputMaster;
+    public InputMaster inputMaster;
     [SerializeField]
     private ToolType currentTool;  //used only through property Tool
     [SerializeField]
@@ -62,6 +61,7 @@ public class ToolManager : MonoBehaviour {
 
     public delegate void EventWithIndexTool(uint handNumber, ToolManager.ToolType tool);
     public event EventWithIndexTool AnnounceToolChanged;
+
 
     private void Awake()
     {
@@ -203,10 +203,10 @@ public class ToolManager : MonoBehaviour {
         return magic;
     }
 
-    // toolRights table v0.7
+    // toolRights table v0.8
     // 0000 0001 = Empty
     // 0000 0010 = Camera
-    // 0000 0100 = CommentTester
+    // 0000 0100 = RemoteGrabber
     // 0000 1000 = EditingLaser
 
     // 0001 0000 = Eraser
