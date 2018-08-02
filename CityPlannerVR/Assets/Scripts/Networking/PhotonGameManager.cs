@@ -114,6 +114,7 @@ public class PhotonGameManager : MonoBehaviour {
 
 			if(PhotonPlayerAvatar.LocalPlayerInstance == null) {
 				Debug.Log ("Instantiating player");
+				this.gameObject.GetComponent<Logger> ().StartLogging ();
 				InstantiatePlayer ();
 			}
 		}
