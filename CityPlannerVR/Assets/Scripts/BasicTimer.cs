@@ -90,7 +90,7 @@ public class BasicTimer : MonoBehaviour {
 			}
 
 			if (timer.currentInterval >= timer.interval) {
-				Debug.LogWarning ("IntervalTimer " + timer.name + " interval reached!");
+				//Debug.LogWarning ("IntervalTimer " + timer.name + " interval reached!");
 				timer.currentInterval = 0;
 				if (IntervalReached != null) {
 					IntervalReached (timer.name);

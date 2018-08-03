@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using System;
+using System.IO;
 
 [Serializable]
 public class CompleteLog
@@ -55,10 +56,26 @@ public class Logger : MonoBehaviour {
 	private const string POSITION_TIMER_NAME = "PositionTimer";
 	private const float POSITION_TIMER_INTERVAL = 2;
 
+	private string logPathName;
+
 	#endregion
 
 	//LAST SAVE BEFORE QUITTING
-	
+
+	void Start()
+	{
+		logPathName = Application.persistentDataPath + Path.DirectorySeparatorChar + "logfiles";
+
+		try {
+			if(!Directory.Exists(logPathName)){
+				Directory.CreateDirectory(logPathName);
+			}
+		}
+		catch(IOException ex){
+			PrintWarningLog (ex.Message);
+		}
+	}
+
 	// Update is called once per frame
 	void Update () {
 		
@@ -73,12 +90,13 @@ public class Logger : MonoBehaviour {
 	{
 		StartTimers ();
 		CreateJSON ();
+		UpdateFilePath ();
 	}
 
 	private string GetUserID()
 	{
 		if (this.userID == null) {
-		
+			this.userID = PhotonNetwork.player.NickName;
 		}
 
 		return this.userID;
@@ -98,7 +116,7 @@ public class Logger : MonoBehaviour {
 	{
 		switch (name) {
 			case LOG_TIMER_NAME: 
-				//Tässä kirjoitus tiedostoon?
+				SaveLogFile ();
 				break;
 			case POSITION_TIMER_NAME: 
 				SavePosition ();
@@ -125,8 +143,15 @@ public class Logger : MonoBehaviour {
 		string jsonstring = JsonUtility.ToJson (logForThisUser);
 		currentJSON = jsonstring;
 
-		PrintWarningLog ("New JSON created! Currently stored JSON: " + currentJSON);
+	}
 
+	private void UpdateFilePath()
+	{
+		string fileExtender = ".json";
+		string fileName = logForThisUser.userID + "_log_" + logForThisUser.startTime;
+		logPathName += Path.DirectorySeparatorChar + fileName + fileExtender;
+
+		PrintWarningLog ("LogFilePath updated to: " + logPathName);
 	}
 
 	public void LogActionLine(string action)
@@ -140,7 +165,6 @@ public class Logger : MonoBehaviour {
 		string jsonupdated = JsonUtility.ToJson (logForThisUser);
 		currentJSON = jsonupdated;
 
-		PrintWarningLog ("New JSON line added! Currently stored JSON: " + currentJSON);
 	}
 
 	private void SavePosition()
@@ -154,11 +178,19 @@ public class Logger : MonoBehaviour {
 		string jsonupdated = JsonUtility.ToJson (logForThisUser);
 		currentJSON = jsonupdated;
 
-		PrintWarningLog ("New JSON line added! Currently stored JSON: " + currentJSON);
 	}
 
 	public void PrintWarningLog(string text)
 	{
 		Debug.LogWarning (text);
+	}
+
+	private void SaveLogFile()
+	{
+		StreamWriter sw = File.CreateText(logPathName);  //creates or overwrites file at filepath
+		sw.Close();
+		File.WriteAllText(logPathName, currentJSON);
+
+		PrintWarningLog ("Log file saved! Contents: " + currentJSON);
 	}
 }
