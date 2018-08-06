@@ -96,7 +96,7 @@ public class LaserButton : MonoBehaviour {
         }
         if (commentName == null)
         {
-            commentName = GetComponentInChildren<UnityEngine.UI.Text>().text;
+            commentName = GetComponentInChildren<Text>().text;
         }
 
         playComment.PlayCommentInPosition(commentName);
@@ -143,7 +143,7 @@ public class LaserButton : MonoBehaviour {
     {
         if (image == null)
         {
-            image = GetComponent<UnityEngine.UI.Image>();
+            image = GetComponent<Image>();
             materialColor = image.color;
         }
     }
