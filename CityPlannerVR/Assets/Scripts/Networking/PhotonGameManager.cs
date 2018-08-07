@@ -49,6 +49,12 @@ public class PhotonGameManager : MonoBehaviour {
     public Vector3 playerSpawnPoint3;
     public Vector3 playerSpawnPoint4;
 
+    public List<Color> colors;
+    public Color color1;
+    public Color color2;
+    public Color color3;
+    public Color color4;
+
     #endregion
 
     #region Private Variables
@@ -63,14 +69,14 @@ public class PhotonGameManager : MonoBehaviour {
 	// (which allows you to make breaking changes).
 	string gameVersion = "1";
 
-	#endregion
+    #endregion
 
-	void Awake()
-	{
-		DontDestroyOnLoad(this);
-		Instance = this;
-		connection = GetComponent<PhotonConnection> ();
-		isMultiplayerSceneLoaded = false;
+    void Awake()
+    {
+        DontDestroyOnLoad(this);
+        Instance = this;
+        connection = GetComponent<PhotonConnection>();
+        isMultiplayerSceneLoaded = false;
         playerSpawnPoints = new List<Vector3>()
         {
             playerSpawnPoint1,
@@ -79,6 +85,14 @@ public class PhotonGameManager : MonoBehaviour {
             playerSpawnPoint4
         };
 
+        colors = new List<Color>()
+        {
+            color1,
+            color2,
+            color3,
+            color4
+         };
+    
     }
 
 	void OnEnable()
@@ -199,8 +213,16 @@ public class PhotonGameManager : MonoBehaviour {
 			// It gets synced by using PhotonNetwork.Instantiate
 			GameObject player;
 			if (isMale) {
-				player = PhotonNetwork.Instantiate (this.playerPrefabMale.name, playerSpawnPoints[connection.GetNumberOfClients()], Quaternion.identity, 0);
-			} else {
+				player = PhotonNetwork.Instantiate (playerPrefabMale.name, playerSpawnPoints[connection.GetNumberOfClients()], Quaternion.identity, 0);
+                ParticleSystem psys;
+                psys = player.GetComponent<ParticleSystem>();
+                var main = psys.main;
+                main.startColor = colors[connection.GetNumberOfClients()];
+               
+
+            }
+            
+            else {
 				player = PhotonNetwork.Instantiate (this.playerPrefabFemale.name, playerSpawnPoints[connection.GetNumberOfClients()], Quaternion.identity, 0);
 			}
 			Debug.Log ("Player instantiated at: " + playerSpawnPoints[connection.GetNumberOfClients()].x.ToString () + "," + playerSpawnPoints[connection.GetNumberOfClients()].y.ToString () + "," + playerSpawnPoints[connection.GetNumberOfClients()].z.ToString ());
