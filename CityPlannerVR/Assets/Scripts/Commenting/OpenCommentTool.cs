@@ -17,8 +17,7 @@ public class OpenCommentTool : MonoBehaviour {
     {
         playerAvatar = PhotonPlayerAvatar.LocalPlayerInstance;
 
-        commentTool = GameObject.Find("CommentTool");
-        commentOutput = GameObject.Find("CommentList");
+        commentTool = GameObject.Find("Comments");
         playComment = commentOutput.GetComponent<PlayComment>();
         recordComment = commentTool.GetComponentInChildren<RecordComment>();
 

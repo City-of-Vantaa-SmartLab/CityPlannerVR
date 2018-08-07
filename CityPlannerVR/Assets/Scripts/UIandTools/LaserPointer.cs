@@ -37,11 +37,6 @@ public class LaserPointer : PunBehaviour
     [HideInInspector]
     VoiceController voiceController;
 
-    GameObject commentTool;
-    GameObject commentOutput;
-    PlayComment playComment;
-    RecordComment recordComment;
-
 	string commentToolTag = "CommentToolTag";
     string buttonTag = "Button";
 	string commentObjectTag = "Building";
@@ -56,9 +51,6 @@ public class LaserPointer : PunBehaviour
 
     private void Awake()
     {
-        commentTool = GameObject.Find("CommentTool");
-        commentOutput = GameObject.Find("CommentList");
-        playComment = commentOutput.GetComponent<PlayComment>();
 
         player = GameObject.Find("Player");
         checkPlayerSize = player.GetComponent<CheckPlayerSize>();
@@ -103,14 +95,8 @@ public class LaserPointer : PunBehaviour
             photonView.RPC("ActivateFakeLaser", PhotonTargets.AllBuffered, status);
         }
 
-        recordComment = commentTool.GetComponentInChildren<RecordComment>();
+        //recordComment = commentTool.GetComponentInChildren<RecordComment>();
 
-    }
-
-    private void DisableCommentTool()
-    {
-        commentOutput.SetActive(false);
-        commentTool.SetActive(false);
     }
 
     private void InitHolder(Transform targetTransform)
