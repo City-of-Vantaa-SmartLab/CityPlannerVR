@@ -131,6 +131,21 @@ public class RemoteGrabber : MonoBehaviour {
 
     private IEnumerator StartPulling(GameObject target, float pullTime, float increment)
     {
+        GameObject grabFromPrefab = (GameObject)Resources.Load("Prefabs/Effects/GrabFrom");
+        GameObject grabToPrefab = (GameObject)Resources.Load("Prefabs/Effects/GrabTo");
+
+        GameObject grabFrom = Instantiate(grabFromPrefab);
+        GameObject grabTo = Instantiate(grabToPrefab);
+        //grabFrom.transform.parent = target.transform;
+        grabTo.transform.parent = transform;
+
+        //grabFrom.transform.localScale = Vector3.one;
+        //grabTo.transform.localScale = Vector3.one;
+        //grabFrom.transform.localPosition = Vector3.zero;
+        //grabTo.transform.localPosition = Vector3.zero;
+
+        grabFrom.transform.position = target.transform.position;
+
         isPulling = true;
         float counter = 0;
         while (isPulling && counter < pullTime)
@@ -139,8 +154,27 @@ public class RemoteGrabber : MonoBehaviour {
             yield return new WaitForSeconds(increment);
         }
         if (isPulling)
-            myHand.AttachObject(mainTarget);
+            myHand.AttachObject(target);
         isPulling = false;
+
+        //Destroy(grabFrom, 5f);
+        //Destroy(grabTo, 5f);
+
+        //if (grabFrom)
+        //    Destroy(grabFrom);
+        //if (grabTo)
+        //    Destroy(grabTo);
+
+        //Toolbeltin instantioinnista prujut
+        //Vector3 localPos = toolbelt.transform.localPosition;
+        //Vector3 globalScale = toolbelt.transform.localScale; //record prefabs true scale
+        //toolbelt.transform.parent = playerBody.transform;
+        ////toolbelt.transform.parent = transform;
+
+        //toolbelt.transform.localScale = Vector3.one; //required for lossy scale
+        //toolbelt.transform.localScale = new Vector3(globalScale.x / toolbelt.transform.lossyScale.x,
+        //    globalScale.y / toolbelt.transform.lossyScale.y, globalScale.z / toolbelt.transform.lossyScale.z);
+        //toolbelt.transform.localPosition = localPos;
     }
 
     #endregion
@@ -167,8 +201,8 @@ public class RemoteGrabber : MonoBehaviour {
             {
                 //Debug.Log("Removing " + other.gameObject.name + " from target list");
                 targetList.Remove(other.gameObject);
-                if (isPulling && other.gameObject == mainTarget)
-                    isPulling = false;
+                //if (isPulling && other.gameObject == mainTarget)
+                //    isPulling = false;
             }
         }
 
