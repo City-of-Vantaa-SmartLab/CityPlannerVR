@@ -155,7 +155,7 @@ public class LoadCommentsToTablet : MonoBehaviour {
             if (fileInfo[i].Name.EndsWith(".wav"))
             {
                 commentClips.Add(request.GetAudioClip());
-                commentClips[index].name = "VoiceComment";
+                commentClips[index].name = fileInfo[i].Name;
 
                 index++;
             }
@@ -190,6 +190,8 @@ public class LoadCommentsToTablet : MonoBehaviour {
 
     }
 
+    PlayComment playComment;
+
     /// <summary>
     /// Creates the button object and puts it under the ScrollableList
     /// </summary>
@@ -198,25 +200,25 @@ public class LoadCommentsToTablet : MonoBehaviour {
         for (int i = 0; i < commentsToPlayHere.Count; i++)
         {
             buttonImage = Instantiate(commentButton);
+            playComment = buttonImage.GetComponent<PlayComment>();
             buttonImage.transform.SetParent(panel.transform);
             buttonImage.transform.localPosition = Vector3.zero;
             buttonImage.transform.localRotation = Quaternion.identity;
             buttonImage.transform.localScale = Vector3.one * 10;
             buttonText = buttonImage.GetComponentInChildren<Text>();
-            buttonText.text = "Joku:";
+            buttonText.text = commentsToPlayHere[i];
+
+            GetCommentClip(commentsToPlayHere[i]);
         }
     }
 
     /// <summary>
     /// Plays the comment
     /// </summary>
-    /// <param name="commentName"> The name of the comment</param>
-    public void PlayCommentInPosition(string commentName)
+    /// <param name="commentName"> The name of the comment </param>
+    public void GetCommentClip(string commentName)
     {
-        int index = commentsToPlayHere.IndexOf(commentName);
-        //int index = commentDictionary[commentName].commentIndex;
-        audioSource.clip = commentClips[index];
-
-        audioSource.Play();
+        int index = commentDictionary[commentName].commentIndex;
+        playComment.comment = commentClips[index];
     }
 }

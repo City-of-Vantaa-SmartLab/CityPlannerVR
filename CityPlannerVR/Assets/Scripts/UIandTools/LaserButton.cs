@@ -85,45 +85,6 @@ public class LaserButton : MonoBehaviour {
             }
         }
     }
-
-    //--------------------------------------------------------------------------------------------------------------------------------
-    //ButtonBackground
-    public void PlayCommentStart()
-    {
-        if (playComment == null)
-        {
-            playComment = GameObject.Find("CommentList").GetComponent<PlayComment>();
-        }
-        if (commentName == null)
-        {
-            commentName = GetComponentInChildren<Text>().text;
-        }
-
-        playComment.PlayCommentInPosition(commentName);
-    }
-
-    //ForwardButton 
-    public void GoForward()
-    {
-        if (playComment == null)
-        {
-            playComment = GameObject.Find("CommentList").GetComponent<PlayComment>();
-        }
-
-        playComment.GoForward();
-    }
-
-    //BackwardButton
-    public void GoBackward()
-    {
-        if (playComment == null)
-        {
-            playComment = GameObject.Find("CommentList").GetComponent<PlayComment>();   
-        }
-
-        playComment.GoBackward();
-    }
-
     //--------------------------------------------------------------------------------------------------------------------------------
     //ButtonBackground prefab
     public void OnHoverUI()

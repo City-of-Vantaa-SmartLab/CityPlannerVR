@@ -53,13 +53,13 @@ public class OpenCommentTool : MonoBehaviour {
     {
         
         commentOutput.SetActive(true);
-        playComment.LoadComments();
+        //playComment.LoadComments();
         
     }
 
     public void ActivateCommentTool()
     {
-        playComment.pointedTarget = HoverTabletManager.commentTarget.gameObject;
+        //playComment.pointedTarget = HoverTabletManager.commentTarget.gameObject;
         commentTool.SetActive(true);
 
         //CommentTool position
