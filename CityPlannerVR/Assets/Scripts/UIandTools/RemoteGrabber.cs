@@ -153,7 +153,10 @@ public class RemoteGrabber : MonoBehaviour {
             yield return new WaitForSeconds(increment);
         }
         if (isPulling)
+        {
             myHand.AttachObject(target);
+            SteamVR_Controller.Input((int)myHand.controller.index).TriggerHapticPulse(1000);
+        }
         isPulling = false;
 
         //Destroy(grabFrom, 5f);
