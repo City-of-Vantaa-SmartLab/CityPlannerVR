@@ -29,7 +29,7 @@ public class RemoteGrabber : MonoBehaviour {
         if (!InitOwn())
             Debug.Log("Failed to initialize RemoteGrabber!");
         if (pullTime == 0)
-            pullTime = 0.5f;
+            pullTime = 1f;
         CheckTool();
         Subscribe();
     }
@@ -132,12 +132,11 @@ public class RemoteGrabber : MonoBehaviour {
     private IEnumerator StartPulling(GameObject target, float pullTime, float increment)
     {
         GameObject grabFromPrefab = (GameObject)Resources.Load("Prefabs/Effects/GrabFrom");
-        GameObject grabToPrefab = (GameObject)Resources.Load("Prefabs/Effects/GrabTo");
+        //GameObject grabToPrefab = (GameObject)Resources.Load("Prefabs/Effects/GrabTo");
 
         GameObject grabFrom = Instantiate(grabFromPrefab);
-        GameObject grabTo = Instantiate(grabToPrefab);
-        //grabFrom.transform.parent = target.transform;
-        grabTo.transform.parent = transform;
+        //GameObject grabTo = Instantiate(grabToPrefab);
+        //grabTo.transform.parent = transform;
 
         //grabFrom.transform.localScale = Vector3.one;
         //grabTo.transform.localScale = Vector3.one;
