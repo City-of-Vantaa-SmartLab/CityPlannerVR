@@ -26,6 +26,7 @@ public class ItemContainer : MonoBehaviour {
     public UnityEvent unclickedEvents;
     public UnityEvent hoverInEvents;
     public UnityEvent hoverOutEvents;
+    public InputMaster.EventWithIndex nullifyItemContainer;
     private uint subscribedControllerIndex;  //only used for OnUnclicked method
 
 
@@ -44,6 +45,11 @@ public class ItemContainer : MonoBehaviour {
         }
         else
             isToolContainer = false;
+    }
+
+    private void OnDisable()
+    {
+        nullifyItemContainer?.Invoke((int)subscribedControllerIndex);
     }
 
     public void OnClicked()
@@ -126,6 +132,11 @@ public class ItemContainer : MonoBehaviour {
         toolHolder.transform.localScale = Vector3.one;
         toolHolder.transform.localRotation = Quaternion.identity;
         toolHolder.transform.localPosition = localPos;
+    }
+
+    public void Test()
+    {
+        Debug.Log("Testing itemcontainer");
     }
 
 #if UNITY_EDITOR
