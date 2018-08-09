@@ -53,6 +53,7 @@ public class PhotonConnection : Photon.PunBehaviour {
 		} 
 		else {
 			// Connect to Photon Online Server.
+			Debug.Log("Connecting to Photon using gameVersion: " + gameVersion);
 			PhotonNetwork.ConnectUsingSettings(gameVersion);
 		}
 	}
@@ -73,13 +74,15 @@ public class PhotonConnection : Photon.PunBehaviour {
 
 	public override void OnConnectedToMaster()
 	{
+		Debug.Log("Photon connected to Master Server. Trying to connect room: " + isConnecting);
 		//Only join room if we actually want to connect
 		if (isConnecting) {
 			isConnecting = false;
 			if (!PhotonNetwork.inRoom) {
 				PhotonGameManager.Instance.ChangeState (NetworkState.JOINING_ROOM);
 				// Join a potential existing room. 
-				//If there is, good, if not, callback with OnPhotonRandomJoinFailed()  
+				//If there is, good, if not, callback with OnPhotonRandomJoinFailed()
+				Debug.Log("Trying to join room: " + roomName);
 				PhotonNetwork.JoinRoom (roomName);
 			}
 		}
@@ -102,12 +105,13 @@ public class PhotonConnection : Photon.PunBehaviour {
 
 	public override void OnCreatedRoom()
 	{
+		Debug.Log("Created room: " + roomName);
 		PhotonGameManager.Instance.ChangeState (NetworkState.ROOM_CREATED);
 	}
 
 	public override void OnJoinedRoom()
 	{
-		Debug.Log ("Launcher: OnJoinedRoom() called by PUN. This client is in a room.");
+		Debug.Log ("Launcher: OnJoinedRoom() called by PUN. This client is in a room: " + roomName);
 		//PhotonNetwork.isMessageQueueRunning = false;
 		//Load world if we are the first player
 		//Otherwise rely on PhotonNetwork.automaticallySyncScene to sync the instance
