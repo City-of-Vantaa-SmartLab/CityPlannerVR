@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using UnityEngine;
+using UnityEngine.Events;
 using Valve.VR.InteractionSystem;
 
 /// <summary>
@@ -318,7 +319,10 @@ public class ToolManager : MonoBehaviour {
                 return;
             }
             else
+            {
                 activeItemContainer.OnHoverIn();
+                activeItemContainer.nullifyItemContainer += HandleNullifyItemContainer;
+            }
 
             if (myHandNumber == 1)
                 inputMaster.hand1InsideToolbelt = true;
@@ -332,18 +336,32 @@ public class ToolManager : MonoBehaviour {
     private void OnTriggerExit(Collider other)
     {
         if (other.CompareTag("ItemSlot") || other.CompareTag("SpawnSlot"))
-        {
-            //Debug.Log(this.name + " has left " + other.name);
-            if (activeItemContainer != null)
-                activeItemContainer.OnHoverOut();
+            NullifyItemContainer();
+    }
 
-            if (myHandNumber == 1)
-                inputMaster.hand1InsideToolbelt = false;
-            else if (myHandNumber == 2)
-                inputMaster.hand2InsideToolbelt = false;
-            else
-                Debug.LogError("Could not determine hand number for toolmanager!");
-            activeItemContainer = null;
+    /// <summary>
+    /// Detects when a gameobject with an itemcontainer script is hovered over or disabled.
+    /// </summary>
+    public void NullifyItemContainer()
+    {
+        //Debug.Log(this.name + " has left " + other.name);
+        if (activeItemContainer != null)
+        {
+            activeItemContainer.OnHoverOut();
+            activeItemContainer.nullifyItemContainer -= HandleNullifyItemContainer;
         }
+
+        if (myHandNumber == 1)
+            inputMaster.hand1InsideToolbelt = false;
+        else if (myHandNumber == 2)
+            inputMaster.hand2InsideToolbelt = false;
+        else
+            Debug.LogError("Could not determine hand number for toolmanager!");
+        activeItemContainer = null;
+    }
+
+    private void HandleNullifyItemContainer(int controllerIndex)
+    {
+        NullifyItemContainer();
     }
 }
