@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using System;
 
 public class Timer 
 {
@@ -30,7 +31,13 @@ public class IntervalTimer : Timer
 
 public class BasicTimer : MonoBehaviour {
 
-	//STILL NEED STOPPERS AND EVENTS FOR WAIT END AND INTERVAL
+	//Timer events
+	public static event Action WaitTimerEnded;
+	public static event Action GeneralTimerStopped;
+	public static event Action IntervalTimerStopped;
+	public static event Action<string> IntervalReached;
+
+	//STILL NEED STOPPERS
 
 	private List<WaitTimer> waitTimers = new List<WaitTimer>();
 	private List<GeneralTimer> genTimers = new List<GeneralTimer>();
@@ -49,6 +56,9 @@ public class BasicTimer : MonoBehaviour {
 			if (timer.waitTimer > timer.waitTime) {
 				Debug.LogWarning ("WaitTimer " + timer.name + " completed!");
 				waitTimers.Remove (timer);
+				if (WaitTimerEnded != null) {
+					WaitTimerEnded ();
+				}
 			}
 		}
 
@@ -63,6 +73,9 @@ public class BasicTimer : MonoBehaviour {
 			if (timer.shouldStop) {
 				Debug.LogWarning ("GeneralTimer " + timer.name + " stopped!");
 				genTimers.Remove (timer);
+				if (GeneralTimerStopped != null) {
+					GeneralTimerStopped ();
+				}
 			}
 		}
 
@@ -77,13 +90,19 @@ public class BasicTimer : MonoBehaviour {
 			}
 
 			if (timer.currentInterval >= timer.interval) {
-				Debug.LogWarning ("IntervalTimer " + timer.name + " interval reached!");
+				//Debug.LogWarning ("IntervalTimer " + timer.name + " interval reached!");
 				timer.currentInterval = 0;
+				if (IntervalReached != null) {
+					IntervalReached (timer.name);
+				}
 			}
 
 			if (timer.shouldStop) {
 				Debug.LogWarning ("IntervalTimer " + timer.name + " stopped!");
 				interTimers.Remove (timer);
+				if (IntervalTimerStopped != null) {
+					IntervalTimerStopped ();
+				}
 			}
 		}
 

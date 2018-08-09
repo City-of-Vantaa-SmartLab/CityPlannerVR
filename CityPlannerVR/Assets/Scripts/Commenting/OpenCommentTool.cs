@@ -17,8 +17,7 @@ public class OpenCommentTool : MonoBehaviour {
     {
         playerAvatar = PhotonPlayerAvatar.LocalPlayerInstance;
 
-        commentTool = GameObject.Find("CommentTool");
-        commentOutput = GameObject.Find("CommentList");
+        commentTool = GameObject.Find("Comments");
         playComment = commentOutput.GetComponent<PlayComment>();
         recordComment = commentTool.GetComponentInChildren<RecordComment>();
 
@@ -54,13 +53,13 @@ public class OpenCommentTool : MonoBehaviour {
     {
         
         commentOutput.SetActive(true);
-        playComment.LoadComments();
+        //playComment.LoadComments();
         
     }
 
     public void ActivateCommentTool()
     {
-        playComment.pointedTarget = HoverTabletManager.commentTarget.gameObject;
+        //playComment.pointedTarget = HoverTabletManager.commentTarget.gameObject;
         commentTool.SetActive(true);
 
         //CommentTool position

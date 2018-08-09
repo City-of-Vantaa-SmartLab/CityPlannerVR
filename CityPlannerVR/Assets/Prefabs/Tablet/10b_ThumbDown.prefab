@@ -21,6 +21,7 @@ GameObject:
   - component: {fileID: 224130176695493222}
   - component: {fileID: 222570609162618178}
   - component: {fileID: 114321668345559300}
+  - component: {fileID: 114289161876949344}
   m_Layer: 0
   m_Name: Text
   m_TagString: Untagged
@@ -125,6 +126,20 @@ MonoBehaviour:
         m_CallState: 2
     m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
       Culture=neutral, PublicKeyToken=null
+--- !u!114 &114289161876949344
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1276211795534380}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 1573420865, guid: f70555f144d8491a825f0804e09c671c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_EffectColor: {r: 0, g: 0.22352941, b: 0.14901961, a: 1}
+  m_EffectDistance: {x: 2, y: -1.5}
+  m_UseGraphicAlpha: 1
 --- !u!114 &114321668345559300
 MonoBehaviour:
   m_ObjectHideFlags: 1
