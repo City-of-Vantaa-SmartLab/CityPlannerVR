@@ -5,9 +5,10 @@ using UnityEngine;
 using UnityEngine.Events;
 
 /// <summary>
-/// Toolslot and items need to be tagged as ItemSlots or SpawnSlot. Can be used in conjuction with PhotonSpawnableObject, but then itemcontainer's tooltype must be item!.
-/// Events also require that the gameobject attached has a trigger collider (checked in ToolManager) and a rigidbody,
-/// but this might change in later revisions.
+/// Toolslot/items/buttons need to be tagged as an ItemSlot or SpawnSlot. Can be used in conjuction with PhotonSpawnableObject for automation, but then itemcontainer's tooltype must be item!.
+/// Events also require that the gameobject attached has a trigger collider (checked in ToolManager) and a rigidbody, but this might change in later revisions.
+/// Also remember to check that the player collides with the wanted layer in the collider matrix in project settings -> physics.
+/// Use button as the tooltype, if you only use the embedded eventsystem.
 /// </summary>
 
 
@@ -36,7 +37,7 @@ public class ItemContainer : MonoBehaviour {
             tool = ToolManager.ToolType.Item;
 
         //sphereCol = GetComponent<SphereCollider>();
-        if (tool != ToolManager.ToolType.Item)
+        if (tool != ToolManager.ToolType.Item && tool != ToolManager.ToolType.Button)
         {
             isToolContainer = true;
             ReplaceVisibleHolder();
@@ -107,6 +108,8 @@ public class ItemContainer : MonoBehaviour {
             prefab = (GameObject)Resources.Load("Prefabs/ToolHolders/LaserpointerHolder");
         else if (tool == ToolManager.ToolType.Camera)
             prefab = (GameObject)Resources.Load("Prefabs/ToolHolders/CameraHolder");
+        else if (tool == ToolManager.ToolType.RemoteGrabber)
+            prefab = (GameObject)Resources.Load("Prefabs/ToolHolders/RemoteGrabberPlaceholder");
 
 
 
@@ -121,6 +124,7 @@ public class ItemContainer : MonoBehaviour {
         Vector3 localPos = toolHolder.transform.localPosition;
         toolHolder.transform.parent = transform;
         toolHolder.transform.localScale = Vector3.one;
+        toolHolder.transform.localRotation = Quaternion.identity;
         toolHolder.transform.localPosition = localPos;
     }
 
