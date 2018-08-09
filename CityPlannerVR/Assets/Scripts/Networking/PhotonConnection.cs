@@ -20,6 +20,8 @@ public class PhotonConnection : Photon.PunBehaviour {
 	// Typically used for the OnConnectedToMaster() callback
 	bool isConnecting;
 
+	private string roomName = "tikkuraittiRoom";
+
 	#endregion
 
 
@@ -78,7 +80,7 @@ public class PhotonConnection : Photon.PunBehaviour {
 				PhotonGameManager.Instance.ChangeState (NetworkState.JOINING_ROOM);
 				// Join a potential existing room. 
 				//If there is, good, if not, callback with OnPhotonRandomJoinFailed()  
-				PhotonNetwork.JoinRoom ("tikkuraittiRoom");
+				PhotonNetwork.JoinRoom (roomName);
 			}
 		}
 	}
@@ -95,7 +97,7 @@ public class PhotonConnection : Photon.PunBehaviour {
 		Debug.Log("Launcher:OnPhotonRandomJoinFailed() was called by PUN. No random room available, so we create one.");
 		PhotonGameManager.Instance.ChangeState (NetworkState.CREATING_ROOM);
 		// Failed to join a random room. Create a new room.
-		PhotonNetwork.CreateRoom("tikkuraittiRoom", new RoomOptions() {MaxPlayers = GetComponentInParent<PhotonGameManager>().MaxPlayersPerRoom}, null);
+		PhotonNetwork.CreateRoom(roomName, new RoomOptions() {MaxPlayers = GetComponentInParent<PhotonGameManager>().MaxPlayersPerRoom}, null);
 	}
 
 	public override void OnCreatedRoom()
