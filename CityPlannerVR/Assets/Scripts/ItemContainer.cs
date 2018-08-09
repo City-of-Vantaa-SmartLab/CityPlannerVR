@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
+using Valve.VR.InteractionSystem;
 
 /// <summary>
 /// Toolslot/items/buttons need to be tagged as an ItemSlot or SpawnSlot. Can be used in conjuction with PhotonSpawnableObject for automation, but then itemcontainer's tooltype must be item!.
@@ -139,6 +140,37 @@ public class ItemContainer : MonoBehaviour {
         Debug.Log("Testing itemcontainer");
     }
 
+    //---------------------------------------------------------------------------------------------
+
+    SpriteRenderer sprite;
+    int deviceIndex;
+
+    public void OnHoverSprite()
+    {
+        if(sprite == null)
+        {
+            sprite = GetComponent<SpriteRenderer>();
+        }
+
+        sprite.color = Color.gray;
+        SteamVR_Controller.Input(deviceIndex).TriggerHapticPulse(500);
+    }
+
+    public void OnStopHoverSprite()
+    {
+        sprite.color = Color.white;
+    }
+
+    /// <summary>
+    /// Gets the deviceIndex of a hand used to press this button for haptic feedback call
+    /// </summary>
+    /// <param name="other">The hand that presses this button</param>
+    private void OnTriggerEnter(Collider other)
+    {
+        deviceIndex = (int)other.GetComponent<Hand>().controller.index;
+    }
+
+    //---------------------------------------------------------------------------------------------
 #if UNITY_EDITOR
     //using UnityEditor;
 
