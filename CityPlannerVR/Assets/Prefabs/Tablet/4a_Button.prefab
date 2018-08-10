@@ -42,6 +42,7 @@ GameObject:
   - component: {fileID: 114463096496065588}
   - component: {fileID: 114799037349282260}
   - component: {fileID: 54679853819587710}
+  - component: {fileID: 114882229342191784}
   m_Layer: 24
   m_Name: 4a_Button
   m_TagString: SpawnSlot
@@ -140,7 +141,7 @@ MonoBehaviour:
   hoverInEvents:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 114799037349282260}
+      - m_Target: {fileID: 114882229342191784}
         m_MethodName: OnHoverSprite
         m_Mode: 1
         m_Arguments:
@@ -156,7 +157,7 @@ MonoBehaviour:
   hoverOutEvents:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 114799037349282260}
+      - m_Target: {fileID: 114882229342191784}
         m_MethodName: OnStopHoverSprite
         m_Mode: 1
         m_Arguments:
@@ -202,6 +203,17 @@ MonoBehaviour:
     m_VerticalOverflow: 0
     m_LineSpacing: 1
   m_Text: New Text
+--- !u!114 &114882229342191784
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1621149211844490}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: df231b3c72d051043a3ddf2226b8ddb2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!114 &114898770222165742
 MonoBehaviour:
   m_ObjectHideFlags: 1

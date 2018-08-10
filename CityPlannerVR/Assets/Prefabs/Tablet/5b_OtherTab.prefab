@@ -42,6 +42,7 @@ GameObject:
   - component: {fileID: 114317749616939002}
   - component: {fileID: 54825409769455996}
   - component: {fileID: 114447403190989142}
+  - component: {fileID: 114347829264946370}
   m_Layer: 24
   m_Name: 5b_OtherTab
   m_TagString: SpawnSlot
@@ -85,7 +86,7 @@ BoxCollider:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1577267748965596}
   m_Material: {fileID: 0}
-  m_IsTrigger: 0
+  m_IsTrigger: 1
   m_Enabled: 1
   serializedVersion: 2
   m_Size: {x: 4.65, y: 1.86, z: 0.2}
@@ -116,6 +117,17 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   nextPageIndex: 0
+--- !u!114 &114347829264946370
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1577267748965596}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: df231b3c72d051043a3ddf2226b8ddb2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!114 &114447403190989142
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -154,7 +166,7 @@ MonoBehaviour:
   hoverInEvents:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 114447403190989142}
+      - m_Target: {fileID: 114347829264946370}
         m_MethodName: OnHoverSprite
         m_Mode: 1
         m_Arguments:
@@ -170,7 +182,7 @@ MonoBehaviour:
   hoverOutEvents:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 114447403190989142}
+      - m_Target: {fileID: 114347829264946370}
         m_MethodName: OnStopHoverSprite
         m_Mode: 1
         m_Arguments:
