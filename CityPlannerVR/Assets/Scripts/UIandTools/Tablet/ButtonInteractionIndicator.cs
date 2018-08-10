@@ -1,10 +1,12 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class ButtonInteractionIndicator : MonoBehaviour {
 
     SpriteRenderer sprite;
+    Image image;
     int deviceIndex;
 
     /// <summary>
@@ -36,5 +38,22 @@ public class ButtonInteractionIndicator : MonoBehaviour {
         sprite.color = Color.white;
     }
 
+    //--------------------------------------------------------------------------------------------------------------------------------------
+
+    public void OnHoverUI()
+    {
+        if(image == null)
+        {
+            image = GetComponent<Image>();
+        }
+
+        image.color = Color.gray;
+        SteamVR_Controller.Input(deviceIndex).TriggerHapticPulse(500);
+    }
+
+    public void OnStopHoverUI()
+    {
+        image.color = Color.white;
+    }
 
 }
