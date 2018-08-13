@@ -6,13 +6,13 @@ using UnityEngine;
 /// <summary>
 /// Play the voice comment
 /// </summary>
-[RequireComponent(typeof(AudioSource))]
+//[RequireComponent(typeof(AudioSource))]
 public class PlayComment : MonoBehaviour {
 
     /// <summary>
     /// Is used to play the voice comment
     /// </summary>
-    [HideInInspector]
+    //[HideInInspector]
 	public AudioSource audioSource;
 
     [Tooltip("The PlayButton game object")]
@@ -26,9 +26,10 @@ public class PlayComment : MonoBehaviour {
     [HideInInspector]
     public AudioClip comment;
 
-
-    void Awake(){
-		audioSource = GetComponent<AudioSource> ();
+    void Start()
+    {
+        audioSource = GetComponentInParent<AudioSource>();
+        Debug.Log("AudioSource = " + audioSource);
     }
 
     /// <summary>
@@ -41,7 +42,7 @@ public class PlayComment : MonoBehaviour {
         playButton.SetActive(false);
         pauseButton.SetActive(true);
 
-        audioSource.Play();
+        audioSource.PlayOneShot(comment);
         Debug.Log("AudioSource.isPlaying = " + audioSource.isPlaying);
 
         //StartCoroutine(IsAudioFinished());
@@ -65,8 +66,8 @@ public class PlayComment : MonoBehaviour {
 
         else
         {
-            //playButton.SetActive(true);
-            //pauseButton.SetActive(false);
+            playButton.SetActive(true);
+            pauseButton.SetActive(false);
         }
     }
 }

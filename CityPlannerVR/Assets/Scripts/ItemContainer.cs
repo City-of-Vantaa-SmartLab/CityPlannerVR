@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
+using Valve.VR.InteractionSystem;
 
 /// <summary>
 /// Toolslot/items/buttons need to be tagged as an ItemSlot or SpawnSlot. Can be used in conjuction with PhotonSpawnableObject for automation, but then itemcontainer's tooltype must be item!.
@@ -139,6 +140,7 @@ public class ItemContainer : MonoBehaviour {
         Debug.Log("Testing itemcontainer");
     }
 
+    
 #if UNITY_EDITOR
     //using UnityEditor;
 

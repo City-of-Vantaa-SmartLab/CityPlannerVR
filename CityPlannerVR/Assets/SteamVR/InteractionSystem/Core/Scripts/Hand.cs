@@ -504,7 +504,7 @@ namespace Valve.VR.InteractionSystem
             //    hoverLayerMask.value
             //);
 
-            Physics.OverlapSphereNonAlloc(hoverSphereTransform.position - new Vector3(0, flScaledSphereRadius * boxMult - flScaledSphereRadius, 0), flScaledSphereRadius * 2f, overlappingColliders, hoverLayerMask.value);
+            Physics.OverlapSphereNonAlloc(hoverSphereTransform.position - new Vector3(0, flScaledSphereRadius * boxMult - flScaledSphereRadius, 0), flScaledSphereRadius, overlappingColliders, hoverLayerMask.value);
 
             // DebugVar
             int iActualColliderCount = 0;
@@ -739,7 +739,7 @@ namespace Valve.VR.InteractionSystem
             Transform sphereTransform = hoverSphereTransform ? hoverSphereTransform : this.transform;
             Gizmos.DrawWireSphere(sphereTransform.position, hoverSphereRadius);
 
-            Gizmos.DrawSphere(hoverSphereTransform.position - new Vector3(0, flScaledSphereRadius * boxMult - flScaledSphereRadius, 0), flScaledSphereRadius * 2f);
+            Gizmos.DrawSphere(hoverSphereTransform.position - new Vector3(0, flScaledSphereRadius * boxMult - flScaledSphereRadius, 0), flScaledSphereRadius);
         }
 
 

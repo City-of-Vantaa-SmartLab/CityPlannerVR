@@ -22,7 +22,7 @@ GameObject:
   - component: {fileID: 222570609162618178}
   - component: {fileID: 114321668345559300}
   - component: {fileID: 114289161876949344}
-  m_Layer: 0
+  m_Layer: 24
   m_Name: Text
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -39,8 +39,9 @@ GameObject:
   - component: {fileID: 4680121658191650}
   - component: {fileID: 212389039678255894}
   - component: {fileID: 65066551757043464}
-  - component: {fileID: 114247514476884246}
-  m_Layer: 0
+  - component: {fileID: 114784699486965914}
+  - component: {fileID: 114146033128988614}
+  m_Layer: 24
   m_Name: 10b_ThumbDown
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -68,12 +69,12 @@ BoxCollider:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1974774409455454}
   m_Material: {fileID: 0}
-  m_IsTrigger: 0
+  m_IsTrigger: 1
   m_Enabled: 1
   serializedVersion: 2
   m_Size: {x: 1.62, y: 1.57, z: 0.2}
   m_Center: {x: 0, y: 0, z: 0}
---- !u!114 &114247514476884246
+--- !u!114 &114146033128988614
 MonoBehaviour:
   m_ObjectHideFlags: 1
   m_PrefabParentObject: {fileID: 0}
@@ -81,51 +82,9 @@ MonoBehaviour:
   m_GameObject: {fileID: 1974774409455454}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 54130e423e1880a428951fcf612d724e, type: 3}
+  m_Script: {fileID: 11500000, guid: df231b3c72d051043a3ddf2226b8ddb2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  clickedEvents:
-    m_PersistentCalls:
-      m_Calls: []
-    m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
-      Culture=neutral, PublicKeyToken=null
-  unclickedEvents:
-    m_PersistentCalls:
-      m_Calls: []
-    m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
-      Culture=neutral, PublicKeyToken=null
-  hoverInEvents:
-    m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 114247514476884246}
-        m_MethodName: OnHoverSprite
-        m_Mode: 1
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
-    m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
-      Culture=neutral, PublicKeyToken=null
-  hoverOutEvents:
-    m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 114247514476884246}
-        m_MethodName: OnStopHoverSprite
-        m_Mode: 1
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
-    m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
-      Culture=neutral, PublicKeyToken=null
 --- !u!114 &114289161876949344
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -173,6 +132,62 @@ MonoBehaviour:
     m_VerticalOverflow: 0
     m_LineSpacing: 1
   m_Text: 0
+--- !u!114 &114784699486965914
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1974774409455454}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5eda615d4490ccc4ba1d6a048e840bcf, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  tool: 9
+  isToolContainer: 0
+  persistentContainer: 0
+  clickedEvents:
+    m_PersistentCalls:
+      m_Calls: []
+    m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
+      Culture=neutral, PublicKeyToken=null
+  unclickedEvents:
+    m_PersistentCalls:
+      m_Calls: []
+    m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
+      Culture=neutral, PublicKeyToken=null
+  hoverInEvents:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 114146033128988614}
+        m_MethodName: OnHoverSprite
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+    m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
+      Culture=neutral, PublicKeyToken=null
+  hoverOutEvents:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 114146033128988614}
+        m_MethodName: OnStopHoverSprite
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+    m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
+      Culture=neutral, PublicKeyToken=null
 --- !u!212 &212389039678255894
 SpriteRenderer:
   m_ObjectHideFlags: 1

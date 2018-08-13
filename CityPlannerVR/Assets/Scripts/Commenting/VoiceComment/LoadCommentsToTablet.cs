@@ -30,7 +30,7 @@ public struct VoiceComment2
 /// <summary>
 /// Play the voice comment
 /// </summary>
-[RequireComponent(typeof(AudioSource))]
+//[RequireComponent(typeof(AudioSource))]
 public class LoadCommentsToTablet : MonoBehaviour {
 
     /// <summary> All the voice comments are stored here </summary>
@@ -38,7 +38,7 @@ public class LoadCommentsToTablet : MonoBehaviour {
     /// <summary> All the voice comments that are played in this location (i.e Prisma as only comments that are about it) </summary>
     List<string> commentsToPlayHere;
     /// <summary> Is used to play the voice comment </summary>
-	AudioSource audioSource;
+	//AudioSource audioSource;
     ///<summary> The name of the comment and a struct that contains the name of the commenter and the position of the comment </summary>
     public Dictionary<string, VoiceComment2> commentDictionary;
 
@@ -74,7 +74,7 @@ public class LoadCommentsToTablet : MonoBehaviour {
 
     void Awake()
     {
-        audioSource = GetComponent<AudioSource>();
+        //audioSource = GetComponent<AudioSource>();
 
         commentsToPlayHere = new List<string>();
         commentDictionary = new Dictionary<string, VoiceComment2>();
@@ -95,6 +95,7 @@ public class LoadCommentsToTablet : MonoBehaviour {
         }
         isFirstEnable = false;
     }
+
     /// <summary>
     /// Loads all voiceComment files and sorts them
     /// </summary>
@@ -110,6 +111,7 @@ public class LoadCommentsToTablet : MonoBehaviour {
 
             if (fileInfo.Length > 0)
             {
+                Debug.Log("fileInfo > 0");
                 //fileInfo also contains the meta files but we don't want them in this list
                 //comments = new AudioClip[fileInfo.Length/2];
                 //comments = Resources.LoadAll<AudioClip>("Comments/VoiceComments/AudioFiles");
@@ -125,12 +127,15 @@ public class LoadCommentsToTablet : MonoBehaviour {
 
                 for (int i = 0; i < commentClips.Count; ++i)
                 {
+                    Debug.Log("commentClips.Count = " + commentClips.Count);
+                    Debug.Log("Add to comment dictionary");
                     commentDictionary.Add(positionDB.list[i].recordName, new VoiceComment2(positionDB.list[i].commenterName, positionDB.list[i].targetName, new Vector3(positionDB.list[i].position[0], positionDB.list[i].position[1], positionDB.list[i].position[2]), i));
                 }
 
                 GetAllCommentsForObjects();
                 if (commentsToPlayHere.Count > 0)
                 {
+                    Debug.Log("Create buttons");
                     CreateButtons();
                 }
                 else
@@ -149,12 +154,15 @@ public class LoadCommentsToTablet : MonoBehaviour {
         int index = 0;
         WWW request = null;
 
+        float[] data = null;
+
         for (int i = 0; i < fileInfo.Length; i++)
         {
             request = new WWW("file:///" + RecordComment.SavePath + RecordComment.AudioExt + fileInfo[i].Name);
             if (fileInfo[i].Name.EndsWith(".wav"))
             {
                 commentClips.Add(request.GetAudioClip());
+                request.GetAudioClip().GetData(data, 0);
                 commentClips[index].name = fileInfo[i].Name;
 
                 index++;

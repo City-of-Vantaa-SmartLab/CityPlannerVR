@@ -21,10 +21,11 @@ GameObject:
   - component: {fileID: 4866189201790186}
   - component: {fileID: 212368327124175114}
   - component: {fileID: 65264744218645184}
-  - component: {fileID: 114679609347004296}
-  m_Layer: 0
+  - component: {fileID: 114935559225378180}
+  - component: {fileID: 114567368212134042}
+  m_Layer: 24
   m_Name: 12b_TextCommentButton
-  m_TagString: Untagged
+  m_TagString: SpawnSlot
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -49,12 +50,12 @@ BoxCollider:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1520647020200242}
   m_Material: {fileID: 0}
-  m_IsTrigger: 0
+  m_IsTrigger: 1
   m_Enabled: 1
   serializedVersion: 2
   m_Size: {x: 2.0000005, y: 1.1300007, z: 0.20000005}
   m_Center: {x: -0.0000006854534, y: 0, z: 0}
---- !u!114 &114679609347004296
+--- !u!114 &114567368212134042
 MonoBehaviour:
   m_ObjectHideFlags: 1
   m_PrefabParentObject: {fileID: 0}
@@ -62,9 +63,23 @@ MonoBehaviour:
   m_GameObject: {fileID: 1520647020200242}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 54130e423e1880a428951fcf612d724e, type: 3}
+  m_Script: {fileID: 11500000, guid: df231b3c72d051043a3ddf2226b8ddb2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &114935559225378180
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1520647020200242}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5eda615d4490ccc4ba1d6a048e840bcf, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  tool: 9
+  isToolContainer: 0
+  persistentContainer: 0
   clickedEvents:
     m_PersistentCalls:
       m_Calls: []
@@ -78,7 +93,7 @@ MonoBehaviour:
   hoverInEvents:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 114679609347004296}
+      - m_Target: {fileID: 114567368212134042}
         m_MethodName: OnHoverSprite
         m_Mode: 1
         m_Arguments:
@@ -94,7 +109,7 @@ MonoBehaviour:
   hoverOutEvents:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 114679609347004296}
+      - m_Target: {fileID: 114567368212134042}
         m_MethodName: OnStopHoverSprite
         m_Mode: 1
         m_Arguments:
