@@ -38,4 +38,9 @@ public class ChangePage : MonoBehaviour {
     {
         hoverTablet.PageIndex = previousPage;
     }
+
+    public void InitializeCommentTarget()
+    {
+        HoverTabletManager.CommentTarget = null;
+    }
 }

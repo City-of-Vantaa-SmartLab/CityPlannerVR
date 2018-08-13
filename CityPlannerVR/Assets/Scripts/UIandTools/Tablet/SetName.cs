@@ -32,7 +32,7 @@ public class SetName : MonoBehaviour {
 
     public void GiveNameAndFacades()
     {
-        HoverTabletManager.commentTarget = gameObject;        
+        HoverTabletManager.CommentTarget = gameObject;        
 
          if(facades.Length > 0)
         {

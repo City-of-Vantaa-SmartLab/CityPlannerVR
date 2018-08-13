@@ -185,7 +185,7 @@ public class LoadCommentsToTablet : MonoBehaviour {
         //commentsToPlayHere.Clear();
         foreach (KeyValuePair<string, VoiceComment2> comment in commentDictionary)
         {
-            if (comment.Value.targetName == HoverTabletManager.commentTarget.name)
+            if (comment.Value.targetName == HoverTabletManager.CommentTarget.name)
             {
                 commentsToPlayHere.Add(comment.Key);
             }

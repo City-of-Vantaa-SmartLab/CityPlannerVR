@@ -33,6 +33,7 @@ GameObject:
   - component: {fileID: 114405330046478802}
   - component: {fileID: 114022910537130216}
   - component: {fileID: 114547123787477082}
+  - component: {fileID: 114864113479481416}
   m_Layer: 17
   m_Name: roskakori
   m_TagString: Spawnable
@@ -138,6 +139,17 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 114405330046478802}
         m_MethodName: GiveNameAndFacades
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+      - m_Target: {fileID: 114864113479481416}
+        m_MethodName: ChangeToObjectPage
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -309,6 +321,17 @@ MonoBehaviour:
   instantiationId: -1
   currentMasterID: -1
   isRuntimeInstantiated: 0
+--- !u!114 &114864113479481416
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1293068513832398}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 89bb0255020f48c4e86fdcbebaec6615, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!114 &114947226657603266
 MonoBehaviour:
   m_ObjectHideFlags: 1
