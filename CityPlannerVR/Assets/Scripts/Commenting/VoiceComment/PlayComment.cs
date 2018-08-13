@@ -37,20 +37,18 @@ public class PlayComment : MonoBehaviour {
     /// </summary>
     public void PlayCommentInPosition()
     {
-        Debug.Log("comment = " + comment);
         audioSource.clip = comment;
         playButton.SetActive(false);
         pauseButton.SetActive(true);
 
         audioSource.PlayOneShot(comment);
-        Debug.Log("AudioSource.isPlaying = " + audioSource.isPlaying);
 
-        //StartCoroutine(IsAudioFinished());
+        StartCoroutine(IsAudioFinished());
     }
 
     public void PauseComment()
     {
-        //StopCoroutine(IsAudioFinished());
+        StopCoroutine(IsAudioFinished());
         playButton.SetActive(true);
         pauseButton.SetActive(false);
 
@@ -59,15 +57,13 @@ public class PlayComment : MonoBehaviour {
 
     IEnumerator IsAudioFinished()
     {
-        if (audioSource.isPlaying)
+        
+        while (audioSource.isPlaying)
         {
             yield return null;
         }
 
-        else
-        {
-            playButton.SetActive(true);
-            pauseButton.SetActive(false);
-        }
+         playButton.SetActive(true);
+         pauseButton.SetActive(false);
     }
 }

@@ -111,7 +111,6 @@ public class LoadCommentsToTablet : MonoBehaviour {
 
             if (fileInfo.Length > 0)
             {
-                Debug.Log("fileInfo > 0");
                 //fileInfo also contains the meta files but we don't want them in this list
                 //comments = new AudioClip[fileInfo.Length/2];
                 //comments = Resources.LoadAll<AudioClip>("Comments/VoiceComments/AudioFiles");
@@ -123,24 +122,6 @@ public class LoadCommentsToTablet : MonoBehaviour {
                 {
                     positionDB = (PositionDatabase)serializer.Deserialize(file);
                     file.Close();
-                }
-
-                for (int i = 0; i < commentClips.Count; ++i)
-                {
-                    Debug.Log("commentClips.Count = " + commentClips.Count);
-                    Debug.Log("Add to comment dictionary");
-                    commentDictionary.Add(positionDB.list[i].recordName, new VoiceComment2(positionDB.list[i].commenterName, positionDB.list[i].targetName, new Vector3(positionDB.list[i].position[0], positionDB.list[i].position[1], positionDB.list[i].position[2]), i));
-                }
-
-                GetAllCommentsForObjects();
-                if (commentsToPlayHere.Count > 0)
-                {
-                    Debug.Log("Create buttons");
-                    CreateButtons();
-                }
-                else
-                {
-                    //TODO: Joku teksti indikoimaan, ettei kommentteja ole?
                 }
             }
         }
@@ -154,21 +135,46 @@ public class LoadCommentsToTablet : MonoBehaviour {
         int index = 0;
         WWW request = null;
 
-        float[] data = null;
-
         for (int i = 0; i < fileInfo.Length; i++)
         {
             request = new WWW("file:///" + RecordComment.SavePath + RecordComment.AudioExt + fileInfo[i].Name);
             if (fileInfo[i].Name.EndsWith(".wav"))
             {
+                while (!request.isDone)
+                {
+                    yield return null;
+                }
                 commentClips.Add(request.GetAudioClip());
-                request.GetAudioClip().GetData(data, 0);
                 commentClips[index].name = fileInfo[i].Name;
 
                 index++;
             }
         }
         yield return request;
+
+        StartCoroutine(FillCommentDictionary()); 
+    }
+
+    IEnumerator FillCommentDictionary()
+    {
+        for (int i = 0; i < commentClips.Count; ++i)
+        {
+            commentDictionary.Add(positionDB.list[i].recordName, new VoiceComment2(positionDB.list[i].commenterName, positionDB.list[i].targetName, new Vector3(positionDB.list[i].position[0], positionDB.list[i].position[1], positionDB.list[i].position[2]), i));
+        }
+
+        GetAllCommentsForObjects();
+
+        yield return null;
+
+        if (commentsToPlayHere.Count > 0)
+        {
+            StartCoroutine(CreateButtons());
+        }
+        else
+        {
+            //TODO: Joku teksti indikoimaan, ettei kommentteja ole?
+            Debug.LogWarning("There is no comments for this building");
+        }
     }
 
     /// <summary>
@@ -203,7 +209,7 @@ public class LoadCommentsToTablet : MonoBehaviour {
     /// <summary>
     /// Creates the button object and puts it under the ScrollableList
     /// </summary>
-    void CreateButtons()
+    IEnumerator CreateButtons()
     {
         for (int i = 0; i < commentsToPlayHere.Count; i++)
         {
@@ -218,6 +224,8 @@ public class LoadCommentsToTablet : MonoBehaviour {
 
             GetCommentClip(commentsToPlayHere[i]);
         }
+
+        yield return null;
     }
 
     /// <summary>
