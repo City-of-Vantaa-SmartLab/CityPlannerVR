@@ -56,6 +56,8 @@ public class LoadCommentsToTablet : MonoBehaviour {
     /// <summary> The ScrollableList panel object that contains all the buttons when they are created </summary>
     public GameObject panel;
 
+    public GameObject NoCommentsText;
+
     DirectoryInfo info;
     FileInfo[] fileInfo;
 
@@ -107,6 +109,7 @@ public class LoadCommentsToTablet : MonoBehaviour {
 
     private void OnDisable()
     {
+        NoCommentsText.SetActive(false);
         //Destroy all the buttons because they are created again anyway
         for (int i = 0; i < panel.transform.childCount; i++)
         {
@@ -190,8 +193,7 @@ public class LoadCommentsToTablet : MonoBehaviour {
         }
         else
         {
-            //TODO: Joku teksti indikoimaan, ettei kommentteja ole?
-            Debug.LogWarning("There is no comments for this building");
+            NoCommentsText.SetActive(true);
         }
     }
 
