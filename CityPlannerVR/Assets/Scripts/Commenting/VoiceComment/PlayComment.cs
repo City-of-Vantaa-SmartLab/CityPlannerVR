@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 /// <summary>
 /// Play the voice comment
@@ -25,6 +26,8 @@ public class PlayComment : MonoBehaviour {
     /// </summary>
     [HideInInspector]
     public AudioClip comment;
+
+    public Slider slider;
 
     void Start()
     {
@@ -57,13 +60,19 @@ public class PlayComment : MonoBehaviour {
 
     IEnumerator IsAudioFinished()
     {
-        
+        float time = 0;
+
         while (audioSource.isPlaying)
         {
+            float progress = Mathf.Clamp01(time / comment.length);
+            time += Time.deltaTime;
+            slider.value = progress;
+            
             yield return null;
         }
 
-         playButton.SetActive(true);
-         pauseButton.SetActive(false);
+        playButton.SetActive(true);
+        pauseButton.SetActive(false);
+        slider.value = 0;
     }
 }

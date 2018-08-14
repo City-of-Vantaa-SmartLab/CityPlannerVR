@@ -279,7 +279,6 @@ public class LoadCommentsToTablet : MonoBehaviour {
     /// <param name="commentName"> The name of the comment </param>
     public void GetCommentClip(string commentName)
     {
-        Debug.Log("Get comment clip");
         int index = commentDictionary[commentName].commentIndex;
         playComment.comment = commentClips[index];
     }
