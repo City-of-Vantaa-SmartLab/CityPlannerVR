@@ -32,7 +32,6 @@ public class PlayComment : MonoBehaviour {
     void Start()
     {
         audioSource = GetComponentInParent<AudioSource>();
-        Debug.Log("AudioSource = " + audioSource);
     }
 
     /// <summary>
