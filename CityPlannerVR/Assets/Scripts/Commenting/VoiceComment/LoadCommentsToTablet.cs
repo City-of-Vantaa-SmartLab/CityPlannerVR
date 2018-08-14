@@ -81,8 +81,6 @@ public class LoadCommentsToTablet : MonoBehaviour {
         generalComments = new List<string>();
         commentDictionary = new Dictionary<string, VoiceComment2>();
 
-        //panel = GameObject.Find("ScrollableList");
-
         commentButton = (GameObject)Resources.Load("VoiceComment");
 
         commentClips = new List<AudioClip>();
@@ -109,6 +107,7 @@ public class LoadCommentsToTablet : MonoBehaviour {
 
     private void OnDisable()
     {
+        //Destroy all the buttons because they are created again anyway
         for (int i = 0; i < panel.transform.childCount; i++)
         {
             Destroy(panel.transform.GetChild(i).gameObject);
@@ -205,11 +204,11 @@ public class LoadCommentsToTablet : MonoBehaviour {
         commentsToPlayHere.Clear();
         foreach (KeyValuePair<string, VoiceComment2> comment in commentDictionary)
         {
-            if(HoverTabletManager.CommentTarget == null)
+            if(HoverTabletManager.CommentTarget == null && comment.Value.targetName == "Empty")
             {
                 generalComments.Add(comment.Key);
             }
-            else if (comment.Value.targetName == HoverTabletManager.CommentTarget.name)
+            else if (HoverTabletManager.CommentTarget != null && comment.Value.targetName == HoverTabletManager.CommentTarget.name)
             {
                 commentsToPlayHere.Add(comment.Key);
             }
@@ -237,7 +236,6 @@ public class LoadCommentsToTablet : MonoBehaviour {
     {
         int lenght;
 
-        Debug.Log("LoadNullComments = " + loadNullComments);
         if (loadNullComments)
         {
             lenght = generalComments.Count;
@@ -246,27 +244,25 @@ public class LoadCommentsToTablet : MonoBehaviour {
         {
             lenght = commentsToPlayHere.Count;
         }
-        Debug.Log("Length = " + lenght);
 
         for (int i = 0; i < lenght; i++)
         {
-            Debug.Log("Creating a button");
             buttonImage = Instantiate(commentButton);
             playComment = buttonImage.GetComponent<PlayComment>();
             buttonImage.transform.SetParent(panel.transform);
             buttonImage.transform.localPosition = Vector3.zero;
             buttonImage.transform.localRotation = Quaternion.identity;
             buttonImage.transform.localScale = Vector3.one * 10;
-            buttonText = buttonImage.GetComponentInChildren<Text>();
-            //TODO: muuta nimi
-            buttonText.text = commentsToPlayHere[i];
+            buttonText = buttonImage.GetComponentInChildren<Text>();            
 
             if (loadNullComments)
             {
+                buttonText.text = commentDictionary[generalComments[i]].commenterName + ":";
                 GetCommentClip(generalComments[i]);
             }
             else
             {
+                buttonText.text = commentDictionary[commentsToPlayHere[i]].commenterName + ":";
                 GetCommentClip(commentsToPlayHere[i]);
             }
     
