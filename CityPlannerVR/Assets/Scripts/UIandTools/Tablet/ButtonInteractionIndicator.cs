@@ -17,9 +17,11 @@ public class ButtonInteractionIndicator : MonoBehaviour {
     {
         if(gameObject.layer == LayerMask.NameToLayer("ButtonLayer"))
         {
-            deviceIndex = (int)other.GetComponent<Valve.VR.InteractionSystem.Hand>().controller.index;
+            if(other.GetComponent<Valve.VR.InteractionSystem.Hand>() != null)
+            {
+                deviceIndex = (int)other.GetComponent<Valve.VR.InteractionSystem.Hand>().controller.index;
+            }
         }
-
     }
 
     public void OnHoverSprite()

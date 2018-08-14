@@ -320,15 +320,19 @@ public class RecordComment : MonoBehaviour
         positionDB.list[positionDB.list.Count - 1].recordName = filename;
         if(HoverTabletManager.CommentTarget == null)
         {
-            positionDB.list[positionDB.list.Count - 1].targetName = null;
+            positionDB.list[positionDB.list.Count - 1].targetName = "Empty";
+            positionDB.list[positionDB.list.Count - 1].position[0] = 0;
+            positionDB.list[positionDB.list.Count - 1].position[1] = 0;
+            positionDB.list[positionDB.list.Count - 1].position[2] = 0;
         }
         else
         {
             positionDB.list[positionDB.list.Count - 1].targetName = HoverTabletManager.CommentTarget.name;
+            positionDB.list[positionDB.list.Count - 1].position[0] = HoverTabletManager.CommentTarget.transform.position.x;
+            positionDB.list[positionDB.list.Count - 1].position[1] = HoverTabletManager.CommentTarget.transform.position.y;
+            positionDB.list[positionDB.list.Count - 1].position[2] = HoverTabletManager.CommentTarget.transform.position.z;
         }
-        positionDB.list[positionDB.list.Count - 1].position[0] = HoverTabletManager.CommentTarget.transform.position.x;
-        positionDB.list[positionDB.list.Count - 1].position[1] = HoverTabletManager.CommentTarget.transform.position.y;
-        positionDB.list[positionDB.list.Count - 1].position[2] = HoverTabletManager.CommentTarget.transform.position.z;
+        
 
         serializer.Serialize(file, positionDB);
         file.Close();

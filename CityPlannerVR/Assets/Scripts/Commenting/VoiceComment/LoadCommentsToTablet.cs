@@ -37,8 +37,8 @@ public class LoadCommentsToTablet : MonoBehaviour {
     List<AudioClip> commentClips;
     /// <summary> All the voice comments that are played in this location (i.e Prisma as only comments that are about it) </summary>
     List<string> commentsToPlayHere;
-    /// <summary> Is used to play the voice comment </summary>
-	//AudioSource audioSource;
+    /// <summary> Comments whithout a target </summary>
+	List<string> generalComments;
     ///<summary> The name of the comment and a struct that contains the name of the commenter and the position of the comment </summary>
     public Dictionary<string, VoiceComment2> commentDictionary;
 
@@ -54,7 +54,7 @@ public class LoadCommentsToTablet : MonoBehaviour {
     /// <summary> The text on a single button </summary>
     Text buttonText;
     /// <summary> The ScrollableList panel object that contains all the buttons when they are created </summary>
-    GameObject panel;
+    public GameObject panel;
 
     DirectoryInfo info;
     FileInfo[] fileInfo;
@@ -71,15 +71,17 @@ public class LoadCommentsToTablet : MonoBehaviour {
     GameObject commentButton;
 
     bool isFirstEnable = true;
+    bool loadNullComments = false;
 
     void Awake()
     {
         //audioSource = GetComponent<AudioSource>();
 
         commentsToPlayHere = new List<string>();
+        generalComments = new List<string>();
         commentDictionary = new Dictionary<string, VoiceComment2>();
 
-        panel = GameObject.Find("ScrollableList");
+        //panel = GameObject.Find("ScrollableList");
 
         commentButton = (GameObject)Resources.Load("VoiceComment");
 
@@ -91,9 +93,26 @@ public class LoadCommentsToTablet : MonoBehaviour {
         //If this is done before Awake, don't load comments
         if (!isFirstEnable)
         {
+            if(gameObject.name == "CommentListening")
+            {
+                loadNullComments = true;
+            }
+            else
+            {
+                loadNullComments = false;
+            }
+
             LoadComments();
         }
         isFirstEnable = false;
+    }
+
+    private void OnDisable()
+    {
+        for (int i = 0; i < panel.transform.childCount; i++)
+        {
+            Destroy(panel.transform.GetChild(i).gameObject);
+        }
     }
 
     /// <summary>
@@ -166,7 +185,7 @@ public class LoadCommentsToTablet : MonoBehaviour {
 
         yield return null;
 
-        if (commentsToPlayHere.Count > 0)
+        if (commentsToPlayHere.Count > 0 || generalComments.Count > 0)
         {
             StartCoroutine(CreateButtons());
         }
@@ -182,10 +201,15 @@ public class LoadCommentsToTablet : MonoBehaviour {
     /// </summary>
     void GetAllCommentsForObjects()
     {
-        //commentsToPlayHere.Clear();
+        generalComments.Clear();
+        commentsToPlayHere.Clear();
         foreach (KeyValuePair<string, VoiceComment2> comment in commentDictionary)
         {
-            if (comment.Value.targetName == HoverTabletManager.CommentTarget.name)
+            if(HoverTabletManager.CommentTarget == null)
+            {
+                generalComments.Add(comment.Key);
+            }
+            else if (comment.Value.targetName == HoverTabletManager.CommentTarget.name)
             {
                 commentsToPlayHere.Add(comment.Key);
             }
@@ -211,8 +235,22 @@ public class LoadCommentsToTablet : MonoBehaviour {
     /// </summary>
     IEnumerator CreateButtons()
     {
-        for (int i = 0; i < commentsToPlayHere.Count; i++)
+        int lenght;
+
+        Debug.Log("LoadNullComments = " + loadNullComments);
+        if (loadNullComments)
         {
+            lenght = generalComments.Count;
+        }
+        else
+        {
+            lenght = commentsToPlayHere.Count;
+        }
+        Debug.Log("Length = " + lenght);
+
+        for (int i = 0; i < lenght; i++)
+        {
+            Debug.Log("Creating a button");
             buttonImage = Instantiate(commentButton);
             playComment = buttonImage.GetComponent<PlayComment>();
             buttonImage.transform.SetParent(panel.transform);
@@ -220,9 +258,18 @@ public class LoadCommentsToTablet : MonoBehaviour {
             buttonImage.transform.localRotation = Quaternion.identity;
             buttonImage.transform.localScale = Vector3.one * 10;
             buttonText = buttonImage.GetComponentInChildren<Text>();
+            //TODO: muuta nimi
             buttonText.text = commentsToPlayHere[i];
 
-            GetCommentClip(commentsToPlayHere[i]);
+            if (loadNullComments)
+            {
+                GetCommentClip(generalComments[i]);
+            }
+            else
+            {
+                GetCommentClip(commentsToPlayHere[i]);
+            }
+    
         }
 
         yield return null;
@@ -234,6 +281,7 @@ public class LoadCommentsToTablet : MonoBehaviour {
     /// <param name="commentName"> The name of the comment </param>
     public void GetCommentClip(string commentName)
     {
+        Debug.Log("Get comment clip");
         int index = commentDictionary[commentName].commentIndex;
         playComment.comment = commentClips[index];
     }
