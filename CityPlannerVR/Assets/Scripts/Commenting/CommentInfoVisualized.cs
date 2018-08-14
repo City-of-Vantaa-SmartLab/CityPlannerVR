@@ -56,7 +56,7 @@ public class CommentInfoVisualized : MonoBehaviour {
         GenerateTextCell(CurrentComment.data.commentedObjectName);
         GenerateTextCell(CurrentComment.data.quickcheck.ToString());
 
-        GenerateTextCell(CurrentComment.data.type.ToString());
+        GenerateTextCell(CurrentComment.data.commentType.ToString());
         GenerateTextCell(CurrentComment.data.SHPath);
         //GenerateTextCell(CurrentComment.data.commentatorPosition.ToString());
     }

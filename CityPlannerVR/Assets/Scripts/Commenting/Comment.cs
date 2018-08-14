@@ -10,7 +10,7 @@ public class CommentData
     //CommentMetaData metaData;
     public string dataString;
     //public int type;
-    public Comment.CommentType type;
+    public Comment.CommentType commentType;
 
     public string userName; //player
     public string commentedObjectName;
@@ -65,11 +65,11 @@ public class Comment {
 
     public void SortAndAddToLocalList()
     {
-        switch (data.type)
+        switch (data.commentType)
         {
             case Comment.CommentType.Text:
                 //case 1:
-                if (!IsCommentInList(SaveData.commentLists.textComments))
+                //if (!IsCommentInList(SaveData.commentLists.textComments))
                     SaveData.commentLists.textComments.Add(this);
                 break;
 
@@ -96,9 +96,11 @@ public class Comment {
         Comment temp;
         for (int i = 0; i < testList.Count; i++)
         {
+            Debug.Log("Checking if comment already exists...");
             temp = testList[i];
             if (IsTheSameComment(temp))
             {
+                Debug.Log("Found the same comment!");
                     return true;
             }
         }
@@ -183,7 +185,7 @@ public class Comment {
             SHPath = "Screenshot path",
             submittedShortDate = DateTime.Now.ToShortDateString(),
             //submittedShortTime = DateTime.Now.ToShortTimeString(),
-            type = Comment.CommentType.Text,
+            commentType = Comment.CommentType.Text,
             //type = 1,
             userName = "Username"
         };
@@ -220,7 +222,7 @@ public class Comment {
         CommentData tempData = new CommentData();
         tempData.userName = PhotonNetwork.player.NickName;
         tempData.SHPath = screenshotPath;
-        tempData.type = commentType;
+        tempData.commentType = commentType;
         tempData.submittedShortDate = System.DateTime.Now.ToShortDateString();
         tempData.submittedShortTime = System.DateTime.Now.ToShortTimeString();
 

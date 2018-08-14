@@ -96,7 +96,7 @@ public class SaveAndLoadTransforms : MonoBehaviour {
 
     public void Load()
     {
-        Load(defaultFileName, false);
+        Load(defaultFileName, true);
     }
 
     /// <summary>
@@ -138,9 +138,11 @@ public class SaveAndLoadTransforms : MonoBehaviour {
         if (useDatabase)
         {
             MongoDBAPI.UseDefaultConnections();
-            MongoDBAPI.ExportJSONFileFromDatabase(MongoDBAPI.transformCollection, pathName);
+            //MongoDBAPI.ExportJSONFileFromDatabase(MongoDBAPI.transformCollection, pathName);
+            MongoDBAPI.ExportContainersFromDatabase<TransformData>(MongoDBAPI.transformCollection);
         }
-        SaveData.LoadItems<TransformData>(pathName);
+        else
+            SaveData.LoadItems<TransformData>(pathName);
     }
 
     /// <summary>

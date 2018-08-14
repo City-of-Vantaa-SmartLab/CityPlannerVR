@@ -185,12 +185,13 @@ public class MongoDBAPI {
                 filter = new BsonDocument();
             if (sort == null)
                 sort = Builders<BsonDocument>.Sort.Descending("date");
-            if (projection == null)
+            if (projection == null && !excludeID)
                 projection = Builders<BsonDocument>.Projection.Exclude("_id");
 
             var cursor = targetCollection.Find(filter).Project(projection).Sort(sort).ToCursor();
             foreach (var document in cursor.ToEnumerable())
             {
+
                 using (var stringWriter = new StringWriter())
                 using (var jsonWriter = new JsonWriter(stringWriter))
                 {
@@ -200,9 +201,32 @@ public class MongoDBAPI {
                     streamWriter.WriteLine(line);
                 }
             }
+
         }
     }
 
+    public static void ExportContainersFromDatabase<T>(IMongoCollection<BsonDocument> targetCollection)
+    {
+        ExportContainersFromDatabase<T>(null, null, null, targetCollection, true);
+    }
+
+    public static void ExportContainersFromDatabase<T>(FilterDefinition<BsonDocument> filter, SortDefinition<BsonDocument> sort,
+        ProjectionDefinition<BsonDocument> projection, IMongoCollection<BsonDocument> targetCollection, bool excludeID)
+    {
+        if (filter == null)
+            filter = new BsonDocument();
+        if (sort == null)
+            sort = Builders<BsonDocument>.Sort.Descending("date");
+        if (projection == null || !excludeID)
+            projection = Builders<BsonDocument>.Projection.Exclude("_id");
+
+        var cursor = targetCollection.Find(filter).Project(projection).Sort(sort).ToCursor();
+        foreach (var document in cursor.ToEnumerable())
+        {
+            Container<T> newContainer = BsonSerializer.Deserialize<Container<T>>(document);
+            SaveData.LoadItems(newContainer);
+        }
+    }
 
 
 

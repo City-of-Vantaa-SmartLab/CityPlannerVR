@@ -55,10 +55,9 @@ public class SaveAndLoadComments : MonoBehaviour
 
     public void Load()
     {
-        LoadFromDatabase();
-        //Container<CommentData> tempContainer;
-        //tempContainer = SaveData.LoadDatas<CommentData>(pathName);
-        SaveData.LoadItems<CommentData>(pathName);
+        LoadFromExternalSource(true);
+
+        //SaveData.LoadItems<CommentData>(pathName);
     }
 
     #region Database accessing
@@ -70,11 +69,16 @@ public class SaveAndLoadComments : MonoBehaviour
         MongoDBAPI.ImportJSONFileToDatabase(MongoDBAPI.commentCollection, pathName);
     }
 
-    private void LoadFromDatabase()
+    private void LoadFromExternalSource(bool useDatase)
     {
+        if (useDatase)
+        {
+            MongoDBAPI.UseDefaultConnections();
+            //MongoDBAPI.ExportJSONFileFromDatabase(MongoDBAPI.commentCollection, pathName);
+            MongoDBAPI.ExportContainersFromDatabase<CommentData>(MongoDBAPI.commentCollection);
+        }
         //pathName = folderPathName + slash + fileName + fileExtender;
-        MongoDBAPI.UseDefaultConnections();
-        MongoDBAPI.ExportJSONFileFromDatabase(MongoDBAPI.commentCollection, pathName);
+
     }
 
     private void CountDatabaseCommentContainers()

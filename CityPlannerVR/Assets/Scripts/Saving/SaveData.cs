@@ -31,7 +31,7 @@ public class SaveData {
     }
 
     public static Container<CommentData> commentContainer = new Container<CommentData>();
-    public static Container<CommentData> commentContainerForVizualisation = new Container<CommentData>();
+    //public static Container<CommentData> commentContainerForVizualisation = new Container<CommentData>();
     public static Container<TransformData> transformContainer = new Container<TransformData>();
     public static Container<TransformData> startupContainer = new Container<TransformData>();
     public static int amountOfTransforms = 0;
@@ -80,7 +80,7 @@ public class SaveData {
     }
 
     /// <summary>
-    /// Processes source container to generate comments and restore transforms.
+    /// Processes source container to generate comments and restore comments/transforms.
     /// </summary>
 
     public static void LoadItems<T>(Container<T> sourceContainer)

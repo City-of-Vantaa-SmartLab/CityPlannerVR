@@ -11,10 +11,14 @@ using UnityEngine.UI;
 public class CommentDepository : MonoBehaviour {
 
     public GameObject testImage;
-    public GameObject targetForMetaData;
+    public GameObject targetForMetaData;  // Needs CommentInfoVisualized component
     public CommentInfoVisualized metaDataHolder;
     public List<Comment> currentList;
+    public List<CommentData> currentDataList;
     public Comment.CommentType currentType;
+
+    [SerializeField]
+    private List<Comment> texts, voices, thumbs = new List<Comment>();
 
     private int currentCommentIndex;
 
@@ -26,11 +30,17 @@ public class CommentDepository : MonoBehaviour {
             metaDataHolder = targetForMetaData.GetComponent<CommentInfoVisualized>();
         if (!metaDataHolder)
             Debug.Log("Could not find comment metadata visualization component!");
+
+        texts = SaveData.commentLists.textComments;
+        voices = SaveData.commentLists.voiceComments;
+        thumbs = SaveData.commentLists.thumbComments;
+
+        currentDataList = SaveData.commentContainer.datas;
+
     }
 
 
-    [SerializeField]
-    private List<Comment> texts, voices, thumbs = new List<Comment>();
+
 
     public void ChooseTextComments()
     {
@@ -43,7 +53,7 @@ public class CommentDepository : MonoBehaviour {
 
     public void GenerateListVisuals(Comment.CommentType type, int index)
     {
-        if (!targetForMetaData)
+        if (!metaDataHolder)
         {
             Debug.LogError("No target set for comment visualization!");
             return;
@@ -60,19 +70,19 @@ public class CommentDepository : MonoBehaviour {
                 break;
 
             case Comment.CommentType.Thumb:
-                if (currentType != Comment.CommentType.Thumb)
-                {
+                //if (currentType != Comment.CommentType.Thumb)
+                //{
                     currentList = SaveData.commentLists.thumbComments;
                     currentType = Comment.CommentType.Thumb;
-                }
+                //}
                 break;
 
             case Comment.CommentType.Voice:
-                if (currentType != Comment.CommentType.Voice)
-                {
+                //if (currentType != Comment.CommentType.Voice)
+                //{
                     currentList = SaveData.commentLists.voiceComments;
                     currentType = Comment.CommentType.Voice;
-                }
+                //}
                 break;
 
             case Comment.CommentType.None:
@@ -90,18 +100,34 @@ public class CommentDepository : MonoBehaviour {
 
 
 
-    private void GenerateVisualsOnList(List<Comment> list, int listIndex)
+    private bool GenerateVisualsOnList(List<Comment> list, int listIndex)
     {
+        if (listIndex < 0)
+        {
+            Debug.LogError("ListIndex is negative!");
+            return false;
+        }
+        if (list.Count == 0)
+        {
+            Debug.LogError("The list is empty!");
+            return false;
+        }
         if (!metaDataHolder)
             metaDataHolder = targetForMetaData.GetComponent<CommentInfoVisualized>();
         if (metaDataHolder)
         {
-            metaDataHolder.CurrentComment = list[listIndex];  //Changing current comment holder should clear the old one automatically and generate new visuals
+            if (list.Count > listIndex)
+            {
+                metaDataHolder.CurrentComment = list[listIndex];  //Changing current comment holder should clear the old one automatically and generate new visuals
+                return true;
+            }
+            Debug.LogError("Could not change current comment, index out of bounds!");
         }
         else
         {
             Debug.Log("Could not find component CommentListVisualized!");
         }
+        return false;
     }
 
     public void RotateComment(bool forwards)
@@ -121,7 +147,8 @@ public class CommentDepository : MonoBehaviour {
             nextCommentIndex = 0;
         if (nextCommentIndex < 0)
             nextCommentIndex = currentList.Count - 1;
-        GenerateVisualsOnList(currentList, nextCommentIndex);
+        if (!GenerateVisualsOnList(currentList, nextCommentIndex))
+            Debug.Log("Could not rotate comment!");
     }
 
 
