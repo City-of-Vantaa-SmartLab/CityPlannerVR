@@ -138,8 +138,8 @@ public class SaveAndLoadTransforms : MonoBehaviour {
         if (useDatabase)
         {
             MongoDBAPI.UseDefaultConnections();
-            //MongoDBAPI.ExportJSONFileFromDatabase(MongoDBAPI.transformCollection, pathName);
-            MongoDBAPI.ExportContainersFromDatabase<TransformData>(MongoDBAPI.transformCollection);
+            MongoDBAPI.ExportJSONFileFromDatabase(MongoDBAPI.transformCollection, pathName);
+            //MongoDBAPI.ExportContainersFromDatabase<TransformData>(MongoDBAPI.transformCollection);
         }
         else
             SaveData.LoadItems<TransformData>(pathName);

@@ -40,7 +40,7 @@ public class CommentInfoVisualized : MonoBehaviour {
     public void GenerateInfo()
     {
         ClearVisuals();
-        Debug.Log("Generating info");
+        //Debug.Log("Generating info");
 
         if (CurrentComment == null)
         {
@@ -50,7 +50,7 @@ public class CommentInfoVisualized : MonoBehaviour {
 
         GenerateTextCell(CurrentComment.data.userName);
         GenerateTextCell(CurrentComment.data.submittedShortDate);
-        GenerateTextCell(CurrentComment.data.submittedShortTime);
+        //GenerateTextCell(CurrentComment.data.submittedShortTime);
 
         GenerateTextCell(CurrentComment.data.dataString);
         GenerateTextCell(CurrentComment.data.commentedObjectName);

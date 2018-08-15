@@ -177,7 +177,7 @@ public class MongoDBAPI {
     }
 
     public static void ExportJSONFileFromDatabase(FilterDefinition<BsonDocument> filter, SortDefinition<BsonDocument> sort,
-        ProjectionDefinition<BsonDocument> projection, IMongoCollection<BsonDocument> targetCollection, string filepath, bool excludeID)
+        ProjectionDefinition<BsonDocument> projection, IMongoCollection<BsonDocument> targetCollection, string filepath, bool onlyExcludeID)
     {
         using (var streamWriter = new StreamWriter(filepath))
         {
@@ -185,7 +185,7 @@ public class MongoDBAPI {
                 filter = new BsonDocument();
             if (sort == null)
                 sort = Builders<BsonDocument>.Sort.Descending("date");
-            if (projection == null && !excludeID)
+            if (projection == null || !onlyExcludeID)
                 projection = Builders<BsonDocument>.Projection.Exclude("_id");
 
             var cursor = targetCollection.Find(filter).Project(projection).Sort(sort).ToCursor();
@@ -210,31 +210,32 @@ public class MongoDBAPI {
         ExportContainersFromDatabase<T>(null, null, null, targetCollection, true);
     }
 
+    //Not working at the moment
     public static void ExportContainersFromDatabase<T>(FilterDefinition<BsonDocument> filter, SortDefinition<BsonDocument> sort,
-        ProjectionDefinition<BsonDocument> projection, IMongoCollection<BsonDocument> targetCollection, bool excludeID)
+        ProjectionDefinition<BsonDocument> projection, IMongoCollection<BsonDocument> targetCollection, bool onlyExcludeID)
     {
         if (filter == null)
             filter = new BsonDocument();
         if (sort == null)
             sort = Builders<BsonDocument>.Sort.Descending("date");
-        if (projection == null || !excludeID)
+        if (projection == null || !onlyExcludeID)
             projection = Builders<BsonDocument>.Projection.Exclude("_id");
 
         var cursor = targetCollection.Find(filter).Project(projection).Sort(sort).ToCursor();
         foreach (var document in cursor.ToEnumerable())
         {
-            Container<T> newContainer = BsonSerializer.Deserialize<Container<T>>(document);
+            Container<T> newContainer = BsonSerializer.Deserialize<Container<T>>(document);  //Error: Invalid generic arguments, typearguments
             SaveData.LoadItems(newContainer);
         }
     }
 
 
 
-    public static void LoadFileFromDatabase(FilterDefinition<BsonDocument> filter,
-        string filepath, IMongoCollection<BsonDocument> collection)
-    {
-        var document = collection.Find(filter).First();
-    }
+    //public static void LoadFileFromDatabase(FilterDefinition<BsonDocument> filter,
+    //    string filepath, IMongoCollection<BsonDocument> collection)
+    //{
+    //    var document = collection.Find(filter).First();
+    //}
 
 
     //instead this could be done with:

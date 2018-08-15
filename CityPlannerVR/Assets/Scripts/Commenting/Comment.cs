@@ -17,7 +17,7 @@ public class CommentData
     public string SHPath;
     
     public string submittedShortDate;
-    public string submittedShortTime;
+    //public string submittedShortTime;
     //public Vector3 commentatorPosition;
     public int quickcheck;
 }
@@ -29,7 +29,6 @@ public class Comment {
 
     //public CommentType CurrentType { get; set; }
     public CommentData data; //used for storing and loading data
-
 
     //default constructor
     public Comment()
@@ -69,7 +68,7 @@ public class Comment {
         {
             case Comment.CommentType.Text:
                 //case 1:
-                //if (!IsCommentInList(SaveData.commentLists.textComments))
+                if (!IsCommentInList(SaveData.commentLists.textComments))
                     SaveData.commentLists.textComments.Add(this);
                 break;
 
@@ -96,11 +95,11 @@ public class Comment {
         Comment temp;
         for (int i = 0; i < testList.Count; i++)
         {
-            Debug.Log("Checking if comment already exists...");
+            //Debug.Log("Checking if comment already exists...");
             temp = testList[i];
             if (IsTheSameComment(temp))
             {
-                Debug.Log("Found the same comment!");
+                //Debug.Log("Found the same comment!");
                     return true;
             }
         }
@@ -175,7 +174,7 @@ public class Comment {
 
     public static Comment GenerateTestComment()
     {
-        Comment newComment = new Comment();
+        Comment newComment = SaveAndLoadComments.CreateComment();
         CommentData data = new CommentData
         {
             //commentatorPosition = Vector3.zero,
@@ -190,8 +189,10 @@ public class Comment {
             userName = "Username"
         };
 
-        newComment.data = data;
-        newComment.AddCommentDataToSavedata();
+        newComment.CombineAndProcess(data);
+
+        //newComment.data = data;
+        //newComment.AddCommentDataToSavedata();
         return newComment;
     }
 
@@ -201,30 +202,60 @@ public class Comment {
         SaveData.AddData(this.data);
     }
 
-    public static void GenerateTextComment(string commentString, GameObject targetObject, string screenshotPath)
+    public static Comment GenerateTextComment(string commentString, GameObject targetObject, string screenshotPath)
     {
-        CommentData tempData = GenerateMetaData(CommentType.Text, targetObject, screenshotPath);
+        CommentData tempData = GenerateMetaData(CommentType.Text, targetObject, screenshotPath, commentString);
         Comment comment = SaveAndLoadComments.CreateComment();
-        tempData.dataString = commentString;
+        comment.CombineAndProcess(tempData);
+        return comment;
+    }
 
-        comment.data = tempData;
-        comment.GenerateQuickCheck(3);
-        comment.SortAndAddToLocalList();
-        comment.AddCommentDataToSavedata();
+    public static Comment GenerateThumbComment(string thumbData, GameObject targetObject, string screenshotPath)
+    {
+        CommentData tempData = GenerateMetaData(CommentType.Thumb, targetObject, screenshotPath, thumbData);
+        Comment comment = SaveAndLoadComments.CreateComment();
+        comment.CombineAndProcess(tempData);
+        return comment;
+    }
+
+    public static Comment GenerateVoiceComment(string audioFilePath, GameObject targetObject, string screenshotPath)
+    {
+        CommentData tempData = GenerateMetaData(CommentType.Voice, targetObject, screenshotPath, audioFilePath);
+        Comment comment = SaveAndLoadComments.CreateComment();
+        comment.CombineAndProcess(tempData);
+        return comment;
+    }
+
+    private void CombineAndProcess(CommentData tempData)
+    {
+        data = tempData;
+        GenerateQuickCheck(3);
+        SortAndAddToLocalList();
+        AddCommentDataToSavedata();
     }
 
     /// <summary>
     /// Creates metadata for commentdata. Does not log targetobject name and datastring!
     /// </summary>
 
-    private static CommentData GenerateMetaData(CommentType commentType, GameObject targetObject, string screenshotPath)
+    private static CommentData GenerateMetaData(CommentType commentType, GameObject targetObject, string screenshotPath, string dataString)
     {
         CommentData tempData = new CommentData();
-        tempData.userName = PhotonNetwork.player.NickName;
-        tempData.SHPath = screenshotPath;
+        if (string.IsNullOrEmpty(PhotonNetwork.player.NickName))
+            tempData.userName = "Anonymous";
+        else
+            tempData.userName = PhotonNetwork.player.NickName;
+        if (string.IsNullOrEmpty(screenshotPath))
+            tempData.SHPath = "No screenshots";
+        else
+            tempData.SHPath = screenshotPath;
         tempData.commentType = commentType;
         tempData.submittedShortDate = System.DateTime.Now.ToShortDateString();
-        tempData.submittedShortTime = System.DateTime.Now.ToShortTimeString();
+        //tempData.submittedShortTime = System.DateTime.Now.ToShortTimeString();
+        if (string.IsNullOrEmpty(dataString))
+            tempData.dataString = "No data!";
+        else
+            tempData.dataString = dataString;
 
         tempData.quickcheck = 0; //should be created later
 
@@ -232,6 +263,7 @@ public class Comment {
             tempData.commentedObjectName = "Yleinen";
         else
             tempData.commentedObjectName = targetObject.name;
+
 
         return tempData;
     }

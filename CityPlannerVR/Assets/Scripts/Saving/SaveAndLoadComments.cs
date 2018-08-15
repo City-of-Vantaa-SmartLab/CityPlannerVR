@@ -26,7 +26,7 @@ public class SaveAndLoadComments : MonoBehaviour
         folderPathName = Application.persistentDataPath + slash + folder;
         pathName = folderPathName + slash + fileName + fileExtender;
 
-        Load();
+        //Load();
     }
 
     public static Comment CreateComment()
@@ -55,7 +55,8 @@ public class SaveAndLoadComments : MonoBehaviour
 
     public void Load()
     {
-        LoadFromExternalSource(true);
+        StartCoroutine(LoadFromExternalSource(true));
+        //LoadFromExternalSource(true);
 
         //SaveData.LoadItems<CommentData>(pathName);
     }
@@ -69,17 +70,28 @@ public class SaveAndLoadComments : MonoBehaviour
         MongoDBAPI.ImportJSONFileToDatabase(MongoDBAPI.commentCollection, pathName);
     }
 
-    private void LoadFromExternalSource(bool useDatase)
+    IEnumerator LoadFromExternalSource(bool useDatase)
     {
-        if (useDatase)
+        int countdown = 5;
+        while (countdown > 0)
         {
-            MongoDBAPI.UseDefaultConnections();
-            //MongoDBAPI.ExportJSONFileFromDatabase(MongoDBAPI.commentCollection, pathName);
-            MongoDBAPI.ExportContainersFromDatabase<CommentData>(MongoDBAPI.commentCollection);
+            Debug.Log("Starting to load in " + countdown + " seconds...");
+            countdown--;
+            yield return new WaitForSeconds(1f);
         }
-        //pathName = folderPathName + slash + fileName + fileExtender;
 
+        Debug.Log("Starting to load...");
+        MongoDBAPI.UseDefaultConnections();
+        MongoDBAPI.ExportJSONFileFromDatabase(MongoDBAPI.commentCollection, pathName);
+        //MongoDBAPI.ExportContainersFromDatabase<CommentData>(MongoDBAPI.commentCollection);
+
+        pathName = folderPathName + slash + fileName + fileExtender;
+        SaveData.LoadItems<CommentData>(pathName);
+        Debug.Log("Loading done!");
+
+        yield return null;
     }
+
 
     private void CountDatabaseCommentContainers()
     {
@@ -104,7 +116,7 @@ public class SaveAndLoadComments : MonoBehaviour
         {
             Comment testComment = Comment.GenerateTestComment();
             testComment.data.dataString += i;
-            testComment.SortAndAddToLocalList();
+            //testComment.SortAndAddToLocalList();
         }
     }
 

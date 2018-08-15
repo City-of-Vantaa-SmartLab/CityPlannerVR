@@ -143,10 +143,13 @@ public class CommentDepository : MonoBehaviour {
         else
             nextCommentIndex--;
 
+        //Debug.Log("Current index: " + nextCommentIndex);
         if (nextCommentIndex >= currentList.Count)
             nextCommentIndex = 0;
         if (nextCommentIndex < 0)
             nextCommentIndex = currentList.Count - 1;
+        currentCommentIndex = nextCommentIndex;
+        //Debug.Log("Current index changed to: " + nextCommentIndex);
         if (!GenerateVisualsOnList(currentList, nextCommentIndex))
             Debug.Log("Could not rotate comment!");
     }
