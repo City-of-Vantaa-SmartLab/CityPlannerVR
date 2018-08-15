@@ -7,6 +7,7 @@ public class ButtonInteractionIndicator : MonoBehaviour {
 
     SpriteRenderer sprite;
     Image image;
+    MeshRenderer meshRenderer;
     int deviceIndex;
 
     /// <summary>
@@ -56,6 +57,24 @@ public class ButtonInteractionIndicator : MonoBehaviour {
     public void OnStopHoverUI()
     {
         image.color = Color.white;
+    }
+
+    //--------------------------------------------------------------------------------------------------------------------------------------
+
+    public void OnHoverObject()
+    {
+        if(meshRenderer == null)
+        {
+            meshRenderer = GetComponent<MeshRenderer>();
+        }
+
+        meshRenderer.material.color = Color.gray;
+        SteamVR_Controller.Input(deviceIndex).TriggerHapticPulse(500);
+    }
+
+    public void OnStopHoverObject()
+    {
+        meshRenderer.material.color = Color.white;
     }
 
 }
