@@ -20,6 +20,8 @@ public class CommentData
     //public string submittedShortTime;
     //public Vector3 commentatorPosition;
     public int quickcheck;
+    public string commentName;
+    public float[] positions;
 }
 
 [Serializable]
@@ -186,7 +188,10 @@ public class Comment {
             //submittedShortTime = DateTime.Now.ToShortTimeString(),
             commentType = Comment.CommentType.Text,
             //type = 1,
-            userName = "Username"
+            userName = "Username",
+            positions = new float[] { 1f, 2f, 3f },
+            commentName = "Comment name"
+            
         };
 
         newComment.CombineAndProcess(data);
@@ -218,9 +223,9 @@ public class Comment {
         return comment;
     }
 
-    public static Comment GenerateVoiceComment(string audioFilePath, GameObject targetObject, string screenshotPath)
+    public static Comment GenerateVoiceComment(string audioFilePath, string targetObjectName, string screenshotPath, string commentName, float[] positions)
     {
-        CommentData tempData = GenerateMetaData(CommentType.Voice, targetObject, screenshotPath, audioFilePath);
+        CommentData tempData = GenerateMetaData(CommentType.Voice, targetObjectName, screenshotPath, audioFilePath, commentName, positions);
         Comment comment = SaveAndLoadComments.CreateComment();
         comment.CombineAndProcess(tempData);
         return comment;
@@ -234,21 +239,29 @@ public class Comment {
         AddCommentDataToSavedata();
     }
 
-    /// <summary>
-    /// Creates metadata for commentdata. Does not log targetobject name and datastring!
-    /// </summary>
-
     private static CommentData GenerateMetaData(CommentType commentType, GameObject targetObject, string screenshotPath, string dataString)
+    {
+        CommentData tempData;
+        if (targetObject)
+            tempData = GenerateMetaData(commentType, targetObject.name, screenshotPath, dataString, null, null);
+        else
+            tempData = GenerateMetaData(commentType, "Yleinen", screenshotPath, dataString, null, null);
+        return tempData;
+    }
+
+    private static CommentData GenerateMetaData(CommentType commentType, string targetObjectName, string screenshotPath, string dataString, string commentName, float[] positions)
     {
         CommentData tempData = new CommentData();
         if (string.IsNullOrEmpty(PhotonNetwork.player.NickName))
             tempData.userName = "Anonymous";
         else
             tempData.userName = PhotonNetwork.player.NickName;
+
         if (string.IsNullOrEmpty(screenshotPath))
             tempData.SHPath = "No screenshots";
         else
             tempData.SHPath = screenshotPath;
+
         tempData.commentType = commentType;
         tempData.submittedShortDate = System.DateTime.Now.ToShortDateString();
         //tempData.submittedShortTime = System.DateTime.Now.ToShortTimeString();
@@ -259,11 +272,9 @@ public class Comment {
 
         tempData.quickcheck = 0; //should be created later
 
-        if (targetObject == null)
-            tempData.commentedObjectName = "Yleinen";
-        else
-            tempData.commentedObjectName = targetObject.name;
-
+        tempData.commentedObjectName = targetObjectName;
+        tempData.commentName = commentName;
+        tempData.positions = positions;
 
         return tempData;
     }
