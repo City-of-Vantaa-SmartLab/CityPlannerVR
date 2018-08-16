@@ -118,6 +118,22 @@ public class RecordComment : MonoBehaviour
             return audioSavePathExt;
         }
     }
+
+    static string CommenterName;
+    static string CommentName;
+    static float[] Positions;
+    static string TargetObject;
+
+    public static bool receiveComment;
+    public bool ReceiveComment
+    {
+        set
+        {
+            receiveComment = value;
+            SaveRecordedAudio(true);
+        }
+    }
+
     //---------------------------------------------------------------------------------------------
 
     private void Start()
@@ -259,7 +275,7 @@ public class RecordComment : MonoBehaviour
                     recordTimeMilliSec = 0;
                     recordTimer.text = string.Format("00:{0:00}:{1:00}", recordTimeSec, recordTimeMilliSec);
 
-                    SaveRecordedAudio();
+                    SaveRecordedAudio(false);
                     //Enable voice chat again
                     voiceTrigger.Mode = Dissonance.CommActivationMode.VoiceActivation;
                 }
@@ -303,40 +319,70 @@ public class RecordComment : MonoBehaviour
     /// <summary>
     /// Save the voice comment as a wav file to savePath location
     /// </summary>
-    void SaveRecordedAudio()
+    void SaveRecordedAudio(bool fromServer)
     {
         string filename = commenter + "_VoiceComment_" + System.DateTime.Now.ToString("yyyy-MM-dd_HH-mm-ss");
 
         SavWav.Save(filename, finalAudioClip, savePath + audioSavePathExt);
 
         XmlSerializer serializer = new XmlSerializer(typeof(PositionDatabase));
-        
-        
-        FileStream file = File.Create(savePath + positionFileName); 
+
+        FileStream file = File.Create(savePath + positionFileName);
 
         positionDB.list.Add(new PositionData());
 
-        positionDB.list[positionDB.list.Count - 1].commenterName = commenter;
-        positionDB.list[positionDB.list.Count - 1].recordName = filename;
-        if(HoverTabletManager.CommentTarget == null)
+        if (fromServer)
         {
-            positionDB.list[positionDB.list.Count - 1].targetName = "Empty";
-            positionDB.list[positionDB.list.Count - 1].position[0] = 0;
-            positionDB.list[positionDB.list.Count - 1].position[1] = 0;
-            positionDB.list[positionDB.list.Count - 1].position[2] = 0;
+           positionDB.list[positionDB.list.Count - 1].commenterName = CommenterName;
+           positionDB.list[positionDB.list.Count - 1].recordName = CommenterName;
+
+           positionDB.list[positionDB.list.Count - 1].targetName = TargetObject;
+           positionDB.list[positionDB.list.Count - 1].position[0] = Positions[0];
+           positionDB.list[positionDB.list.Count - 1].position[1] = Positions[1];
+           positionDB.list[positionDB.list.Count - 1].position[2] = Positions[2];
+            
         }
         else
         {
-            positionDB.list[positionDB.list.Count - 1].targetName = HoverTabletManager.CommentTarget.name;
-            positionDB.list[positionDB.list.Count - 1].position[0] = HoverTabletManager.CommentTarget.transform.position.x;
-            positionDB.list[positionDB.list.Count - 1].position[1] = HoverTabletManager.CommentTarget.transform.position.y;
-            positionDB.list[positionDB.list.Count - 1].position[2] = HoverTabletManager.CommentTarget.transform.position.z;
+            positionDB.list[positionDB.list.Count - 1].commenterName = commenter;
+            positionDB.list[positionDB.list.Count - 1].recordName = filename;
+
+            if (HoverTabletManager.CommentTarget == null)
+            {
+                positionDB.list[positionDB.list.Count - 1].targetName = "Empty";
+                positionDB.list[positionDB.list.Count - 1].position[0] = 0;
+                positionDB.list[positionDB.list.Count - 1].position[1] = 0;
+                positionDB.list[positionDB.list.Count - 1].position[2] = 0;
+            }
+            else
+            {
+                positionDB.list[positionDB.list.Count - 1].targetName = HoverTabletManager.CommentTarget.name;
+                positionDB.list[positionDB.list.Count - 1].position[0] = HoverTabletManager.CommentTarget.transform.position.x;
+                positionDB.list[positionDB.list.Count - 1].position[1] = HoverTabletManager.CommentTarget.transform.position.y;
+                positionDB.list[positionDB.list.Count - 1].position[2] = HoverTabletManager.CommentTarget.transform.position.z;
+            }
         }
         
 
         serializer.Serialize(file, positionDB);
         file.Close();
+    }
 
+    public static void GenerateComment(string commenter, string commentName, float[] positions, string targetObject)
+    {
+        CommenterName = commenter;
+        CommentName = commentName;
+        Positions = positions;
+        TargetObject = targetObject;
+
+        if (receiveComment)
+        {
+            receiveComment = false;
+        }
+        else
+        {
+            receiveComment = true;
+        }
     }
 }
 
