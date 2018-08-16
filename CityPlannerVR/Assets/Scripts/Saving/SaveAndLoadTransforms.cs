@@ -34,7 +34,8 @@ public class SaveAndLoadTransforms : MonoBehaviour {
     private string folder;
     private string defaultFileName;
     private string startupFileName;
-    private string fileExtender;
+    private string fileExtenderDat;
+    private string fileExtenderPng;
     private string testFileName;
     private string latestFileName;
     private string pathName;
@@ -45,8 +46,9 @@ public class SaveAndLoadTransforms : MonoBehaviour {
         folder = "SaveData";
         defaultFileName = "TransformData";
         startupFileName = "StartupTransformData";
-        fileExtender = ".dat";
-        testFileName = "Test";
+        fileExtenderDat = ".dat";
+        fileExtenderPng = ".png";
+        testFileName = "test";
         latestFileName = "Latest";
         folderPathName = Application.persistentDataPath + slash + folder;
 
@@ -96,7 +98,7 @@ public class SaveAndLoadTransforms : MonoBehaviour {
 
     public void Load()
     {
-        Load(defaultFileName, false);
+        Load(defaultFileName, true);
     }
 
     /// <summary>
@@ -111,7 +113,7 @@ public class SaveAndLoadTransforms : MonoBehaviour {
     private IEnumerator SaveWhenContainerIsReady(string fileName, Container<TransformData> container, bool useDatabase)
     {
         //Debug.Log("Starting coroutine...");
-        pathName = folderPathName + slash + fileName + fileExtender;
+        pathName = folderPathName + slash + fileName + fileExtenderDat;
 
         SaveData.transformCount = 0;
         SaveData.BeforeSavingTransforms();
@@ -134,13 +136,15 @@ public class SaveAndLoadTransforms : MonoBehaviour {
 
     public void Load(string fileName, bool useDatabase)
     {
-        pathName = folderPathName + slash + fileName + fileExtender;
+        pathName = folderPathName + slash + fileName + fileExtenderDat;
         if (useDatabase)
         {
             MongoDBAPI.UseDefaultConnections();
-            MongoDBAPI.ExportJSONFileFromDatabase(MongoDBAPI.transformCollection, pathName);
+            MongoDBAPI.ExportJSONFileFromDatabase<TransformData>(MongoDBAPI.transformCollection, pathName);
+            //MongoDBAPI.ExportContainersFromDatabase<TransformData>(MongoDBAPI.transformCollection);
         }
-        SaveData.LoadItems<TransformData>(pathName);
+        else
+            SaveData.LoadItems<TransformData>(pathName);
     }
 
     /// <summary>
@@ -486,8 +490,16 @@ public class SaveAndLoadTransforms : MonoBehaviour {
 
     public void TestDatabaseMethod1()
     {
-        pathName = folderPathName + slash + testFileName + fileExtender;
-        MongoDBAPI.TestMethod1(pathName);
+        pathName = folderPathName + slash + testFileName + fileExtenderPng;
+        MongoDBAPI.UseDefaultConnections();
+        MongoDBAPI.TestMethod1(pathName, testFileName + fileExtenderPng);
+    }
+
+    public void TestDatabaseMethod2()
+    {
+        pathName = folderPathName + slash + testFileName + fileExtenderPng;
+        MongoDBAPI.UseDefaultConnections();
+        MongoDBAPI.TestMethod2(pathName);
     }
 
     //public void SaveLatestToDatabase()

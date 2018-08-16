@@ -5,12 +5,14 @@ using MongoDB.Bson;
 using MongoDB.Bson.IO;
 using MongoDB.Bson.Serialization;
 using MongoDB.Driver;
-//using MongoDB.Driver.Core;
+using MongoDB.Driver.Core;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Text;
 using System.Linq;
 using System.IO;
 using System;
+
 
 public class MongoDBAPI {
 
@@ -19,6 +21,15 @@ public class MongoDBAPI {
         public string ip;
         public string databaseName;
         public string collectionName;
+    }
+
+    [Serializable]
+    private class BinaryDocument
+    {
+        public string userName;
+        public string filepath;
+        public string submittedShortDate;
+        public BsonBinaryData bsonBinaryData;
     }
 
     //private static string defaultConnectionString = "mongodb://192.168.100.21:27017";
@@ -31,6 +42,8 @@ public class MongoDBAPI {
     //public static IMongoCollection<Container<TransformData>> transformCollection;
     public static IMongoCollection<BsonDocument> transformCollection;
     public static IMongoCollection<BsonDocument> commentCollection;
+    public static IMongoCollection<BsonDocument> imageCollection;
+    public static IMongoCollection<BsonDocument> voiceCollection;
     private static string defaultDB = "tikkuraitti";
     private static string defaultUser = "buser";
     private static string defaultPwd = "1234";
@@ -38,6 +51,9 @@ public class MongoDBAPI {
         MongoCredential.CreateCredential(defaultDB, defaultUser, defaultPwd);
     private static string commentColName = "comments";
     private static string transformColName = "transforms";
+    private static string imageColName = "images";
+    private static string voiceColName = "voicefiles";
+
 
 
 
@@ -99,12 +115,11 @@ public class MongoDBAPI {
 
     public static void ConnectToDefaultCollections()
     {
-        //commentCollection = ConnectToDatabaseCollection<Comment>(commentColName);
-        //transformCollection = ConnectToDatabaseCollection<TransformData>(transformColName);
-        //commentCollection = activeDatabase.GetCollection<Comment>(commentColName);
-        //transformCollection = activeDatabase.GetCollection<Container<TransformData>>(transformColName);
         transformCollection = activeDatabase.GetCollection<BsonDocument>(transformColName);
         commentCollection = activeDatabase.GetCollection<BsonDocument>(commentColName);
+        imageCollection = activeDatabase.GetCollection<BsonDocument>(imageColName);
+        voiceCollection = activeDatabase.GetCollection<BsonDocument>(voiceColName);
+
     }
 
     public static IMongoCollection<T> ConnectToDatabaseCollection<T>(string collectionName)
@@ -145,11 +160,16 @@ public class MongoDBAPI {
         return false;
     }
 
-    public static void TestMethod1(string filepath)
+    public static void TestMethod1(string filepath, string filenameExtended)
     {
-        Debug.Log("Tämä on testi1");
-        ImportJSONFileToDatabase(transformCollection, filepath);
-        //ExportJSONFileFromDatabase(mongoCollection, filepath);
+        Debug.Log("Tallennetaan");
+        ImportBinaryFileToDatabase(imageCollection, filepath, filenameExtended);
+    }
+
+    public static void TestMethod2(string filepath)
+    {
+        Debug.Log("Ladataan");
+        ExportBinaryFileFromDatabase(imageCollection, filepath);
     }
 
     public static void ImportJSONFileToDatabase(IMongoCollection<BsonDocument> targetCollection, string filepath)
@@ -171,46 +191,135 @@ public class MongoDBAPI {
         }
     }
 
-    public static void ExportJSONFileFromDatabase(IMongoCollection<BsonDocument> targetCollection, string filepath)
+    public static void ImportBinaryFileToDatabase(IMongoCollection<BsonDocument> targetCollection, string filepath, string filenameExtended)
     {
-        ExportJSONFileFromDatabase(null, null, null, targetCollection, filepath, true);
+        using (var streamReader = new StreamReader(filepath))
+        {
+
+            //document.userName = PhotonNetwork.player.NickName;
+            //if (string.IsNullOrEmpty(document.userName))
+            //    document.userName = "N/A";
+            //document.filepath = filepath;
+            //document.submittedShortDate = System.DateTime.Now.ToShortDateString();
+
+            var bytes = File.ReadAllBytes(filepath);
+
+            BsonBinaryData binaryData = new BsonBinaryData(bytes);
+            //document.bsonBinaryData = vladislav;
+            BsonValue urpuus = binaryData.AsBsonValue;
+            //BsonDocument rawdocument = new BsonDocument(filenameExtended, vladislav.AsBsonValue);
+            //BsonDocument document = binaryData.ToBsonDocument(); //binarydata value cannot be added to the root level of bson document
+            BsonElement element = new BsonElement("bytes", binaryData.AsBsonValue);
+            BsonDocument document = new BsonDocument(element);
+
+            targetCollection.InsertOne(document);
+
+        }
     }
 
-    public static void ExportJSONFileFromDatabase(FilterDefinition<BsonDocument> filter, SortDefinition<BsonDocument> sort,
-        ProjectionDefinition<BsonDocument> projection, IMongoCollection<BsonDocument> targetCollection, string filepath, bool excludeID)
+    public static void ExportBinaryFileFromDatabase(IMongoCollection<BsonDocument> targetCollection, string filepath)
     {
-        using (var streamWriter = new StreamWriter(filepath))
-        {
-            if (filter == null)
-                filter = new BsonDocument();
-            if (sort == null)
-                sort = Builders<BsonDocument>.Sort.Descending("date");
-            if (projection == null)
-                projection = Builders<BsonDocument>.Projection.Exclude("_id");
+        ExportBinaryFileFromDatabase(null, null, null, targetCollection, filepath, true);
+    }
 
-            var cursor = targetCollection.Find(filter).Project(projection).Sort(sort).ToCursor();
-            foreach (var document in cursor.ToEnumerable())
+    public static void ExportBinaryFileFromDatabase(FilterDefinition<BsonDocument> filter, SortDefinition<BsonDocument> sort,
+    ProjectionDefinition<BsonDocument> projection, IMongoCollection<BsonDocument> targetCollection, string filepath, bool onlyExcludeID)
+    {
+        if (filter == null)
+            filter = new BsonDocument();
+        if (sort == null)
+            sort = Builders<BsonDocument>.Sort.Descending("_id");
+        if (projection == null || !onlyExcludeID)
+            projection = Builders<BsonDocument>.Projection.Exclude("_id");
+
+        var cursor = targetCollection.Find(filter).Project(projection).Sort(sort).ToCursor();
+        foreach (var document in cursor.ToEnumerable())
+        {
+            using (var streamWriter = new StreamWriter(filepath))
+            using (var stringWriter = new StringWriter())
+            //using (var jsonWriter = new JsonWriter(stringWriter))
             {
-                using (var stringWriter = new StringWriter())
-                using (var jsonWriter = new JsonWriter(stringWriter))
-                {
-                    var context = BsonSerializationContext.CreateRoot(jsonWriter);
-                    targetCollection.DocumentSerializer.Serialize(context, document);
-                    var line = stringWriter.ToString();
-                    streamWriter.WriteLine(line);
-                }
+                //var context = BsonSerializationContext.CreateRoot(jsonWriter);
+                //targetCollection.DocumentSerializer.Serialize(context, document);
+                var line = stringWriter.ToString();
+                streamWriter.WriteLine(line);
             }
+        }
+    }
+
+    public static void ExportJSONFileFromDatabase<T>(IMongoCollection<BsonDocument> targetCollection, string filepath)
+    {
+        //Task taskA = new Task(() => ExportJSONFileFromDatabase(null, null, null, targetCollection, filepath, true));
+        //taskA.Start();
+        //Debug.Log("Vladislav");
+        ////taskA.Wait();
+        //Debug.Log("Task don't hurt me");
+
+        ExportJSONFileFromDatabase<T>(null, null, null, targetCollection, filepath, true);
+    }
+
+    public static void ExportJSONFileFromDatabase<T>(FilterDefinition<BsonDocument> filter, SortDefinition<BsonDocument> sort,
+        ProjectionDefinition<BsonDocument> projection, IMongoCollection<BsonDocument> targetCollection, string filepath, bool onlyExcludeID)
+    {
+        //using (var streamWriter = new StreamWriter(filepath))
+        //{
+        if (filter == null)
+            filter = new BsonDocument();
+        if (sort == null)
+            sort = Builders<BsonDocument>.Sort.Descending("date");
+        if (projection == null || !onlyExcludeID)
+            projection = Builders<BsonDocument>.Projection.Exclude("_id");
+
+        var cursor = targetCollection.Find(filter).Project(projection).Sort(sort).ToCursor();
+        foreach (var document in cursor.ToEnumerable())
+        {
+            using (var streamWriter = new StreamWriter(filepath))
+            using (var stringWriter = new StringWriter())
+            using (var jsonWriter = new JsonWriter(stringWriter))
+            {
+                var context = BsonSerializationContext.CreateRoot(jsonWriter);
+                targetCollection.DocumentSerializer.Serialize(context, document);
+                var line = stringWriter.ToString();
+                streamWriter.WriteLine(line);
+            }
+            SaveData.LoadItems<T>(filepath);  //Works, but reading the whole file (instead of piecemeal) or loading straight to memory would be more efficient
+
+        }
+
+        //}
+    }
+
+    public static void ExportContainersFromDatabase<T>(IMongoCollection<BsonDocument> targetCollection)
+    {
+        ExportContainersFromDatabase<T>(null, null, null, targetCollection, true);
+    }
+
+    //Not working at the moment
+    public static void ExportContainersFromDatabase<T>(FilterDefinition<BsonDocument> filter, SortDefinition<BsonDocument> sort,
+        ProjectionDefinition<BsonDocument> projection, IMongoCollection<BsonDocument> targetCollection, bool onlyExcludeID)
+    {
+        if (filter == null)
+            filter = new BsonDocument();
+        if (sort == null)
+            sort = Builders<BsonDocument>.Sort.Descending("date");
+        if (projection == null || !onlyExcludeID)
+            projection = Builders<BsonDocument>.Projection.Exclude("_id");
+
+        var cursor = targetCollection.Find(filter).Project(projection).Sort(sort).ToCursor();
+        foreach (var document in cursor.ToEnumerable())
+        {
+            Container<T> newContainer = BsonSerializer.Deserialize<Container<T>>(document);  //Error: Invalid generic arguments, typearguments
+            SaveData.LoadItems(newContainer);
         }
     }
 
 
 
-
-    public static void LoadFileFromDatabase(FilterDefinition<BsonDocument> filter,
-        string filepath, IMongoCollection<BsonDocument> collection)
-    {
-        var document = collection.Find(filter).First();
-    }
+    //public static void LoadFileFromDatabase(FilterDefinition<BsonDocument> filter,
+    //    string filepath, IMongoCollection<BsonDocument> collection)
+    //{
+    //    var document = collection.Find(filter).First();
+    //}
 
 
     //instead this could be done with:

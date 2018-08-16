@@ -6,9 +6,10 @@ using System;
 using System.Threading.Tasks;
 
 [Serializable]
-public class Container<T> /*where T : parentClass  //if needed, eg. CommentData as child class -> through inheritance?*/
+public class Container<T>  //where T : new()
 {
     public List<T> datas = new List<T>();
+    //public T urpuus;
     public Transform previousHolder = null; //used when loading transformdata
     public string date;
     public string time;
@@ -31,7 +32,7 @@ public class SaveData {
     }
 
     public static Container<CommentData> commentContainer = new Container<CommentData>();
-    public static Container<CommentData> commentContainerForVizualisation = new Container<CommentData>();
+    //public static Container<CommentData> commentContainerForVizualisation = new Container<CommentData>();
     public static Container<TransformData> transformContainer = new Container<TransformData>();
     public static Container<TransformData> startupContainer = new Container<TransformData>();
     public static int amountOfTransforms = 0;
@@ -80,7 +81,7 @@ public class SaveData {
     }
 
     /// <summary>
-    /// Processes source container to generate comments and restore transforms.
+    /// Processes source container to generate comments and restore comments/transforms.
     /// </summary>
 
     public static void LoadItems<T>(Container<T> sourceContainer)
@@ -144,7 +145,13 @@ public class SaveData {
     public static void AddData<T> (T data)
     {
         if (data is CommentData)
+        {
+            if (data == null)
+            {
+                Debug.Log("Comment data object is null, not added to datas!");
+            }
             commentContainer.datas.Add(data as CommentData);
+        }
         if (data is TransformData)
             transformContainer.datas.Add(data as TransformData);
     }
