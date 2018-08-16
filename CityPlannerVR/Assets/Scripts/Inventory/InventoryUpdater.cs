@@ -68,13 +68,10 @@ public class InventoryUpdater : MonoBehaviour
                 if (item_int <= databaseSize)
                 {
                     PhotonSpawnableObject _spawn = spawn;
-                    Debug.Log("ButtonUP");
                     DestroyCurrent(_spawn);
                     spawn.itemInSpawner = itemData.DBAccessUP(item_int);
-                    Debug.Log("new item added");
                     item_int++;
                     spawn.InstantiateLocalItemInSpawner(spawn.itemInSpawner);
-                    Debug.Log("New crap added");
                 }
 
             }
@@ -82,10 +79,10 @@ public class InventoryUpdater : MonoBehaviour
 
         else if (item_int >= databaseSize)
         {
-            Debug.Log("ButtonUPDeactivated");
+            Debug.LogWarning("ButtonUPDeactivated");
         }
         else
-            Debug.Log("What the hell happened");
+            Debug.LogError("What the hell happened");
 
     }
 
@@ -94,7 +91,6 @@ public class InventoryUpdater : MonoBehaviour
     {
         if (item_int <= 9)
         {
-            Debug.Log("DeactivateButton");
             item_int = 9;
         }
         else if (item_int == databaseSize)
@@ -119,13 +115,11 @@ public class InventoryUpdater : MonoBehaviour
             foreach (PhotonSpawnableObject spawn in spawners)
             {
                 PhotonSpawnableObject _spawn = spawn;
-                Debug.Log("ButtonDown");
                 DestroyCurrent(_spawn);
 
                 spawn.itemInSpawner = itemData.DBAccessDown(item_int);
                 item_int++;
                 spawn.InstantiateLocalItemInSpawner(spawn.itemInSpawner);
-                Debug.Log("New crap added");
             }
         }
 
@@ -133,12 +127,9 @@ public class InventoryUpdater : MonoBehaviour
 
     public void DestroyCurrent(PhotonSpawnableObject spawnedObject)
     {
-        Debug.Log("Destroy Pushed");
-        Debug.Log("Lets Destroy");
+
         spawnedObject.DestroyItemInSpawner();
 
-
-        //}
     }
 
 }

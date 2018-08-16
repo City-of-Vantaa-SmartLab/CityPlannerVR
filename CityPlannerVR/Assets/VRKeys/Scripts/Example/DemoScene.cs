@@ -94,7 +94,7 @@ namespace VRKeys
         {
             keyboard.DisableInput();
             string temptext = text;
-            GameObject targetobject = HoverTabletManager.commentTarget;
+            GameObject targetobject = HoverTabletManager.CommentTarget;
             Comment.GenerateTextComment(temptext, targetobject, "wadap");
 
 

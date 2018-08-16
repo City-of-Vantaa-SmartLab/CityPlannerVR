@@ -10,6 +10,9 @@ using Dissonance;
 public class VoiceController : MonoBehaviour
 {
 
+
+    GameObject player;
+
     DissonanceComms comms;
     VoicePlayerState localPlayer;
     VoiceBroadcastTrigger voiceTrigger;
@@ -33,6 +36,11 @@ public class VoiceController : MonoBehaviour
 
     [HideInInspector]
     public string playerName;
+
+    /// <summary>
+    /// Indicates to player that they have muted themselves
+    /// </summary>
+    GameObject muteIndicatorObject;
 
     string whisperTarget;
     bool playerIsSpeaking = false;
@@ -62,7 +70,10 @@ public class VoiceController : MonoBehaviour
 
         indicator.SetActive(false);
 
-        inputMaster = GameObject.Find("Player").GetComponent<InputMaster>();
+        player = GameObject.Find("Player");
+        inputMaster = player.GetComponent<InputMaster>();
+        muteIndicatorObject = GameObject.Find("MuteIndicator");
+        muteIndicatorObject.SetActive(false);
 
         voiceTrigger = GetComponent<VoiceBroadcastTrigger>();
 
@@ -98,6 +109,7 @@ public class VoiceController : MonoBehaviour
             comms.IsMuted = true;
             //indikoi pelaajille mute
             //source.Play();
+            muteIndicatorObject.SetActive(true);
         }
 
         else
@@ -105,6 +117,7 @@ public class VoiceController : MonoBehaviour
             comms.IsMuted = false;
             //indikoi pelaajille unmute
             //source.Play();
+            muteIndicatorObject.SetActive(false);
         }
     }
     /// <summary>

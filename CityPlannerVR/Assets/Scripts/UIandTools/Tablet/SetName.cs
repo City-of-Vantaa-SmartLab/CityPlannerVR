@@ -32,22 +32,22 @@ public class SetName : MonoBehaviour {
 
     public void GiveNameAndFacades()
     {
-        HoverTabletManager.commentTarget = gameObject;        
+        HoverTabletManager.CommentTarget = gameObject;
 
-         if(facades.Length > 0)
-        {
-            CheckIndex();
-            //Give the facades to the button
-            ChangeFacade.facades = facades;
-            ChangeFacade.facadeIndex = facadeIndex;
-            ChangeFacade.canChangeFacade = true;
-        }
-        else
-        {
-            ChangeFacade.facades = null;
-            ChangeFacade.facadeIndex = 0;
-            ChangeFacade.canChangeFacade = false;
-        }
+        //if (facades.Length > 0)
+        //{
+        //    CheckIndex();
+        //    //Give the facades to the button
+        //    ChangeFacade.facades = facades;
+        //    ChangeFacade.facadeIndex = facadeIndex;
+        //    ChangeFacade.canChangeFacade = true;
+        //}
+        //else
+        //{
+        //    ChangeFacade.facades = null;
+        //    ChangeFacade.facadeIndex = 0;
+        //    ChangeFacade.canChangeFacade = false;
+        //}
 
         if (OnChangeColor != null)
         {

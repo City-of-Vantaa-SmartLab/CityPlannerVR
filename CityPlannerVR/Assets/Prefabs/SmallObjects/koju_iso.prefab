@@ -32,6 +32,7 @@ GameObject:
   - component: {fileID: 114122181856690814}
   - component: {fileID: 114412923353875576}
   - component: {fileID: 114469254039530692}
+  - component: {fileID: 114902901289701776}
   m_Layer: 17
   m_Name: koju_iso
   m_TagString: Spawnable
@@ -157,6 +158,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2474917abc445a64b94d68b916a22d62, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  destroyCountermax: 5
+  destroyWaitSeconds: 1
 --- !u!114 &114412923353875576
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -180,7 +183,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 54130e423e1880a428951fcf612d724e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  triggeredEvents:
+  clickedEvents:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 114412923353875576}
@@ -194,6 +197,22 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+      - m_Target: {fileID: 114902901289701776}
+        m_MethodName: ChangeToObjectPage
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+    m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
+      Culture=neutral, PublicKeyToken=null
+  unclickedEvents:
+    m_PersistentCalls:
+      m_Calls: []
     m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
       Culture=neutral, PublicKeyToken=null
   hoverInEvents:
@@ -307,3 +326,14 @@ MonoBehaviour:
   instantiationId: -1
   currentMasterID: -1
   isRuntimeInstantiated: 0
+--- !u!114 &114902901289701776
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1417077144485390}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 89bb0255020f48c4e86fdcbebaec6615, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 

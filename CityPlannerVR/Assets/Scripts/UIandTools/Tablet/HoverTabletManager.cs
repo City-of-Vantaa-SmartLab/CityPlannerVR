@@ -7,8 +7,20 @@ using UnityEngine;
 /// </summary>
 public class HoverTabletManager : MonoBehaviour {
 
+    public delegate void TargetChanged();
+    public static event TargetChanged OnTargetChanged;
+
     /// <summary> The target we want to comment or do something else with </summary>
-    public static GameObject commentTarget;
+    private static GameObject commentTarget;
+    public static GameObject CommentTarget
+    {
+        get { return commentTarget; }
+        set
+        {
+            commentTarget = value;
+            OnTargetChanged?.Invoke();
+        }
+    }
     /// <summary> Index of currently open page </summary>
     public static int openPage;
 

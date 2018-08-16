@@ -37,8 +37,8 @@ public class LoadCommentsToTablet : MonoBehaviour {
     List<AudioClip> commentClips;
     /// <summary> All the voice comments that are played in this location (i.e Prisma as only comments that are about it) </summary>
     List<string> commentsToPlayHere;
-    /// <summary> Is used to play the voice comment </summary>
-	//AudioSource audioSource;
+    /// <summary> Comments whithout a target </summary>
+	List<string> generalComments;
     ///<summary> The name of the comment and a struct that contains the name of the commenter and the position of the comment </summary>
     public Dictionary<string, VoiceComment2> commentDictionary;
 
@@ -54,7 +54,9 @@ public class LoadCommentsToTablet : MonoBehaviour {
     /// <summary> The text on a single button </summary>
     Text buttonText;
     /// <summary> The ScrollableList panel object that contains all the buttons when they are created </summary>
-    GameObject panel;
+    public GameObject panel;
+
+    public GameObject NoCommentsText;
 
     DirectoryInfo info;
     FileInfo[] fileInfo;
@@ -71,15 +73,15 @@ public class LoadCommentsToTablet : MonoBehaviour {
     GameObject commentButton;
 
     bool isFirstEnable = true;
+    bool loadNullComments = false;
 
     void Awake()
     {
         //audioSource = GetComponent<AudioSource>();
 
         commentsToPlayHere = new List<string>();
+        generalComments = new List<string>();
         commentDictionary = new Dictionary<string, VoiceComment2>();
-
-        panel = GameObject.Find("ScrollableList");
 
         commentButton = (GameObject)Resources.Load("VoiceComment");
 
@@ -91,9 +93,28 @@ public class LoadCommentsToTablet : MonoBehaviour {
         //If this is done before Awake, don't load comments
         if (!isFirstEnable)
         {
+            if(gameObject.name == "CommentListening")
+            {
+                loadNullComments = true;
+            }
+            else
+            {
+                loadNullComments = false;
+            }
+
             LoadComments();
         }
         isFirstEnable = false;
+    }
+
+    private void OnDisable()
+    {
+        NoCommentsText.SetActive(false);
+        //Destroy all the buttons because they are created again anyway
+        for (int i = 0; i < panel.transform.childCount; i++)
+        {
+            Destroy(panel.transform.GetChild(i).gameObject);
+        }
     }
 
     /// <summary>
@@ -166,14 +187,13 @@ public class LoadCommentsToTablet : MonoBehaviour {
 
         yield return null;
 
-        if (commentsToPlayHere.Count > 0)
+        if (commentsToPlayHere.Count > 0 || generalComments.Count > 0)
         {
             StartCoroutine(CreateButtons());
         }
         else
         {
-            //TODO: Joku teksti indikoimaan, ettei kommentteja ole?
-            Debug.LogWarning("There is no comments for this building");
+            NoCommentsText.SetActive(true);
         }
     }
 
@@ -182,10 +202,15 @@ public class LoadCommentsToTablet : MonoBehaviour {
     /// </summary>
     void GetAllCommentsForObjects()
     {
-        //commentsToPlayHere.Clear();
+        generalComments.Clear();
+        commentsToPlayHere.Clear();
         foreach (KeyValuePair<string, VoiceComment2> comment in commentDictionary)
         {
-            if (comment.Value.targetName == HoverTabletManager.commentTarget.name)
+            if(HoverTabletManager.CommentTarget == null && comment.Value.targetName == "Empty")
+            {
+                generalComments.Add(comment.Key);
+            }
+            else if (HoverTabletManager.CommentTarget != null && comment.Value.targetName == HoverTabletManager.CommentTarget.name)
             {
                 commentsToPlayHere.Add(comment.Key);
             }
@@ -211,7 +236,18 @@ public class LoadCommentsToTablet : MonoBehaviour {
     /// </summary>
     IEnumerator CreateButtons()
     {
-        for (int i = 0; i < commentsToPlayHere.Count; i++)
+        int lenght;
+
+        if (loadNullComments)
+        {
+            lenght = generalComments.Count;
+        }
+        else
+        {
+            lenght = commentsToPlayHere.Count;
+        }
+
+        for (int i = 0; i < lenght; i++)
         {
             buttonImage = Instantiate(commentButton);
             playComment = buttonImage.GetComponent<PlayComment>();
@@ -219,10 +255,19 @@ public class LoadCommentsToTablet : MonoBehaviour {
             buttonImage.transform.localPosition = Vector3.zero;
             buttonImage.transform.localRotation = Quaternion.identity;
             buttonImage.transform.localScale = Vector3.one * 10;
-            buttonText = buttonImage.GetComponentInChildren<Text>();
-            buttonText.text = commentsToPlayHere[i];
+            buttonText = buttonImage.GetComponentInChildren<Text>();            
 
-            GetCommentClip(commentsToPlayHere[i]);
+            if (loadNullComments)
+            {
+                buttonText.text = commentDictionary[generalComments[i]].commenterName + ":";
+                GetCommentClip(generalComments[i]);
+            }
+            else
+            {
+                buttonText.text = commentDictionary[commentsToPlayHere[i]].commenterName + ":";
+                GetCommentClip(commentsToPlayHere[i]);
+            }
+    
         }
 
         yield return null;

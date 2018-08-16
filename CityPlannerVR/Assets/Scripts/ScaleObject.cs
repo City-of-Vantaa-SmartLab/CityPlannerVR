@@ -55,7 +55,7 @@ public class ScaleObject : MonoBehaviour
         {
             changeTeleport.ChangeProperties();
             ScaleNetworkedPlayerAvatar();
-            ScalePoints();
+            //ScalePoints();
             ChangeGravity();
         }
     }

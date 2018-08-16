@@ -72,7 +72,7 @@ public class OpenCommentTool : MonoBehaviour {
 
         CommentToolManager commentToolManager;
         commentToolManager = commentTool.GetComponent<CommentToolManager>();
-        commentToolManager.targetName = HoverTabletManager.commentTarget.name;
+        commentToolManager.targetName = HoverTabletManager.CommentTarget.name;
     }
 
     public void HideCommentTool()
