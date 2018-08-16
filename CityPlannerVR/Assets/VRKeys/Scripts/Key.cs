@@ -82,6 +82,9 @@ namespace VRKeys {
 		}
 
 		public void OnTriggerEnter (Collider other) {
+
+            Debug.Log("TRIGGERED");
+
 			if (isPressing || disabled || keyboard.disabled || !keyboard.initialized) {
 				return;
 			}
