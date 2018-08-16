@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using System.IO;
+using System.Threading.Tasks;
 
 /// <summary>
 /// The middleman between Comment and SaveData scripts. Manages local lists of comments in the depository.
@@ -48,48 +49,63 @@ public class SaveAndLoadComments : MonoBehaviour
     //Use eg. laserbutton to call the methods below
     public void Save()
     {
-        SaveData.SaveDatas(pathName, SaveData.commentContainer);
-        //SaveData.ClearContainer(SaveData.commentContainer);
-        SaveToDatabase();
+        Task saveTask = new Task(() => SaveToDatabase());
+        saveTask.Start();
+        //SaveToDatabase();
     }
 
     public void Load()
     {
-        StartCoroutine(LoadFromExternalSource(true));
-        //LoadFromExternalSource(true);
+        Task loadTask = new Task(() => LoadFromExternalSource(true));
+        loadTask.Start();
 
-        //SaveData.LoadItems<CommentData>(pathName);
+        //taskA.Wait();
+
+        //StartCoroutine(LoadFromExternalSource(true));
+
+        //LoadFromExternalSource(true);
     }
 
     #region Database accessing
 
     public void SaveToDatabase()
     {
+        pathName = folderPathName + slash + fileName + fileExtender;
+        SaveData.SaveDatas(pathName, SaveData.commentContainer);
+        //SaveData.ClearContainer(SaveData.commentContainer);
+        Debug.Log("Starting to save...");
         //pathName = folderPathName + slash + fileName + fileExtender;
         MongoDBAPI.UseDefaultConnections();
         MongoDBAPI.ImportJSONFileToDatabase(MongoDBAPI.commentCollection, pathName);
+        Debug.Log("Saving done!");
     }
 
-    IEnumerator LoadFromExternalSource(bool useDatase)
+    private void LoadFromExternalSource(bool useDatase)
     {
-        int countdown = 5;
-        while (countdown > 0)
-        {
-            Debug.Log("Starting to load in " + countdown + " seconds...");
-            countdown--;
-            yield return new WaitForSeconds(1f);
-        }
-
-        Debug.Log("Starting to load...");
-        MongoDBAPI.UseDefaultConnections();
-        MongoDBAPI.ExportJSONFileFromDatabase(MongoDBAPI.commentCollection, pathName);
-        //MongoDBAPI.ExportContainersFromDatabase<CommentData>(MongoDBAPI.commentCollection);
-
+        //int countdown = 5;
+        //while (countdown > 0)
+        //{
+        //    Debug.Log("Starting to load in " + countdown + " seconds...");
+        //    countdown--;
+        //    yield return new WaitForSeconds(1f);
+        //}
         pathName = folderPathName + slash + fileName + fileExtender;
-        SaveData.LoadItems<CommentData>(pathName);
-        Debug.Log("Loading done!");
+        if (useDatase)
+        {
+            Debug.Log("Starting to load...");
+            MongoDBAPI.UseDefaultConnections();
+            MongoDBAPI.ExportJSONFileFromDatabase<CommentData>(MongoDBAPI.commentCollection, pathName);
+            //MongoDBAPI.ExportContainersFromDatabase<CommentData>(MongoDBAPI.commentCollection);
 
-        yield return null;
+            //SaveData.LoadItems<CommentData>(pathName);
+            Debug.Log("Loading done!");
+        }
+        else
+            SaveData.LoadItems<CommentData>(pathName);
+
+
+
+        //yield return null;
     }
 
 
