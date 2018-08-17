@@ -116,7 +116,7 @@ public class ItemContainer : MonoBehaviour {
         else if (tool == ToolManager.ToolType.Camera)
             prefab = (GameObject)Resources.Load("Prefabs/ToolHolders/CameraHolder");
         else if (tool == ToolManager.ToolType.RemoteGrabber)
-            prefab = (GameObject)Resources.Load("Prefabs/ToolHolders/RemoteGrabberPlaceholder");
+            prefab = (GameObject)Resources.Load("Prefabs/ToolHolders/MagnetHolder");
 
 
 
@@ -129,10 +129,12 @@ public class ItemContainer : MonoBehaviour {
         toolHolder = Instantiate(prefab);
 
         Vector3 localPos = toolHolder.transform.localPosition;
+        Quaternion localRot = toolHolder.transform.localRotation;
         toolHolder.transform.parent = transform;
         toolHolder.transform.localScale = Vector3.one;
-        toolHolder.transform.localRotation = Quaternion.identity;
+        //toolHolder.transform.localRotation = Quaternion.identity;
         toolHolder.transform.localPosition = localPos;
+        toolHolder.transform.localRotation = localRot;
     }
 
     public void Test()
