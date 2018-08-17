@@ -71,6 +71,8 @@ namespace VRKeys {
 			transform.localPosition = defaultPosition;
 			meshRenderer.material = inactiveMat;
 
+            GetComponent<BoxCollider>().isTrigger = true;
+
 			OnEnableExtras ();
 		}
 
@@ -82,8 +84,6 @@ namespace VRKeys {
 		}
 
 		public void OnTriggerEnter (Collider other) {
-
-            Debug.Log("TRIGGERED");
 
 			if (isPressing || disabled || keyboard.disabled || !keyboard.initialized) {
 				return;
