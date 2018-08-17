@@ -162,13 +162,13 @@ public class MongoDBAPI {
 
     public static void TestMethod1(string filepath, string filenameExtended)
     {
-        Debug.Log("Tallennetaan");
+        Debug.Log("Tallennetaan " + filepath);
         ImportBinaryFileToDatabase(imageCollection, filepath, filenameExtended);
     }
 
     public static void TestMethod2(string filepath)
     {
-        Debug.Log("Ladataan");
+        Debug.Log("Ladataan " + filepath);
         ExportBinaryFileFromDatabase(imageCollection, filepath);
     }
 
@@ -205,13 +205,19 @@ public class MongoDBAPI {
             var bytes = File.ReadAllBytes(filepath);
 
             BsonBinaryData binaryData = new BsonBinaryData(bytes);
-            //document.bsonBinaryData = vladislav;
-            BsonValue urpuus = binaryData.AsBsonValue;
-            //BsonDocument rawdocument = new BsonDocument(filenameExtended, vladislav.AsBsonValue);
-            //BsonDocument document = binaryData.ToBsonDocument(); //binarydata value cannot be added to the root level of bson document
-            BsonElement element = new BsonElement("bytes", binaryData.AsBsonValue);
-            BsonDocument document = new BsonDocument(element);
+            List<BsonElement> elementList = new List<BsonElement>();
+            //BsonElement elementByte = new BsonElement("bytes", binaryData.AsBsonValue);
+            BsonElement elementByte = new BsonElement("bytes", binaryData);
+            elementList.Add(elementByte);
+            if (string.IsNullOrEmpty(filenameExtended))
+            {
+                Debug.Log("Filename is missing!");
+                filenameExtended = "N/A";
+            }
+            BsonElement elementFilename = new BsonElement("filename", BsonValue.Create(filenameExtended));
+            elementList.Add(elementFilename);
 
+            BsonDocument document = new BsonDocument(elementList);
             targetCollection.InsertOne(document);
 
         }
@@ -229,22 +235,62 @@ public class MongoDBAPI {
             filter = new BsonDocument();
         if (sort == null)
             sort = Builders<BsonDocument>.Sort.Descending("_id");
-        if (projection == null || !onlyExcludeID)
-            projection = Builders<BsonDocument>.Projection.Exclude("_id");
+        //if (projection == null || !onlyExcludeID)
+        //    projection = Builders<BsonDocument>.Projection.Exclude("_id");
+        if (projection == null)
+            projection = Builders<BsonDocument>.Projection.Include("bytes");
 
-        var cursor = targetCollection.Find(filter).Project(projection).Sort(sort).ToCursor();
-        foreach (var document in cursor.ToEnumerable())
+        var mongoCursor = targetCollection.Find(filter).Project(projection).Sort(sort).ToCursor();  //With or without cursor, still missing something
+        var document = mongoCursor.ToBsonDocument();  //This is the likely culprit
+
+        //foreach(var document in mongoCursor.ToEnumerable())
+        //{
+
+        //}
+
+        BsonElement wut = new BsonElement();
+        if (document == null)
         {
-            using (var streamWriter = new StreamWriter(filepath))
-            using (var stringWriter = new StringWriter())
-            //using (var jsonWriter = new JsonWriter(stringWriter))
-            {
-                //var context = BsonSerializationContext.CreateRoot(jsonWriter);
-                //targetCollection.DocumentSerializer.Serialize(context, document);
-                var line = stringWriter.ToString();
-                streamWriter.WriteLine(line);
-            }
+            Debug.Log("Document is null!");
+            return;
         }
+        //document.TryGetElement("bytes", out wut);
+        wut = document.FirstOrDefault();
+        if (wut == null)
+        {
+            Debug.Log("Wut is null!");
+            return;
+        }
+        if (wut.Value == null)
+        {
+            Debug.Log("Wut value is null!");
+            return;
+        }
+        Debug.Log("Wut is it: " + wut.Name);
+        Debug.Log("Wut has it: " + wut.Value);
+        //var wat = BsonBinaryData.Create(wut.Value);
+        var wat = wut.Value.AsBsonBinaryData;
+        //var bytes = wut.Value.AsBsonBinaryData.Bytes;
+        var bytes = wat.Bytes;
+
+        if (bytes == null)
+            Debug.Log("Bytes are null!");
+        else
+            File.WriteAllBytes(filepath, bytes);
+
+        //var cursor = targetCollection.Find(filter).Project(projection).Sort(sort).ToCursor();
+        //foreach (var document in cursor.ToEnumerable())
+        //{
+        //    using (var streamWriter = new StreamWriter(filepath))
+        //    using (var stringWriter = new StringWriter())
+        //    //using (var jsonWriter = new JsonWriter(stringWriter))
+        //    {
+        //        //var context = BsonSerializationContext.CreateRoot(jsonWriter);
+        //        //targetCollection.DocumentSerializer.Serialize(context, document);
+        //        var line = stringWriter.ToString();
+        //        streamWriter.WriteLine(line);
+        //    }
+        //}
     }
 
     public static void ExportJSONFileFromDatabase<T>(IMongoCollection<BsonDocument> targetCollection, string filepath)

@@ -40,8 +40,9 @@ public class SaveAndLoadComments : MonoBehaviour
     {
         Comment comment = CreateComment();
         comment.data = data;
-        //comment.LoadData();
         comment.SortAndAddToLocalList();
+        if (comment.data.commentType == Comment.CommentType.Voice)
+            RecordComment.GenerateComment(data.userName, data.commentName, data.positions, data.commentedObjectName);
         return comment;
     }
 
