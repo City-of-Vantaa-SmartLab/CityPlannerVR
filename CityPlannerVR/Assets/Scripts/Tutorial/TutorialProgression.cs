@@ -7,9 +7,9 @@ public class TutorialProgression : MonoBehaviour
 
  
     public int textlistsize1;
-    public GameObject buttontext1;
-    public GameObject buttontext2;
-    public GameObject mirrorLights;
+    //public GameObject buttontext1;
+    //public GameObject buttontext2;
+    //public GameObject mirrorLights;
     public GameObject tutparent;
     public GameObject yesBut;
     public AudioSource blop;
@@ -96,8 +96,8 @@ public class TutorialProgression : MonoBehaviour
             part_time.SetActive(true);
             lightOn = true;
             textLight.enabled = lightOn;
-            mirrorLights.SetActive(true);
-            buttontext1.SetActive(true);
+            //mirrorLights.SetActive(true);
+            //buttontext1.SetActive(true);
             text_int++;
         }
         
@@ -105,8 +105,8 @@ public class TutorialProgression : MonoBehaviour
         {
             if (yesButton == true)
             {
-                buttontext2.SetActive(false);
-                buttontext1.SetActive(true);
+                //buttontext2.SetActive(false);
+                //buttontext1.SetActive(true);
                 if (text_int == 1)
                 {
                     text_int = 3;
@@ -132,8 +132,8 @@ public class TutorialProgression : MonoBehaviour
                     part_time.SetActive(false);
                     part_time = tutexts[text_int+1];
                     part_time.SetActive(true);
-                    buttontext1.SetActive(false);
-                    buttontext2.SetActive(true);
+                    //buttontext1.SetActive(false);
+                    //buttontext2.SetActive(true);
 					NextAvatar();
                     modelcycle = true;
                 }
@@ -144,8 +144,8 @@ public class TutorialProgression : MonoBehaviour
                     part_time.SetActive(false);
                     part_time = tutexts[text_int];
                     part_time.SetActive(true);
-                    buttontext1.SetActive(false);
-                    buttontext2.SetActive(true);
+                    //buttontext1.SetActive(false);
+                    //buttontext2.SetActive(true);
                     NextAvatar();
                 }
 
@@ -155,8 +155,8 @@ public class TutorialProgression : MonoBehaviour
                     part_time.SetActive(false);
                     part_time = tutexts[text_int+1];
                     part_time.SetActive(true);
-                    buttontext1.SetActive(false);
-                    buttontext2.SetActive(true);
+                    //buttontext1.SetActive(false);
+                    //buttontext2.SetActive(true);
                     NextAvatar();
                 }
             }
