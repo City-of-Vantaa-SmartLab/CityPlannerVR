@@ -127,7 +127,7 @@ namespace VRKeys {
 		/// <summary>
 		/// Initialization.
 		/// </summary>
-		private IEnumerator Start () {
+		public IEnumerator Start () {
             Debug.Log("Start");
 			yield return StartCoroutine (DoSetLanguage (keyboardLayout));
 
@@ -356,7 +356,7 @@ namespace VRKeys {
 		/// </summary>
 		/// <param name="layout">New language.</param>
 		public void SetLayout (KeyboardLayout layout) {
-			//StartCoroutine (DoSetLanguage (layout));
+			StartCoroutine (DoSetLanguage (layout));
 		}
 
 		private IEnumerator DoSetLanguage (KeyboardLayout lang) {
