@@ -107,6 +107,16 @@ public class ScrollbarManager : MonoBehaviour {
         }
     }
 
+    private float CalculateIncrement()
+    {
+        float increment = 0;
+
+        //                                   The first child of this object is the object that has all the comments as children
+        increment = (verticalScrollbar.size / transform.GetChild(0).transform.childCount) * 2;
+
+        return increment;
+    }
+
     public void ScrollRight(float increment)
     {
         if (xValue + increment > 1)
@@ -126,18 +136,18 @@ public class ScrollbarManager : MonoBehaviour {
     }
     public void ScrollDown(float increment)
     {
-        if (yValue - increment < 0)
+        if (yValue - CalculateIncrement() < 0)
             yValue = 0;
         else
-            yValue -= increment;
+            yValue -= CalculateIncrement();
         OnSliderUpdate(xValue, yValue);
     }
     public void ScrollUp(float increment)
     {
-        if (yValue + increment > 1)
+        if (yValue + CalculateIncrement() > 1)
             yValue = 1;
         else
-            yValue += increment;
+            yValue += CalculateIncrement();
         OnSliderUpdate(xValue, yValue);
     }
 
