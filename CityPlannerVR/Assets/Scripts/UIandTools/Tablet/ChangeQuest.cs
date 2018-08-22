@@ -4,12 +4,20 @@ using UnityEngine;
 
 public class ChangeQuest : MonoBehaviour {
 
-    public GameObject QuestObject;
+    public GameObject[] QuestObjects;
+    GameObject QuestObject;
     GameObject[] Quests;
     int currentQuestIndex = 0;
 
+    PhotonGameManager gameManager;
+
     private void Start()
     {
+        gameManager = GameObject.Find("GameManager").GetComponent<PhotonGameManager>();
+
+        QuestObject = QuestObjects[gameManager.GetMissionValue()];
+        QuestObject.SetActive(true);
+
         Quests = new GameObject[QuestObject.transform.childCount];
 
         for (int i = 0; i < Quests.Length; i++)
