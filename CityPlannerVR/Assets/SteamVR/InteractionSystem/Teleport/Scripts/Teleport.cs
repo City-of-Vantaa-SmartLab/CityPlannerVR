@@ -123,10 +123,15 @@ namespace Valve.VR.InteractionSystem
 		public static SteamVR_Events.Action< TeleportMarkerBase > PlayerPreAction( UnityAction< TeleportMarkerBase > action ) { return new SteamVR_Events.Action< TeleportMarkerBase >( PlayerPre, action ); }
 
         //------Tarun koodia-------------------------------
+        [Header("Tarun juttuja")]
         public GameObject scaleToSmall;
-		ScaleObject[] scalePlayer;
-		//-------------------------------------------------
-		private static Teleport _instance;
+		ScaleObject[] scalePlayerSmall;
+
+        public GameObject scaleToBig;
+        ScaleObject[] scalePlayerBig;
+        CheckPlayerSize playerSize;
+        //-------------------------------------------------
+        private static Teleport _instance;
 		public static Teleport instance
 		{
 			get
@@ -190,7 +195,9 @@ namespace Valve.VR.InteractionSystem
             //Invoke( "ShowTeleportHint", 5.0f );
 
             //------Tarun koodia------------------------------
-            scalePlayer = scaleToSmall.GetComponents<ScaleObject>();
+            playerSize = GameObject.Find("Player").GetComponent<CheckPlayerSize>();
+            scalePlayerSmall = scaleToSmall.GetComponents<ScaleObject>();
+            scalePlayerBig = scaleToBig.GetComponents<ScaleObject>();
             //------------------------------------------------
 
         }
@@ -872,10 +879,21 @@ namespace Valve.VR.InteractionSystem
 			if ( teleportPoint != null )
 			{
 				teleportPosition = teleportPoint.transform.position;
+
                 //--------------Tarun koodia-------------------------------------------
-                for (int i = 0; i < scalePlayer.Length; i++)
+                if (playerSize.isSmall)
                 {
-                    scalePlayer[i].ScalePlayer();
+                    for (int i = 0; i < scalePlayerBig.Length; i++)
+                    {
+                        scalePlayerBig[i].ScalePlayer();
+                    }
+                }
+                else
+                {
+                    for (int i = 0; i < scalePlayerSmall.Length; i++)
+                    {
+                        scalePlayerSmall[i].ScalePlayer();
+                    }
                 }
 				//---------------------------------------------------------------------
 
