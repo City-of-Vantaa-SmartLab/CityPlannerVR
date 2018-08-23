@@ -13,6 +13,7 @@ public class ScrollbarManager : MonoBehaviour {
     public ScrollRect scrollRect;
     public ThrottleManager verticalThrottle;
     public ThrottleManager horizontalThrottle;
+    public GameObject ObjectList;
     public bool doNotUseScrollbars;
     private float xValue;
     private float yValue;
@@ -30,7 +31,7 @@ public class ScrollbarManager : MonoBehaviour {
         if (!scrollRect)
             scrollRect = gameObject.GetComponent<ScrollRect>();
         if (sensitivityVertical == 0)
-            sensitivityVertical = 0.1f;
+            sensitivityVertical = 0.01f;
     }
 
     // Update is called once per frame
@@ -70,12 +71,12 @@ public class ScrollbarManager : MonoBehaviour {
                     if (temp > 0)
                     {
                         temp = (temp * sensitivityVertical) / verticalThrottle.drive.maxAngle;
-                        ScrollUp(temp);
+                        ScrollUpOld(temp);
                     }
                     else
                     {
                         temp = (temp * sensitivityVertical) / verticalThrottle.drive.minAngle;
-                        ScrollDown(temp);
+                        ScrollDownOld(temp);
                     }
                     
 
@@ -112,7 +113,7 @@ public class ScrollbarManager : MonoBehaviour {
         float increment = 0;
 
         //                                   The first child of this object is the object that has all the comments as children
-        increment = (verticalScrollbar.size / transform.GetChild(0).transform.childCount) * 2;
+        increment = (verticalScrollbar.size / ObjectList.transform.childCount) * 2;
 
         return increment;
     }
@@ -150,6 +151,26 @@ public class ScrollbarManager : MonoBehaviour {
             yValue += CalculateIncrement();
         OnSliderUpdate(xValue, yValue);
     }
+
+    //-------------------
+    public void ScrollDownOld(float increment)
+    {
+        if (yValue - increment < 0)
+            yValue = 0;
+        else
+            yValue -= increment;
+        OnSliderUpdate(xValue, yValue);
+    }
+    public void ScrollUpOld(float increment)
+    {
+        if (yValue + increment > 1)
+            yValue = 1;
+        else
+            yValue += increment;
+        OnSliderUpdate(xValue, yValue);
+    }
+
+    //---------------
 
     public void OnSliderUpdate(float xCoord, float yCoord)
     {
