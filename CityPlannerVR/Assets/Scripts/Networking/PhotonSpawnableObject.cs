@@ -204,11 +204,12 @@ public class PhotonSpawnableObject : MonoBehaviour {
             Debug.LogWarning("Failed finding correct hand!");
 		}
 
-	/*	if (hand != null) {
-			hand.AttachObject (clone);
-		}*/
-
 		Debug.LogWarning ("Real item instantiated");
+		List<string> info = new List<string>();
+		info.Add ("itemName");
+		info.Add (item.name);
+		GameObject.Find ("GameManager").GetComponent<Logger> ().LogActionLine ("ItemCreated", info);
+
 	}
 
     public void DestroyItemInSpawner()

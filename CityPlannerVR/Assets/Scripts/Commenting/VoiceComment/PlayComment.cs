@@ -45,6 +45,11 @@ public class PlayComment : MonoBehaviour {
 
         audioSource.PlayOneShot(comment);
 
+		List<string> info = new List<string>();
+		info.Add ("commentName");
+		info.Add ("name");
+		GameObject.Find ("GameManager").GetComponent<Logger> ().LogActionLine ("PlayCommentClicked", null);
+
         StartCoroutine(IsAudioFinished());
     }
 
@@ -55,6 +60,8 @@ public class PlayComment : MonoBehaviour {
         pauseButton.SetActive(false);
 
         audioSource.Pause();
+
+		GameObject.Find ("GameManager").GetComponent<Logger> ().LogActionLine ("PauseCommentClicked", null);
     }
 
     IEnumerator IsAudioFinished()
@@ -73,5 +80,7 @@ public class PlayComment : MonoBehaviour {
         playButton.SetActive(true);
         pauseButton.SetActive(false);
         slider.value = 0;
+
+		GameObject.Find ("GameManager").GetComponent<Logger> ().LogActionLine ("PlayingCommentEnded", null);
     }
 }
