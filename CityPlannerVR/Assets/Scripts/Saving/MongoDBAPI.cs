@@ -1,17 +1,12 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-using MongoDB.Bson;
+﻿using MongoDB.Bson;
 using MongoDB.Bson.IO;
 using MongoDB.Bson.Serialization;
 using MongoDB.Driver;
-using MongoDB.Driver.Core;
-using System.Threading;
-using System.Threading.Tasks;
-using System.Text;
-using System.Linq;
-using System.IO;
 using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
+using UnityEngine;
 
 
 public class MongoDBAPI {
@@ -53,6 +48,7 @@ public class MongoDBAPI {
     private static string transformColName = "transforms";
     private static string imageColName = "images";
     private static string voiceColName = "voicefiles";
+    private static char slash = Path.DirectorySeparatorChar;
 
 
 
@@ -223,74 +219,145 @@ public class MongoDBAPI {
         }
     }
 
-    public static void ExportBinaryFileFromDatabase(IMongoCollection<BsonDocument> targetCollection, string filepath)
+    public static void ExportBinaryFileFromDatabase(IMongoCollection<BsonDocument> targetCollection, string folderPathName)
     {
-        ExportBinaryFileFromDatabase(null, null, null, targetCollection, filepath, true);
+        ExportBinaryFileFromDatabase(null, null, null, targetCollection, folderPathName, true);
     }
 
+    //Clean obsolete comments away later!
     public static void ExportBinaryFileFromDatabase(FilterDefinition<BsonDocument> filter, SortDefinition<BsonDocument> sort,
-    ProjectionDefinition<BsonDocument> projection, IMongoCollection<BsonDocument> targetCollection, string filepath, bool onlyExcludeID)
+    ProjectionDefinition<BsonDocument> projection, IMongoCollection<BsonDocument> targetCollection, string folderPathName, bool onlyExcludeID)
     {
         if (filter == null)
             filter = new BsonDocument();
         if (sort == null)
             sort = Builders<BsonDocument>.Sort.Descending("_id");
-        //if (projection == null || !onlyExcludeID)
-        //    projection = Builders<BsonDocument>.Projection.Exclude("_id");
-        if (projection == null)
-            projection = Builders<BsonDocument>.Projection.Include("bytes");
+        if (projection == null || onlyExcludeID)
+            projection = Builders<BsonDocument>.Projection.Exclude("_id");
+        //if (projection == null)
+        //    projection = Builders<BsonDocument>.Projection.Include("bytes");
 
         var mongoCursor = targetCollection.Find(filter).Project(projection).Sort(sort).ToCursor();  //With or without cursor, still missing something
         var document = mongoCursor.ToBsonDocument();  //This is the likely culprit
 
-        //foreach(var document in mongoCursor.ToEnumerable())
-        //{
-
-        //}
-
-        BsonElement wut = new BsonElement();
         if (document == null)
         {
             Debug.Log("Document is null!");
             return;
         }
-        //document.TryGetElement("bytes", out wut);
-        wut = document.FirstOrDefault();
-        if (wut == null)
-        {
-            Debug.Log("Wut is null!");
-            return;
-        }
-        if (wut.Value == null)
-        {
-            Debug.Log("Wut value is null!");
-            return;
-        }
-        Debug.Log("Wut is it: " + wut.Name);
-        Debug.Log("Wut has it: " + wut.Value);
-        //var wat = BsonBinaryData.Create(wut.Value);
-        var wat = wut.Value.AsBsonBinaryData;
-        //var bytes = wut.Value.AsBsonBinaryData.Bytes;
-        var bytes = wat.Bytes;
 
-        if (bytes == null)
-            Debug.Log("Bytes are null!");
-        else
-            File.WriteAllBytes(filepath, bytes);
+        //VIHDOINKIN itse päättelemällä prkl dokumentaatio on *****
+        foreach (var doc in mongoCursor.ToEnumerable())
+        {
+            byte[] urpuus = { 0 };
+            BsonBinaryData elementBytes = new BsonBinaryData(urpuus);
+            string filename = "";
 
-        //var cursor = targetCollection.Find(filter).Project(projection).Sort(sort).ToCursor();
-        //foreach (var document in cursor.ToEnumerable())
-        //{
-        //    using (var streamWriter = new StreamWriter(filepath))
-        //    using (var stringWriter = new StringWriter())
-        //    //using (var jsonWriter = new JsonWriter(stringWriter))
-        //    {
-        //        //var context = BsonSerializationContext.CreateRoot(jsonWriter);
-        //        //targetCollection.DocumentSerializer.Serialize(context, document);
-        //        var line = stringWriter.ToString();
-        //        streamWriter.WriteLine(line);
-        //    }
-        //}
+            try
+            {
+                foreach (var element in doc.Elements)
+                {
+                    if (element.Name == "bytes")
+                    {
+                        elementBytes = element.Value.AsBsonBinaryData;
+                    }
+                    if (element.Name == "filename")
+                    {
+                        filename = element.Value.AsString;
+                    }
+                }
+
+                var bytes = (byte[])elementBytes;
+                if (string.IsNullOrEmpty(filename))
+                    Debug.Log("Filename is empty!");
+                else
+                    File.WriteAllBytes((folderPathName + slash + filename), bytes);
+
+            }
+            catch (Exception ex)
+            {
+                Debug.Log(filename+ " has error with message" + ex.Message);
+            }
+
+        }
+
+        //BsonElement wut = new BsonElement();
+
+        ////document.TryGetElement("bytes", out wut);
+        //wut = document.FirstOrDefault();
+        ////if (wut == null)
+        ////{
+        ////    Debug.Log("Wut is null!");
+        ////    return;
+        ////}
+        ////if (wut.Value == null)
+        ////{
+        ////    Debug.Log("Wut value is null!");
+        ////    return;
+        ////}
+        ////Debug.Log("Wut is it: " + wut.Name);
+        ////Debug.Log("Wut has it: " + wut.Value);
+        //////var wat = BsonBinaryData.Create(wut.Value);
+
+        //////using (var stream = File.OpenWrite(filepath))
+        //////using (var writer = new BsonBinaryWriter(stream))
+        //////{
+        //////    writer.WriteStartDocument();
+        //////    writer.writename
+        //////}
+
+
+        //////BsonReader bsonReader;
+        //////bsonReader.ReadStartDocument();
+        //////var ihmeBytes[] = bsonReader.ReadBytes(wut.Value);
+
+        ////BsonDeserializationContext context = BsonDeserializationContext.CreateRoot(bsonReader.  );
+        ////BsonWriter bsonWriter;
+        ////var context = BsonSerializationContext.CreateRoot(bsonWriter);
+        ////BsonStringSerializer stringSerializer = new BsonStringSerializer();
+        ////stringSerializer.Deserialize(context);
+
+        //////var wat = wut.Value.AsBsonBinaryData;
+
+        ////Debug.Log("Menee hermot");
+        //////var bytes = wut.Value.AsBsonBinaryData.Bytes;
+        ////var bytes = wat.Bytes;
+
+        ////if (bytes == null)
+        ////    Debug.Log("Bytes are null!");
+        ////else
+        ////    File.WriteAllBytes(filepath, bytes);
+
+        ////Debug.Log("Getting desperate");
+        //////var bsonBinaryData = wut.Value.AsBsonBinaryData;
+        ////var bsonBinaryData = BsonBinaryData.Create(wut.Value);
+
+
+
+        ////Debug.Log("Please work");
+        ////var binary = (byte[])bsonBinaryData;
+
+        //////var mitaIhmetta = BsonSerializer.Deserialize<Byte[]>(wut.Value.AsBsonBinaryData);
+        //////if (mitaIhmetta == null)
+        //////    Debug.Log("Bytes are null!");
+        //////else
+        //////    File.WriteAllBytes(filepath, mitaIhmetta);
+
+        ////if (binary == null)
+        ////    Debug.Log("Bytes are null!");
+        ////else
+        ////    File.WriteAllBytes(filepath, binary);
+
+        //byte[] bytes = Utf8Encodings.Lenient.GetBytes(wut.Value.AsString);
+
+        //if (bytes == null)
+        //    Debug.Log("Bytes are null!");
+        //else
+        //    File.WriteAllBytes(filepath, bytes);
+
+
+
+
     }
 
     public static void ExportJSONFileFromDatabase<T>(IMongoCollection<BsonDocument> targetCollection, string filepath)
