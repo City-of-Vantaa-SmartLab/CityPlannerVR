@@ -30,7 +30,7 @@ namespace VRKeys
         public GameObject hoverTablet;
 
         public bool keyboardOn;
-
+        
         /// <summary>
         /// Show the keyboard with a custom input message. Attaching events dynamically,
         /// but you can also use the inspector.
@@ -40,8 +40,9 @@ namespace VRKeys
         private void Start()
         {
             vrKeyboard = GameObject.Find("VRKeys");
-            vrKeyboard.SetActive(false);
-            keyboardOn = false;
+            
+            //vrKeyboard.SetActive(false);
+            //keyboardOn = false;
             Debug.Log("Keyboard found");
         }
 

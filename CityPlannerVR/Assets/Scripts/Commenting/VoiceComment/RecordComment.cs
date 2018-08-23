@@ -197,6 +197,7 @@ public class RecordComment : MonoBehaviour
                 //Debug.Log("Recording started");
                 //-----canvas.SetActive(true);
                 RecordTimerCoroutine = StartCoroutine(RecordTimer());
+				GameObject.Find ("GameManager").GetComponent<Logger> ().LogActionLine ("CommentRecordingStarted", null);
             }
         }
         else
@@ -279,6 +280,7 @@ public class RecordComment : MonoBehaviour
                     //Enable voice chat again
                     voiceTrigger.Mode = Dissonance.CommActivationMode.VoiceActivation;
                 }
+				GameObject.Find ("GameManager").GetComponent<Logger> ().LogActionLine ("CommentRecordingStopped", null);
             }
         }
     }

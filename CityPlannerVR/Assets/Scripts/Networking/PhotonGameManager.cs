@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using UnityEngine.UI;
 
 public enum NetworkState
 {
@@ -49,6 +50,8 @@ public class PhotonGameManager : MonoBehaviour {
     public Vector3 playerSpawnPoint3;
     public Vector3 playerSpawnPoint4;
 
+	public PhotonConnection connection;
+
     #endregion
 
     #region Private Variables
@@ -56,12 +59,12 @@ public class PhotonGameManager : MonoBehaviour {
     //Track current network state
     NetworkState state = NetworkState.DISCONNECTED;
 
-	public PhotonConnection connection;
-
 	// This client's version number.
 	// Users are separated from each other by gameversion 
 	// (which allows you to make breaking changes).
 	string gameVersion = "1";
+
+	private int missionValue = 0;
 
 	#endregion
 
@@ -180,6 +183,21 @@ public class PhotonGameManager : MonoBehaviour {
 	public NetworkState CurrentNetworkState()
 	{
 		return state;
+	}
+
+	public void ChangeMissionValue()
+	{
+		this.missionValue = GameObject.Find ("MissionDropdown").GetComponent<Dropdown> ().value;
+		//if (newValue >= 0 && newValue <= MAX_MISSION_VALUE) {
+		//	this.missionValue = newValue;
+		//}
+
+		Debug.LogWarning ("Mission value changed to: " + this.missionValue);
+	}
+
+	public int GetMissionValue()
+	{
+		return this.missionValue;
 	}
 
 	#endregion

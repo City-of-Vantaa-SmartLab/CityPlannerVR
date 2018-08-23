@@ -127,7 +127,8 @@ namespace VRKeys {
 		/// <summary>
 		/// Initialization.
 		/// </summary>
-		private IEnumerator Start () {
+		public IEnumerator Start () {
+            Debug.Log("Start");
 			yield return StartCoroutine (DoSetLanguage (keyboardLayout));
 
 			validationNotice.SetActive (false);
@@ -200,6 +201,7 @@ namespace VRKeys {
 		}
 
 		private IEnumerator EnableWhenInitialized () {
+            Debug.Log("Enable when initialized");
             StartCoroutine(Start());
 			yield return new WaitUntil (() => initialized);
 
@@ -358,6 +360,7 @@ namespace VRKeys {
 		}
 
 		private IEnumerator DoSetLanguage (KeyboardLayout lang) {
+            Debug.Log("Do set language");
 			keyboardLayout = lang;
 			layout = LayoutList.GetLayout (keyboardLayout);
 
@@ -447,6 +450,8 @@ namespace VRKeys {
 		/// Setup the keys.
 		/// </summary>
 		private IEnumerator SetupKeys () {
+
+            Debug.Log("Set up keys");
 			bool activeState = canvas.activeSelf;
 
 			// Hide everything before setting up the keys
@@ -455,7 +460,7 @@ namespace VRKeys {
 
 			// Remove previous keys
 			if (keys != null) {
-				foreach (Key key in keys) {
+                foreach (Key key in keys) {
 					if (key != null) {
 						Destroy (key.gameObject);
 					}
@@ -467,7 +472,7 @@ namespace VRKeys {
 
 			// Numbers row
 			for (int i = 0; i < layout.row1Keys.Length; i++) {
-				GameObject obj = (GameObject) Instantiate (keyPrefab, keysParent);
+                GameObject obj = (GameObject) Instantiate (keyPrefab, keysParent);
 				obj.transform.localPosition += (Vector3.right * ((keyWidth * i) - layout.row1Offset));
 
 				LetterKey key = obj.GetComponent<LetterKey> ();
@@ -480,14 +485,16 @@ namespace VRKeys {
 				obj.SetActive (true);
 
 				keys[keyCount] = key;
-				keyCount++;
+                keyCount++;
+
+               
 
 				yield return null;
 			}
 
 			// QWERTY row
 			for (int i = 0; i < layout.row2Keys.Length; i++) {
-				GameObject obj = (GameObject) Instantiate (keyPrefab, keysParent);
+                GameObject obj = (GameObject) Instantiate (keyPrefab, keysParent);
 				obj.transform.localPosition += (Vector3.right * ((keyWidth * i) - layout.row2Offset));
 				obj.transform.localPosition += (Vector3.back * keyHeight * 1);
 
@@ -501,14 +508,16 @@ namespace VRKeys {
 				obj.SetActive (true);
 
 				keys[keyCount] = key;
-				keyCount++;
+                keyCount++;
 
-				yield return null;
+               
+
+                yield return null;
 			}
 
 			// ASDF row
 			for (int i = 0; i < layout.row3Keys.Length; i++) {
-				GameObject obj = (GameObject) Instantiate (keyPrefab, keysParent);
+                GameObject obj = (GameObject) Instantiate (keyPrefab, keysParent);
 				obj.transform.localPosition += (Vector3.right * ((keyWidth * i) - layout.row3Offset));
 				obj.transform.localPosition += (Vector3.back * keyHeight * 2);
 
@@ -522,7 +531,7 @@ namespace VRKeys {
 				obj.SetActive (true);
 
 				keys[keyCount] = key;
-				keyCount++;
+                keyCount++;
 
 				yield return null;
 			}
@@ -543,7 +552,7 @@ namespace VRKeys {
 				obj.SetActive (true);
 
 				keys[keyCount] = key;
-				keyCount++;
+                keyCount++;
 
 				yield return null;
 			}

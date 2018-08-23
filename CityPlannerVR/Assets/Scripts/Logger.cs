@@ -19,6 +19,7 @@ public class LoggedAction
 {
 	public string timestamp;
 	public string action;
+	public List<string> otherVars;
 }
 
 [Serializable]
@@ -34,7 +35,7 @@ public class Logger : MonoBehaviour {
 	//{"userID": xxxx,
 	//"startTime": xxxx,
 	//"loggedActions": [
-	//{"timestamp": xxxx, "action": xxxx}
+	//{"timestamp": xxxx, "action": xxxx, otherVars: ["varName", "varValue", "var2Name", "var2Value"]}
 	//],
 	//"userPositions": [
 	//{"timestamp": xxxx, "position": {"x": xxx, "y": xxx, "z": xxx}}
@@ -54,7 +55,7 @@ public class Logger : MonoBehaviour {
 	private const float LOG_SAVE_INTERVAL = 30;
 
 	private const string POSITION_TIMER_NAME = "PositionTimer";
-	private const float POSITION_TIMER_INTERVAL = 2;
+	private const float POSITION_TIMER_INTERVAL = 1;
 
 	private string logPathName;
 
@@ -154,11 +155,14 @@ public class Logger : MonoBehaviour {
 		PrintWarningLog ("LogFilePath updated to: " + logPathName);
 	}
 
-	public void LogActionLine(string action)
+	public void LogActionLine(string action, List<string> vars)
 	{
 		LoggedAction newAction = new LoggedAction ();
 		newAction.timestamp = GetTimeSinceStart ();
 		newAction.action = action;
+		if (vars.Count > 0) {
+			newAction.otherVars = vars;
+		}
 
 		logForThisUser.loggedActions.Add (newAction);
 

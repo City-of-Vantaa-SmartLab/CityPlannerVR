@@ -43,6 +43,7 @@ public class ScreenshotCamera : MonoBehaviour {
     /// </summary>
     public GameObject[] points;
 
+    public LoadPhotos loadPhotos;
     /// <summary>
     /// Makes and returns the name which is given to the screenshot when it's saved
     /// </summary>
@@ -178,6 +179,8 @@ public class ScreenshotCamera : MonoBehaviour {
             ssCamera.targetTexture = rt;
             cameraScreenMaterial.mainTexture = rt;
             cameraScreen.GetComponent<MeshRenderer>().material = cameraScreenMaterial;
+
+            loadPhotos.Load();
         }
         
     }

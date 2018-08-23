@@ -22,8 +22,8 @@ public class ObjectContainer : MonoBehaviour {
 
     void Awake()
     {
-        objects = new List<GameObject>();
-        trashPoint = trashTablePoint.transform.position;
-		grid = gridObject;
+        //objects = new List<GameObject>();
+        //trashPoint = trashTablePoint.transform.position;
+		//grid = gridObject;
     }
 }

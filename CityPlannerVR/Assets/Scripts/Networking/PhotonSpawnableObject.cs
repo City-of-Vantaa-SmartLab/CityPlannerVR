@@ -32,6 +32,14 @@ public class PhotonSpawnableObject : MonoBehaviour {
 
     #endregion
 
+    private GameObject player;
+    CheckPlayerSize playerSize;
+    private Vector3 originalScale;
+    private Vector3 smallScale;
+
+    bool firstEnable = true;
+    bool secondEnable = true;
+
    //Use this for initialization
 	void Start()
 	{
@@ -39,19 +47,43 @@ public class PhotonSpawnableObject : MonoBehaviour {
         hand2 = GameObject.Find("Hand2").GetComponent<Hand>();
         itemContainer = this.gameObject.GetComponent<ItemContainer>();
     }
-    
-	//void Update() {
-	//	if (isFirstTime) {
-	//		itemPrefabName = "Inventory/"+itemPrefabName;
 
-	//		inputMaster = GameObject.Find("Player").GetComponent<InputMaster>();
-	//		isFirstTime = false;
+    //void Update() {
+    //	if (isFirstTime) {
+    //		itemPrefabName = "Inventory/"+itemPrefabName;
 
-	//		this.GetItems (null);
-	//	}
-	//}
+    //		inputMaster = GameObject.Find("Player").GetComponent<InputMaster>();
+    //		isFirstTime = false;
 
-   public void GetItems (GameObject dbitem) {
+    //		this.GetItems (null);
+    //	}
+    //}
+
+    private void OnEnable()
+    {
+        Debug.Log("FirstEnable" + firstEnable);
+        if (firstEnable)
+        {
+            firstEnable = false;
+            player = GameObject.Find("Player");
+            playerSize = player.GetComponent<CheckPlayerSize>();
+        }
+        //else if (secondEnable)
+        //{
+        //    secondEnable = false;
+        //}
+
+        //else if (playerSize.isSmall)
+        //{
+        //    gameObject.transform.GetChild(1).transform.localScale = smallScale;
+        //}
+        //else
+        //{
+        //    gameObject.transform.GetChild(1).transform.localScale = originalScale;
+        //}
+    }
+
+    public void GetItems (GameObject dbitem) {
 
         if (PhotonNetwork.isMasterClient)
         {
@@ -123,6 +155,18 @@ public class PhotonSpawnableObject : MonoBehaviour {
     {
         item = dbItem;
         GameObject clone = Instantiate(item, spawnPoint.position, spawnPoint.rotation);
+        clone.transform.localEulerAngles += new Vector3(0, 0, -90);
+
+        originalScale = clone.transform.localScale;
+
+        smallScale = originalScale * 0.02f;
+        
+        
+
+        if (playerSize.isSmall)
+        {
+            clone.transform.localScale = smallScale;
+        }
 
         Rigidbody r_clone = clone.GetComponent<Rigidbody>();
 
@@ -160,11 +204,12 @@ public class PhotonSpawnableObject : MonoBehaviour {
             Debug.LogWarning("Failed finding correct hand!");
 		}
 
-	/*	if (hand != null) {
-			hand.AttachObject (clone);
-		}*/
-
 		Debug.LogWarning ("Real item instantiated");
+		List<string> info = new List<string>();
+		info.Add ("itemName");
+		info.Add (item.name);
+		GameObject.Find ("GameManager").GetComponent<Logger> ().LogActionLine ("ItemCreated", info);
+
 	}
 
     public void DestroyItemInSpawner()

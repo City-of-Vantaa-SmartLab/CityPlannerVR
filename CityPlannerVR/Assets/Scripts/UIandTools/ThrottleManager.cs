@@ -67,8 +67,7 @@ public class ThrottleManager : MonoBehaviour {
         }
     }
 
-    private void OnTriggerEnter(Collider other)
-    {
+    private void OnTriggerEnter(Collider other) { 
         if (other.CompareTag("GameController"))  //a tag that is in hand!
         {
             holding = true;
