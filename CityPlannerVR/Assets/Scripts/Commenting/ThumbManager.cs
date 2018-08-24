@@ -22,4 +22,14 @@ public class ThumbManager : MonoBehaviour {
 		this.gameObject.GetComponentInChildren<Text> ().text = newNo.ToString ();
 	}
 
+	public void CreateThumbUp()
+	{
+		//NÄILLE EI VIELÄ TEHDÄ MITÄÄN
+		Comment newThumb = Comment.GenerateThumbComment ("1", HoverTabletManager.CommentTarget, null);
+	}
+
+	public void CreateThumbDown()
+	{
+		Comment newThumb = Comment.GenerateThumbComment ("0", HoverTabletManager.CommentTarget, null);
+	}
 }
