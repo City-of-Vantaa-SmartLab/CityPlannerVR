@@ -58,6 +58,10 @@ public class IsAttachedToHand : MonoBehaviour {
     private void OnAttachedToHand(Valve.VR.InteractionSystem.Hand hand)
 	{
 		isInHand = true;
+		List<string> info = new List<string> ();
+		info.Add ("ItemName");
+		info.Add (this.gameObject.name);
+		GameObject.Find ("GameManager").GetComponent<Logger> ().LogActionLine ("ItemAttachedToHand", info);
         //StartCoroutine(CheckIfHandChanged ());
     }
 
