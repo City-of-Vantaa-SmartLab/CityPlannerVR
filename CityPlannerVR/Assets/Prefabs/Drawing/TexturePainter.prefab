@@ -1,0 +1,64 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1001 &100100000
+Prefab:
+  m_ObjectHideFlags: 1
+  serializedVersion: 2
+  m_Modification:
+    m_TransformParent: {fileID: 0}
+    m_Modifications: []
+    m_RemovedComponents: []
+  m_ParentPrefab: {fileID: 0}
+  m_RootGameObject: {fileID: 1439208610321040}
+  m_IsPrefabParent: 1
+--- !u!1 &1439208610321040
+GameObject:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  serializedVersion: 5
+  m_Component:
+  - component: {fileID: 4170156818947772}
+  - component: {fileID: 114316484989541248}
+  m_Layer: 0
+  m_Name: TexturePainter
+  m_TagString: TexturePainter
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &4170156818947772
+Transform:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1439208610321040}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &114316484989541248
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1439208610321040}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fb6a28551dbcfe74bbe27c85b692c449, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  brushContainer: {fileID: 1367206142143922, guid: ad4b33299e2afa94db1758413ef489e9,
+    type: 2}
+  sceneCamera: {fileID: 0}
+  canvasCam: {fileID: 20312018817369550, guid: ad4b33299e2afa94db1758413ef489e9, type: 2}
+  canvasTexture: {fileID: 8400000, guid: a09074efbd6d26a43af0024e1d33bd93, type: 2}
+  baseMaterial: {fileID: 2100000, guid: 073f84564d7686444bbd49c363e25522, type: 2}
+  brushSize: 0.0666667
+  penDistance: 0.05
+  brushColor: {r: 0, g: 0, b: 0, a: 0}
+  brushPool: {fileID: 0}
+  penTip: {fileID: 4585593794843080, guid: c18524a9a7d669749b26789d8081b2a2, type: 2}
