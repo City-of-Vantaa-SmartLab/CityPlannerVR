@@ -160,7 +160,7 @@ public class Logger : MonoBehaviour {
 		LoggedAction newAction = new LoggedAction ();
 		newAction.timestamp = GetTimeSinceStart ();
 		newAction.action = action;
-		if (vars.Count > 0) {
+		if (vars != null) {
 			newAction.otherVars = vars;
 		}
 

@@ -12,6 +12,9 @@ public class ChangePage : MonoBehaviour {
     private int previousPage;
     private int[] nextPages;
 
+    public int tutorialPageIndex;
+    public TutorialPageBrowse tutorialPage;
+
     private void Start()
     {
         hoverTablet = GetComponentInParent<HoverTabletManager>();
@@ -42,5 +45,10 @@ public class ChangePage : MonoBehaviour {
     public void InitializeCommentTarget()
     {
         HoverTabletManager.CommentTarget = null;
+    }
+
+    public void ChangeTutorialPage()
+    {
+        tutorialPage.OpenPageIndex = tutorialPageIndex;
     }
 }

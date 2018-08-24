@@ -3,6 +3,7 @@ using System.Collections;
 using UnityEngine;
 using UnityEngine.Events;
 using Valve.VR.InteractionSystem;
+using System.Collections.Generic;
 
 /// <summary>
 /// This script keeps track of what tool is in use in this hand.
@@ -153,6 +154,11 @@ public class ToolManager : MonoBehaviour {
         activeItemContainer.tool = tempTool;
 
         activeItemContainer.ReplaceVisibleHolder();
+
+		List<string> info = new List<string> ();
+		info.Add ("selectedTool");
+		info.Add (Tool.ToString());
+		GameObject.Find ("GameManager").GetComponent<Logger> ().LogActionLine ("NewToolSelected", info);
     }
 
     private void HandleNewRole(int index)

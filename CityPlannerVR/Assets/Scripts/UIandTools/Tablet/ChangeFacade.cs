@@ -18,11 +18,24 @@ public class ChangeFacade : MonoBehaviour {
         meshRenderer = GetComponent<MeshRenderer>();
     }
 
+	public void NextFacadeOverNetwork()
+	{
+		int newIndex = ScrollFacades ();
+		this.gameObject.GetComponent<PhotonView> ().RPC ("CheckIndex", PhotonTargets.AllBuffered, newIndex);
+		this.gameObject.GetComponent<PhotonView> ().RPC ("FacadeChange", PhotonTargets.AllBuffered);
+	}
 
+	[PunRPC]
+	public void CheckIndex(int index)
+	{
+		if (facadeIndex != index) {
+			facadeIndex = index;
+		}
+	}
     /// <summary>
     /// Used to scroll facades
     /// </summary>
-    public void ScrollFacades()
+    public int ScrollFacades()
     {
         Debug.Log("Scroll Facades");
         if (canChangeFacade)
@@ -40,12 +53,14 @@ public class ChangeFacade : MonoBehaviour {
             }
         }
 
-        FacadeChange();
+		return facadeIndex;
+        //FacadeChange();
     }
 
     /// <summary>
     /// Change the facade of the building selected
     /// </summary>
+	[PunRPC]
     public void FacadeChange()
     {
         Debug.Log("Change facades");

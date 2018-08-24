@@ -7,6 +7,21 @@ public class TutorialPageBrowse : MonoBehaviour {
     public GameObject[] tutorialPages;
     int openPageIndex = 0;
 
+    public int OpenPageIndex
+    {
+        get
+        {
+            return openPageIndex;
+        }
+
+        set
+        {
+            tutorialPages[openPageIndex].SetActive(false);
+            openPageIndex = value;
+            tutorialPages[openPageIndex].SetActive(true);
+        }
+    }
+
     private void Start()
     {
         for (int i = 0; i < tutorialPages.Length; i++)

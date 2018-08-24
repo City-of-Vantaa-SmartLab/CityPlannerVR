@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 /// <summary>
 /// A test class for thumbs button, will be removed?
@@ -9,67 +10,65 @@ using UnityEngine;
 
 public class ThumbManager : MonoBehaviour {
 
-    private SaveAndLoadComments SLComments;
-    private CommentToolManager commentToolManager;
-    private GameObject player;
-    //private GameObject target;
-    private string commentLayer = "CommentTool";
+	public bool isThumbsUp;
 
     private void Start()
     {
-        SLComments = GameObject.Find("GameController").GetComponent<SaveAndLoadComments>();
-        commentToolManager = transform.GetComponentInParent<CommentToolManager>();
+		
     }
 
-    public void Test()
-    {
-        Debug.Log("THUMBS MANAGER TESTAA");
-    }
+	private void OnEnable()
+	{
+		this.GetThumbs (isThumbsUp);
+		HoverTabletManager.OnTargetChanged += this.TargetChanged;
+	}
 
-    //public void CreateThumbUp()
-    //{
-    //    CommentData tempData = CreateThumbData();
-    //    tempData.dataString = "1";
-    //    SLComments.CreateNewComment(tempData);
-    //}
+	private void OnDisable()
+	{
+		HoverTabletManager.OnTargetChanged -= this.TargetChanged;
+	}
 
-    //public void CreateThumbDown()
-    //{
-    //    CommentData tempData = CreateThumbData();
-    //    tempData.dataString = "0";
-    //    SLComments.CreateNewComment(tempData);
-    //}
+	private void TargetChanged()
+	{
+		this.GetThumbs (isThumbsUp);
+	}
 
-    //needs to be cleaned up
-    private CommentData CreateThumbData()
-    {
-        String userName = PhotonNetwork.player.NickName;
-        //string targetName = commentToolManager.LEArgs.target.name;
+	public void UpdateThumbText()
+	{
+		int oldNo = int.Parse (this.gameObject.GetComponentInChildren<Text> ().text);
+		int newNo = oldNo + 1;
 
-        CommentData tempData = new CommentData();
+		this.gameObject.GetComponentInChildren<Text> ().text = newNo.ToString ();
+	}
 
-        //tempData.userName = PhotonNetwork.player.NickName; //check with PhotonNetwork.player.IsLocal ?
-        //tempData.userName = commenter.GetComponent<PhotonView>().owner.NickName;
-        tempData.userName = userName;
-        tempData.commentedObjectName = commentToolManager.targetName;
-        tempData.SHPath = "";
-        //tempData.commentatorPosition = player.transform.position;
-        tempData.commentType = Comment.CommentType.Thumb;
-        //tempData.type = 2;
+	public void CreateThumbUp()
+	{
+		//NÄILLE EI VIELÄ TEHDÄ MITÄÄN
+		Comment newThumb = Comment.GenerateThumbComment ("1", HoverTabletManager.CommentTarget, null);
+	}
 
-        tempData.quickcheck = 0; //will be created in saveAndLoadComments script
+	public void CreateThumbDown()
+	{
+		Comment newThumb = Comment.GenerateThumbComment ("0", HoverTabletManager.CommentTarget, null);
+	}
 
-        return tempData;
-    }
+	public void GetThumbs(bool isUpThumbs)
+	{
+		List<Comment> allthumbs = SaveData.commentLists.thumbComments;
+		int counter = 0;
+		Debug.LogWarning ("Found " + allthumbs.Count.ToString () + " thumbs");
+		foreach (Comment com in allthumbs) {
+			Debug.LogWarning (com.data.dataString + " Thumb found for " + com.data.commentedObjectName);
+			if (com.data.commentedObjectName.Equals (HoverTabletManager.CommentTarget.name)) {
+				if (isUpThumbs && com.data.dataString.Equals ("1")) {
+					counter++;
+				} else if (!isUpThumbs && com.data.dataString.Equals ("0")) {
+					counter++;
+				}
+			}
 
-    //private GameObject GetTarget(object sender, LaserEventArgs e)
-    //{
-    //    if (e.target.gameObject.layer != LayerMask.NameToLayer(commentLayer))
-    //    {
-    //        return e.target.gameObject;
-    //    }
-    //    else
-    //        return null;
-    //}
-
+		}
+		Debug.LogWarning ("Total thumbs for this: " + counter);
+		this.gameObject.GetComponentInChildren<Text> ().text = counter.ToString ();
+	}
 }

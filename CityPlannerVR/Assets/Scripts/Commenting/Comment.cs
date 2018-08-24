@@ -82,7 +82,7 @@ public class Comment {
 
             case Comment.CommentType.Thumb:
                 //case 2:
-                if (!IsCommentInList(SaveData.commentLists.thumbComments))
+                //if (!IsCommentInList(SaveData.commentLists.thumbComments))
                     SaveData.commentLists.thumbComments.Add(this);
                 break;
 
@@ -212,6 +212,10 @@ public class Comment {
         CommentData tempData = GenerateMetaData(CommentType.Text, targetObject, screenshotPath, commentString);
         Comment comment = SaveAndLoadComments.CreateComment();
         comment.CombineAndProcess(tempData);
+		List<string> info = new List<string> ();
+		info.Add ("ObjectName");
+		info.Add (targetObject.name);
+		GameObject.Find ("GameManager").GetComponent<Logger> ().LogActionLine ("TextCommentCreated", info);
         return comment;
     }
 
@@ -220,6 +224,10 @@ public class Comment {
         CommentData tempData = GenerateMetaData(CommentType.Thumb, targetObject, screenshotPath, thumbData);
         Comment comment = SaveAndLoadComments.CreateComment();
         comment.CombineAndProcess(tempData);
+		List<string> info = new List<string> ();
+		info.Add ("ObjectName");
+		info.Add (targetObject.name);
+		GameObject.Find ("GameManager").GetComponent<Logger> ().LogActionLine ("ThumbCommentCreated", info);
         return comment;
     }
 
@@ -228,6 +236,10 @@ public class Comment {
         CommentData tempData = GenerateMetaData(CommentType.Voice, targetObjectName, screenshotPath, audioFilePath, commentName, positions);
         Comment comment = SaveAndLoadComments.CreateComment();
         comment.CombineAndProcess(tempData);
+		List<string> info = new List<string> ();
+		info.Add ("ObjectName");
+		info.Add (targetObjectName);
+		GameObject.Find ("GameManager").GetComponent<Logger> ().LogActionLine ("VoiceCommentCreated", info);
         return comment;
     }
 

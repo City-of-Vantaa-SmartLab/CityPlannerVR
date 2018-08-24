@@ -48,7 +48,6 @@ public class LoadPhotos : MonoBehaviour {
             request = new WWW("file:///" + path + fileInfo[i].Name);
             if (fileInfo[i].Name.EndsWith(".png"))
             {
-                Debug.Log("index = " + index);
                 yield return request;
                 
                 texture = request.texture;
