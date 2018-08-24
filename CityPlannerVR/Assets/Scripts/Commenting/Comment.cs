@@ -82,7 +82,7 @@ public class Comment {
 
             case Comment.CommentType.Thumb:
                 //case 2:
-                if (!IsCommentInList(SaveData.commentLists.thumbComments))
+                //if (!IsCommentInList(SaveData.commentLists.thumbComments))
                     SaveData.commentLists.thumbComments.Add(this);
                 break;
 

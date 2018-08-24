@@ -10,9 +10,28 @@ using UnityEngine.UI;
 
 public class ThumbManager : MonoBehaviour {
 
+	public bool isThumbsUp;
+
     private void Start()
     {
+		
     }
+
+	private void OnEnable()
+	{
+		this.GetThumbs (isThumbsUp);
+		HoverTabletManager.OnTargetChanged += this.TargetChanged;
+	}
+
+	private void OnDisable()
+	{
+		HoverTabletManager.OnTargetChanged -= this.TargetChanged;
+	}
+
+	private void TargetChanged()
+	{
+		this.GetThumbs (isThumbsUp);
+	}
 
 	public void UpdateThumbText()
 	{
@@ -31,5 +50,25 @@ public class ThumbManager : MonoBehaviour {
 	public void CreateThumbDown()
 	{
 		Comment newThumb = Comment.GenerateThumbComment ("0", HoverTabletManager.CommentTarget, null);
+	}
+
+	public void GetThumbs(bool isUpThumbs)
+	{
+		List<Comment> allthumbs = SaveData.commentLists.thumbComments;
+		int counter = 0;
+		Debug.LogWarning ("Found " + allthumbs.Count.ToString () + " thumbs");
+		foreach (Comment com in allthumbs) {
+			Debug.LogWarning (com.data.dataString + " Thumb found for " + com.data.commentedObjectName);
+			if (com.data.commentedObjectName.Equals (HoverTabletManager.CommentTarget.name)) {
+				if (isUpThumbs && com.data.dataString.Equals ("1")) {
+					counter++;
+				} else if (!isUpThumbs && com.data.dataString.Equals ("0")) {
+					counter++;
+				}
+			}
+
+		}
+		Debug.LogWarning ("Total thumbs for this: " + counter);
+		this.gameObject.GetComponentInChildren<Text> ().text = counter.ToString ();
 	}
 }
