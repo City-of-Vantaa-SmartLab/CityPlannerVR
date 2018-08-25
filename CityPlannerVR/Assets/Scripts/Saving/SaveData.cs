@@ -35,6 +35,12 @@ public class SaveData {
     //public static Container<CommentData> commentContainerForVizualisation = new Container<CommentData>();
     public static Container<TransformData> transformContainer = new Container<TransformData>();
     public static Container<TransformData> startupContainer = new Container<TransformData>();
+    public static Container<FileInfoContainer> syncFileContainer = new Container<FileInfoContainer>();
+    public static Container<FileInfoContainer> syncFileContainerTemp = new Container<FileInfoContainer>();
+
+    public static bool binarySyncing = false;
+
+
     public static int amountOfTransforms = 0;
     public static int transformCount;
 
@@ -152,8 +158,17 @@ public class SaveData {
             }
             commentContainer.datas.Add(data as CommentData);
         }
-        if (data is TransformData)
+        else if (data is TransformData)
             transformContainer.datas.Add(data as TransformData);
+        else if (data is FileInfoContainer)
+        {
+            if (binarySyncing)
+                syncFileContainerTemp.datas.Add(data as FileInfoContainer);
+            else
+                syncFileContainer.datas.Add(data as FileInfoContainer);
+        }
+        else
+            Debug.LogError("Data type for saving not recognized!");
     }
 
     public static void ClearContainer<T>(Container<T> container)

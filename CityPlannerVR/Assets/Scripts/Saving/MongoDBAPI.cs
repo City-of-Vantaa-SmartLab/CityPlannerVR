@@ -18,14 +18,15 @@ public class MongoDBAPI {
         public string collectionName;
     }
 
-    [Serializable]
-    private class BinaryDocument
-    {
-        public string userName;
-        public string filepath;
-        public string submittedShortDate;
-        public BsonBinaryData bsonBinaryData;
-    }
+
+    //[Serializable]
+    //private class BinaryDocument
+    //{
+    //    public string userName;
+    //    public string filepath;
+    //    public string submittedShortDate;
+    //    public BsonBinaryData bsonBinaryData;
+    //}
 
     //private static string defaultConnectionString = "mongodb://192.168.100.21:27017";
 
@@ -39,6 +40,7 @@ public class MongoDBAPI {
     public static IMongoCollection<BsonDocument> commentCollection;
     public static IMongoCollection<BsonDocument> imageCollection;
     public static IMongoCollection<BsonDocument> voiceCollection;
+    public static IMongoCollection<BsonDocument> defaultFileCollection;
     private static string defaultDB = "tikkuraitti";
     private static string defaultUser = "buser";
     private static string defaultPwd = "1234";
@@ -48,8 +50,12 @@ public class MongoDBAPI {
     private static string transformColName = "transforms";
     private static string imageColName = "images";
     private static string voiceColName = "voicefiles";
+    private static string defaultColName = "otherfiles";
     private static char slash = Path.DirectorySeparatorChar;
 
+    public static readonly string defaultFileFolder = Application.persistentDataPath + slash + "OtherFiles";
+    public static readonly string imageFileFolder = Application.streamingAssetsPath;
+    public static readonly string voiceFileFolder = Application.streamingAssetsPath;
 
 
 
@@ -115,6 +121,7 @@ public class MongoDBAPI {
         commentCollection = activeDatabase.GetCollection<BsonDocument>(commentColName);
         imageCollection = activeDatabase.GetCollection<BsonDocument>(imageColName);
         voiceCollection = activeDatabase.GetCollection<BsonDocument>(voiceColName);
+        defaultFileCollection = activeDatabase.GetCollection<BsonDocument>(defaultColName);
 
     }
 
@@ -156,23 +163,22 @@ public class MongoDBAPI {
         return false;
     }
 
-    public static void TestMethod1(string filepath, string filenameExtended)
-    {
-        Debug.Log("Tallennetaan " + filepath);
-        ImportBinaryFileToDatabase(imageCollection, filepath, filenameExtended);
-    }
+    //public static void TestMethod1(string filepath, string filenameExtended)
+    //{
+    //    Debug.Log("Tallennetaan " + filepath);
+    //    ImportBinaryFileToDatabase(imageCollection, filepath, filenameExtended);
+    //}
 
-    public static void TestMethod2(string filepath)
-    {
-        Debug.Log("Ladataan " + filepath);
-        ExportBinaryFileFromDatabase(imageCollection, filepath);
-    }
+    //public static void TestMethod2(string filepath)
+    //{
+    //    Debug.Log("Ladataan " + filepath);
+    //    ExportBinaryFileFromDatabase(imageCollection, filepath);
+    //}
 
     public static void ImportJSONFileToDatabase(IMongoCollection<BsonDocument> targetCollection, string filepath)
     {
         using (var streamReader = new StreamReader(filepath))
         {
-            //Debug.Log("Streamreader start!");
             string line;
             while ((line = streamReader.ReadLine()) != null)
             {
@@ -181,61 +187,81 @@ public class MongoDBAPI {
                     var context = BsonDeserializationContext.CreateRoot(jsonReader);
                     var document = targetCollection.DocumentSerializer.Deserialize(context);
                     targetCollection.InsertOne(document);
-                    //Debug.Log("Insert done!");
                 }
             }
         }
     }
 
-    public static void ImportBinaryFileToDatabase(IMongoCollection<BsonDocument> targetCollection, string filepath, string filenameExtended)
+    public static bool ImportBinaryFileToDatabase(
+        IMongoCollection<BsonDocument> targetCollection,FileInfoContainer fileInfo)
     {
-        using (var streamReader = new StreamReader(filepath))
+        string filePathToUse;
+        StreamReader streamReader;
+
+        if (fileInfo.useFullPath)
+            filePathToUse = fileInfo.fullFilePath;
+        else if (fileInfo.fileType == SyncFiles.Filetype.image)
+            filePathToUse = imageFileFolder + slash + fileInfo.filename;
+        else if (fileInfo.fileType == SyncFiles.Filetype.voice)
+            filePathToUse = voiceFileFolder + slash + fileInfo.filename;
+        else
+            filePathToUse = defaultFileFolder + slash + fileInfo.filename;
+
+        if (string.IsNullOrEmpty(filePathToUse))
         {
+            Debug.Log("The filepath is null or empty!");
+            return false;
+        }
 
-            //document.userName = PhotonNetwork.player.NickName;
-            //if (string.IsNullOrEmpty(document.userName))
-            //    document.userName = "N/A";
-            //document.filepath = filepath;
-            //document.submittedShortDate = System.DateTime.Now.ToShortDateString();
+        using (streamReader = new StreamReader(filePathToUse))
 
-            var bytes = File.ReadAllBytes(filepath);
-
+        {
+            var bytes = File.ReadAllBytes(filePathToUse);
             BsonBinaryData binaryData = new BsonBinaryData(bytes);
             List<BsonElement> elementList = new List<BsonElement>();
-            //BsonElement elementByte = new BsonElement("bytes", binaryData.AsBsonValue);
             BsonElement elementByte = new BsonElement("bytes", binaryData);
             elementList.Add(elementByte);
-            if (string.IsNullOrEmpty(filenameExtended))
-            {
-                Debug.Log("Filename is missing!");
-                filenameExtended = "N/A";
-            }
-            BsonElement elementFilename = new BsonElement("filename", BsonValue.Create(filenameExtended));
+
+            //if (string.IsNullOrEmpty(fileInfo.filename))
+            //{
+            //    Debug.Log("Filename is missing!");
+            //    fileInfo.filename = "N/A";
+            //}
+            BsonElement elementFilename = new BsonElement("filename", BsonValue.Create(fileInfo.filename) ?? "N/A");
             elementList.Add(elementFilename);
+
+            BsonElement elementFileType = new BsonElement("filetype", BsonValue.Create(fileInfo.fileType) ?? "N/A");
+            elementList.Add(elementFileType);
+
+            BsonElement elementUserWhoSaved = new BsonElement("user", BsonValue.Create(PhotonNetwork.player.NickName ?? "N/A" ));
+            elementList.Add(elementUserWhoSaved);  //Only needed for database debugging
 
             BsonDocument document = new BsonDocument(elementList);
             targetCollection.InsertOne(document);
-
         }
+        return true;
     }
 
     public static void ExportBinaryFileFromDatabase(IMongoCollection<BsonDocument> targetCollection, string folderPathName)
     {
-        ExportBinaryFileFromDatabase(null, null, null, targetCollection, folderPathName, true);
+        ExportBinaryFileFromDatabase(null, null, null, targetCollection, folderPathName, false);
     }
 
     //Clean obsolete comments away later!
-    public static void ExportBinaryFileFromDatabase(FilterDefinition<BsonDocument> filter, SortDefinition<BsonDocument> sort,
-    ProjectionDefinition<BsonDocument> projection, IMongoCollection<BsonDocument> targetCollection, string folderPathName, bool onlyExcludeID)
+    public static void ExportBinaryFileFromDatabase(
+        FilterDefinition<BsonDocument> filter,
+        SortDefinition<BsonDocument> sort,                  
+        ProjectionDefinition<BsonDocument> projection,      //Use include and exclude to target specific fields in the BsonDocument
+        IMongoCollection<BsonDocument> targetCollection,    //The collection from where the method pulls BsonDocuments
+        string folderPathName,                              //Saves files from the collection to this folder, unless useSavedFolderPath is true and BsonDocument has a string named foldername
+        bool overWriteFiles)                                //Overwrites the same named files
     {
         if (filter == null)
             filter = new BsonDocument();
         if (sort == null)
             sort = Builders<BsonDocument>.Sort.Descending("_id");
-        if (projection == null || onlyExcludeID)
+        if (projection == null)
             projection = Builders<BsonDocument>.Projection.Exclude("_id");
-        //if (projection == null)
-        //    projection = Builders<BsonDocument>.Projection.Include("bytes");
 
         var mongoCursor = targetCollection.Find(filter).Project(projection).Sort(sort).ToCursor();  //With or without cursor, still missing something
         var document = mongoCursor.ToBsonDocument();  //This is the likely culprit
@@ -246,136 +272,79 @@ public class MongoDBAPI {
             return;
         }
 
-        //VIHDOINKIN itse päättelemällä prkl dokumentaatio on *****
         foreach (var doc in mongoCursor.ToEnumerable())
         {
             byte[] urpuus = { 0 };
             BsonBinaryData elementBytes = new BsonBinaryData(urpuus);
             string filename = "";
+            string foldername = "";
 
             try
             {
                 foreach (var element in doc.Elements)
                 {
-                    if (element.Name == "bytes")
+                    if (string.IsNullOrEmpty(element.Name))
+                        Debug.Log("Empty or null field name!");
+                    else
                     {
-                        elementBytes = element.Value.AsBsonBinaryData;
-                    }
-                    if (element.Name == "filename")
-                    {
-                        filename = element.Value.AsString;
+                        switch (element.Name)
+                        {
+                            case "bytes":
+                                elementBytes = element.Value.AsBsonBinaryData;
+                                break;
+
+                            case "filename":
+                                filename = element.Value.AsString;
+                                break;
+                            case "foldername":
+                                foldername = element.Value.AsString;
+                                break;
+                            case "filetype":
+                                elementBytes = element.Value.AsBsonBinaryData;
+                                break;
+
+                            default:
+                                Debug.Log("Could not recognize Bson document's field name: " + element.Name);
+                                break;
+                        }
                     }
                 }
+
+                if (string.IsNullOrEmpty(foldername) && !string.IsNullOrEmpty(folderPathName))
+                    foldername = folderPathName;
 
                 var bytes = (byte[])elementBytes;
                 if (string.IsNullOrEmpty(filename))
                     Debug.Log("Filename is empty!");
                 else
-                    File.WriteAllBytes((folderPathName + slash + filename), bytes);
+                {
+                    string fullPath = folderPathName + slash + filename;
+                    if (!overWriteFiles && File.Exists(fullPath))
+                    {
+                        Debug.Log("File exists, not overwriting!");
+                    }
+                    else
+                        File.WriteAllBytes((fullPath), bytes);
+
+                }
 
             }
             catch (Exception ex)
             {
-                Debug.Log(filename+ " has error with message" + ex.Message);
+                Debug.Log(filename+ " has error with message " + ex.Message);
             }
-
         }
-
-        //BsonElement wut = new BsonElement();
-
-        ////document.TryGetElement("bytes", out wut);
-        //wut = document.FirstOrDefault();
-        ////if (wut == null)
-        ////{
-        ////    Debug.Log("Wut is null!");
-        ////    return;
-        ////}
-        ////if (wut.Value == null)
-        ////{
-        ////    Debug.Log("Wut value is null!");
-        ////    return;
-        ////}
-        ////Debug.Log("Wut is it: " + wut.Name);
-        ////Debug.Log("Wut has it: " + wut.Value);
-        //////var wat = BsonBinaryData.Create(wut.Value);
-
-        //////using (var stream = File.OpenWrite(filepath))
-        //////using (var writer = new BsonBinaryWriter(stream))
-        //////{
-        //////    writer.WriteStartDocument();
-        //////    writer.writename
-        //////}
-
-
-        //////BsonReader bsonReader;
-        //////bsonReader.ReadStartDocument();
-        //////var ihmeBytes[] = bsonReader.ReadBytes(wut.Value);
-
-        ////BsonDeserializationContext context = BsonDeserializationContext.CreateRoot(bsonReader.  );
-        ////BsonWriter bsonWriter;
-        ////var context = BsonSerializationContext.CreateRoot(bsonWriter);
-        ////BsonStringSerializer stringSerializer = new BsonStringSerializer();
-        ////stringSerializer.Deserialize(context);
-
-        //////var wat = wut.Value.AsBsonBinaryData;
-
-        ////Debug.Log("Menee hermot");
-        //////var bytes = wut.Value.AsBsonBinaryData.Bytes;
-        ////var bytes = wat.Bytes;
-
-        ////if (bytes == null)
-        ////    Debug.Log("Bytes are null!");
-        ////else
-        ////    File.WriteAllBytes(filepath, bytes);
-
-        ////Debug.Log("Getting desperate");
-        //////var bsonBinaryData = wut.Value.AsBsonBinaryData;
-        ////var bsonBinaryData = BsonBinaryData.Create(wut.Value);
-
-
-
-        ////Debug.Log("Please work");
-        ////var binary = (byte[])bsonBinaryData;
-
-        //////var mitaIhmetta = BsonSerializer.Deserialize<Byte[]>(wut.Value.AsBsonBinaryData);
-        //////if (mitaIhmetta == null)
-        //////    Debug.Log("Bytes are null!");
-        //////else
-        //////    File.WriteAllBytes(filepath, mitaIhmetta);
-
-        ////if (binary == null)
-        ////    Debug.Log("Bytes are null!");
-        ////else
-        ////    File.WriteAllBytes(filepath, binary);
-
-        //byte[] bytes = Utf8Encodings.Lenient.GetBytes(wut.Value.AsString);
-
-        //if (bytes == null)
-        //    Debug.Log("Bytes are null!");
-        //else
-        //    File.WriteAllBytes(filepath, bytes);
-
-
-
-
     }
 
     public static void ExportJSONFileFromDatabase<T>(IMongoCollection<BsonDocument> targetCollection, string filepath)
     {
-        //Task taskA = new Task(() => ExportJSONFileFromDatabase(null, null, null, targetCollection, filepath, true));
-        //taskA.Start();
-        //Debug.Log("Vladislav");
-        ////taskA.Wait();
-        //Debug.Log("Task don't hurt me");
-
         ExportJSONFileFromDatabase<T>(null, null, null, targetCollection, filepath, true);
     }
 
     public static void ExportJSONFileFromDatabase<T>(FilterDefinition<BsonDocument> filter, SortDefinition<BsonDocument> sort,
         ProjectionDefinition<BsonDocument> projection, IMongoCollection<BsonDocument> targetCollection, string filepath, bool onlyExcludeID)
     {
-        //using (var streamWriter = new StreamWriter(filepath))
-        //{
+
         if (filter == null)
             filter = new BsonDocument();
         if (sort == null)
@@ -399,7 +368,6 @@ public class MongoDBAPI {
 
         }
 
-        //}
     }
 
     public static void ExportContainersFromDatabase<T>(IMongoCollection<BsonDocument> targetCollection)
@@ -426,19 +394,6 @@ public class MongoDBAPI {
         }
     }
 
-
-
-    //public static void LoadFileFromDatabase(FilterDefinition<BsonDocument> filter,
-    //    string filepath, IMongoCollection<BsonDocument> collection)
-    //{
-    //    var document = collection.Find(filter).First();
-    //}
-
-
-    //instead this could be done with:
-    //var filter = Builders<BsonDocument>.Filter.Eq("i", 10);
-    //var update = Builders<BsonDocument>.Update.Set("i", 110);
-    //collection.UpdateOne(filter, update);
     public static void UpdateFileInDatabase(FilterDefinition<BsonDocument> filter,
         UpdateDefinition<BsonDocument> update, IMongoCollection<BsonDocument> collection)
     {
@@ -447,53 +402,4 @@ public class MongoDBAPI {
 
 
 }
-
-
-
-////Codes below are from a tutorial: https://www.youtube.com/watch?v=rMbIx4Yk6U8
-//namespace mongo20
-//{
-//    class Program
-//    {
-//        static void Main(string[] args)
-//        {
-//            var client = new MongoClient();
-//            var db = client.GetDatabase("Tikkuraitti");
-//            var coll = db.GetCollection<SaveData>("Comments");
-
-//            var customerId = new ObjectId("5b3c9032ac815c5d9c8dafab");
-
-//            var customers = coll
-//                .Find(b => b.customers == customerId)
-//                .Limit(5)
-//                .ToListAsync()
-//                .Result;
-
-//            Console.WriteLine("Books");
-//            foreach (var in customers)
-//            {
-//                Console.WriteLine(" * " + customerId. ;
-//            }
-
-//        }
-
-//        private static async Task<ReplaceOneResult> SaveAsync<T>(
-//            this IMongoCollection<T> collection, T entity) where T : IIdentified
-//        {
-//            return await collection.ReplaceOneAsync(
-//                i => i.Id == entity.Id,
-//                entity,
-//                new UpdateOptions { IsUpsert = true });  //adds the entity, if not found in database
-//        }
-
-//        public interface IIdentified
-//        {
-//            ObjectId Id { get; }
-//        }
-
-//    }
-
-
-
-//}
 

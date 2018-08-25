@@ -48,14 +48,14 @@ public class SaveAndLoadComments : MonoBehaviour
 
 
     //Use eg. laserbutton to call the methods below
-    public void Save()
+    public void SaveAsync()
     {
         Task saveTask = new Task(() => SaveToDatabase());
         saveTask.Start();
         //SaveToDatabase();
     }
 
-    public void Load()
+    public void LoadAsync()
     {
         Task loadTask = new Task(() => LoadFromExternalSource(true));
         loadTask.Start();
