@@ -93,7 +93,7 @@ namespace Valve.VR.InteractionSystem
 
         //Tarun debuggaukseen (Gizmoja varten) (muuten määritellään UpdateHovering():ssa)
         float flScaledSphereRadius;
-        float boxMult;
+        //--float boxMult;
 
         //-------------------------------------------------
         // The Interactable object this Hand is currently hovering over
@@ -487,8 +487,8 @@ namespace Valve.VR.InteractionSystem
 			/*float*/ flScaledSphereRadius = hoverSphereRadius * flHoverRadiusScale;
 
 			// if we're close to the floor, increase the radius to make things easier to pick up
-			float handDiff = Mathf.Abs( transform.position.y - playerInstance.trackingOriginTransform.position.y );
-			/*float*/ boxMult = Util.RemapNumberClamped( handDiff, 0.0f, 0.5f * flHoverRadiusScale, 5.0f, 1.0f ) * flHoverRadiusScale;
+			//--float handDiff = Mathf.Abs( transform.position.y - playerInstance.trackingOriginTransform.position.y );
+			/*float*/ //--boxMult = Util.RemapNumberClamped( handDiff, 0.0f, 0.5f * flHoverRadiusScale, 5.0f, 1.0f ) * flHoverRadiusScale;
 
 			// null out old vals
 			for ( int i = 0; i < overlappingColliders.Length; ++i )
@@ -504,7 +504,7 @@ namespace Valve.VR.InteractionSystem
             //    hoverLayerMask.value
             //);
 
-            Physics.OverlapSphereNonAlloc(hoverSphereTransform.position - new Vector3(0, flScaledSphereRadius * boxMult - flScaledSphereRadius, 0), flScaledSphereRadius, overlappingColliders, hoverLayerMask.value);
+            Physics.OverlapSphereNonAlloc(hoverSphereTransform.position - new Vector3(0, flScaledSphereRadius /** boxMult*/ - flScaledSphereRadius, 0), flScaledSphereRadius, overlappingColliders, hoverLayerMask.value);
 
             // DebugVar
             int iActualColliderCount = 0;
@@ -739,7 +739,7 @@ namespace Valve.VR.InteractionSystem
             Transform sphereTransform = hoverSphereTransform ? hoverSphereTransform : this.transform;
             Gizmos.DrawWireSphere(sphereTransform.position, hoverSphereRadius);
 
-            Gizmos.DrawSphere(hoverSphereTransform.position - new Vector3(0, flScaledSphereRadius * boxMult - flScaledSphereRadius, 0), flScaledSphereRadius);
+            Gizmos.DrawSphere(hoverSphereTransform.position - new Vector3(0, flScaledSphereRadius /** boxMult*/ - flScaledSphereRadius, 0), flScaledSphereRadius);
         }
 
 
