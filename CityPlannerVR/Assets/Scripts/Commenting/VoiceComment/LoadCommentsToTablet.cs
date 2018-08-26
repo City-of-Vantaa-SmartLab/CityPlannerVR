@@ -58,8 +58,14 @@ public class LoadCommentsToTablet : MonoBehaviour {
 
     public GameObject NoCommentsText;
 
+    public GameObject textCommentPrefab;
+    Text textCommentText;
+    List<GameObject> TextCommentsV;
+
     DirectoryInfo info;
     FileInfo[] fileInfo;
+
+    //public SaveData saveData;
 
 
     /// <summary>
@@ -103,6 +109,7 @@ public class LoadCommentsToTablet : MonoBehaviour {
             }
 
             LoadComments();
+            GetTextComments();
         }
         isFirstEnable = false;
     }
@@ -115,6 +122,49 @@ public class LoadCommentsToTablet : MonoBehaviour {
         {
             Destroy(panel.transform.GetChild(i).gameObject);
         }
+
+        if(TextCommentsV != null)
+        {
+            int count = TextCommentsV.Count;
+
+            for (int i = 0; i < count; i++)
+            {
+                Destroy(TextCommentsV[0]);
+            }
+        }
+        
+    }
+
+    void GetTextComments()
+    {
+        List<Comment> textComments = SaveData.commentLists.textComments;
+        TextCommentsV = new List<GameObject>();
+        foreach (var comment in textComments)
+        {
+            if (comment.data.commentedObjectName == null)
+            {
+                GameObject textCommentObject = Instantiate(textCommentPrefab);
+                TextCommentsV.Add(textCommentObject);
+                textCommentObject.transform.SetParent(panel.transform);
+                textCommentObject.transform.localPosition = Vector3.zero;
+                textCommentObject.transform.localRotation = Quaternion.identity;
+                textCommentObject.transform.localScale = Vector3.one * 10;
+                textCommentText = textCommentObject.GetComponentInChildren<Text>();
+                textCommentText.text = comment.data.dataString;
+            }
+            else if (comment.data.commentedObjectName.Equals(HoverTabletManager.CommentTarget.name))
+            {
+                GameObject textCommentObject = Instantiate(textCommentPrefab);
+                TextCommentsV.Add(textCommentObject);
+                textCommentObject.transform.SetParent(panel.transform);
+                textCommentObject.transform.localPosition = Vector3.zero;
+                textCommentObject.transform.localRotation = Quaternion.identity;
+                textCommentObject.transform.localScale = Vector3.one * 10;
+                textCommentText = textCommentObject.GetComponentInChildren<Text>();
+                textCommentText.text = comment.data.dataString;
+            }
+        }
+
     }
 
     /// <summary>
@@ -190,6 +240,10 @@ public class LoadCommentsToTablet : MonoBehaviour {
         if (commentsToPlayHere.Count > 0 || generalComments.Count > 0)
         {
             StartCoroutine(CreateButtons());
+        }
+        else if(TextCommentsV.Count > 0)
+        {
+            return;
         }
         else
         {
