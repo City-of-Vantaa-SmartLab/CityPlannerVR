@@ -127,6 +127,7 @@ public class SyncFiles : MonoBehaviour
         {
             Task taskImages = new Task(() => MongoDBAPI.ExportBinaryFileFromDatabase(MongoDBAPI.imageCollection, MongoDBAPI.imageFileFolder));
             taskImages.Start();
+            MongoDBAPI.AnnounceImageUpdate();  //Moved here because the event should be called from the main thread. Might be late but is also called in the following cycles, no worries! 
         }
         else if (filetype == Filetype.voice)
         {
@@ -138,6 +139,7 @@ public class SyncFiles : MonoBehaviour
             Task taskDefault = new Task(() => MongoDBAPI.ExportBinaryFileFromDatabase(MongoDBAPI.defaultFileCollection , MongoDBAPI.defaultFileFolder));
             taskDefault.Start();
         }
+
 
         //Task saveTask = new Task(() => SaveToDatabase());
         //saveTask.Start();
