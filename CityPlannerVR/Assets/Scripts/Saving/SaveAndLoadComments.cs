@@ -71,15 +71,21 @@ public class SaveAndLoadComments : MonoBehaviour
 
     public void SaveToDatabase()
     {
+        if (SaveData.commentContainer.datas.Count == 0)
+        {
+            Debug.Log("Comment container is empty, not saving!");
+            return;
+        }
         pathName = folderPathName + slash + fileName + fileExtender;
         SaveData.SaveDatas(pathName, SaveData.commentContainer);
         //SaveData.ClearContainer(SaveData.commentContainer);
-        Debug.Log("Starting to save...");
+        //Debug.Log("Starting to save...");
         //pathName = folderPathName + slash + fileName + fileExtender;
         if (!MongoDBAPI.UseDefaultConnections())
             return;
         MongoDBAPI.ImportJSONFileToDatabase(MongoDBAPI.commentCollection, pathName);
-        Debug.Log("Saving done!");
+        Debug.Log("Saving done, emptying collection!");
+        SaveData.ClearContainer(SaveData.commentContainer);
     }
 
     private void LoadFromExternalSource(bool useDatase)

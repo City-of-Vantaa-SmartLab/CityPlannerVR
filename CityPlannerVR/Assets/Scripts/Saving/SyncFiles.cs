@@ -31,15 +31,32 @@ public class SyncFiles : MonoBehaviour
 
     private static char slash = Path.DirectorySeparatorChar;
     public float ToDBInterval;
-    public float FromDBInterval;  //Use a negative value to disable syncing
+    public float FromDBInterval;
 
-    public bool syncImages;
-    public bool syncVoices;
-    public bool syncDefaults;
+    public bool syncAll;
+    public bool syncFilesToDB;
+    public bool syncImagesFromDB;
+    public bool syncVoicesFromDB;
+    public bool syncDefaultsFromDB;
+    public bool syncCommentsFromDB;
+    public bool syncCommentsToDB;
+
+    public SaveAndLoadComments SLComments;
+    public SaveAndLoadTransforms SLTransforms;  //Not yet used for anything
 
 
     private void Start()
     {
+        if (syncAll)
+        {
+            syncFilesToDB = true;
+            syncImagesFromDB = true;
+            syncVoicesFromDB = true;
+            syncDefaultsFromDB = true;
+            syncCommentsFromDB = true;
+            syncCommentsToDB = true;
+        }
+
         if (ToDBInterval == 0)
             ToDBInterval = 5f;
         if (ToDBInterval > 0)
@@ -49,13 +66,25 @@ public class SyncFiles : MonoBehaviour
             FromDBInterval = 5f;
         if (FromDBInterval > 0)
             InvokeRepeating("StartSyncingFromDatabaseAsync", 2f, FromDBInterval);
+
+        if (!SLComments)
+            SLComments = gameObject.GetComponent<SaveAndLoadComments>();
+        if (!SLTransforms)
+            SLTransforms = gameObject.GetComponent<SaveAndLoadTransforms>();
+
     }
 
     private void StartSyncingToDatabaseAsync()
     {
+        if (syncCommentsToDB)
+            SLComments.SaveAsync();
         //Debug.Log("Sync to database called...");
-        Task syncing = new Task(() => SyncToDatabase());
-        syncing.Start();
+        if (syncFilesToDB)
+        {
+            Task syncing = new Task(() => SyncToDatabase());
+            syncing.Start();
+        }
+
         //SyncToDatabase();
     }
 
@@ -64,12 +93,15 @@ public class SyncFiles : MonoBehaviour
         //Debug.Log("Sync from database called...");
         //Task syncing = new Task(() => SyncToDatabase());
         //syncing.Start();
-        if (syncImages)
+        if (syncImagesFromDB)
             SyncFromDatabaseAsync(Filetype.image);
-        if (syncVoices)
+        if (syncVoicesFromDB)
             SyncFromDatabaseAsync(Filetype.voice);
-        if (syncDefaults)
+        if (syncDefaultsFromDB)
             SyncFromDatabaseAsync(Filetype.defaultType);
+        if (syncCommentsFromDB)
+            SLComments.LoadAsync();
+
     }
 
 

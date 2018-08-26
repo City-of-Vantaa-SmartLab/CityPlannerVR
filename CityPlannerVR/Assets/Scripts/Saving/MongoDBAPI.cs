@@ -52,6 +52,7 @@ public class MongoDBAPI {
     private static string voiceColName = "voicefiles";
     private static string defaultColName = "otherfiles";
     private static char slash = Path.DirectorySeparatorChar;
+    private static List<ObjectId> readCommentIds = new List<ObjectId>();
 
     public static readonly string defaultFileFolder = Application.persistentDataPath + slash + "OtherFiles";
     public static readonly string imageFileFolder = Application.streamingAssetsPath + slash + "Screenshots";
@@ -372,18 +373,68 @@ public class MongoDBAPI {
         ExportJSONFileFromDatabase<T>(null, null, null, targetCollection, filepath, 20);
     }
 
+    public static FilterDefinition<BsonDocument> CreateFilter(List<ObjectId> ids)
+    {
+        Debug.Log("Starting to create filter...");
+        if (ids.Count == 0)
+            return new BsonDocument();
+        Debug.Log("Starting to create filter for real!");
+
+        //Option 1: we want the opposite from what this returns -> negation!
+        //List<BsonElement> elements = new List<BsonElement>();
+        //for (int i = 0; i < ids.Count; i++)
+        //{
+        //    BsonElement newElement = new BsonElement("_id", ids[i]);
+        //    elements.Append(newElement);
+        //}
+        //BsonDocument palautus = new BsonDocument(elements);
+        //return palautus;
+
+        //string objectIdString = "Objectid(";
+        string objectIdString = "";
+        string nextObject = ", ";
+
+        //Option 2: Returns a filter, that removes documents with the same ids that are in the list ids -> readCommentIds
+        string superstring = "{ '_id' : { $nin: [" + objectIdString + (ids[0].ToString()) ;
+        for (int i = 1; i < ids.Count; i++)
+        {
+            superstring = superstring + nextObject + objectIdString + ids[i];
+        }
+        superstring = superstring + "]} }";
+        Debug.Log(superstring);
+        BsonDocument palautus = BsonSerializer.Deserialize<BsonDocument>(superstring);
+
+        return palautus;
+
+    }
+
     public static void ExportJSONFileFromDatabase<T>(FilterDefinition<BsonDocument> filter, SortDefinition<BsonDocument> sort,
         ProjectionDefinition<BsonDocument> projection, IMongoCollection<BsonDocument> targetCollection, string filepath, int limit)
     {
 
+        //if (filter == null)
+        //    filter = new BsonDocument();
         if (filter == null)
-            filter = new BsonDocument();
+            filter = CreateFilter(readCommentIds);
         if (sort == null)
             sort = Builders<BsonDocument>.Sort.Descending("date");
         if (projection == null)
             projection = Builders<BsonDocument>.Projection.Exclude("_id");
 
-        var cursor = targetCollection.Find(filter).Project(projection).Sort(sort).Limit(limit).ToCursor();
+        var tempFind = targetCollection.Find(filter).Sort(sort).Limit(limit);
+        Debug.Log("Tempfind created");
+        var tempCursor = tempFind.ToCursor();
+        Debug.Log("TempCursor created");
+        //var tempCursor = targetCollection.Find(filter).Sort(sort).Limit(limit).ToCursor();
+        foreach (var document in tempCursor.ToEnumerable())
+        {
+            readCommentIds.Add(document.GetElement("_id").Value.AsObjectId);
+        }
+        Debug.Log("Read id's added to list");
+
+        var cursor = tempFind.Project(projection).ToCursor();
+        Debug.Log("Last cursor made");
+        //var cursor = targetCollection.Find(filter).Project(projection).Sort(sort).Limit(limit).ToCursor();
         foreach (var document in cursor.ToEnumerable())
         {
             using (var streamWriter = new StreamWriter(filepath))

@@ -194,12 +194,12 @@ public class SaveData {
     /// </summary>
     /// <param name="collectionIndex">0: commentCollection, 1: transformCollection</param>
 
-    public static void SaveFileToDatabase(string filepath, int collectionIndex)
-    {
-        if (!MongoDBAPI.UseDefaultConnections())
-            return;
-        if (collectionIndex == 1)
-            MongoDBAPI.ImportJSONFileToDatabase(MongoDBAPI.transformCollection, filepath);
-    }
+    //public static void SaveFileToDatabase(string filepath, int collectionIndex)
+    //{
+    //    if (!MongoDBAPI.UseDefaultConnections())
+    //        return;
+    //    if (collectionIndex == 1)
+    //        MongoDBAPI.ImportJSONFileToDatabase(MongoDBAPI.transformCollection, filepath);
+    //}
 
 }
