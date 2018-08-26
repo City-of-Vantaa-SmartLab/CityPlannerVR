@@ -141,7 +141,32 @@ public class LoadCommentsToTablet : MonoBehaviour {
         TextCommentsV = new List<GameObject>();
         foreach (var comment in textComments)
         {
-            if (comment.data.commentedObjectName == null)
+			if (HoverTabletManager.CommentTarget != null) {
+				if (comment.data.commentedObjectName.Equals(HoverTabletManager.CommentTarget.name))
+				{
+					GameObject textCommentObject = Instantiate(textCommentPrefab);
+					TextCommentsV.Add(textCommentObject);
+					textCommentObject.transform.SetParent(panel.transform);
+					textCommentObject.transform.localPosition = Vector3.zero;
+					textCommentObject.transform.localRotation = Quaternion.identity;
+					textCommentObject.transform.localScale = Vector3.one * 10;
+					textCommentText = textCommentObject.GetComponentInChildren<Text>();
+					textCommentText.text = comment.data.dataString;
+				}
+			} else {
+				if (comment.data.commentedObjectName.Equals("Yleinen"))
+				{
+					GameObject textCommentObject = Instantiate(textCommentPrefab);
+					TextCommentsV.Add(textCommentObject);
+					textCommentObject.transform.SetParent(panel.transform);
+					textCommentObject.transform.localPosition = Vector3.zero;
+					textCommentObject.transform.localRotation = Quaternion.identity;
+					textCommentObject.transform.localScale = Vector3.one * 10;
+					textCommentText = textCommentObject.GetComponentInChildren<Text>();
+					textCommentText.text = comment.data.dataString;
+				}
+			}
+            /*if (comment.data.commentedObjectName == null)
             {
                 GameObject textCommentObject = Instantiate(textCommentPrefab);
                 TextCommentsV.Add(textCommentObject);
@@ -162,7 +187,7 @@ public class LoadCommentsToTablet : MonoBehaviour {
                 textCommentObject.transform.localScale = Vector3.one * 10;
                 textCommentText = textCommentObject.GetComponentInChildren<Text>();
                 textCommentText.text = comment.data.dataString;
-            }
+            }*/
         }
 
     }
@@ -243,7 +268,7 @@ public class LoadCommentsToTablet : MonoBehaviour {
         }
         else if(TextCommentsV.Count > 0)
         {
-            return;
+            yield return null;
         }
         else
         {
