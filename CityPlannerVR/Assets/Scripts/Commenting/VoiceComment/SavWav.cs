@@ -31,8 +31,9 @@ public static class SavWav {
 
 			WriteHeader(fileStream, clip);
 		}
+        SyncFiles.GenerateFileInfoContainer(null, filepath, true, SyncFiles.Filetype.voice);
 
-		return true; // TODO: return false if there's a failure saving the file
+        return true; // TODO: return false if there's a failure saving the file
 	}
 
 	public static AudioClip TrimSilence(AudioClip clip, float min) {

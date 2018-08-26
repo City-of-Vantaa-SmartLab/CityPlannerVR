@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.IO;
+using System.Threading.Tasks;
 using UnityEngine;
 
 /// <summary>
@@ -38,7 +39,7 @@ public class SaveAndLoadTransforms : MonoBehaviour {
     private string fileExtenderPng;
     private string testFileName;
     private string latestFileName;
-    private string pathName;
+    private string pathNameFolder;
     private char slash = Path.DirectorySeparatorChar;
 
     private void Awake()
@@ -48,7 +49,7 @@ public class SaveAndLoadTransforms : MonoBehaviour {
         startupFileName = "StartupTransformData";
         fileExtenderDat = ".dat";
         fileExtenderPng = ".png";
-        testFileName = "test";
+        testFileName = "TEST2";
         latestFileName = "Latest";
         folderPathName = Application.persistentDataPath + slash + folder;
 
@@ -87,18 +88,22 @@ public class SaveAndLoadTransforms : MonoBehaviour {
     /// Save transformcontainer to local file and DB using default settings.
     /// </summary>
 
-    public void Save()
+    public void SaveAsync()
     {
-        Save(defaultFileName, SaveData.transformContainer, false);
+        Task saveTask = new Task(() =>Save(defaultFileName, SaveData.transformContainer, false));
+        saveTask.Start();
+        //Save(defaultFileName, SaveData.transformContainer, false);
     }
 
     /// <summary>
     /// Load to transformcontainer from DB using default settings.
     /// </summary>
 
-    public void Load()
+    public void LoadAsync()
     {
-        Load(defaultFileName, true);
+        Task loadTask = new Task(() => Load(defaultFileName, true));
+        loadTask.Start();
+        //Load(defaultFileName, true);
     }
 
     /// <summary>
@@ -113,7 +118,7 @@ public class SaveAndLoadTransforms : MonoBehaviour {
     private IEnumerator SaveWhenContainerIsReady(string fileName, Container<TransformData> container, bool useDatabase)
     {
         //Debug.Log("Starting coroutine...");
-        pathName = folderPathName + slash + fileName + fileExtenderDat;
+        pathNameFolder = folderPathName + slash + fileName + fileExtenderDat;
 
         SaveData.transformCount = 0;
         SaveData.BeforeSavingTransforms();
@@ -124,27 +129,27 @@ public class SaveAndLoadTransforms : MonoBehaviour {
             yield return new WaitForSeconds(.1f);
         }
         SaveData.transformCount = 0;
-        SaveData.SaveDatas(pathName, container);
+        SaveData.SaveDatas(pathNameFolder, container);
         //SaveData.ClearContainer(container);
         if (useDatabase)
         {
-            MongoDBAPI.UseDefaultConnections();
-            MongoDBAPI.ImportJSONFileToDatabase(MongoDBAPI.transformCollection, pathName);
+            if (MongoDBAPI.UseDefaultConnections())
+                MongoDBAPI.ImportJSONFileToDatabase(MongoDBAPI.transformCollection, pathNameFolder);
         }
         //Debug.Log("Saving done!");
     }
 
     public void Load(string fileName, bool useDatabase)
     {
-        pathName = folderPathName + slash + fileName + fileExtenderDat;
+        pathNameFolder = folderPathName + slash + fileName + fileExtenderDat;
         if (useDatabase)
         {
-            MongoDBAPI.UseDefaultConnections();
-            MongoDBAPI.ExportJSONFileFromDatabase<TransformData>(MongoDBAPI.transformCollection, pathName);
+            if (MongoDBAPI.UseDefaultConnections())
+                MongoDBAPI.ExportJSONFileFromDatabase<TransformData>(MongoDBAPI.transformCollection, pathNameFolder);
             //MongoDBAPI.ExportContainersFromDatabase<TransformData>(MongoDBAPI.transformCollection);
         }
         else
-            SaveData.LoadItems<TransformData>(pathName);
+            SaveData.LoadItems<TransformData>(pathNameFolder);
     }
 
     /// <summary>
@@ -488,19 +493,19 @@ public class SaveAndLoadTransforms : MonoBehaviour {
 
 
 
-    public void TestDatabaseMethod1()
-    {
-        pathName = folderPathName + slash + testFileName + fileExtenderPng;
-        MongoDBAPI.UseDefaultConnections();
-        MongoDBAPI.TestMethod1(pathName, testFileName + fileExtenderPng);
-    }
+    //public void TestDatabaseMethod1()
+    //{
+    //    pathNameFolder = folderPathName + slash + testFileName + fileExtenderPng;
+    //    MongoDBAPI.UseDefaultConnections();
+    //    MongoDBAPI.TestMethod1(pathNameFolder, testFileName + fileExtenderPng);
+    //}
 
-    public void TestDatabaseMethod2()
-    {
-        pathName = folderPathName + slash + testFileName + fileExtenderPng;
-        MongoDBAPI.UseDefaultConnections();
-        MongoDBAPI.TestMethod2(pathName);
-    }
+    //public void TestDatabaseMethod2()
+    //{
+    //    pathNameFolder = folderPathName + slash + testFileName + fileExtenderPng;
+    //    MongoDBAPI.UseDefaultConnections();
+    //    MongoDBAPI.TestMethod2(folderPathName);
+    //}
 
     //public void SaveLatestToDatabase()
     //{
