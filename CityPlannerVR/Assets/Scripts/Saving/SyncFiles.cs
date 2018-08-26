@@ -30,21 +30,25 @@ public class SyncFiles : MonoBehaviour
     //public Filetype File { get; set; }
 
     private static char slash = Path.DirectorySeparatorChar;
-    public float SyncToDatabaseInterval;
-    public float SyncFromDatabaseInterval;  //Use a negative value to disable syncing
+    public float ToDBInterval;
+    public float FromDBInterval;  //Use a negative value to disable syncing
+
+    public bool syncImages;
+    public bool syncVoices;
+    public bool syncDefaults;
 
 
     private void Start()
     {
-        if (SyncToDatabaseInterval == 0)
-            SyncToDatabaseInterval = 5f;
-        if (SyncToDatabaseInterval > 0)
-            InvokeRepeating("StartSyncingToDatabaseAsync", 2f, SyncToDatabaseInterval);
+        if (ToDBInterval == 0)
+            ToDBInterval = 5f;
+        if (ToDBInterval > 0)
+            InvokeRepeating("StartSyncingToDatabaseAsync", 2f, ToDBInterval);
 
-        if (SyncFromDatabaseInterval == 0)
-            SyncFromDatabaseInterval = 5f;
-        if (SyncFromDatabaseInterval > 0)
-            InvokeRepeating("StartSyncingFromDatabaseAsync", 2f, SyncFromDatabaseInterval);
+        if (FromDBInterval == 0)
+            FromDBInterval = 5f;
+        if (FromDBInterval > 0)
+            InvokeRepeating("StartSyncingFromDatabaseAsync", 2f, FromDBInterval);
     }
 
     private void StartSyncingToDatabaseAsync()
@@ -60,9 +64,12 @@ public class SyncFiles : MonoBehaviour
         //Debug.Log("Sync from database called...");
         //Task syncing = new Task(() => SyncToDatabase());
         //syncing.Start();
-        SyncFromDatabaseAsync(Filetype.image);
-        SyncFromDatabaseAsync(Filetype.voice);
-        SyncFromDatabaseAsync(Filetype.defaultType);
+        if (syncImages)
+            SyncFromDatabaseAsync(Filetype.image);
+        if (syncVoices)
+            SyncFromDatabaseAsync(Filetype.voice);
+        if (syncDefaults)
+            SyncFromDatabaseAsync(Filetype.defaultType);
     }
 
 
@@ -75,17 +82,15 @@ public class SyncFiles : MonoBehaviour
             return;
         }
 
-        //Debug.Log("Starting to sync files...");
+        //Debug.Log("Starting to sync files to database...");
         SaveData.binarySyncing = true;
         foreach (FileInfoContainer info in SaveData.syncFileContainer.datas)
         {
             try
             {
-                if (!MongoDBAPI.UseDefaultConnections())
-                {
-                    Debug.Log("Skipping to next file");
-                    continue;
-                }
+                MongoDBAPI.UseDefaultConnections();
+                //if (!MongoDBAPI.UseDefaultConnections())
+                //    throw new Exception("I am error");
                 if (info.fileType == Filetype.image)
                     MongoDBAPI.ImportBinaryFileToDatabase(MongoDBAPI.imageCollection, info);
                 else if (info.fileType == Filetype.voice)
@@ -145,7 +150,7 @@ public class SyncFiles : MonoBehaviour
 
     public static void GenerateFileInfoContainer(string fileName, string fullFilePath, bool useFullPath, Filetype fileType)
     {
-        Debug.Log("Generating file info...");
+        //Debug.Log("Generating file info...");
         FileInfoContainer temp = new FileInfoContainer();
         temp.useFullPath = useFullPath;
         temp.fullFilePath = fullFilePath;
@@ -155,13 +160,13 @@ public class SyncFiles : MonoBehaviour
         else
             temp.filename = fileName;
         SaveData.AddData(temp);
-        Debug.Log("File info added for saving");
+        //Debug.Log("File info added for saving");
     }
 
     public static string ExtractFilenameOnly(string fullFilePath)
     {
         int slashPosition = -1;
-        Debug.Log("Extracting filename from: " + fullFilePath);
+        //Debug.Log("Extracting filename from: " + fullFilePath);
         for (int i = 0; i < fullFilePath.Length; i++)
         {
             if (fullFilePath[i] == slash)
@@ -172,6 +177,7 @@ public class SyncFiles : MonoBehaviour
             return "";
 
         string filename = fullFilePath.Substring(slashPosition + 1);
+        //Debug.Log("Extracted: " + filename);
         return filename;
     }
 

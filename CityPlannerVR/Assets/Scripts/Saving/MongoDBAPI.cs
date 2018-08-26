@@ -55,7 +55,7 @@ public class MongoDBAPI {
 
     public static readonly string defaultFileFolder = Application.persistentDataPath + slash + "OtherFiles";
     public static readonly string imageFileFolder = Application.streamingAssetsPath + slash + "Screenshots";
-    public static readonly string voiceFileFolder = Application.streamingAssetsPath + slash + "Comments" + slash + "VoiceComments";
+    public static readonly string voiceFileFolder = Application.streamingAssetsPath + slash + "Comments" + slash + "VoiceComments" + slash + "AudioFiles";
 
 
 
