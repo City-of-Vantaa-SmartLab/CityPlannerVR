@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using System.IO;
+using System;
 
 public class LoadPhotos : MonoBehaviour {
 
@@ -24,14 +25,24 @@ public class LoadPhotos : MonoBehaviour {
     {
         photoPath = Application.streamingAssetsPath + slash + "Screenshots" + slash;
         info = new DirectoryInfo(photoPath);
+        MongoDBAPI.ImagesLoadedFromDatabase += HandleImageUpdate;
 
         Load();
     }
+
+    private void OnDestroy()
+    {
+        MongoDBAPI.ImagesLoadedFromDatabase -= HandleImageUpdate;
+    }
+
+    private void HandleImageUpdate() => Load();
 
     public void Load()
     {
         StartCoroutine(LoadPhotosFromStreamingAssets(photoPath));
     }
+
+
 
     IEnumerator LoadPhotosFromStreamingAssets(string path)
     {

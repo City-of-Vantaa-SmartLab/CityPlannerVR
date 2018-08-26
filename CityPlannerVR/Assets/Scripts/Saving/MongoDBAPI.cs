@@ -57,7 +57,14 @@ public class MongoDBAPI {
     public static readonly string imageFileFolder = Application.streamingAssetsPath + slash + "Screenshots";
     public static readonly string voiceFileFolder = Application.streamingAssetsPath + slash + "Comments" + slash + "VoiceComments" + slash + "AudioFiles";
 
+    public static event SaveData.SerializeAction ImagesLoadedFromDatabase;
 
+
+    public static void AnnounceImageUpdate()
+    {
+        //Debug.Log("Firing image update event...");
+        ImagesLoadedFromDatabase?.Invoke();
+    }
 
     //private static CollectionData commentColSet = new CollectionData
     //{
