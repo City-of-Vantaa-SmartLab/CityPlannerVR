@@ -56,9 +56,9 @@ public class ThumbManager : MonoBehaviour {
 	{
 		List<Comment> allthumbs = SaveData.commentLists.thumbComments;
 		int counter = 0;
-		Debug.LogWarning ("Found " + allthumbs.Count.ToString () + " thumbs");
+		//Debug.LogWarning ("Found " + allthumbs.Count.ToString () + " thumbs");
 		foreach (Comment com in allthumbs) {
-			Debug.LogWarning (com.data.dataString + " Thumb found for " + com.data.commentedObjectName);
+			//Debug.LogWarning (com.data.dataString + " Thumb found for " + com.data.commentedObjectName);
 			if (com.data.commentedObjectName.Equals (HoverTabletManager.CommentTarget.name)) {
 				if (isUpThumbs && com.data.dataString.Equals ("1")) {
 					counter++;
@@ -68,7 +68,7 @@ public class ThumbManager : MonoBehaviour {
 			}
 
 		}
-		Debug.LogWarning ("Total thumbs for this: " + counter);
+		//Debug.LogWarning ("Total thumbs for this: " + counter);
 		this.gameObject.GetComponentInChildren<Text> ().text = counter.ToString ();
 	}
 }

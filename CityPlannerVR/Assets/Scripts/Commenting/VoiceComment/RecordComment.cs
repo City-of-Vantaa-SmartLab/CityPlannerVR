@@ -323,7 +323,7 @@ public class RecordComment : MonoBehaviour
     /// </summary>
     void SaveRecordedAudio(bool fromServer)
     {
-        string filename = commenter + "_VoiceComment_" + System.DateTime.Now.ToString("yyyy-MM-dd_HH-mm-ss");
+        string filename = System.DateTime.Now.ToString("yyyy-MM-dd_HH-mm-ss") + "_" + commenter + "_VoiceComment";
 
         SavWav.Save(filename, finalAudioClip, savePath + audioSavePathExt);
 
