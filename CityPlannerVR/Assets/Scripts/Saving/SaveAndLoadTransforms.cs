@@ -133,8 +133,8 @@ public class SaveAndLoadTransforms : MonoBehaviour {
         //SaveData.ClearContainer(container);
         if (useDatabase)
         {
-            MongoDBAPI.UseDefaultConnections();
-            MongoDBAPI.ImportJSONFileToDatabase(MongoDBAPI.transformCollection, pathNameFolder);
+            if (MongoDBAPI.UseDefaultConnections())
+                MongoDBAPI.ImportJSONFileToDatabase(MongoDBAPI.transformCollection, pathNameFolder);
         }
         //Debug.Log("Saving done!");
     }
@@ -144,8 +144,8 @@ public class SaveAndLoadTransforms : MonoBehaviour {
         pathNameFolder = folderPathName + slash + fileName + fileExtenderDat;
         if (useDatabase)
         {
-            MongoDBAPI.UseDefaultConnections();
-            MongoDBAPI.ExportJSONFileFromDatabase<TransformData>(MongoDBAPI.transformCollection, pathNameFolder);
+            if (MongoDBAPI.UseDefaultConnections())
+                MongoDBAPI.ExportJSONFileFromDatabase<TransformData>(MongoDBAPI.transformCollection, pathNameFolder);
             //MongoDBAPI.ExportContainersFromDatabase<TransformData>(MongoDBAPI.transformCollection);
         }
         else

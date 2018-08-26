@@ -29,34 +29,63 @@ public class SyncFiles : MonoBehaviour
     //public enum ToolType { Empty, Camera, RemoteGrabber, EditingLaser, Eraser, Painter, PathCamera, VideoCamera, Item, Button };  //includes modes for tools
     //public Filetype File { get; set; }
 
-    private string folderPathName;
-    private string folder;
-    private string fileName;
-    private string fileExtender;
-    private string pathName;
-    private string streamingAssets = Application.streamingAssetsPath;
-    private char slash = Path.DirectorySeparatorChar;
+    private static char slash = Path.DirectorySeparatorChar;
+    public float SyncToDatabaseInterval;
+    public float SyncFromDatabaseInterval;  //Use a negative value to disable syncing
+
+
+    private void Start()
+    {
+        if (SyncToDatabaseInterval == 0)
+            SyncToDatabaseInterval = 5f;
+        if (SyncToDatabaseInterval > 0)
+            InvokeRepeating("StartSyncingToDatabaseAsync", 2f, SyncToDatabaseInterval);
+
+        if (SyncFromDatabaseInterval == 0)
+            SyncFromDatabaseInterval = 5f;
+        if (SyncFromDatabaseInterval > 0)
+            InvokeRepeating("StartSyncingFromDatabaseAsync", 2f, SyncFromDatabaseInterval);
+    }
 
     private void StartSyncingToDatabaseAsync()
     {
+        //Debug.Log("Sync to database called...");
         Task syncing = new Task(() => SyncToDatabase());
         syncing.Start();
+        //SyncToDatabase();
+    }
+
+    private void StartSyncingFromDatabaseAsync()
+    {
+        //Debug.Log("Sync from database called...");
+        //Task syncing = new Task(() => SyncToDatabase());
+        //syncing.Start();
+        SyncFromDatabaseAsync(Filetype.image);
+        SyncFromDatabaseAsync(Filetype.voice);
+        SyncFromDatabaseAsync(Filetype.defaultType);
     }
 
 
-    private void SyncToDatabase()
+    private static void SyncToDatabase()
     {
+        //Debug.Log("Why is this not called");
         if (SaveData.binarySyncing == true)
         {
             Debug.Log("Binary files are already syncing to database!");
             return;
         }
 
+        //Debug.Log("Starting to sync files...");
         SaveData.binarySyncing = true;
         foreach (FileInfoContainer info in SaveData.syncFileContainer.datas)
         {
             try
             {
+                if (!MongoDBAPI.UseDefaultConnections())
+                {
+                    Debug.Log("Skipping to next file");
+                    continue;
+                }
                 if (info.fileType == Filetype.image)
                     MongoDBAPI.ImportBinaryFileToDatabase(MongoDBAPI.imageCollection, info);
                 else if (info.fileType == Filetype.voice)
@@ -87,6 +116,8 @@ public class SyncFiles : MonoBehaviour
     
     private void SyncFromDatabaseAsync(Filetype filetype)
     {
+        if (!MongoDBAPI.UseDefaultConnections())
+            return;
         if (filetype == Filetype.image)
         {
             Task taskImages = new Task(() => MongoDBAPI.ExportBinaryFileFromDatabase(MongoDBAPI.imageCollection, MongoDBAPI.imageFileFolder));
@@ -112,13 +143,36 @@ public class SyncFiles : MonoBehaviour
     /// Filename and filetype are the most important, you can disregard fullfilepath if useFullPath is false
     /// </summary>
 
-    public void GenerateFileInfoContainer(string fileName, string fullFilePath, bool useFullPath, Filetype fileType)
+    public static void GenerateFileInfoContainer(string fileName, string fullFilePath, bool useFullPath, Filetype fileType)
     {
+        Debug.Log("Generating file info...");
         FileInfoContainer temp = new FileInfoContainer();
         temp.useFullPath = useFullPath;
         temp.fullFilePath = fullFilePath;
-        temp.filename = fileName;
+        temp.fileType = fileType;
+        if (string.IsNullOrEmpty(fileName))
+            temp.filename = ExtractFilenameOnly(fullFilePath);
+        else
+            temp.filename = fileName;
         SaveData.AddData(temp);
+        Debug.Log("File info added for saving");
+    }
+
+    public static string ExtractFilenameOnly(string fullFilePath)
+    {
+        int slashPosition = -1;
+        Debug.Log("Extracting filename from: " + fullFilePath);
+        for (int i = 0; i < fullFilePath.Length; i++)
+        {
+            if (fullFilePath[i] == slash)
+                slashPosition = i;
+        }
+
+        if (slashPosition < 0)
+            return "";
+
+        string filename = fullFilePath.Substring(slashPosition + 1);
+        return filename;
     }
 
 }

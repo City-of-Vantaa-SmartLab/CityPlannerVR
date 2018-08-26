@@ -76,7 +76,8 @@ public class SaveAndLoadComments : MonoBehaviour
         //SaveData.ClearContainer(SaveData.commentContainer);
         Debug.Log("Starting to save...");
         //pathName = folderPathName + slash + fileName + fileExtender;
-        MongoDBAPI.UseDefaultConnections();
+        if (!MongoDBAPI.UseDefaultConnections())
+            return;
         MongoDBAPI.ImportJSONFileToDatabase(MongoDBAPI.commentCollection, pathName);
         Debug.Log("Saving done!");
     }
@@ -94,12 +95,15 @@ public class SaveAndLoadComments : MonoBehaviour
         if (useDatase)
         {
             Debug.Log("Starting to load...");
-            MongoDBAPI.UseDefaultConnections();
-            MongoDBAPI.ExportJSONFileFromDatabase<CommentData>(MongoDBAPI.commentCollection, pathName);
-            //MongoDBAPI.ExportContainersFromDatabase<CommentData>(MongoDBAPI.commentCollection);
+            if (MongoDBAPI.UseDefaultConnections())
+            {
+                MongoDBAPI.ExportJSONFileFromDatabase<CommentData>(MongoDBAPI.commentCollection, pathName);
+                //MongoDBAPI.ExportContainersFromDatabase<CommentData>(MongoDBAPI.commentCollection);
 
-            //SaveData.LoadItems<CommentData>(pathName);
-            Debug.Log("Loading done!");
+                //SaveData.LoadItems<CommentData>(pathName);
+                Debug.Log("Loading done!");
+            }
+
         }
         else
             SaveData.LoadItems<CommentData>(pathName);

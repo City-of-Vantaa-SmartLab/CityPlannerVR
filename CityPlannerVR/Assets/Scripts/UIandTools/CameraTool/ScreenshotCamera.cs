@@ -171,6 +171,7 @@ public class ScreenshotCamera : MonoBehaviour {
             byte[] bytes = screenShot.EncodeToPNG();
             string filename = ScreenshotName(resWidth, resHeight);
             System.IO.File.WriteAllBytes(filename, bytes);
+            SyncFiles.GenerateFileInfoContainer(null, filename, true, SyncFiles.Filetype.image);
             Debug.Log("Took screenshot to: " + filename);
             clickSound.Play();
 

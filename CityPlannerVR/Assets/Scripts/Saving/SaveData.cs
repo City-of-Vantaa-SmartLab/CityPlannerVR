@@ -196,7 +196,8 @@ public class SaveData {
 
     public static void SaveFileToDatabase(string filepath, int collectionIndex)
     {
-        MongoDBAPI.UseDefaultConnections();
+        if (!MongoDBAPI.UseDefaultConnections())
+            return;
         if (collectionIndex == 1)
             MongoDBAPI.ImportJSONFileToDatabase(MongoDBAPI.transformCollection, filepath);
     }

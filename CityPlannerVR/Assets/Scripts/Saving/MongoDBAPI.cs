@@ -54,8 +54,8 @@ public class MongoDBAPI {
     private static char slash = Path.DirectorySeparatorChar;
 
     public static readonly string defaultFileFolder = Application.persistentDataPath + slash + "OtherFiles";
-    public static readonly string imageFileFolder = Application.streamingAssetsPath;
-    public static readonly string voiceFileFolder = Application.streamingAssetsPath;
+    public static readonly string imageFileFolder = Application.streamingAssetsPath + slash + "Screenshots";
+    public static readonly string voiceFileFolder = Application.streamingAssetsPath + slash + "Comments" + slash + "VoiceComments";
 
 
 
@@ -95,18 +95,27 @@ public class MongoDBAPI {
     /// commentCollection to access data with methods export/import JSONfile to/from Database
     /// </summary>
 
-    public static void UseDefaultConnections()
+    public static bool UseDefaultConnections()
     {
         ConnectToClient(defaultSettings);
         if (client != null)
         {
             activeDatabase = client.GetDatabase(defaultDB);
             if (activeDatabase != null)
+            {
                 ConnectToDefaultCollections();
+                return true;
+            }
+            else
+            {
+                Debug.Log("Found database server, but could not connect to database!");
+                return false;
+            }
         }
         else
         {
-            Debug.Log("Server client is null!");
+            Debug.Log("Could not find server, check SSH tunnel!");
+            return false;
         }
     }
 
@@ -195,6 +204,18 @@ public class MongoDBAPI {
     public static bool ImportBinaryFileToDatabase(
         IMongoCollection<BsonDocument> targetCollection,FileInfoContainer fileInfo)
     {
+        if (targetCollection == null)
+        {
+            Debug.Log("Target collection is null!");
+            return false;
+        }
+
+        if (fileInfo == null)
+        {
+            Debug.Log("Fileinfo is null!");
+            return false;
+        }
+
         string filePathToUse;
         StreamReader streamReader;
 
@@ -244,7 +265,7 @@ public class MongoDBAPI {
 
     public static void ExportBinaryFileFromDatabase(IMongoCollection<BsonDocument> targetCollection, string folderPathName)
     {
-        ExportBinaryFileFromDatabase(null, null, null, targetCollection, folderPathName, false);
+        ExportBinaryFileFromDatabase(null, null, null, targetCollection, folderPathName, false, 20);
     }
 
     //Clean obsolete comments away later!
@@ -254,7 +275,8 @@ public class MongoDBAPI {
         ProjectionDefinition<BsonDocument> projection,      //Use include and exclude to target specific fields in the BsonDocument
         IMongoCollection<BsonDocument> targetCollection,    //The collection from where the method pulls BsonDocuments
         string folderPathName,                              //Saves files from the collection to this folder, unless useSavedFolderPath is true and BsonDocument has a string named foldername
-        bool overWriteFiles)                                //Overwrites the same named files
+        bool overWriteFiles,                                //Overwrites the same named files
+        int limit)                                          //Limits the number of documents pulled from database
     {
         if (filter == null)
             filter = new BsonDocument();
@@ -263,7 +285,7 @@ public class MongoDBAPI {
         if (projection == null)
             projection = Builders<BsonDocument>.Projection.Exclude("_id");
 
-        var mongoCursor = targetCollection.Find(filter).Project(projection).Sort(sort).ToCursor();  //With or without cursor, still missing something
+        var mongoCursor = targetCollection.Find(filter).Project(projection).Sort(sort).Limit(limit).ToCursor();  //With or without cursor, still missing something
         var document = mongoCursor.ToBsonDocument();  //This is the likely culprit
 
         if (document == null)
@@ -278,6 +300,7 @@ public class MongoDBAPI {
             BsonBinaryData elementBytes = new BsonBinaryData(urpuus);
             string filename = "";
             string foldername = "";
+            SyncFiles.Filetype filetype = SyncFiles.Filetype.defaultType;
 
             try
             {
@@ -300,11 +323,11 @@ public class MongoDBAPI {
                                 foldername = element.Value.AsString;
                                 break;
                             case "filetype":
-                                elementBytes = element.Value.AsBsonBinaryData;
+                                filetype = (SyncFiles.Filetype)element.Value.AsInt32;
                                 break;
 
                             default:
-                                Debug.Log("Could not recognize Bson document's field name: " + element.Name);
+                                //Debug.Log("Could not recognize Bson document's field name: " + element.Name);
                                 break;
                         }
                     }
@@ -321,7 +344,7 @@ public class MongoDBAPI {
                     string fullPath = folderPathName + slash + filename;
                     if (!overWriteFiles && File.Exists(fullPath))
                     {
-                        Debug.Log("File exists, not overwriting!");
+                        //Debug.Log("File exists, not overwriting!");
                     }
                     else
                         File.WriteAllBytes((fullPath), bytes);
@@ -331,28 +354,29 @@ public class MongoDBAPI {
             }
             catch (Exception ex)
             {
-                Debug.Log(filename+ " has error with message " + ex.Message);
+                Debug.Log("Error with file: " + filename);
+                Debug.Log(ex);
             }
         }
     }
 
     public static void ExportJSONFileFromDatabase<T>(IMongoCollection<BsonDocument> targetCollection, string filepath)
     {
-        ExportJSONFileFromDatabase<T>(null, null, null, targetCollection, filepath, true);
+        ExportJSONFileFromDatabase<T>(null, null, null, targetCollection, filepath, 20);
     }
 
     public static void ExportJSONFileFromDatabase<T>(FilterDefinition<BsonDocument> filter, SortDefinition<BsonDocument> sort,
-        ProjectionDefinition<BsonDocument> projection, IMongoCollection<BsonDocument> targetCollection, string filepath, bool onlyExcludeID)
+        ProjectionDefinition<BsonDocument> projection, IMongoCollection<BsonDocument> targetCollection, string filepath, int limit)
     {
 
         if (filter == null)
             filter = new BsonDocument();
         if (sort == null)
             sort = Builders<BsonDocument>.Sort.Descending("date");
-        if (projection == null || !onlyExcludeID)
+        if (projection == null)
             projection = Builders<BsonDocument>.Projection.Exclude("_id");
 
-        var cursor = targetCollection.Find(filter).Project(projection).Sort(sort).ToCursor();
+        var cursor = targetCollection.Find(filter).Project(projection).Sort(sort).Limit(limit).ToCursor();
         foreach (var document in cursor.ToEnumerable())
         {
             using (var streamWriter = new StreamWriter(filepath))
