@@ -214,7 +214,12 @@ public class Comment {
         comment.CombineAndProcess(tempData);
 		List<string> info = new List<string> ();
 		info.Add ("ObjectName");
-		info.Add (targetObject.name);
+		if (targetObject != null) {
+			info.Add (targetObject.name);
+		} else {
+			info.Add ("NoObject");
+		}
+
 		GameObject.Find ("GameManager").GetComponent<Logger> ().LogActionLine ("TextCommentCreated", info);
         return comment;
     }
@@ -226,7 +231,11 @@ public class Comment {
         comment.CombineAndProcess(tempData);
 		List<string> info = new List<string> ();
 		info.Add ("ObjectName");
-		info.Add (targetObject.name);
+		if (targetObject != null) {
+			info.Add (targetObject.name);
+		} else {
+			info.Add ("NoObject");
+		}
 		GameObject.Find ("GameManager").GetComponent<Logger> ().LogActionLine ("ThumbCommentCreated", info);
         return comment;
     }
