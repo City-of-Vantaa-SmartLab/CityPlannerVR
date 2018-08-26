@@ -157,7 +157,7 @@ public class PhotonSpawnableObject : MonoBehaviour {
         GameObject clone = Instantiate(item, spawnPoint.position, spawnPoint.rotation);
         clone.transform.localEulerAngles += new Vector3(0, 0, -90);
 
-        originalScale = clone.transform.localScale;
+        originalScale = clone.transform.localScale * 1.5f;
 
         smallScale = originalScale * 0.02f;
         
