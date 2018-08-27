@@ -35,5 +35,10 @@ public class ChangeQuest : MonoBehaviour {
         currentQuestIndex++;
         Quests[currentQuestIndex - 1].SetActive(false);
         Quests[currentQuestIndex].SetActive(true);
+        List<string> info = new List<string>();
+        info.Add("QuestIndex");
+        info.Add(currentQuestIndex.ToString());
+
+        GameObject.Find("GameManager").GetComponent<Logger>().LogActionLine("NextQuestOpened", info);
     }
 }
