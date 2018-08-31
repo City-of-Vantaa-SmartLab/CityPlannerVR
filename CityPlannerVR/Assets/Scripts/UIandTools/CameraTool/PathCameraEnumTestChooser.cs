@@ -3,7 +3,8 @@ using System.Collections.Generic;
 using UnityEngine;
 
 /// <summary>
-/// For test purpose only
+/// For test purpose only. Can be removed after a better solution is done 
+/// (Make 4 cubes (or other objects with collider) and give this to all of them. Then name them like they are in each if statement.)
 /// </summary>
 public class PathCameraEnumTestChooser : MonoBehaviour {
 

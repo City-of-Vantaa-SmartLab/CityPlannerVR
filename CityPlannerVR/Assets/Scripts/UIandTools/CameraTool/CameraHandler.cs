@@ -11,8 +11,10 @@ public class CameraHandler : MonoBehaviour {
 	private enum CameraMode {ScreenshotCamera, VideoCamera, PathCamera}
 	private CameraMode cameraMode = CameraMode.ScreenshotCamera;
 
+    [Tooltip("Aka screenshotCamera")]
     public GameObject normalCamera;
     public GameObject videoCameraObject;
+    [Tooltip("Child of the hand(s)")]
 	public GameObject pathCameraPoint;
 
     ScreenshotCamera screenshotCamera;
@@ -85,7 +87,9 @@ public class CameraHandler : MonoBehaviour {
         PathPointModeActive = false;
     }
     //-------------------------------------------------------------------------------------------------------------------------------------
-    //Is called when the cameraTool is switched on
+    ///<summary>
+    ///Is called when the cameraTool is switched on
+    ///</summary>
     public void ActivateCameraTool(uint deviceIndex, ToolManager.ToolType tool)
 	{
         if (deviceIndex == handNumber)
@@ -101,7 +105,9 @@ public class CameraHandler : MonoBehaviour {
 
             }
 
-            //if video camera is selected
+            ///<summary>
+            ///if video camera is selected
+            ///</summary>
             else if (tool == ToolManager.ToolType.VideoCamera)
             {
                 videoCamera.myHandNumber = handNumber;
@@ -110,7 +116,9 @@ public class CameraHandler : MonoBehaviour {
                 PathPointModeActive = false;
 
             }
-            //if path camera is selected
+            ///<summary>
+            ///if path camera is selected
+            ///</summary>
             else if (tool == ToolManager.ToolType.PathCamera)
             {
                 pathCameraHandler.myHandNumber = handNumber;
@@ -125,9 +133,11 @@ public class CameraHandler : MonoBehaviour {
             }
         }
 	}
-	//-------------------------------------------------------------------------------------------------------------------------------------
-	//Is called when the cameraTool is switched off
-	public void DeactivateCameraTool()
+    //-------------------------------------------------------------------------------------------------------------------------------------
+    ///<summary>
+    ///Is called when the cameraTool is switched off
+    ///</summary>
+    public void DeactivateCameraTool()
 	{
         if (toolManager.myHandNumber == screenshotCamera.myHandNumber)
         {

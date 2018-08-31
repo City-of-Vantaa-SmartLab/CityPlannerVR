@@ -2,6 +2,10 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+/// <summary>
+/// Stores some information that every page has
+/// </summary>
+
 public class Page : MonoBehaviour {
 
     /// <summary> Index used to control a page </summary>

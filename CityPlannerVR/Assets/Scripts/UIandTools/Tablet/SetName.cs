@@ -34,6 +34,7 @@ public class SetName : MonoBehaviour {
     {
         HoverTabletManager.CommentTarget = gameObject;
 
+        //[xxx]
         //if (facades.Length > 0)
         //{
         //    CheckIndex();
@@ -48,6 +49,7 @@ public class SetName : MonoBehaviour {
         //    ChangeFacade.facadeIndex = 0;
         //    ChangeFacade.canChangeFacade = false;
         //}
+        //[xxx]
 
         if (OnChangeColor != null)
         {

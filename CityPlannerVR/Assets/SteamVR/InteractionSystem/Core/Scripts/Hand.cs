@@ -504,6 +504,7 @@ namespace Valve.VR.InteractionSystem
             //    hoverLayerMask.value
             //);
 
+            //Our own version, upper one is official steamVR version (OverlapBoxNonAlloc)
             Physics.OverlapSphereNonAlloc(hoverSphereTransform.position - new Vector3(0, flScaledSphereRadius /** boxMult*/ - flScaledSphereRadius, 0), flScaledSphereRadius, overlappingColliders, hoverLayerMask.value);
 
             // DebugVar

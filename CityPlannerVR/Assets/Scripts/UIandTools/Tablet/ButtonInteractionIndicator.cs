@@ -25,6 +25,9 @@ public class ButtonInteractionIndicator : MonoBehaviour {
         }
     }
 
+    /// <summary>
+    /// Used if the used to hover on an object with a sprite renderer (ie. a tablet button)
+    /// </summary>
     public void OnHoverSprite()
     {
         if (sprite == null)
@@ -42,7 +45,9 @@ public class ButtonInteractionIndicator : MonoBehaviour {
     }
 
     //--------------------------------------------------------------------------------------------------------------------------------------
-
+    /// <summary>
+    /// Used if the used to hover on an object with a image component (ie. a play and pause button button)
+    /// </summary>
     public void OnHoverUI()
     {
         if(image == null)
@@ -60,7 +65,9 @@ public class ButtonInteractionIndicator : MonoBehaviour {
     }
 
     //--------------------------------------------------------------------------------------------------------------------------------------
-
+    /// <summary>
+    /// Used if the used to hover on an object with a mesh renderer (ie. the facade button next R-kioski)
+    /// </summary>
     public void OnHoverObject()
     {
         if(meshRenderer == null)

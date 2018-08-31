@@ -2,14 +2,19 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+
+/// <summary>
+/// 
+/// </summary>
 public class ChangeFacade : MonoBehaviour {
 
     MeshRenderer meshRenderer;
 
     /// <summary>
     /// List of all the possible facades for an object
+    /// (if wanted to make to work with multiple buildings, remove comments marked with xxx (some other adjustments might have to be also done)) 
     /// </summary>
-    public /*static*/ GameObject[] facades;
+    public /*static [xxx]*/ GameObject[] facades;
     public static int facadeIndex = 0;
     public static bool canChangeFacade = true;
 
@@ -54,7 +59,7 @@ public class ChangeFacade : MonoBehaviour {
         }
 
 		return facadeIndex;
-        //FacadeChange();
+        //FacadeChange(); [xxx]
     }
 
     /// <summary>
